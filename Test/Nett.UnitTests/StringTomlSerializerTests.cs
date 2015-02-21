@@ -25,7 +25,7 @@ namespace Nett.UnitTests
         [Fact]
         public void Deserialize_WithMultipleSignBeforeNumber_FailsToParse()
         {
-            Assert.Throws<FormatException>(() => StringTomlSerializer.Deserialize("key = --0"));
+            Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize("key = --0"));
         }
 
         [Theory]

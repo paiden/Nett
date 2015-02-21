@@ -29,7 +29,7 @@ using System;
 
 -->namespace
 
-public class Parser {
+internal sealed partial class Parser {
 -->constants
 	const bool _T = true;
 	const bool _x = false;

@@ -4,11 +4,11 @@ using System.Text;
 
 using System;
 
-namespace Nett {
+namespace Nett.Parser {
 
 
 
-public class Parser {
+internal sealed partial class Parser {
 	public const int _EOF = 0;
 	public const int _number = 1;
 	public const int _sign = 2;
@@ -120,7 +120,7 @@ public readonly TomlTable parsed = new TomlTable();
 			Expect(1);
 			sb.Append(t.val); 
 		}
-		var iv = long.Parse(sb.ToString()); val = neg ? -iv : iv; 
+		val = this.ParseIntVal(sb, neg); 
 	}
 
 

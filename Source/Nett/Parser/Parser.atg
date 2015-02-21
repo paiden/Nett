@@ -1,4 +1,4 @@
-﻿$namespace=Nett
+﻿$namespace=Nett.Parser
 
 using System.Text;
 
@@ -35,5 +35,5 @@ PRODUCTIONS
 		   number											(. sb.Append(t.val); .)
 		   {
 				'_'number									(. sb.Append(t.val); .)
-		   }												(. var iv = long.Parse(sb.ToString()); val = neg ? -iv : iv; .).
+		   }												(. val = this.ParseIntVal(sb, neg); .).
 END Toml.

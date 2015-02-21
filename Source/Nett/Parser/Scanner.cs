@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Collections;
 
-namespace Nett {
+namespace Nett.Parser {
 
 public class Token {
 	public int kind;    // token kind

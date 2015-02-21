@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Nett
 {
@@ -10,8 +7,8 @@ namespace Nett
     {
         public static TomlTable Deserialize(Stream s)
         {
-            var scanner = new Scanner(s);
-            var parser = new Parser(scanner);
+            var scanner = new Parser.Scanner(s);
+            var parser = new Parser.Parser(scanner);
             var sw = new StringWriter();
             parser.errors.errorStream = sw;
             parser.Parse();
