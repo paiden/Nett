@@ -21,5 +21,17 @@ namespace Nett.UnitTests
             Assert.Equal(expectedValue, parsed.Get<int>(key));
             Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
         }
+
+        [Theory]
+        [InlineData("Key = 1_000", "Key", 1000)]
+        [InlineData("Key = 1_2_3_4", "Key", 1234)]
+        public void Deserialize_IntWithUnderscoreSeperator_ProducesCorrectObject(string toParse, string key, object expectedValue)
+        {
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            Assert.NotNull(parsed);
+            Assert.Equal(expectedValue, parsed.Get<int>(key));
+            Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
+        }
     }
 }

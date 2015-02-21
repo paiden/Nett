@@ -1,3 +1,6 @@
+using System.Text;
+
+
 
 using System;
 
@@ -10,7 +13,7 @@ public class Parser {
 	public const int _number = 1;
 	public const int _sign = 2;
 	public const int _identifier = 3;
-	public const int maxT = 5;
+	public const int maxT = 6;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -24,7 +27,7 @@ public class Parser {
 	int errDist = minErrDist;
 
 public readonly TomlTable parsed = new TomlTable();
-
+private readonly StringBuilder sb = new StringBuilder(32);
 
 
 
@@ -105,13 +108,19 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 
 	void IntVal(out long val) {
-		int mul = 1; 
+		bool neg = false; this.sb.Clear(); 
 		while (la.kind == 2) {
 			Get();
 		}
-		if(t.val == "-") mul = -1; 
+		if(t.val == "-") neg = true; 
 		Expect(1);
-		val = long.Parse(t.val) * mul; 
+		sb.Append(t.val); 
+		while (la.kind == 5) {
+			Get();
+			Expect(1);
+			sb.Append(t.val); 
+		}
+		var iv = long.Parse(sb.ToString()); val = neg ? -iv : iv; 
 	}
 
 
@@ -126,7 +135,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x}
 
 	};
 } // end Parser
@@ -145,7 +154,8 @@ public class Errors {
 			case 2: s = "sign expected"; break;
 			case 3: s = "identifier expected"; break;
 			case 4: s = "\"=\" expected"; break;
-			case 5: s = "??? expected"; break;
+			case 5: s = "\"_\" expected"; break;
+			case 6: s = "??? expected"; break;
 
 			default: s = "error " + n; break;
 		}

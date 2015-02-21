@@ -1,15 +1,16 @@
 ﻿$namespace=Nett
 
+using System.Text;
+
 COMPILER Toml
 public readonly TomlTable parsed = new TomlTable();
-
+private readonly StringBuilder sb = new StringBuilder(32);
 
 CHARACTERS
 	digit = '0'..'9'.
 	letter = 'a'..'z' + 'A'..'Z'.
 	plus = '+'.
 	minus = '-'.
-
 TOKENS
 	number = digit{digit}.
 	sign = plus | minus.
@@ -24,8 +25,10 @@ PRODUCTIONS
 		= identifier										(. val = t.val; .).
 	Value<out object val>									(. long iv; .)
 		= IntVal<out iv>									(. val = iv; .).
-	IntVal<out long val>									(. int mul = 1; .)
-		 = {sign}											(. if(t.val == "-") mul = -1; .)
-		   number											(. val = long.Parse(t.val) * mul; .).
-
+	IntVal<out long val>									(. bool neg = false; this.sb.Clear(); .)
+		 = {sign}											(. if(t.val == "-") neg = true; .)
+		   number											(. sb.Append(t.val); .)
+		   {
+				'_'number									(. sb.Append(t.val); .)
+		   }												(. var iv = long.Parse(sb.ToString()); val = neg ? -iv : iv; .).
 END Toml.
