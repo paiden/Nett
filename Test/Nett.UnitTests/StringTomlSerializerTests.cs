@@ -45,5 +45,14 @@ namespace Nett.UnitTests
             Assert.NotNull(parsed);
             Assert.Equal(0, parsed.Get<int>("key"));
         }
+
+        [Theory]
+        [InlineData(@"str = ""I'm a string. \""You can quote me\"". Name\tJos\u00E9\nLocation\tSF.", "str", @"I'm a string. \""You can quote me\"". Name\tJos\u00E9\nLocation\tSF.")]
+        public void Deserialize_SingleLineSringValue_DeserializesCorrectly(string toParse, string key, string expected)
+        {
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            Assert.Equal(expected, parsed.Get<string>(key));
+        }
     }
 }

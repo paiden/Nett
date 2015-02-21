@@ -3,8 +3,9 @@
 using System.Text;
 
 COMPILER Toml
-public readonly TomlTable parsed = new TomlTable();
-private readonly StringBuilder sb = new StringBuilder(32);
+
+	public readonly TomlTable parsed = new TomlTable();
+	private readonly StringBuilder sb = new StringBuilder(32);
 
 CHARACTERS
 	digit = '0'..'9'.

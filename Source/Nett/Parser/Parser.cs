@@ -27,7 +27,7 @@ public class Parser {
 	int errDist = minErrDist;
 
 public readonly TomlTable parsed = new TomlTable();
-private readonly StringBuilder sb = new StringBuilder(32);
+	private readonly StringBuilder sb = new StringBuilder(32);
 
 
 
