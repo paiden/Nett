@@ -22,6 +22,12 @@ namespace Nett.UnitTests
             Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
         }
 
+        [Fact]
+        public void Deserialize_WithMultipleSignBeforeNumber_FailsToParse()
+        {
+            Assert.Throws<FormatException>(() => StringTomlSerializer.Deserialize("key = --0"));
+        }
+
         [Theory]
         [InlineData("Key = 1_000", "Key", 1000)]
         [InlineData("Key = 1_2_3_4", "Key", 1234)]

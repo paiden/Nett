@@ -109,7 +109,7 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void IntVal(out long val) {
 		bool neg = false; this.sb.Clear(); 
-		while (la.kind == 2) {
+		if (la.kind == 2) {
 			Get();
 		}
 		if(t.val == "-") neg = true; 

@@ -31,7 +31,7 @@ PRODUCTIONS
 	Value<out object val>									(. long iv; .)
 		= IntVal<out iv>									(. val = iv; .).
 	IntVal<out long val>									(. bool neg = false; this.sb.Clear(); .)
-		 = {sign}											(. if(t.val == "-") neg = true; .)
+		 = [sign]											(. if(t.val == "-") neg = true; .)
 		   number											(. sb.Append(t.val); .)
 		   {
 				'_'number									(. sb.Append(t.val); .)
