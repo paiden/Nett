@@ -33,5 +33,17 @@ namespace Nett.UnitTests
             Assert.Equal(expectedValue, parsed.Get<int>(key));
             Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
         }
+
+        [Fact]
+        public void Deserilize_WithComments_ParserCanHandleCommentsCorrectly()
+        {
+            string toParse = "# I am a comment. Hear me roar. Roar." + Environment.NewLine +
+                             "key = 0 # Yeah, you can do this. ";
+
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            Assert.NotNull(parsed);
+            Assert.Equal(0, parsed.Get<int>("key"));
+        }
     }
 }

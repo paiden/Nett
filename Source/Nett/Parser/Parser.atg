@@ -11,10 +11,14 @@ CHARACTERS
 	letter = 'a'..'z' + 'A'..'Z'.
 	plus = '+'.
 	minus = '-'.
+	eol = '\n'.
+
 TOKENS
 	number = digit{digit}.
 	sign = plus | minus.
 	identifier = letter{digit|letter}.
+
+COMMENTS FROM "#" TO eol
 
 IGNORE '\r' + '\n'
 
