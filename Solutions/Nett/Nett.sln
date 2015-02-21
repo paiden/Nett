@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22512.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.UnitTests", "..\..\Test\Nett.UnitTests\Nett.UnitTests.csproj", "{C7FDD1D2-70F8-4808-8F39-27267C159CF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett", "..\..\Source\Nett\Nett.csproj", "{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7FDD1D2-70F8-4808-8F39-27267C159CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7FDD1D2-70F8-4808-8F39-27267C159CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7FDD1D2-70F8-4808-8F39-27267C159CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7FDD1D2-70F8-4808-8F39-27267C159CF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,13 @@
+#File Types
+*.cache
+*.old
+*.log
+*.suo
+*.user
+
+#Folders
+.vs
+bin
+obj
+packages
+

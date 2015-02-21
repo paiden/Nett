@@ -1,0 +1,31 @@
+﻿$namespace=Nett
+
+COMPILER Toml
+public readonly TomlTable parsed = new TomlTable();
+
+
+CHARACTERS
+	digit = '0'..'9'.
+	letter = 'a'..'z' + 'A'..'Z'.
+	plus = '+'.
+	minus = '-'.
+
+TOKENS
+	number = digit{digit}.
+	sign = plus | minus.
+	identifier = letter{digit|letter}.
+
+IGNORE '\r' + '\n'
+
+PRODUCTIONS
+	Toml 													(. string key; object val; .)
+		= Key<out key> '=' Value<out val>					(. parsed.Add(key, val); .).
+	Key<out string val> 
+		= identifier										(. val = t.val; .).
+	Value<out object val>									(. long iv; .)
+		= IntVal<out iv>									(. val = iv; .).
+	IntVal<out long val>									(. int mul = 1; .)
+		 = {sign}											(. if(t.val == "-") mul = -1; .)
+		   number											(. val = long.Parse(t.val) * mul; .).
+
+END Toml.
