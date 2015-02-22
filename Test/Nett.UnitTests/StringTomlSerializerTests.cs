@@ -74,5 +74,40 @@ namespace Nett.UnitTests
 
             Assert.Equal("\u0000004D", parsed.Get<string>("str"));
         }
+
+        [Theory]
+        [InlineData("str = \"\"\"\"\"\"", "")]
+        [InlineData("str = \"\"\" \"\"\"", " ")]
+        [InlineData("str = \"\"\"\r\n\"\"\"", "")]
+        [InlineData("str = \"\"\"\r\nHello\r\nYou  \"\"\"", "Hello\r\nYou  ")]
+        public void Deserialize_MString_ProducesCorrectresult(string src, string expected)
+        {
+            var parsed = StringTomlSerializer.Deserialize(src);
+
+            Assert.Equal(expected, parsed.Get<string>("str"));
+        }
+
+        const string Case1 = @"str = """"""
+The quick brown \
+
+
+   fox jumps over \
+        the lazy dog.""""""";
+
+        const string Case2 = @"str = """"""\
+       The quick brown \
+       fox jumps over \
+       the lazy dog.\
+       """"""";
+
+        [Theory]
+        [InlineData(Case1)]
+        [InlineData(Case2)]
+        public void Deserialize_MStringWithSpaceReduction_ProducesCorrectResult(string src)
+        {
+            var parsed = StringTomlSerializer.Deserialize(src);
+
+            Assert.Equal("The quick brown fox jumps over the lazy dog.", parsed.Get<string>("str"));
+        }
     }
 }

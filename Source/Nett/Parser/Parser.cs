@@ -14,7 +14,8 @@ internal sealed partial class Parser {
 	public const int _sign = 2;
 	public const int _identifier = 3;
 	public const int _string = 4;
-	public const int maxT = 7;
+	public const int _mstring = 5;
+	public const int maxT = 8;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -92,7 +93,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(5);
+		Expect(6);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
@@ -110,7 +111,10 @@ public readonly TomlTable parsed = new TomlTable();
 		} else if (la.kind == 4) {
 			Get();
 			val = ParseStringVal(t.val); 
-		} else SynErr(8);
+		} else if (la.kind == 5) {
+			Get();
+			val = ParseMStringVal(t.val); 
+		} else SynErr(9);
 	}
 
 	void IntVal(out long val) {
@@ -121,7 +125,7 @@ public readonly TomlTable parsed = new TomlTable();
 		if(t.val == "-") neg = true; 
 		Expect(1);
 		sb.Append(t.val); 
-		while (la.kind == 6) {
+		while (la.kind == 7) {
 			Get();
 			Expect(1);
 			sb.Append(t.val); 
@@ -141,7 +145,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x}
 
 	};
 } // end Parser
@@ -160,10 +164,11 @@ public class Errors {
 			case 2: s = "sign expected"; break;
 			case 3: s = "identifier expected"; break;
 			case 4: s = "string expected"; break;
-			case 5: s = "\"=\" expected"; break;
-			case 6: s = "\"_\" expected"; break;
-			case 7: s = "??? expected"; break;
-			case 8: s = "invalid Value"; break;
+			case 5: s = "mstring expected"; break;
+			case 6: s = "\"=\" expected"; break;
+			case 7: s = "\"_\" expected"; break;
+			case 8: s = "??? expected"; break;
+			case 9: s = "invalid Value"; break;
 
 			default: s = "error " + n; break;
 		}

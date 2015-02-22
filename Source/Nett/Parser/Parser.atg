@@ -26,6 +26,11 @@ TOKENS
 											| "\\u" hexDigit hexDigit hexDigit hexDigit
 											| "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
 				} "\"".
+	mstring =	"\"\"\"" { stringChar		| "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\\r" | "\\\n"
+											| "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
+											| "\\u" hexDigit hexDigit hexDigit hexDigit
+											| "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
+				} "\"\"\"".
 
 COMMENTS FROM "#" TO eol
 
@@ -38,7 +43,8 @@ PRODUCTIONS
 		= identifier										(. val = t.val; .).
 	Value<out object val>									(. long iv; val = null; .)
 		= IntVal<out iv>									(. val = iv; .)
-		| string											(. val = ParseStringVal(t.val); .).
+		| string											(. val = ParseStringVal(t.val); .)
+		| mstring											(. val = ParseMStringVal(t.val); .).
 	IntVal<out long val>									(. bool neg = false; this.sb.Clear(); .)
 		 = [sign]											(. if(t.val == "-") neg = true; .)
 		   number											(. sb.Append(t.val); .)
