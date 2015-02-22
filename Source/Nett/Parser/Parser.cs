@@ -16,7 +16,8 @@ internal sealed partial class Parser {
 	public const int _string = 4;
 	public const int _mstring = 5;
 	public const int _lstring = 6;
-	public const int maxT = 9;
+	public const int _mlstring = 7;
+	public const int maxT = 10;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -94,7 +95,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(7);
+		Expect(8);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
@@ -118,7 +119,10 @@ public readonly TomlTable parsed = new TomlTable();
 		} else if (la.kind == 6) {
 			Get();
 			val = ParseLStringVal(t.val); 
-		} else SynErr(10);
+		} else if (la.kind == 7) {
+			Get();
+			val = ParseMLStringVal(t.val); 
+		} else SynErr(11);
 	}
 
 	void IntVal(out long val) {
@@ -129,7 +133,7 @@ public readonly TomlTable parsed = new TomlTable();
 		if(t.val == "-") neg = true; 
 		Expect(1);
 		sb.Append(t.val); 
-		while (la.kind == 8) {
+		while (la.kind == 9) {
 			Get();
 			Expect(1);
 			sb.Append(t.val); 
@@ -149,7 +153,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x}
 
 	};
 } // end Parser
@@ -170,10 +174,11 @@ public class Errors {
 			case 4: s = "string expected"; break;
 			case 5: s = "mstring expected"; break;
 			case 6: s = "lstring expected"; break;
-			case 7: s = "\"=\" expected"; break;
-			case 8: s = "\"_\" expected"; break;
-			case 9: s = "??? expected"; break;
-			case 10: s = "invalid Value"; break;
+			case 7: s = "mlstring expected"; break;
+			case 8: s = "\"=\" expected"; break;
+			case 9: s = "\"_\" expected"; break;
+			case 10: s = "??? expected"; break;
+			case 11: s = "invalid Value"; break;
 
 			default: s = "error " + n; break;
 		}

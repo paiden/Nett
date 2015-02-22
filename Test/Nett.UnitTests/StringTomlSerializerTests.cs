@@ -121,5 +121,26 @@ The quick brown \
 
             Assert.Equal(expected, parsed.Get<string>("str"));
         }
+
+        [Theory]
+        [InlineData(@"str = '''I [dw]on't need \d{2} apples'''", @"I [dw]on't need \d{2} apples")]
+        [InlineData(@"str  = '''
+The first newline is
+trimmed in raw strings.
+   All other whitespace
+   is preserved.
+'''",
+@"The first newline is
+trimmed in raw strings.
+   All other whitespace
+   is preserved.
+")]
+        public void Deserialize_MutliLineLiteralString_ProducesCorrectResult(string src, string expected)
+        {
+            var parsed = StringTomlSerializer.Deserialize(src);
+
+            Assert.Equal(expected, parsed.Get<string>("str"));
+        }
+
     }
 }
