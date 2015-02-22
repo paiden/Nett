@@ -16,7 +16,7 @@ CHARACTERS
 	eol = '\n'.
 	singleLineStringChar = ANY - '"' - '\\' - '\r' - '\n'.
 	stringChar = ANY - '"' - '\\'.
-
+	lstringChar = ANY - '\''.
 TOKENS
 	number = digit{digit}.
 	sign = plus | minus.
@@ -31,6 +31,7 @@ TOKENS
 											| "\\u" hexDigit hexDigit hexDigit hexDigit
 											| "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
 				} "\"\"\"".
+	lstring = '\'' {lstringChar} '\''.
 
 COMMENTS FROM "#" TO eol
 
@@ -44,7 +45,8 @@ PRODUCTIONS
 	Value<out object val>									(. long iv; val = null; .)
 		= IntVal<out iv>									(. val = iv; .)
 		| string											(. val = ParseStringVal(t.val); .)
-		| mstring											(. val = ParseMStringVal(t.val); .).
+		| mstring											(. val = ParseMStringVal(t.val); .)
+		| lstring											(. val = ParseLStringVal(t.val); .).
 	IntVal<out long val>									(. bool neg = false; this.sb.Clear(); .)
 		 = [sign]											(. if(t.val == "-") neg = true; .)
 		   number											(. sb.Append(t.val); .)

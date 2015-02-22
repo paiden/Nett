@@ -109,5 +109,17 @@ The quick brown \
 
             Assert.Equal("The quick brown fox jumps over the lazy dog.", parsed.Get<string>("str"));
         }
+
+        [Theory]
+        [InlineData(@"str = 'C:\Users\nodejs\templates'", @"C:\Users\nodejs\templates")]
+        [InlineData(@"str = '\\ServerX\admin$\system32\'", @"\\ServerX\admin$\system32\")]
+        [InlineData(@"str = 'Tom ""Dubs"" Preston-Werner'", @"Tom ""Dubs"" Preston-Werner")]
+        [InlineData(@"str = '<\i\c*\s*>'", @"<\i\c*\s*>")]
+        public void Deserialize_LiteralString_ProducesCorrectResult(string src, string expected)
+        {
+            var parsed = StringTomlSerializer.Deserialize(src);
+
+            Assert.Equal(expected, parsed.Get<string>("str"));
+        }
     }
 }
