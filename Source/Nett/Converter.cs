@@ -10,11 +10,16 @@ namespace Nett
         private static readonly Dictionary<Type, Dictionary<Type, Func<object, object>>> ConvertFunctions = new Dictionary<Type, Dictionary<Type, Func<object, object>>>()
         {
             { typeof(long), new Dictionary<Type, Func<object, object>>()
-                            {
-                                { typeof(long), (l) => l },
-                                { typeof(int), (l) => (int)(long)l },
-                            }
+                {
+                    { typeof(long), (l) => l },
+                    { typeof(int), (l) => (int)(long)l },
+                }
             },
+            { typeof(string), new Dictionary<Type, Func<object, object>>()
+                {
+                    { typeof(string), (s) => s },
+                }
+            }
         };
 
         public static TRes Convert<TRes>(object src)

@@ -53,12 +53,20 @@ namespace Nett.UnitTests
         }
 
         [Theory]
-        [InlineData(@"str = ""I'm a string. \""You can quote me\"". Name\tJos\u00E9\nLocation\tSF.", "str", @"I'm a string. \""You can quote me\"". Name\tJos\u00E9\nLocation\tSF.")]
+        [InlineData(@"str = ""I'm a string. \""You can quote me\"". Name\tJos\u00E9\nLocation\tSF.""", "str", "I'm a string. \"You can quote me\". Name\tJos\u00E9\nLocation\tSF.")]
         public void Deserialize_SingleLineSringValue_DeserializesCorrectly(string toParse, string key, string expected)
         {
             var parsed = StringTomlSerializer.Deserialize(toParse);
 
             Assert.Equal(expected, parsed.Get<string>(key));
+        }
+
+        [Fact]
+        public void Deserilize_StringWithUTF32Char_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize(@"str = ""\u0000004D""");
+
+            Assert.Equal("\u0000004D", parsed.Get<string>("str"));
         }
     }
 }

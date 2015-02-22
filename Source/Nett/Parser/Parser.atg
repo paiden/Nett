@@ -9,15 +9,22 @@ COMPILER Toml
 
 CHARACTERS
 	digit = '0'..'9'.
+	hexDigit = digit + "ABCDEFabcdef".
 	letter = 'a'..'z' + 'A'..'Z'.
 	plus = '+'.
 	minus = '-'.
 	eol = '\n'.
+	stringChar = ANY - '"' - '\\'.
 
 TOKENS
 	number = digit{digit}.
 	sign = plus | minus.
 	identifier = letter{digit|letter}.
+	string =	"\"" { stringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
+								  | "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
+								  | "\\u" hexDigit hexDigit hexDigit hexDigit
+								  | "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
+				} "\"".
 
 COMMENTS FROM "#" TO eol
 
@@ -28,8 +35,9 @@ PRODUCTIONS
 		= Key<out key> '=' Value<out val>					(. parsed.Add(key, val); .).
 	Key<out string val> 
 		= identifier										(. val = t.val; .).
-	Value<out object val>									(. long iv; .)
-		= IntVal<out iv>									(. val = iv; .).
+	Value<out object val>									(. long iv; val = null; .)
+		= IntVal<out iv>									(. val = iv; .)
+		| string											(. val = ParseStringVal(t.val); .).
 	IntVal<out long val>									(. bool neg = false; this.sb.Clear(); .)
 		 = [sign]											(. if(t.val == "-") neg = true; .)
 		   number											(. sb.Append(t.val); .)
