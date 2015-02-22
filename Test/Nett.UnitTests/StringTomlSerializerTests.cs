@@ -62,6 +62,12 @@ namespace Nett.UnitTests
         }
 
         [Fact]
+        public void Deseriailze_SingleLineStringWithNewLine_FailsToDeserialize()
+        {
+            Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize("str = \"\r\n\""));
+        }
+
+        [Fact]
         public void Deserilize_StringWithUTF32Char_DeserializesCorrectly()
         {
             var parsed = StringTomlSerializer.Deserialize(@"str = ""\u0000004D""");

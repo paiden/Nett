@@ -14,16 +14,17 @@ CHARACTERS
 	plus = '+'.
 	minus = '-'.
 	eol = '\n'.
+	singleLineStringChar = ANY - '"' - '\\' - '\r' - '\n'.
 	stringChar = ANY - '"' - '\\'.
 
 TOKENS
 	number = digit{digit}.
 	sign = plus | minus.
 	identifier = letter{digit|letter}.
-	string =	"\"" { stringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
-								  | "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
-								  | "\\u" hexDigit hexDigit hexDigit hexDigit
-								  | "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
+	string =	"\"" { singleLineStringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
+											| "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
+											| "\\u" hexDigit hexDigit hexDigit hexDigit
+											| "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
 				} "\"".
 
 COMMENTS FROM "#" TO eol
