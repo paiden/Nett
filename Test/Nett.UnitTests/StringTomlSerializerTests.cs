@@ -40,6 +40,14 @@ namespace Nett.UnitTests
             Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
         }
 
+        [Theory]
+        [InlineData("Key = 01")]
+        [InlineData("Key = 0_1")]
+        public void Deserilaize_IntWihtLeadingZeros_Fails(string toParse)
+        {
+            Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize(toParse));
+        }
+
         [Fact]
         public void Deserilize_WithComments_ParserCanHandleCommentsCorrectly()
         {
