@@ -153,16 +153,18 @@ trimmed in raw strings.
         [Theory]
         [InlineData("d = +1.0", 1.0)]
         [InlineData("d = 3.1415", 3.1415)]
-        [InlineData("d = -0.01", -0.01)]
+        [InlineData("d = -0.0101", -0.0101)]
         [InlineData("d = 5e+22", 5e+22)]
         [InlineData("d = 1e6", 1e6)]
         [InlineData("d = -2E-2", -2E-2)]
         [InlineData("d = 6.626e-34", 6.626e-34)]
+        [InlineData("d = 9_223_617.445_991_228_313", 9223617.445991228313)]
+        [InlineData("d = 1e1_00", 1e100)]
         public void Deserialize_FloatKeyValuePair_ProducesCorrectResult(string src, double expected)
         {
             var parsed = StringTomlSerializer.Deserialize(src);
 
-            Assert.Equal(expected, parsed.Get<double>("d"));
+            Assert.Equal(expected, parsed.Get<double>("d"), 4);
         }
 
         [Theory]

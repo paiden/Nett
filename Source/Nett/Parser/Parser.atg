@@ -22,7 +22,6 @@ TOKENS
 	sign = sigc.
 	letters = letter {letter}.
 	number = digit{digit}.
-	fraction = '.'digit{digit}.
 	string =	"\"" { singleLineStringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
 											| "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
 											| "\\u" hexDigit hexDigit hexDigit hexDigit
@@ -71,15 +70,16 @@ PRODUCTIONS
 			[
 				sign										(. this.psb.Append(t.val); .)
 			]											
-			number											(. this.psb.Append(t.val); .)
+			IntNumS											
 		)													(. val = this.ParseFloatVal(this.psb, neg); .)	
-		| (fraction											(. this.psb.Append(t.val); .)
+		| ( '.'												(. this.psb.Append(t.val); .)
+			IntNumS											(. this.psb.Append(t.val); .)
 			 [(
 				('e' | 'E')									(. this.psb.Append(t.val); .)
 				[
 					sign									(. this.psb.Append(t.val); .)
 				]										
-				number										(. this.psb.Append(t.val); .)
+				IntNumS										
 			  )]
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
 

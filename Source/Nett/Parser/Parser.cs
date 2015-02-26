@@ -13,11 +13,10 @@ internal sealed partial class Parser {
 	public const int _sign = 1;
 	public const int _letters = 2;
 	public const int _number = 3;
-	public const int _fraction = 4;
-	public const int _string = 5;
-	public const int _mstring = 6;
-	public const int _lstring = 7;
-	public const int _mlstring = 8;
+	public const int _string = 4;
+	public const int _mstring = 5;
+	public const int _lstring = 6;
+	public const int _mlstring = 7;
 	public const int maxT = 13;
 
 	const bool _T = true;
@@ -96,7 +95,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(9);
+		Expect(8);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
@@ -119,16 +118,16 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void Value(out object val) {
 		val = null; 
-		if (la.kind == 5) {
+		if (la.kind == 4) {
 			Get();
 			val = ParseStringVal(t.val); 
-		} else if (la.kind == 6) {
+		} else if (la.kind == 5) {
 			Get();
 			val = ParseMStringVal(t.val); 
-		} else if (la.kind == 7) {
+		} else if (la.kind == 6) {
 			Get();
 			val = ParseLStringVal(t.val); 
-		} else if (la.kind == 8) {
+		} else if (la.kind == 7) {
 			Get();
 			val = ParseMLStringVal(t.val); 
 		} else if (la.kind == 1 || la.kind == 3) {
@@ -144,7 +143,7 @@ public readonly TomlTable parsed = new TomlTable();
 		if(t.val == "-") neg = true; 
 		IntNumS();
 		val = this.ParseIntVal(this.psb, neg); 
-		if (la.kind == 4 || la.kind == 11 || la.kind == 12) {
+		if (la.kind == 10 || la.kind == 11 || la.kind == 12) {
 			FloatPart(neg, out val);
 		}
 	}
@@ -152,7 +151,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void IntNumS() {
 		Expect(3);
 		psb.Append(t.val); 
-		while (la.kind == 10) {
+		while (la.kind == 9) {
 			Get();
 			Expect(3);
 			psb.Append(t.val); 
@@ -161,8 +160,8 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void FloatPart(bool neg, out object val) {
 		val = null; 
-		if (la.kind == 11 || la.kind == 12) {
-			if (la.kind == 11) {
+		if (la.kind == 10 || la.kind == 11) {
+			if (la.kind == 10) {
 				Get();
 			} else {
 				Get();
@@ -172,14 +171,15 @@ public readonly TomlTable parsed = new TomlTable();
 				Get();
 				this.psb.Append(t.val); 
 			}
-			Expect(3);
-			this.psb.Append(t.val); 
+			IntNumS();
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else if (la.kind == 4) {
+		} else if (la.kind == 12) {
 			Get();
 			this.psb.Append(t.val); 
-			if (la.kind == 11 || la.kind == 12) {
-				if (la.kind == 11) {
+			IntNumS();
+			this.psb.Append(t.val); 
+			if (la.kind == 10 || la.kind == 11) {
+				if (la.kind == 10) {
 					Get();
 				} else {
 					Get();
@@ -189,8 +189,7 @@ public readonly TomlTable parsed = new TomlTable();
 					Get();
 					this.psb.Append(t.val); 
 				}
-				Expect(3);
-				this.psb.Append(t.val); 
+				IntNumS();
 			}
 			val = this.ParseFloatVal(this.psb, neg); 
 		} else SynErr(15);
@@ -226,15 +225,15 @@ public class Errors {
 			case 1: s = "sign expected"; break;
 			case 2: s = "letters expected"; break;
 			case 3: s = "number expected"; break;
-			case 4: s = "fraction expected"; break;
-			case 5: s = "string expected"; break;
-			case 6: s = "mstring expected"; break;
-			case 7: s = "lstring expected"; break;
-			case 8: s = "mlstring expected"; break;
-			case 9: s = "\"=\" expected"; break;
-			case 10: s = "\"_\" expected"; break;
-			case 11: s = "\"e\" expected"; break;
-			case 12: s = "\"E\" expected"; break;
+			case 4: s = "string expected"; break;
+			case 5: s = "mstring expected"; break;
+			case 6: s = "lstring expected"; break;
+			case 7: s = "mlstring expected"; break;
+			case 8: s = "\"=\" expected"; break;
+			case 9: s = "\"_\" expected"; break;
+			case 10: s = "\"e\" expected"; break;
+			case 11: s = "\"E\" expected"; break;
+			case 12: s = "\".\" expected"; break;
 			case 13: s = "??? expected"; break;
 			case 14: s = "invalid Value"; break;
 			case 15: s = "invalid FloatPart"; break;
