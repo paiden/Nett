@@ -5,23 +5,24 @@ using System.Text;
 COMPILER Toml
 
 	public readonly TomlTable parsed = new TomlTable();
-	private readonly StringBuilder sb = new StringBuilder(32);
+	private readonly StringBuilder psb = new StringBuilder(32);
 
 CHARACTERS
 	digit = '0'..'9'.
 	hexDigit = digit + "ABCDEFabcdef".
 	letter = 'a'..'z' + 'A'..'Z'.
-	plus = '+'.
-	minus = '-'.
 	eol = '\n'.
 	singleLineStringChar = ANY - '"' - '\\' - '\r' - '\n'.
 	stringChar = ANY - '"' - '\\'.
 	lstringChar = ANY - '\''.
 	ac = ANY.
+	sigc = '+' + '-'.
+
 TOKENS
+	sign = sigc.
+	letters = letter {letter}.
 	number = digit{digit}.
-	sign = plus | minus.
-	identifier = letter{digit|letter}.
+	fraction = '.'digit{digit}.
 	string =	"\"" { singleLineStringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
 											| "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
 											| "\\u" hexDigit hexDigit hexDigit hexDigit
@@ -42,18 +43,44 @@ IGNORE '\r' + '\n'
 PRODUCTIONS
 	Toml 													(. string key; object val; .)
 		= Key<out key> '=' Value<out val>					(. parsed.Add(key, val); .).
-	Key<out string val> 
-		= identifier										(. val = t.val; .).
-	Value<out object val>									(. long iv; val = null; .)
-		= IntVal<out iv>									(. val = iv; .)
-		| string											(. val = ParseStringVal(t.val); .)
+	Key<out string val>										(. val = ""; psb.Clear(); .)
+		= letters											(. this.psb.Append(t.val); .)
+			{ 
+				letters										(. this.psb.Append(t.val); .)
+				| 
+				number										(. this.psb.Append(t.val); .)
+			}												(. val = psb.ToString(); .).
+	Value<out object val>									(. val = null; .)
+		= string											(. val = ParseStringVal(t.val); .)
 		| mstring											(. val = ParseMStringVal(t.val); .)
 		| lstring											(. val = ParseLStringVal(t.val); .)
-		| mlstring											(. val = ParseMLStringVal(t.val); .).
-	IntVal<out long val>									(. bool neg = false; this.sb.Clear(); .)
-		 = [sign]											(. if(t.val == "-") neg = true; .)
-		   number											(. sb.Append(t.val); .)
+		| mlstring											(. val = ParseMLStringVal(t.val); .)
+		| NumVal<out val>									.
+	NumVal<out object val>									(. bool neg = false; this.psb.Clear(); .)
+		= [sign]											(. if(t.val == "-") neg = true; .)
+		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
+		[FloatPart<neg, out val>]							.
+	IntNumS									
+		 = number											(. psb.Append(t.val); .)
 		   {
-				'_'number									(. sb.Append(t.val); .)
-		   }												(. val = this.ParseIntVal(sb, neg); .).
+				'_'number									(. psb.Append(t.val); .)
+		   }												.
+	FloatPart<bool neg, out object val>						(. val = null; .)	
+		= (
+			('e' | 'E')										(. this.psb.Append(t.val); .)
+			[
+				sign										(. this.psb.Append(t.val); .)
+			]											
+			number											(. this.psb.Append(t.val); .)
+		)													(. val = this.ParseFloatVal(this.psb, neg); .)	
+		| (fraction											(. this.psb.Append(t.val); .)
+			 [(
+				('e' | 'E')									(. this.psb.Append(t.val); .)
+				[
+					sign									(. this.psb.Append(t.val); .)
+				]										
+				number										(. this.psb.Append(t.val); .)
+			  )]
+		)													(. val = this.ParseFloatVal(this.psb, neg); .).
+
 END Toml.

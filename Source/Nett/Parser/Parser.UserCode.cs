@@ -34,6 +34,23 @@ namespace Nett.Parser
             }
         }
 
+        private double ParseFloatVal(StringBuilder sb, bool neg)
+        {
+            if (this.errors.count <= 0)
+            {
+                // Note leading zero check is not required here, as int value gets always parsed no matter if
+                // the final value is int or float, so the int parse call will already do the correct value check
+                // so we can omit it here (performance).
+                var fv = double.Parse(sb.ToString(), CultureInfo.InvariantCulture);
+                return neg ? -fv : fv;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
         private static string ParseStringVal(string source)
         {
             ssb.Clear();

@@ -24,6 +24,11 @@ namespace Nett
 
         public static TRes Convert<TRes>(object src)
         {
+            if(typeof(TRes) == src.GetType())
+            {
+                return (TRes)src;
+            }
+
             Dictionary<Type, Func<object, object>> convertersForSourceType;
             if(ConvertFunctions.TryGetValue(src.GetType(), out convertersForSourceType))
             {

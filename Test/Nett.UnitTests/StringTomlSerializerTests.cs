@@ -150,5 +150,34 @@ trimmed in raw strings.
             Assert.Equal(expected, parsed.Get<string>("str"));
         }
 
+        [Theory]
+        [InlineData("d = +1.0", 1.0)]
+        [InlineData("d = 3.1415", 3.1415)]
+        [InlineData("d = -0.01", -0.01)]
+        [InlineData("d = 5e+22", 5e+22)]
+        [InlineData("d = 1e6", 1e6)]
+        [InlineData("d = -2E-2", -2E-2)]
+        [InlineData("d = 6.626e-34", 6.626e-34)]
+        public void Deserialize_FloatKeyValuePair_ProducesCorrectResult(string src, double expected)
+        {
+            var parsed = StringTomlSerializer.Deserialize(src);
+
+            Assert.Equal(expected, parsed.Get<double>("d"));
+        }
+
+        [Theory]
+        [InlineData("d = +01.0")]
+        [InlineData("d = 03.1415")]
+        [InlineData("d = -00.01")]
+        [InlineData("d = 05e+22")]
+        [InlineData("d = 01e6")]
+        [InlineData("d = -02E-2")]
+        [InlineData("d = 06.626e-34")]
+        public void Deserialize_FloatWihtLeadingZeros_ThrowsExcption(string src)
+        {
+            var exc = Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize(src));
+            Assert.Equal("Leading zeros are not allowed.", exc.Message);
+        }
+
     }
 }

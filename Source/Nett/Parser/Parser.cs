@@ -10,14 +10,15 @@ namespace Nett.Parser {
 
 internal sealed partial class Parser {
 	public const int _EOF = 0;
-	public const int _number = 1;
-	public const int _sign = 2;
-	public const int _identifier = 3;
-	public const int _string = 4;
-	public const int _mstring = 5;
-	public const int _lstring = 6;
-	public const int _mlstring = 7;
-	public const int maxT = 10;
+	public const int _sign = 1;
+	public const int _letters = 2;
+	public const int _number = 3;
+	public const int _fraction = 4;
+	public const int _string = 5;
+	public const int _mstring = 6;
+	public const int _lstring = 7;
+	public const int _mlstring = 8;
+	public const int maxT = 13;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -31,7 +32,7 @@ internal sealed partial class Parser {
 	int errDist = minErrDist;
 
 public readonly TomlTable parsed = new TomlTable();
-	private readonly StringBuilder sb = new StringBuilder(32);
+	private readonly StringBuilder psb = new StringBuilder(32);
 
 
 
@@ -95,50 +96,104 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(8);
+		Expect(9);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
 
 	void Key(out string val) {
-		Expect(3);
-		val = t.val; 
+		val = ""; psb.Clear(); 
+		Expect(2);
+		this.psb.Append(t.val); 
+		while (la.kind == 2 || la.kind == 3) {
+			if (la.kind == 2) {
+				Get();
+				this.psb.Append(t.val); 
+			} else {
+				Get();
+				this.psb.Append(t.val); 
+			}
+		}
+		val = psb.ToString(); 
 	}
 
 	void Value(out object val) {
-		long iv; val = null; 
-		if (la.kind == 1 || la.kind == 2) {
-			IntVal(out iv);
-			val = iv; 
-		} else if (la.kind == 4) {
+		val = null; 
+		if (la.kind == 5) {
 			Get();
 			val = ParseStringVal(t.val); 
-		} else if (la.kind == 5) {
-			Get();
-			val = ParseMStringVal(t.val); 
 		} else if (la.kind == 6) {
 			Get();
-			val = ParseLStringVal(t.val); 
+			val = ParseMStringVal(t.val); 
 		} else if (la.kind == 7) {
 			Get();
+			val = ParseLStringVal(t.val); 
+		} else if (la.kind == 8) {
+			Get();
 			val = ParseMLStringVal(t.val); 
-		} else SynErr(11);
+		} else if (la.kind == 1 || la.kind == 3) {
+			NumVal(out val);
+		} else SynErr(14);
 	}
 
-	void IntVal(out long val) {
-		bool neg = false; this.sb.Clear(); 
-		if (la.kind == 2) {
+	void NumVal(out object val) {
+		bool neg = false; this.psb.Clear(); 
+		if (la.kind == 1) {
 			Get();
 		}
 		if(t.val == "-") neg = true; 
-		Expect(1);
-		sb.Append(t.val); 
-		while (la.kind == 9) {
-			Get();
-			Expect(1);
-			sb.Append(t.val); 
+		IntNumS();
+		val = this.ParseIntVal(this.psb, neg); 
+		if (la.kind == 4 || la.kind == 11 || la.kind == 12) {
+			FloatPart(neg, out val);
 		}
-		val = this.ParseIntVal(sb, neg); 
+	}
+
+	void IntNumS() {
+		Expect(3);
+		psb.Append(t.val); 
+		while (la.kind == 10) {
+			Get();
+			Expect(3);
+			psb.Append(t.val); 
+		}
+	}
+
+	void FloatPart(bool neg, out object val) {
+		val = null; 
+		if (la.kind == 11 || la.kind == 12) {
+			if (la.kind == 11) {
+				Get();
+			} else {
+				Get();
+			}
+			this.psb.Append(t.val); 
+			if (la.kind == 1) {
+				Get();
+				this.psb.Append(t.val); 
+			}
+			Expect(3);
+			this.psb.Append(t.val); 
+			val = this.ParseFloatVal(this.psb, neg); 
+		} else if (la.kind == 4) {
+			Get();
+			this.psb.Append(t.val); 
+			if (la.kind == 11 || la.kind == 12) {
+				if (la.kind == 11) {
+					Get();
+				} else {
+					Get();
+				}
+				this.psb.Append(t.val); 
+				if (la.kind == 1) {
+					Get();
+					this.psb.Append(t.val); 
+				}
+				Expect(3);
+				this.psb.Append(t.val); 
+			}
+			val = this.ParseFloatVal(this.psb, neg); 
+		} else SynErr(15);
 	}
 
 
@@ -153,7 +208,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x}
 
 	};
 } // end Parser
@@ -168,17 +223,21 @@ public class Errors {
 		string s;
 		switch (n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "number expected"; break;
-			case 2: s = "sign expected"; break;
-			case 3: s = "identifier expected"; break;
-			case 4: s = "string expected"; break;
-			case 5: s = "mstring expected"; break;
-			case 6: s = "lstring expected"; break;
-			case 7: s = "mlstring expected"; break;
-			case 8: s = "\"=\" expected"; break;
-			case 9: s = "\"_\" expected"; break;
-			case 10: s = "??? expected"; break;
-			case 11: s = "invalid Value"; break;
+			case 1: s = "sign expected"; break;
+			case 2: s = "letters expected"; break;
+			case 3: s = "number expected"; break;
+			case 4: s = "fraction expected"; break;
+			case 5: s = "string expected"; break;
+			case 6: s = "mstring expected"; break;
+			case 7: s = "lstring expected"; break;
+			case 8: s = "mlstring expected"; break;
+			case 9: s = "\"=\" expected"; break;
+			case 10: s = "\"_\" expected"; break;
+			case 11: s = "\"e\" expected"; break;
+			case 12: s = "\"E\" expected"; break;
+			case 13: s = "??? expected"; break;
+			case 14: s = "invalid Value"; break;
+			case 15: s = "invalid FloatPart"; break;
 
 			default: s = "error " + n; break;
 		}
