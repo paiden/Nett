@@ -36,6 +36,9 @@ TOKENS
 	mlstring = "\'\'\'" {ac} "\'\'\'".
 	true = "true".
 	false = "false".
+	ao = '['.
+	ac = ']'.
+	as = ','.
 
 COMMENTS FROM "#" TO eol
 
@@ -57,8 +60,9 @@ PRODUCTIONS
 		| mstring											(. val = ParseMStringVal(t.val); .)
 		| lstring											(. val = ParseLStringVal(t.val); .)
 		| mlstring											(. val = ParseMLStringVal(t.val); .)
+		| Array<out val>
 		| IF(NotADateTime()) NumVal<out val>							
-		| DateTimeVal<out val>		.
+		| DateTimeVal<out val>.
 	NumVal<out object val>									(. bool neg = false; string sv = null; this.psb.Clear(); .)
 		= [Sign<out sv>]									(. if(sv == "-") neg = true; .)
 		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
@@ -85,6 +89,15 @@ PRODUCTIONS
 	BoolVal<out object val>									(. val = null; .)
 		= true												(. val = true; .)
 		  | false											(. val = false; .).
+	Array<out object val>									(. object v = null; val = null; var a = new TomlArray(); .)
+		= 
+		ao
+		Value<out v>										(. a.Add(v); .)
+		{
+			as
+			Value<out v>									(. a.Add(v); .)
+		}
+		ac													(. val = a; .).
 
 	DateTimeVal<out object val>								(. val = null; string sv = null; this.psb.Clear(); .)
 		= 

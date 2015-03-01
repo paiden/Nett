@@ -20,7 +20,10 @@ internal sealed partial class Parser {
 	public const int _mlstring = 8;
 	public const int _true = 9;
 	public const int _false = 10;
-	public const int maxT = 19;
+	public const int _ao = 11;
+	public const int _ac = 12;
+	public const int _as = 13;
+	public const int maxT = 22;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -98,7 +101,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(11);
+		Expect(14);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
@@ -135,11 +138,13 @@ public readonly TomlTable parsed = new TomlTable();
 		} else if (la.kind == 8) {
 			Get();
 			val = ParseMLStringVal(t.val); 
+		} else if (la.kind == 11) {
+			Array(out val);
 		} else if (NotADateTime()) {
 			NumVal(out val);
 		} else if (la.kind == 4) {
 			DateTimeVal(out val);
-		} else SynErr(20);
+		} else SynErr(23);
 	}
 
 	void BoolVal(out object val) {
@@ -150,7 +155,21 @@ public readonly TomlTable parsed = new TomlTable();
 		} else if (la.kind == 10) {
 			Get();
 			val = false; 
-		} else SynErr(21);
+		} else SynErr(24);
+	}
+
+	void Array(out object val) {
+		object v = null; val = null; var a = new TomlArray(); 
+		Expect(11);
+		Value(out v);
+		a.Add(v); 
+		while (la.kind == 13) {
+			Get();
+			Value(out v);
+			a.Add(v); 
+		}
+		Expect(12);
+		val = a; 
 	}
 
 	void NumVal(out object val) {
@@ -161,7 +180,7 @@ public readonly TomlTable parsed = new TomlTable();
 		if(sv == "-") neg = true; 
 		IntNumS();
 		val = this.ParseIntVal(this.psb, neg); 
-		if (la.kind == 13 || la.kind == 14 || la.kind == 15) {
+		if (la.kind == 16 || la.kind == 17 || la.kind == 18) {
 			FloatPart(neg, out val);
 		}
 	}
@@ -175,26 +194,26 @@ public readonly TomlTable parsed = new TomlTable();
 		Expect(2);
 		this.psb.Append(t.val); 
 		Day();
-		Expect(16);
+		Expect(19);
 		this.psb.Append(t.val); 
 		Hour();
-		Expect(17);
+		Expect(20);
 		this.psb.Append(t.val); 
 		Minute();
-		Expect(17);
+		Expect(20);
 		this.psb.Append(t.val); 
 		Second();
-		if (la.kind == 18) {
+		if (la.kind == 21) {
 			Get();
 			this.psb.Append(t.val); 
 		} else if (la.kind == 1 || la.kind == 2) {
 			Sign(out sv);
 			this.psb.Append(sv); 
 			Hour();
-			Expect(17);
+			Expect(20);
 			this.psb.Append(t.val); 
 			Minute();
-		} else SynErr(22);
+		} else SynErr(25);
 		val = DateTime.Parse(this.psb.ToString()); 
 	}
 
@@ -206,13 +225,13 @@ public readonly TomlTable parsed = new TomlTable();
 		} else if (la.kind == 2) {
 			Get();
 			val = t.val; 
-		} else SynErr(23);
+		} else SynErr(26);
 	}
 
 	void IntNumS() {
 		Expect(4);
 		psb.Append(t.val); 
-		while (la.kind == 12) {
+		while (la.kind == 15) {
 			Get();
 			Expect(4);
 			psb.Append(t.val); 
@@ -221,8 +240,8 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void FloatPart(bool neg, out object val) {
 		val = null; string sv = null; 
-		if (la.kind == 13 || la.kind == 14) {
-			if (la.kind == 13) {
+		if (la.kind == 16 || la.kind == 17) {
+			if (la.kind == 16) {
 				Get();
 			} else {
 				Get();
@@ -234,13 +253,13 @@ public readonly TomlTable parsed = new TomlTable();
 			this.psb.Append(sv); 
 			IntNumS();
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else if (la.kind == 15) {
+		} else if (la.kind == 18) {
 			Get();
 			this.psb.Append(t.val); 
 			IntNumS();
 			this.psb.Append(t.val); 
-			if (la.kind == 13 || la.kind == 14) {
-				if (la.kind == 13) {
+			if (la.kind == 16 || la.kind == 17) {
+				if (la.kind == 16) {
 					Get();
 				} else {
 					Get();
@@ -253,7 +272,7 @@ public readonly TomlTable parsed = new TomlTable();
 				IntNumS();
 			}
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else SynErr(24);
+		} else SynErr(27);
 	}
 
 	void Year() {
@@ -284,7 +303,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void Second() {
 		Expect(4);
 		this.psb.Append(t.val); 
-		if (la.kind == 15) {
+		if (la.kind == 18) {
 			Get();
 			this.psb.Append(t.val); 
 			Expect(4);
@@ -304,7 +323,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x}
 
 	};
 } // end Parser
@@ -329,20 +348,23 @@ public class Errors {
 			case 8: s = "mlstring expected"; break;
 			case 9: s = "true expected"; break;
 			case 10: s = "false expected"; break;
-			case 11: s = "\"=\" expected"; break;
-			case 12: s = "\"_\" expected"; break;
-			case 13: s = "\"e\" expected"; break;
-			case 14: s = "\"E\" expected"; break;
-			case 15: s = "\".\" expected"; break;
-			case 16: s = "\"T\" expected"; break;
-			case 17: s = "\":\" expected"; break;
-			case 18: s = "\"Z\" expected"; break;
-			case 19: s = "??? expected"; break;
-			case 20: s = "invalid Value"; break;
-			case 21: s = "invalid BoolVal"; break;
-			case 22: s = "invalid DateTimeVal"; break;
-			case 23: s = "invalid Sign"; break;
-			case 24: s = "invalid FloatPart"; break;
+			case 11: s = "ao expected"; break;
+			case 12: s = "ac expected"; break;
+			case 13: s = "as expected"; break;
+			case 14: s = "\"=\" expected"; break;
+			case 15: s = "\"_\" expected"; break;
+			case 16: s = "\"e\" expected"; break;
+			case 17: s = "\"E\" expected"; break;
+			case 18: s = "\".\" expected"; break;
+			case 19: s = "\"T\" expected"; break;
+			case 20: s = "\":\" expected"; break;
+			case 21: s = "\"Z\" expected"; break;
+			case 22: s = "??? expected"; break;
+			case 23: s = "invalid Value"; break;
+			case 24: s = "invalid BoolVal"; break;
+			case 25: s = "invalid DateTimeVal"; break;
+			case 26: s = "invalid Sign"; break;
+			case 27: s = "invalid FloatPart"; break;
 
 			default: s = "error " + n; break;
 		}

@@ -203,5 +203,83 @@ trimmed in raw strings.
 
             Assert.Equal(date, (DateTime)parsed["d"]);
         }
+
+        [Fact]
+        public void Deserialze_WithIntArray_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize("a = [1,2,3]");
+
+            var a = (TomlArray)parsed["a"];
+
+            Assert.Equal(3, a.Count);
+            Assert.Equal(1, a.Get<int>(0));
+            Assert.Equal(2, a.Get<int>(1));
+            Assert.Equal(3, a.Get<int>(2));
+        }
+
+        [Fact]
+        public void Deserialize_WithStringArray_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize(@"a = [""red"", ""yellow"", ""green""]");
+
+            var a = (TomlArray)parsed["a"];
+
+            Assert.Equal(3, a.Count);
+            Assert.Equal("red", a.Get<string>(0));
+            Assert.Equal("yellow", a.Get<string>(1));
+            Assert.Equal("green", a.Get<string>(2));
+        }
+
+        [Fact]
+        public void Deserialize_NestedIntArray_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize("a = [ [1, 2], [3, 4, 5] ]");
+
+            var a = (TomlArray)parsed["a"];
+            Assert.Equal(2, a.Count);
+            var a1 = a.Get<TomlArray>(0);
+            Assert.Equal(2, a1.Count);
+            Assert.Equal(1, (long)a1[0]);
+            Assert.Equal(2, a1.Get<int>(1));
+
+            var a2 = (TomlArray)a[1];
+            Assert.Equal(3, a2.Count);
+            Assert.Equal(3, a2.Get<int>(0));
+            Assert.Equal(4, a2.Get<int>(1));
+            Assert.Equal(5, a2.Get<int>(2));
+        }
+
+        [Fact]
+        public void Deserialize_ComplexStrings_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize(@"a = [""all"", 'strings', """"""are the same"""""", '''type''']");
+
+            var a = (TomlArray)parsed["a"];
+
+            Assert.Equal(4, a.Count);
+            Assert.Equal("all", (string)a[0]);
+            Assert.Equal("strings", (string)a[1]);
+            Assert.Equal("are the same", (string)a[2]);
+            Assert.Equal("type", (string)a[3]);
+        }
+
+        [Fact]
+        public void Deserialize_ArrayWithNesteArrayOfDiffernetTypes_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize(@"a = [ [1, 2], [""a"", ""b"",""c""]]");
+
+            var a = (TomlArray)parsed["a"];
+
+            Assert.Equal(2, a.Count);
+            var a1 = (TomlArray)a[0];
+            Assert.Equal(2, a1.Count);
+            Assert.Equal(1, a1.Get<int>(0));
+            Assert.Equal(2, a1.Get<int>(1));
+
+            var a2 = (TomlArray)a[1];
+            Assert.Equal("a", a2.Get<string>(0));
+            Assert.Equal("b", a2.Get<string>(1));
+            Assert.Equal("c", a2.Get<string>(2));
+        }
     }
 }
