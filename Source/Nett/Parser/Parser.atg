@@ -34,6 +34,8 @@ TOKENS
 				} "\"\"\"".
 	lstring = '\'' {lstringChar} '\''.
 	mlstring = "\'\'\'" {ac} "\'\'\'".
+	true = "true".
+	false = "false".
 
 COMMENTS FROM "#" TO eol
 
@@ -54,7 +56,8 @@ PRODUCTIONS
 		| mstring											(. val = ParseMStringVal(t.val); .)
 		| lstring											(. val = ParseLStringVal(t.val); .)
 		| mlstring											(. val = ParseMLStringVal(t.val); .)
-		| NumVal<out val>									.
+		| NumVal<out val>									
+		| BoolVal<out val>									.
 	NumVal<out object val>									(. bool neg = false; this.psb.Clear(); .)
 		= [sign]											(. if(t.val == "-") neg = true; .)
 		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
@@ -82,5 +85,8 @@ PRODUCTIONS
 				IntNumS										
 			  )]
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
+	BoolVal<out object val>									(. val = null; .)
+		= true												(. val = true; .)
+		  | false											(. val = false; .).
 
 END Toml.

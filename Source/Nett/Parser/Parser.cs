@@ -17,7 +17,9 @@ internal sealed partial class Parser {
 	public const int _mstring = 5;
 	public const int _lstring = 6;
 	public const int _mlstring = 7;
-	public const int maxT = 13;
+	public const int _true = 8;
+	public const int _false = 9;
+	public const int maxT = 15;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -95,7 +97,7 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(8);
+		Expect(10);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
@@ -118,21 +120,37 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void Value(out object val) {
 		val = null; 
-		if (la.kind == 4) {
+		switch (la.kind) {
+		case 4: {
 			Get();
 			val = ParseStringVal(t.val); 
-		} else if (la.kind == 5) {
+			break;
+		}
+		case 5: {
 			Get();
 			val = ParseMStringVal(t.val); 
-		} else if (la.kind == 6) {
+			break;
+		}
+		case 6: {
 			Get();
 			val = ParseLStringVal(t.val); 
-		} else if (la.kind == 7) {
+			break;
+		}
+		case 7: {
 			Get();
 			val = ParseMLStringVal(t.val); 
-		} else if (la.kind == 1 || la.kind == 3) {
+			break;
+		}
+		case 1: case 3: {
 			NumVal(out val);
-		} else SynErr(14);
+			break;
+		}
+		case 8: case 9: {
+			BoolVal(out val);
+			break;
+		}
+		default: SynErr(16); break;
+		}
 	}
 
 	void NumVal(out object val) {
@@ -143,15 +161,26 @@ public readonly TomlTable parsed = new TomlTable();
 		if(t.val == "-") neg = true; 
 		IntNumS();
 		val = this.ParseIntVal(this.psb, neg); 
-		if (la.kind == 10 || la.kind == 11 || la.kind == 12) {
+		if (la.kind == 12 || la.kind == 13 || la.kind == 14) {
 			FloatPart(neg, out val);
 		}
+	}
+
+	void BoolVal(out object val) {
+		val = null; 
+		if (la.kind == 8) {
+			Get();
+			val = true; 
+		} else if (la.kind == 9) {
+			Get();
+			val = false; 
+		} else SynErr(17);
 	}
 
 	void IntNumS() {
 		Expect(3);
 		psb.Append(t.val); 
-		while (la.kind == 9) {
+		while (la.kind == 11) {
 			Get();
 			Expect(3);
 			psb.Append(t.val); 
@@ -160,8 +189,8 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void FloatPart(bool neg, out object val) {
 		val = null; 
-		if (la.kind == 10 || la.kind == 11) {
-			if (la.kind == 10) {
+		if (la.kind == 12 || la.kind == 13) {
+			if (la.kind == 12) {
 				Get();
 			} else {
 				Get();
@@ -173,13 +202,13 @@ public readonly TomlTable parsed = new TomlTable();
 			}
 			IntNumS();
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else if (la.kind == 12) {
+		} else if (la.kind == 14) {
 			Get();
 			this.psb.Append(t.val); 
 			IntNumS();
 			this.psb.Append(t.val); 
-			if (la.kind == 10 || la.kind == 11) {
-				if (la.kind == 10) {
+			if (la.kind == 12 || la.kind == 13) {
+				if (la.kind == 12) {
 					Get();
 				} else {
 					Get();
@@ -192,7 +221,7 @@ public readonly TomlTable parsed = new TomlTable();
 				IntNumS();
 			}
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else SynErr(15);
+		} else SynErr(18);
 	}
 
 
@@ -207,7 +236,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
 
 	};
 } // end Parser
@@ -229,14 +258,17 @@ public class Errors {
 			case 5: s = "mstring expected"; break;
 			case 6: s = "lstring expected"; break;
 			case 7: s = "mlstring expected"; break;
-			case 8: s = "\"=\" expected"; break;
-			case 9: s = "\"_\" expected"; break;
-			case 10: s = "\"e\" expected"; break;
-			case 11: s = "\"E\" expected"; break;
-			case 12: s = "\".\" expected"; break;
-			case 13: s = "??? expected"; break;
-			case 14: s = "invalid Value"; break;
-			case 15: s = "invalid FloatPart"; break;
+			case 8: s = "true expected"; break;
+			case 9: s = "false expected"; break;
+			case 10: s = "\"=\" expected"; break;
+			case 11: s = "\"_\" expected"; break;
+			case 12: s = "\"e\" expected"; break;
+			case 13: s = "\"E\" expected"; break;
+			case 14: s = "\".\" expected"; break;
+			case 15: s = "??? expected"; break;
+			case 16: s = "invalid Value"; break;
+			case 17: s = "invalid BoolVal"; break;
+			case 18: s = "invalid FloatPart"; break;
 
 			default: s = "error " + n; break;
 		}

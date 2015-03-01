@@ -181,5 +181,14 @@ trimmed in raw strings.
             Assert.Equal("Leading zeros are not allowed.", exc.Message);
         }
 
+        [Theory]
+        [InlineData("b = true", true)]
+        [InlineData("b = false", false)]
+        public void Deserialize_Bool_DeseriailzesCorrectly(string src, bool expected)
+        {
+            var parsed = StringTomlSerializer.Deserialize(src);
+            Assert.Equal(expected, (bool)parsed["b"]);
+        }
+
     }
 }
