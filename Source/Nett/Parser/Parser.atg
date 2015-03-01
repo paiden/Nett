@@ -16,10 +16,10 @@ CHARACTERS
 	stringChar = ANY - '"' - '\\'.
 	lstringChar = ANY - '\''.
 	ac = ANY.
-	sigc = '+' + '-'.
 
 TOKENS
-	sign = sigc.
+	plus = '+'.
+	minus = '-'.
 	letters = letter {letter}.
 	number = digit{digit}.
 	string =	"\"" { singleLineStringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
@@ -53,40 +53,70 @@ PRODUCTIONS
 			}												(. val = psb.ToString(); .).
 	Value<out object val>									(. val = null; .)
 		= string											(. val = ParseStringVal(t.val); .)
+		| BoolVal<out val>
 		| mstring											(. val = ParseMStringVal(t.val); .)
 		| lstring											(. val = ParseLStringVal(t.val); .)
 		| mlstring											(. val = ParseMLStringVal(t.val); .)
-		| NumVal<out val>									
-		| BoolVal<out val>									.
-	NumVal<out object val>									(. bool neg = false; this.psb.Clear(); .)
-		= [sign]											(. if(t.val == "-") neg = true; .)
+		| IF(NotADateTime()) NumVal<out val>							
+		| DateTimeVal<out val>		.
+	NumVal<out object val>									(. bool neg = false; string sv = null; this.psb.Clear(); .)
+		= [Sign<out sv>]									(. if(sv == "-") neg = true; .)
 		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
 		[FloatPart<neg, out val>]							.
-	IntNumS									
-		 = number											(. psb.Append(t.val); .)
+	IntNumS = 
+		   number											(. psb.Append(t.val); .)
 		   {
 				'_'number									(. psb.Append(t.val); .)
 		   }												.
-	FloatPart<bool neg, out object val>						(. val = null; .)	
+	FloatPart<bool neg, out object val>						(. val = null; string sv = null; .)	
 		= (
 			('e' | 'E')										(. this.psb.Append(t.val); .)
-			[
-				sign										(. this.psb.Append(t.val); .)
-			]											
+			[Sign<out sv>]									(. this.psb.Append(sv); .)											
 			IntNumS											
 		)													(. val = this.ParseFloatVal(this.psb, neg); .)	
 		| ( '.'												(. this.psb.Append(t.val); .)
 			IntNumS											(. this.psb.Append(t.val); .)
 			 [(
 				('e' | 'E')									(. this.psb.Append(t.val); .)
-				[
-					sign									(. this.psb.Append(t.val); .)
-				]										
+				[Sign<out sv>]								(. this.psb.Append(sv); .)		
 				IntNumS										
 			  )]
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
 	BoolVal<out object val>									(. val = null; .)
 		= true												(. val = true; .)
 		  | false											(. val = false; .).
+
+	DateTimeVal<out object val>								(. val = null; string sv = null; this.psb.Clear(); .)
+		= 
+		Year minus											(. this.psb.Append(t.val); .)
+		Month minus											(. this.psb.Append(t.val); .)
+		Day "T"												(. this.psb.Append(t.val); .)
+		Hour ":"										    (. this.psb.Append(t.val); .)
+		Minute ":"											(. this.psb.Append(t.val); .)
+		Second												
+		("Z"												(. this.psb.Append(t.val); .)
+		 |
+		 (
+			Sign<out sv>									(. this.psb.Append(sv); .)											
+			Hour ":"										(. this.psb.Append(t.val); .)
+			Minute											
+		 )
+		)													(. val = DateTime.Parse(this.psb.ToString()); .).
+	Year = number											(. this.psb.Append(t.val); .).
+	Month = number											(. this.psb.Append(t.val); .).
+	Day = number											(. this.psb.Append(t.val); .).
+	Hour = number											(. this.psb.Append(t.val); .).
+	Minute = number											(. this.psb.Append(t.val); .).
+	Second = number											(. this.psb.Append(t.val); .)
+		[
+			"."												(. this.psb.Append(t.val); .)
+			number											(. this.psb.Append(t.val); .)
+		].
+
+	Sign<out string val>									(. val = null; .)
+		=									
+		plus												(. val = t.val; .)
+		| 
+		minus												(. val = t.val; .).
 
 END Toml.

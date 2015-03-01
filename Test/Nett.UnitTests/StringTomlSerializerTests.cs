@@ -182,7 +182,7 @@ trimmed in raw strings.
         }
 
         [Theory]
-        [InlineData("b = true", true)]
+        //[InlineData("b = true", true)]
         [InlineData("b = false", false)]
         public void Deserialize_Bool_DeseriailzesCorrectly(string src, bool expected)
         {
@@ -190,5 +190,18 @@ trimmed in raw strings.
             Assert.Equal(expected, (bool)parsed["b"]);
         }
 
+
+        [Theory]
+        [InlineData("d = 1979-05-27T07:32:00Z", "1979-05-27T07:32:00Z")]
+        [InlineData("d = 1979-05-27T00:32:00-07:00", "1979-05-27T00:32:00-07:00")]
+        [InlineData("d = 1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
+        public void Deserialize_DatetTime_DeseriaizesCorrectly(string src, string expectedDate)
+        {
+            var date = DateTime.Parse(expectedDate);
+
+            var parsed = StringTomlSerializer.Deserialize(src);
+
+            Assert.Equal(date, (DateTime)parsed["d"]);
+        }
     }
 }

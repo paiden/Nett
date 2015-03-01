@@ -10,16 +10,17 @@ namespace Nett.Parser {
 
 internal sealed partial class Parser {
 	public const int _EOF = 0;
-	public const int _sign = 1;
-	public const int _letters = 2;
-	public const int _number = 3;
-	public const int _string = 4;
-	public const int _mstring = 5;
-	public const int _lstring = 6;
-	public const int _mlstring = 7;
-	public const int _true = 8;
-	public const int _false = 9;
-	public const int maxT = 15;
+	public const int _plus = 1;
+	public const int _minus = 2;
+	public const int _letters = 3;
+	public const int _number = 4;
+	public const int _string = 5;
+	public const int _mstring = 6;
+	public const int _lstring = 7;
+	public const int _mlstring = 8;
+	public const int _true = 9;
+	public const int _false = 10;
+	public const int maxT = 19;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -97,17 +98,17 @@ public readonly TomlTable parsed = new TomlTable();
 	void Toml() {
 		string key; object val; 
 		Key(out key);
-		Expect(10);
+		Expect(11);
 		Value(out val);
 		parsed.Add(key, val); 
 	}
 
 	void Key(out string val) {
 		val = ""; psb.Clear(); 
-		Expect(2);
+		Expect(3);
 		this.psb.Append(t.val); 
-		while (la.kind == 2 || la.kind == 3) {
-			if (la.kind == 2) {
+		while (la.kind == 3 || la.kind == 4) {
+			if (la.kind == 3) {
 				Get();
 				this.psb.Append(t.val); 
 			} else {
@@ -120,108 +121,175 @@ public readonly TomlTable parsed = new TomlTable();
 
 	void Value(out object val) {
 		val = null; 
-		switch (la.kind) {
-		case 4: {
+		if (la.kind == 5) {
 			Get();
 			val = ParseStringVal(t.val); 
-			break;
-		}
-		case 5: {
+		} else if (la.kind == 9 || la.kind == 10) {
+			BoolVal(out val);
+		} else if (la.kind == 6) {
 			Get();
 			val = ParseMStringVal(t.val); 
-			break;
-		}
-		case 6: {
+		} else if (la.kind == 7) {
 			Get();
 			val = ParseLStringVal(t.val); 
-			break;
-		}
-		case 7: {
+		} else if (la.kind == 8) {
 			Get();
 			val = ParseMLStringVal(t.val); 
-			break;
-		}
-		case 1: case 3: {
+		} else if (NotADateTime()) {
 			NumVal(out val);
-			break;
-		}
-		case 8: case 9: {
-			BoolVal(out val);
-			break;
-		}
-		default: SynErr(16); break;
-		}
-	}
-
-	void NumVal(out object val) {
-		bool neg = false; this.psb.Clear(); 
-		if (la.kind == 1) {
-			Get();
-		}
-		if(t.val == "-") neg = true; 
-		IntNumS();
-		val = this.ParseIntVal(this.psb, neg); 
-		if (la.kind == 12 || la.kind == 13 || la.kind == 14) {
-			FloatPart(neg, out val);
-		}
+		} else if (la.kind == 4) {
+			DateTimeVal(out val);
+		} else SynErr(20);
 	}
 
 	void BoolVal(out object val) {
 		val = null; 
-		if (la.kind == 8) {
+		if (la.kind == 9) {
 			Get();
 			val = true; 
-		} else if (la.kind == 9) {
+		} else if (la.kind == 10) {
 			Get();
 			val = false; 
-		} else SynErr(17);
+		} else SynErr(21);
+	}
+
+	void NumVal(out object val) {
+		bool neg = false; string sv = null; this.psb.Clear(); 
+		if (la.kind == 1 || la.kind == 2) {
+			Sign(out sv);
+		}
+		if(sv == "-") neg = true; 
+		IntNumS();
+		val = this.ParseIntVal(this.psb, neg); 
+		if (la.kind == 13 || la.kind == 14 || la.kind == 15) {
+			FloatPart(neg, out val);
+		}
+	}
+
+	void DateTimeVal(out object val) {
+		val = null; string sv = null; this.psb.Clear(); 
+		Year();
+		Expect(2);
+		this.psb.Append(t.val); 
+		Month();
+		Expect(2);
+		this.psb.Append(t.val); 
+		Day();
+		Expect(16);
+		this.psb.Append(t.val); 
+		Hour();
+		Expect(17);
+		this.psb.Append(t.val); 
+		Minute();
+		Expect(17);
+		this.psb.Append(t.val); 
+		Second();
+		if (la.kind == 18) {
+			Get();
+			this.psb.Append(t.val); 
+		} else if (la.kind == 1 || la.kind == 2) {
+			Sign(out sv);
+			this.psb.Append(sv); 
+			Hour();
+			Expect(17);
+			this.psb.Append(t.val); 
+			Minute();
+		} else SynErr(22);
+		val = DateTime.Parse(this.psb.ToString()); 
+	}
+
+	void Sign(out string val) {
+		val = null; 
+		if (la.kind == 1) {
+			Get();
+			val = t.val; 
+		} else if (la.kind == 2) {
+			Get();
+			val = t.val; 
+		} else SynErr(23);
 	}
 
 	void IntNumS() {
-		Expect(3);
+		Expect(4);
 		psb.Append(t.val); 
-		while (la.kind == 11) {
+		while (la.kind == 12) {
 			Get();
-			Expect(3);
+			Expect(4);
 			psb.Append(t.val); 
 		}
 	}
 
 	void FloatPart(bool neg, out object val) {
-		val = null; 
-		if (la.kind == 12 || la.kind == 13) {
-			if (la.kind == 12) {
+		val = null; string sv = null; 
+		if (la.kind == 13 || la.kind == 14) {
+			if (la.kind == 13) {
 				Get();
 			} else {
 				Get();
 			}
 			this.psb.Append(t.val); 
-			if (la.kind == 1) {
-				Get();
-				this.psb.Append(t.val); 
+			if (la.kind == 1 || la.kind == 2) {
+				Sign(out sv);
 			}
+			this.psb.Append(sv); 
 			IntNumS();
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else if (la.kind == 14) {
+		} else if (la.kind == 15) {
 			Get();
 			this.psb.Append(t.val); 
 			IntNumS();
 			this.psb.Append(t.val); 
-			if (la.kind == 12 || la.kind == 13) {
-				if (la.kind == 12) {
+			if (la.kind == 13 || la.kind == 14) {
+				if (la.kind == 13) {
 					Get();
 				} else {
 					Get();
 				}
 				this.psb.Append(t.val); 
-				if (la.kind == 1) {
-					Get();
-					this.psb.Append(t.val); 
+				if (la.kind == 1 || la.kind == 2) {
+					Sign(out sv);
 				}
+				this.psb.Append(sv); 
 				IntNumS();
 			}
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else SynErr(18);
+		} else SynErr(24);
+	}
+
+	void Year() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Month() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Day() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Hour() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Minute() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Second() {
+		Expect(4);
+		this.psb.Append(t.val); 
+		if (la.kind == 15) {
+			Get();
+			this.psb.Append(t.val); 
+			Expect(4);
+			this.psb.Append(t.val); 
+		}
 	}
 
 
@@ -236,7 +304,7 @@ public readonly TomlTable parsed = new TomlTable();
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
 
 	};
 } // end Parser
@@ -251,24 +319,30 @@ public class Errors {
 		string s;
 		switch (n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "sign expected"; break;
-			case 2: s = "letters expected"; break;
-			case 3: s = "number expected"; break;
-			case 4: s = "string expected"; break;
-			case 5: s = "mstring expected"; break;
-			case 6: s = "lstring expected"; break;
-			case 7: s = "mlstring expected"; break;
-			case 8: s = "true expected"; break;
-			case 9: s = "false expected"; break;
-			case 10: s = "\"=\" expected"; break;
-			case 11: s = "\"_\" expected"; break;
-			case 12: s = "\"e\" expected"; break;
-			case 13: s = "\"E\" expected"; break;
-			case 14: s = "\".\" expected"; break;
-			case 15: s = "??? expected"; break;
-			case 16: s = "invalid Value"; break;
-			case 17: s = "invalid BoolVal"; break;
-			case 18: s = "invalid FloatPart"; break;
+			case 1: s = "plus expected"; break;
+			case 2: s = "minus expected"; break;
+			case 3: s = "letters expected"; break;
+			case 4: s = "number expected"; break;
+			case 5: s = "string expected"; break;
+			case 6: s = "mstring expected"; break;
+			case 7: s = "lstring expected"; break;
+			case 8: s = "mlstring expected"; break;
+			case 9: s = "true expected"; break;
+			case 10: s = "false expected"; break;
+			case 11: s = "\"=\" expected"; break;
+			case 12: s = "\"_\" expected"; break;
+			case 13: s = "\"e\" expected"; break;
+			case 14: s = "\"E\" expected"; break;
+			case 15: s = "\".\" expected"; break;
+			case 16: s = "\"T\" expected"; break;
+			case 17: s = "\":\" expected"; break;
+			case 18: s = "\"Z\" expected"; break;
+			case 19: s = "??? expected"; break;
+			case 20: s = "invalid Value"; break;
+			case 21: s = "invalid BoolVal"; break;
+			case 22: s = "invalid DateTimeVal"; break;
+			case 23: s = "invalid Sign"; break;
+			case 24: s = "invalid FloatPart"; break;
 
 			default: s = "error " + n; break;
 		}

@@ -167,5 +167,11 @@ namespace Nett.Parser
 
             return ssb.ToString();
         }
+
+        private bool NotADateTime()
+        {
+            Token t = la;
+            return t.val.Length != 4 && scanner.Peek().val != "-";
+        }
     }
 }
