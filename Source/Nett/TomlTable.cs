@@ -10,9 +10,7 @@ namespace Nett
         public string Name { get; private set; } = "";
         public Dictionary<string, object> Rows { get; } = new Dictionary<string, object>();
 
-        public TomlTable()
-        {
-        }
+        internal bool IsDefined { get; set; }
 
         public TomlTable(string name)
         {

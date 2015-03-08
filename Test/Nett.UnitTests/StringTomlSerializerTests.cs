@@ -356,5 +356,19 @@ type = ""pug""";
             Assert.NotNull(tt);
             Assert.Equal("pug", tt.Get<string>("type"));
         }
+
+        [Fact]
+        public void Deserialize_WhenSameTableDefinedMultipleTimes_Throws()
+        {
+            string toParse = @"
+[a]
+b = 1
+[a]
+d = 2";
+
+            var exc = Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize(toParse));
+            Assert.True(exc.Message.Contains("[a]"));
+            Assert.True(exc.Message.Contains("Defining a table multiple times is not allowed."));
+        }
     }
 }

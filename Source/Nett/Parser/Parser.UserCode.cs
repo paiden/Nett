@@ -192,6 +192,28 @@ namespace Nett.Parser
                     this.current = (TomlTable)current.Rows[p];
                 }
             }
+
+            if (current.IsDefined)
+            {
+                this.SemErr(
+                    string.Format("Table '{0}' was already defined. Defining a table multiple times is not allowed.", GetTableName(tableNames)));
+            }
+            else
+            {
+                this.current.IsDefined = true;
+            }
+        }
+
+        private string GetTableName(IEnumerable<string> tableNames)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var tn in tableNames)
+            {
+                sb.Append(tn);
+                sb.Append(".");
+            }
+
+            return sb.Remove(sb.Length - 1, 1).Insert(0, '[').Append(']').ToString();
         }
 
         private void AddKeyValue(string key, object value)

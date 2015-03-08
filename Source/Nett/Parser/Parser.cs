@@ -40,7 +40,7 @@ internal sealed partial class Parser {
 	int errDist = minErrDist;
 
 private readonly StringBuilder psb = new StringBuilder(32);
-	public readonly TomlTable parsed = new TomlTable();
+	public readonly TomlTable parsed = new TomlTable("");
 	private TomlTable current;
 
 
