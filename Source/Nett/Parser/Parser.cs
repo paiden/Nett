@@ -104,8 +104,8 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	
 	void Toml() {
 		string key; object val; 
-		while (la.kind == 3 || la.kind == 11) {
-			if (la.kind == 3) {
+		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
+			if (la.kind == 3 || la.kind == 5) {
 				KeyValuePair(out key, out val);
 				this.current.Add(key, val); 
 			} else {
@@ -126,7 +126,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		Key(out tableName);
 		Expect(12);
 		var t = new TomlTable(tableName); this.current.Add(t.Name, t); this.current = t; 
-		while (la.kind == 3 || la.kind == 11) {
+		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
 			if (la.kind == 11) {
 				TomlTable();
 			} else {
@@ -137,7 +137,11 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void Key(out string val) {
 		val = ""; psb.Clear(); 
-		BareKey(out val);
+		if (la.kind == 3) {
+			BareKey(out val);
+		} else if (la.kind == 5) {
+			QuoteKey(out val);
+		} else SynErr(23);
 	}
 
 	void Value(out object val) {
@@ -162,7 +166,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			NumVal(out val);
 		} else if (la.kind == 4) {
 			DateTimeVal(out val);
-		} else SynErr(23);
+		} else SynErr(24);
 	}
 
 	void BareKey(out string val) {
@@ -187,6 +191,11 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		val = psb.ToString(); 
 	}
 
+	void QuoteKey(out string val) {
+		Expect(5);
+		val = t.val.Substring(1, t.val.Length - 2); 
+	}
+
 	void BoolVal(out object val) {
 		val = null; 
 		if (la.kind == 9) {
@@ -195,7 +204,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		} else if (la.kind == 10) {
 			Get();
 			val = false; 
-		} else SynErr(24);
+		} else SynErr(25);
 	}
 
 	void Array(out object val) {
@@ -253,7 +262,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			Expect(20);
 			this.psb.Append(t.val); 
 			Minute();
-		} else SynErr(25);
+		} else SynErr(26);
 		val = DateTime.Parse(this.psb.ToString()); 
 	}
 
@@ -265,7 +274,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		} else if (la.kind == 2) {
 			Get();
 			val = t.val; 
-		} else SynErr(26);
+		} else SynErr(27);
 	}
 
 	void IntNumS() {
@@ -312,7 +321,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 				IntNumS();
 			}
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else SynErr(27);
+		} else SynErr(28);
 	}
 
 	void Year() {
@@ -401,11 +410,12 @@ public class Errors {
 			case 20: s = "\":\" expected"; break;
 			case 21: s = "\"Z\" expected"; break;
 			case 22: s = "??? expected"; break;
-			case 23: s = "invalid Value"; break;
-			case 24: s = "invalid BoolVal"; break;
-			case 25: s = "invalid DateTimeVal"; break;
-			case 26: s = "invalid Sign"; break;
-			case 27: s = "invalid FloatPart"; break;
+			case 23: s = "invalid Key"; break;
+			case 24: s = "invalid Value"; break;
+			case 25: s = "invalid BoolVal"; break;
+			case 26: s = "invalid DateTimeVal"; break;
+			case 27: s = "invalid Sign"; break;
+			case 28: s = "invalid FloatPart"; break;
 
 			default: s = "error " + n; break;
 		}

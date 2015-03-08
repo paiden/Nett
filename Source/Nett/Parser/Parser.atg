@@ -58,7 +58,8 @@ PRODUCTIONS
 		= Key<out key> '=' Value<out val>					.
 		
 	Key<out string val>										(. val = ""; psb.Clear(); .)
-		= BareKey<out val>									.
+		= BareKey<out val>									
+		| QuoteKey<out val>.
 
 	BareKey<out string val> 								(. val = null; this.psb.Clear(); .)
 		= letters											(. this.psb.Append(t.val); .)
@@ -69,6 +70,8 @@ PRODUCTIONS
 			| us											(. this.psb.Append(t.val); .)
 		}													(. val = psb.ToString(); .).
 
+	QuoteKey<out string val> = string						(. val = t.val.Substring(1, t.val.Length - 2); .).
+
 	Value<out object val>									(. val = null; .)
 		= string											(. val = ParseStringVal(t.val); .)
 		| BoolVal<out val>
@@ -78,15 +81,18 @@ PRODUCTIONS
 		| Array<out val>
 		| IF(NotADateTime()) NumVal<out val>							
 		| DateTimeVal<out val>.
+
 	NumVal<out object val>									(. bool neg = false; string sv = null; this.psb.Clear(); .)
 		= [Sign<out sv>]									(. if(sv == "-") neg = true; .)
 		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
 		[FloatPart<neg, out val>]							.
+
 	IntNumS = 
 		   number											(. psb.Append(t.val); .)
 		   {
 				'_'number									(. psb.Append(t.val); .)
 		   }												.
+
 	FloatPart<bool neg, out object val>						(. val = null; string sv = null; .)	
 		= (
 			('e' | 'E')										(. this.psb.Append(t.val); .)
@@ -101,9 +107,11 @@ PRODUCTIONS
 				IntNumS										
 			  )]
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
+
 	BoolVal<out object val>									(. val = null; .)
 		= true												(. val = true; .)
 		  | false											(. val = false; .).
+
 	Array<out object val>									(. object v = null; val = null; var a = new TomlArray(); .)
 		= 
 		ao
