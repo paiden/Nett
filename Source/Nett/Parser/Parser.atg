@@ -41,6 +41,7 @@ TOKENS
 	ao = '['.
 	ac = ']'.
 	as = ','.
+	us = '_'.
 
 COMMENTS FROM "#" TO eol
 
@@ -57,12 +58,17 @@ PRODUCTIONS
 		= Key<out key> '=' Value<out val>					.
 		
 	Key<out string val>										(. val = ""; psb.Clear(); .)
+		= BareKey<out val>									.
+
+	BareKey<out string val> 								(. val = null; this.psb.Clear(); .)
 		= letters											(. this.psb.Append(t.val); .)
-			{ 
-				letters										(. this.psb.Append(t.val); .)
-				| 
-				number										(. this.psb.Append(t.val); .)
-			}												(. val = psb.ToString(); .).
+		{
+			letters											(. this.psb.Append(t.val); .)
+			| number										(. this.psb.Append(t.val); .)
+			| minus											(. this.psb.Append(t.val); .)
+			| us											(. this.psb.Append(t.val); .)
+		}													(. val = psb.ToString(); .).
+
 	Value<out object val>									(. val = null; .)
 		= string											(. val = ParseStringVal(t.val); .)
 		| BoolVal<out val>

@@ -305,5 +305,21 @@ key3 = ""value3""";
             Assert.Equal("value2", parsed.Get<string>("key2"));
             Assert.Equal("value3", parsed.Get<string>("key3"));
         }
+
+        [Fact]
+        public void Deserialize_TableWithMultipleBareKeys_DeserializesCorrectly()
+        {
+            string toParse = @"
+key1 = ""value1""
+key_2 = ""value2""
+key-3 = ""value3""";
+
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            Assert.Equal(3, parsed.Rows.Count);
+            Assert.Equal("value1", (string)parsed["key1"]);
+            Assert.Equal("value2", parsed.Get<string>("key_2"));
+            Assert.Equal("value3", parsed.Get<string>("key-3"));
+        }
     }
 }

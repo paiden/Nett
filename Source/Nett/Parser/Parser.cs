@@ -24,6 +24,7 @@ internal sealed partial class Parser {
 	public const int _ao = 11;
 	public const int _ac = 12;
 	public const int _as = 13;
+	public const int _us = 14;
 	public const int maxT = 22;
 
 	const bool _T = true;
@@ -115,7 +116,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void KeyValuePair(out string key, out object val) {
 		Key(out key);
-		Expect(14);
+		Expect(15);
 		Value(out val);
 	}
 
@@ -136,18 +137,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void Key(out string val) {
 		val = ""; psb.Clear(); 
-		Expect(3);
-		this.psb.Append(t.val); 
-		while (la.kind == 3 || la.kind == 4) {
-			if (la.kind == 3) {
-				Get();
-				this.psb.Append(t.val); 
-			} else {
-				Get();
-				this.psb.Append(t.val); 
-			}
-		}
-		val = psb.ToString(); 
+		BareKey(out val);
 	}
 
 	void Value(out object val) {
@@ -173,6 +163,28 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		} else if (la.kind == 4) {
 			DateTimeVal(out val);
 		} else SynErr(23);
+	}
+
+	void BareKey(out string val) {
+		val = null; this.psb.Clear(); 
+		Expect(3);
+		this.psb.Append(t.val); 
+		while (StartOf(1)) {
+			if (la.kind == 3) {
+				Get();
+				this.psb.Append(t.val); 
+			} else if (la.kind == 4) {
+				Get();
+				this.psb.Append(t.val); 
+			} else if (la.kind == 2) {
+				Get();
+				this.psb.Append(t.val); 
+			} else {
+				Get();
+				this.psb.Append(t.val); 
+			}
+		}
+		val = psb.ToString(); 
 	}
 
 	void BoolVal(out object val) {
@@ -259,7 +271,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	void IntNumS() {
 		Expect(4);
 		psb.Append(t.val); 
-		while (la.kind == 15) {
+		while (la.kind == 14) {
 			Get();
 			Expect(4);
 			psb.Append(t.val); 
@@ -351,7 +363,8 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x}
 
 	};
 } // end Parser
@@ -379,8 +392,8 @@ public class Errors {
 			case 11: s = "ao expected"; break;
 			case 12: s = "ac expected"; break;
 			case 13: s = "as expected"; break;
-			case 14: s = "\"=\" expected"; break;
-			case 15: s = "\"_\" expected"; break;
+			case 14: s = "us expected"; break;
+			case 15: s = "\"=\" expected"; break;
 			case 16: s = "\"e\" expected"; break;
 			case 17: s = "\"E\" expected"; break;
 			case 18: s = "\".\" expected"; break;
