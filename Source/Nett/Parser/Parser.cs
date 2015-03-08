@@ -25,6 +25,7 @@ internal sealed partial class Parser {
 	public const int _ac = 12;
 	public const int _as = 13;
 	public const int _us = 14;
+	public const int _dot = 15;
 	public const int maxT = 22;
 
 	const bool _T = true;
@@ -107,7 +108,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
 			if (la.kind == 3 || la.kind == 5) {
 				KeyValuePair(out key, out val);
-				this.current.Add(key, val); 
+				this.AddKeyValue(key, val); 
 			} else {
 				TomlTable();
 			}
@@ -116,21 +117,28 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void KeyValuePair(out string key, out object val) {
 		Key(out key);
-		Expect(15);
+		Expect(16);
 		Value(out val);
 	}
 
 	void TomlTable() {
-		string tableName = null; string key = null; object val = null; 
+		string tableName = null; string key = null; object val = null; List<string> tableNames = new List<string>(); 
 		Expect(11);
 		Key(out tableName);
+		tableNames.Add(tableName); 
+		while (la.kind == 15) {
+			Get();
+			Key(out tableName);
+			tableNames.Add(tableName); 
+		}
 		Expect(12);
-		var t = new TomlTable(tableName); this.current.Add(t.Name, t); this.current = t; 
+		this.CreateTable(tableNames); 
 		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
 			if (la.kind == 11) {
 				TomlTable();
 			} else {
 				KeyValuePair(out key, out val);
+				this.AddKeyValue(key, val); 
 			}
 		}
 	}
@@ -229,7 +237,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		if(sv == "-") neg = true; 
 		IntNumS();
 		val = this.ParseIntVal(this.psb, neg); 
-		if (la.kind == 16 || la.kind == 17 || la.kind == 18) {
+		if (la.kind == 15 || la.kind == 17 || la.kind == 18) {
 			FloatPart(neg, out val);
 		}
 	}
@@ -289,8 +297,8 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void FloatPart(bool neg, out object val) {
 		val = null; string sv = null; 
-		if (la.kind == 16 || la.kind == 17) {
-			if (la.kind == 16) {
+		if (la.kind == 17 || la.kind == 18) {
+			if (la.kind == 17) {
 				Get();
 			} else {
 				Get();
@@ -302,13 +310,13 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			this.psb.Append(sv); 
 			IntNumS();
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else if (la.kind == 18) {
+		} else if (la.kind == 15) {
 			Get();
 			this.psb.Append(t.val); 
 			IntNumS();
 			this.psb.Append(t.val); 
-			if (la.kind == 16 || la.kind == 17) {
-				if (la.kind == 16) {
+			if (la.kind == 17 || la.kind == 18) {
+				if (la.kind == 17) {
 					Get();
 				} else {
 					Get();
@@ -352,7 +360,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	void Second() {
 		Expect(4);
 		this.psb.Append(t.val); 
-		if (la.kind == 18) {
+		if (la.kind == 15) {
 			Get();
 			this.psb.Append(t.val); 
 			Expect(4);
@@ -402,10 +410,10 @@ public class Errors {
 			case 12: s = "ac expected"; break;
 			case 13: s = "as expected"; break;
 			case 14: s = "us expected"; break;
-			case 15: s = "\"=\" expected"; break;
-			case 16: s = "\"e\" expected"; break;
-			case 17: s = "\"E\" expected"; break;
-			case 18: s = "\".\" expected"; break;
+			case 15: s = "dot expected"; break;
+			case 16: s = "\"=\" expected"; break;
+			case 17: s = "\"e\" expected"; break;
+			case 18: s = "\"E\" expected"; break;
 			case 19: s = "\"T\" expected"; break;
 			case 20: s = "\":\" expected"; break;
 			case 21: s = "\"Z\" expected"; break;

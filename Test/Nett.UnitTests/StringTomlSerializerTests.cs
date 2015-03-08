@@ -338,5 +338,23 @@ key-3 = ""value3""";
             Assert.Equal("value2", parsed.Get<string>("character encoding"));
             //Assert.Equal("value3", parsed.Get<string>("ʎǝʞ"));
         }
+
+
+        [Fact]
+        public void Deserialize_TableWithImplicitSubtable_DeserializesCorrectly()
+        {
+            string toParse = @"
+[dog.""tater.man""]
+type = ""pug""";
+            // ""ʎǝʞ"" = ""value3"""; This case currently doesn't work, but it is such an unimportant case I don't want to put time into it
+            // for now, as I really need a basic working TOML system. Hopfully I will have time to take care of this special cases soon.
+
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            Assert.NotNull(parsed["dog"]);
+            var tt = (TomlTable)((TomlTable)parsed["dog"])["tater.man"];
+            Assert.NotNull(tt);
+            Assert.Equal("pug", tt.Get<string>("type"));
+        }
     }
 }

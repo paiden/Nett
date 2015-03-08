@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Nett.Parser
 {
@@ -172,6 +173,30 @@ namespace Nett.Parser
         {
             Token t = la;
             return t.val.Length != 4 && scanner.Peek().val != "-";
+        }
+
+        private void CreateTable(IEnumerable<string> tableNames)
+        {
+            this.current = this.parsed;
+
+            foreach(var p in tableNames)
+            {
+                if(!this.current.Rows.ContainsKey(p))
+                {
+                    var c = new TomlTable(p);
+                    this.current.Add(p, c);
+                    this.current = c;
+                }
+                else
+                {
+                    this.current = (TomlTable)current.Rows[p];
+                }
+            }
+        }
+
+        private void AddKeyValue(string key, object value)
+        {
+            this.current.Add(key, value);
         }
     }
 }

@@ -42,6 +42,7 @@ TOKENS
 	ac = ']'.
 	as = ','.
 	us = '_'.
+	dot = '.'.
 
 COMMENTS FROM "#" TO eol
 
@@ -50,7 +51,7 @@ IGNORE '\r' + '\n'
 PRODUCTIONS
 	Toml 													(. string key; object val; .)
 		= { 
-			KeyValuePair<out key, out val> 					(. this.current.Add(key, val); .)
+			KeyValuePair<out key, out val> 					(. this.AddKeyValue(key, val); .)
 			| TomlTable
 		  }.
 	
@@ -90,7 +91,7 @@ PRODUCTIONS
 	IntNumS = 
 		   number											(. psb.Append(t.val); .)
 		   {
-				'_'number									(. psb.Append(t.val); .)
+				us number									(. psb.Append(t.val); .)
 		   }												.
 
 	FloatPart<bool neg, out object val>						(. val = null; string sv = null; .)	
@@ -99,7 +100,7 @@ PRODUCTIONS
 			[Sign<out sv>]									(. this.psb.Append(sv); .)											
 			IntNumS											
 		)													(. val = this.ParseFloatVal(this.psb, neg); .)	
-		| ( '.'												(. this.psb.Append(t.val); .)
+		| ( dot												(. this.psb.Append(t.val); .)
 			IntNumS											(. this.psb.Append(t.val); .)
 			 [(
 				('e' | 'E')									(. this.psb.Append(t.val); .)
@@ -145,7 +146,7 @@ PRODUCTIONS
 	Minute = number											(. this.psb.Append(t.val); .).
 	Second = number											(. this.psb.Append(t.val); .)
 		[
-			"."												(. this.psb.Append(t.val); .)
+			dot												(. this.psb.Append(t.val); .)
 			number											(. this.psb.Append(t.val); .)
 		].
 
@@ -155,13 +156,17 @@ PRODUCTIONS
 		| 
 		minus												(. val = t.val; .).
 
-	TomlTable =												(. string tableName = null; string key = null; object val = null; .)
-		ao 
-		Key<out tableName>
-		ac													(. var t = new TomlTable(tableName); this.current.Add(t.Name, t); this.current = t; .)
+	TomlTable =												(. string tableName = null; string key = null; object val = null; List<string> tableNames = new List<string>(); .)
+		'[' 
+		Key<out tableName>									(. tableNames.Add(tableName); .)
+		{	
+			'.' 
+			Key<out tableName>                              (. tableNames.Add(tableName); .)
+		}
+		']'													(. this.CreateTable(tableNames); .)
 		(
 			{ TomlTable 
-			| KeyValuePair<out key, out val> 
+			| KeyValuePair<out key, out val>				(. this.AddKeyValue(key, val); .)
 			}
 		)													.
 END Toml.
