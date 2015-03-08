@@ -1,4 +1,5 @@
 using System.Text;
+using System.Collections.Generic;
 
 
 
@@ -36,14 +37,16 @@ internal sealed partial class Parser {
 	public Token la;   // lookahead token
 	int errDist = minErrDist;
 
-public readonly TomlTable parsed = new TomlTable();
-	private readonly StringBuilder psb = new StringBuilder(32);
+private readonly StringBuilder psb = new StringBuilder(32);
+	public readonly TomlTable parsed = new TomlTable();
+	private TomlTable current;
 
 
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
 		errors = new Errors();
+		this.current = this.parsed;
 	}
 
 	void SynErr (int n) {
@@ -100,10 +103,35 @@ public readonly TomlTable parsed = new TomlTable();
 	
 	void Toml() {
 		string key; object val; 
+		while (la.kind == 3 || la.kind == 11) {
+			if (la.kind == 3) {
+				KeyValuePair(out key, out val);
+				this.current.Add(key, val); 
+			} else {
+				TomlTable();
+			}
+		}
+	}
+
+	void KeyValuePair(out string key, out object val) {
 		Key(out key);
 		Expect(14);
 		Value(out val);
-		parsed.Add(key, val); 
+	}
+
+	void TomlTable() {
+		string tableName = null; string key = null; object val = null; 
+		Expect(11);
+		Key(out tableName);
+		Expect(12);
+		var t = new TomlTable(tableName); this.current.Add(t.Name, t); this.current = t; 
+		while (la.kind == 3 || la.kind == 11) {
+			if (la.kind == 11) {
+				TomlTable();
+			} else {
+				KeyValuePair(out key, out val);
+			}
+		}
 	}
 
 	void Key(out string val) {

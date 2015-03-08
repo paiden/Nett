@@ -1,11 +1,13 @@
 ﻿$namespace=Nett.Parser
 
 using System.Text;
+using System.Collections.Generic;
 
 COMPILER Toml
 
-	public readonly TomlTable parsed = new TomlTable();
 	private readonly StringBuilder psb = new StringBuilder(32);
+	public readonly TomlTable parsed = new TomlTable();
+	private TomlTable current;
 
 CHARACTERS
 	digit = '0'..'9'.
@@ -46,7 +48,14 @@ IGNORE '\r' + '\n'
 
 PRODUCTIONS
 	Toml 													(. string key; object val; .)
-		= Key<out key> '=' Value<out val>					(. parsed.Add(key, val); .).
+		= { 
+			KeyValuePair<out key, out val> 					(. this.current.Add(key, val); .)
+			| TomlTable
+		  }.
+	
+	KeyValuePair<out string key, out object val>
+		= Key<out key> '=' Value<out val>					.
+		
 	Key<out string val>										(. val = ""; psb.Clear(); .)
 		= letters											(. this.psb.Append(t.val); .)
 			{ 
@@ -132,4 +141,13 @@ PRODUCTIONS
 		| 
 		minus												(. val = t.val; .).
 
+	TomlTable =												(. string tableName = null; string key = null; object val = null; .)
+		ao 
+		Key<out tableName>
+		ac													(. var t = new TomlTable(tableName); this.current.Add(t.Name, t); this.current = t; .)
+		(
+			{ TomlTable 
+			| KeyValuePair<out key, out val> 
+			}
+		)													.
 END Toml.

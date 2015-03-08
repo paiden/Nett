@@ -47,6 +47,7 @@ internal sealed partial class Parser {
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
 		errors = new Errors();
+		this.current = this.parsed;
 	}
 
 	void SynErr (int n) {

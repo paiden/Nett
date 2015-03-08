@@ -10,9 +10,6 @@ namespace Nett
         public string Name { get; private set; } = "";
         public Dictionary<string, object> Rows { get; } = new Dictionary<string, object>();
 
-        private readonly List<TomlTable> tables = new List<TomlTable>();
-        public IEnumerable<TomlTable> Tables => this.tables;
-
         public TomlTable()
         {
         }
@@ -37,11 +34,6 @@ namespace Nett
         public void Add(string key, object value)
         {
             this.Rows.Add(key, value);
-        }
-
-        public void Add(TomlTable table)
-        {
-            this.tables.Add(table);
         }
     }
 }

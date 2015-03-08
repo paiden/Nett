@@ -281,5 +281,29 @@ trimmed in raw strings.
             Assert.Equal("b", a2.Get<string>(1));
             Assert.Equal("c", a2.Get<string>(2));
         }
+
+        public void Deserialize_Table_DeserializesCorrectly()
+        {
+            var parsed = StringTomlSerializer.Deserialize(@"[table]");
+
+            Assert.Equal(1, parsed.Rows.Count);
+            Assert.Equal("table", parsed.Get<TomlTable>("table").Name);
+        }
+
+        [Fact]
+        public void Deserialize_TableWithMultipleKeys_DeserializesCorrectly()
+        {
+            string toParse = @"
+key1 = ""value1""
+key2 = ""value2""
+key3 = ""value3""";
+
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            Assert.Equal(3, parsed.Rows.Count);
+            Assert.Equal("value1", (string)parsed["key1"]);
+            Assert.Equal("value2", parsed.Get<string>("key2"));
+            Assert.Equal("value3", parsed.Get<string>("key3"));
+        }
     }
 }
