@@ -52,7 +52,8 @@ PRODUCTIONS
 	Toml 													(. string key; object val; .)
 		= { 
 			KeyValuePair<out key, out val> 					(. this.AddKeyValue(key, val); .)
-			| TomlTable
+			| IF(NotAnArray()) TomlTable
+			| TomlArrayTable
 		  }.
 	
 	KeyValuePair<out string key, out object val>
@@ -168,5 +169,18 @@ PRODUCTIONS
 			{ TomlTable 
 			| KeyValuePair<out key, out val>				(. this.AddKeyValue(key, val); .)
 			}
-		)													.
+		).
+
+	TomlArrayTable =										(. string arrayName = null; string key= null; object val = null; .)
+		'[''['
+		Key<out arrayName>                                  (. var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
+		']'']'	
+		{
+			KeyValuePair<out key, out val>					(. t.Add(key, val); .)
+		}
+		{
+			TomlArrayTable
+			|
+			TomlTable
+		}.
 END Toml.

@@ -370,5 +370,36 @@ d = 2";
             Assert.True(exc.Message.Contains("[a]"));
             Assert.True(exc.Message.Contains("Defining a table multiple times is not allowed."));
         }
+
+        [Fact]
+        public void Deserialize_TableArray_DeserializesCorrectly()
+        {
+            string toParse = @"
+[[products]]
+name = ""Hammer""
+sku = 738594937
+
+[[products]]
+
+[[products]]
+name = ""Nail""
+sku = 284758393
+color = ""gray""
+";
+
+            var parsed = StringTomlSerializer.Deserialize(toParse);
+
+            var a = (TomlArray)parsed["products"];
+            Assert.Equal(3, a.Count);
+
+            var t1 = (TomlTable)a[0];
+            Assert.Equal("Hammer", t1.Get<string>("name"));
+
+            var t2 = (TomlTable)a[1];
+            Assert.Equal(0, t2.Rows.Count);
+
+            var t3 = (TomlTable)a[2];
+            Assert.Equal("Nail", t3.Get<string>("name"));
+        }
     }
 }

@@ -109,8 +109,10 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			if (la.kind == 3 || la.kind == 5) {
 				KeyValuePair(out key, out val);
 				this.AddKeyValue(key, val); 
-			} else {
+			} else if (NotAnArray()) {
 				TomlTable();
+			} else {
+				TomlArrayTable();
 			}
 		}
 	}
@@ -139,6 +141,27 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			} else {
 				KeyValuePair(out key, out val);
 				this.AddKeyValue(key, val); 
+			}
+		}
+	}
+
+	void TomlArrayTable() {
+		string arrayName = null; string key= null; object val = null; 
+		Expect(11);
+		Expect(11);
+		Key(out arrayName);
+		var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); 
+		Expect(12);
+		Expect(12);
+		while (la.kind == 3 || la.kind == 5) {
+			KeyValuePair(out key, out val);
+			t.Add(key, val); 
+		}
+		while (la.kind == 11) {
+			if (la.kind == 11) {
+				TomlArrayTable();
+			} else {
+				TomlTable();
 			}
 		}
 	}

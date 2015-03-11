@@ -175,6 +175,12 @@ namespace Nett.Parser
             return t.val.Length != 4 && scanner.Peek().val != "-";
         }
 
+        private bool NotAnArray()
+        {
+            Token t = la;
+            return t.val == "[" && scanner.Peek().val != "[";
+        }
+
         private void CreateTable(IEnumerable<string> tableNames)
         {
             this.current = this.parsed;
@@ -201,6 +207,34 @@ namespace Nett.Parser
             else
             {
                 this.current.IsDefined = true;
+            }
+        }
+
+        private TomlArray CreateOrGetTomlArray(string name)
+        {
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                this.SemErr("Array has a invalid name.");
+            }
+
+            object value;
+            if(current.Rows.TryGetValue(name, out value))
+            {
+                var existing = current[name];
+                var arr = existing as TomlArray;
+
+                if (arr == null && existing != null)
+                {
+                    this.SemErr($"Cannot create array '{name}' because there is already a member of type '{existing.GetType().Name}' with the same name");
+                }
+
+                return arr;
+            }
+            else
+            {
+                var na = new TomlArray();
+                current.Rows.Add(name, na);
+                return na;
             }
         }
 
