@@ -51,7 +51,9 @@
     <Compile Include="StreamTomlSerializer.cs" />
     <Compile Include="StringTomlSerializer.cs" />
     <Compile Include="TomlArray.cs" />
+    <Compile Include="TomlObject.cs" />
     <Compile Include="TomlTable.cs" />
+    <Compile Include="TomlValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Parser\Parser.atg" />

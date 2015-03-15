@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Nett
 {
-    public sealed class TomlTable
+    public sealed class TomlTable : TomlObject
     {
         public string Name { get; private set; } = "";
-        public Dictionary<string, object> Rows { get; } = new Dictionary<string, object>();
+        public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
         internal bool IsDefined { get; set; }
 
@@ -19,19 +19,24 @@ namespace Nett
             this.Name = name;
         }
 
-        public object this[string key]
+        public TomlObject this[string key]
         {
             get { return this.Rows[key]; }
         }
 
         public T Get<T>(string key)
         {
-            return Converter.Convert<T>(this[key]);
+            return this[key].Get<T>();
         }
 
-        public void Add(string key, object value)
+        public void Add(string key, TomlObject value)
         {
             this.Rows.Add(key, value);
+        }
+
+        public override T Get<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

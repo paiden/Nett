@@ -49,14 +49,14 @@ COMMENTS FROM "#" TO eol
 IGNORE '\r' + '\n'
 
 PRODUCTIONS
-	Toml 													(. string key; object val; .)
+	Toml 													(. string key; TomlObject val; .)
 		= { 
 			KeyValuePair<out key, out val> 					(. this.AddKeyValue(key, val); .)
 			| IF(NotAnArray()) TomlTable
 			| TomlArrayTable
 		  }.
 	
-	KeyValuePair<out string key, out object val>
+	KeyValuePair<out string key, out TomlObject val>
 		= Key<out key> '=' Value<out val>					.
 		
 	Key<out string val>										(. val = ""; psb.Clear(); .)
@@ -74,7 +74,7 @@ PRODUCTIONS
 
 	QuoteKey<out string val> = string						(. val = t.val.Substring(1, t.val.Length - 2); .).
 
-	Value<out object val>									(. val = null; .)
+	Value<out TomlObject val>								(. val = null; .)
 		= string											(. val = ParseStringVal(t.val); .)
 		| BoolVal<out val>
 		| mstring											(. val = ParseMStringVal(t.val); .)
@@ -84,7 +84,7 @@ PRODUCTIONS
 		| IF(NotADateTime()) NumVal<out val>							
 		| DateTimeVal<out val>.
 
-	NumVal<out object val>									(. bool neg = false; string sv = null; this.psb.Clear(); .)
+	NumVal<out TomlObject val>								(. bool neg = false; string sv = null; this.psb.Clear(); .)
 		= [Sign<out sv>]									(. if(sv == "-") neg = true; .)
 		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
 		[FloatPart<neg, out val>]							.
@@ -95,7 +95,7 @@ PRODUCTIONS
 				us number									(. psb.Append(t.val); .)
 		   }												.
 
-	FloatPart<bool neg, out object val>						(. val = null; string sv = null; .)	
+	FloatPart<bool neg, out TomlObject val>					(. val = null; string sv = null; .)	
 		= (
 			('e' | 'E')										(. this.psb.Append(t.val); .)
 			[Sign<out sv>]									(. this.psb.Append(sv); .)											
@@ -110,11 +110,11 @@ PRODUCTIONS
 			  )]
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
 
-	BoolVal<out object val>									(. val = null; .)
-		= true												(. val = true; .)
-		  | false											(. val = false; .).
+	BoolVal<out TomlObject val>								(. val = null; .)
+		= true												(. val = new TomlValue<bool>(true); .)
+		  | false											(. val = new TomlValue<bool>(false); .).
 
-	Array<out object val>									(. object v = null; val = null; var a = new TomlArray(); .)
+	Array<out TomlObject val>								(. TomlObject v = null; val = null; var a = new TomlArray(); .)
 		= 
 		ao
 		Value<out v>										(. a.Add(v); .)
@@ -124,7 +124,7 @@ PRODUCTIONS
 		}
 		ac													(. val = a; .).
 
-	DateTimeVal<out object val>								(. val = null; string sv = null; this.psb.Clear(); .)
+	DateTimeVal<out TomlObject val>							(. val = null; string sv = null; this.psb.Clear(); .)
 		= 
 		Year minus											(. this.psb.Append(t.val); .)
 		Month minus											(. this.psb.Append(t.val); .)
@@ -139,7 +139,7 @@ PRODUCTIONS
 			Hour ":"										(. this.psb.Append(t.val); .)
 			Minute											
 		 )
-		)													(. val = DateTime.Parse(this.psb.ToString()); .).
+		)													(. val = new TomlValue<DateTime>(DateTime.Parse(this.psb.ToString())); .).
 	Year = number											(. this.psb.Append(t.val); .).
 	Month = number											(. this.psb.Append(t.val); .).
 	Day = number											(. this.psb.Append(t.val); .).
@@ -157,7 +157,7 @@ PRODUCTIONS
 		| 
 		minus												(. val = t.val; .).
 
-	TomlTable =												(. string tableName = null; string key = null; object val = null; List<string> tableNames = new List<string>(); .)
+	TomlTable =												(. string tableName = null; string key = null; TomlObject val = null; List<string> tableNames = new List<string>(); .)
 		'[' 
 		Key<out tableName>									(. tableNames.Add(tableName); .)
 		{	
@@ -171,7 +171,7 @@ PRODUCTIONS
 			}
 		).
 
-	TomlArrayTable =										(. string arrayName = null; string key= null; object val = null; .)
+	TomlArrayTable =										(. string arrayName = null; string key= null; TomlObject val = null; .)
 		'[''['
 		Key<out arrayName>                                  (. var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
 		']'']'	

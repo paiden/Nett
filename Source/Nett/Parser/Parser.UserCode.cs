@@ -20,22 +20,22 @@ namespace Nett.Parser
             '\u3000',
         };
 
-        private long ParseIntVal(StringBuilder sb, bool neg)
+        private TomlValue<long> ParseIntVal(StringBuilder sb, bool neg)
         {
             if(this.errors.count <= 0)
             {
                 if(sb.Length > 1 && sb[0] == '0') { throw new Exception("Leading zeros are not allowed."); }
 
                 var iv = long.Parse(sb.ToString());
-                return neg ? -iv : iv;
+                return new TomlValue<long>(neg ? -iv : iv);
             }
             else
             {
-                return 0;
+                return new TomlValue<long>(0);
             }
         }
 
-        private double ParseFloatVal(StringBuilder sb, bool neg)
+        private TomlValue<double> ParseFloatVal(StringBuilder sb, bool neg)
         {
             if (this.errors.count <= 0)
             {
@@ -43,25 +43,25 @@ namespace Nett.Parser
                 // the final value is int or float, so the int parse call will already do the correct value check
                 // so we can omit it here (performance).
                 var fv = double.Parse(sb.ToString(), CultureInfo.InvariantCulture);
-                return neg ? -fv : fv;
+                return new TomlValue<double>(neg ? -fv : fv);
             }
             else
             {
-                return 0;
+                return new TomlValue<double>(0);
             }
         }
 
 
-        private static string ParseStringVal(string source)
+        private static TomlValue ParseStringVal(string source)
         {
             ssb.Clear();
             ssb.Append(source);
             ssb.Remove(0, 1);
             ssb.Length--;
-            return ProcessStringValueInCurrentBuilder();
+            return new TomlValue<string>(ProcessStringValueInCurrentBuilder());
         }
 
-        private static string ParseMStringVal(string source)
+        private static TomlObject ParseMStringVal(string source)
         {
             ssb.Clear();
             ssb.Append(source);
@@ -72,7 +72,7 @@ namespace Nett.Parser
             if(ssb.Length > 0 && ssb[0] == '\n') { ssb.Remove(0, 1); }
 
             string s = ProcessStringValueInCurrentBuilder();
-            return ReplaceDelimeterBackslash(s);
+            return new TomlValue<string>(ReplaceDelimeterBackslash(s));
         }
 
         private static string ProcessStringValueInCurrentBuilder()
@@ -150,13 +150,13 @@ namespace Nett.Parser
             return currenMin == int.MaxValue ? defaultValue : currenMin;
         }
 
-        private static string ParseLStringVal(string s)
+        private static TomlValue<string> ParseLStringVal(string s)
         {
             s = s.Substring(1);
-            return s.Substring(0, s.Length - 1);
+            return new TomlValue<string>(s.Substring(0, s.Length - 1));
         }
 
-        private static string ParseMLStringVal(string source)
+        private static TomlValue<string> ParseMLStringVal(string source)
         {
             ssb.Clear();
             ssb.Append(source);
@@ -166,7 +166,7 @@ namespace Nett.Parser
             if (ssb.Length > 0 && ssb[0] == '\r') { ssb.Remove(0, 1); }
             if (ssb.Length > 0 && ssb[0] == '\n') { ssb.Remove(0, 1); }
 
-            return ssb.ToString();
+            return new TomlValue<string>(ssb.ToString());
         }
 
         private bool NotADateTime()
@@ -217,7 +217,7 @@ namespace Nett.Parser
                 this.SemErr("Array has a invalid name.");
             }
 
-            object value;
+            TomlObject value;
             if(current.Rows.TryGetValue(name, out value))
             {
                 var existing = current[name];
@@ -250,7 +250,7 @@ namespace Nett.Parser
             return sb.Remove(sb.Length - 1, 1).Insert(0, '[').Append(']').ToString();
         }
 
-        private void AddKeyValue(string key, object value)
+        private void AddKeyValue(string key, TomlObject value)
         {
             this.current.Add(key, value);
         }

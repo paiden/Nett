@@ -104,7 +104,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	
 	void Toml() {
-		string key; object val; 
+		string key; TomlObject val; 
 		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
 			if (la.kind == 3 || la.kind == 5) {
 				KeyValuePair(out key, out val);
@@ -117,14 +117,14 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		}
 	}
 
-	void KeyValuePair(out string key, out object val) {
+	void KeyValuePair(out string key, out TomlObject val) {
 		Key(out key);
 		Expect(16);
 		Value(out val);
 	}
 
 	void TomlTable() {
-		string tableName = null; string key = null; object val = null; List<string> tableNames = new List<string>(); 
+		string tableName = null; string key = null; TomlObject val = null; List<string> tableNames = new List<string>(); 
 		Expect(11);
 		Key(out tableName);
 		tableNames.Add(tableName); 
@@ -146,7 +146,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	}
 
 	void TomlArrayTable() {
-		string arrayName = null; string key= null; object val = null; 
+		string arrayName = null; string key= null; TomlObject val = null; 
 		Expect(11);
 		Expect(11);
 		Key(out arrayName);
@@ -175,7 +175,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		} else SynErr(23);
 	}
 
-	void Value(out object val) {
+	void Value(out TomlObject val) {
 		val = null; 
 		if (la.kind == 5) {
 			Get();
@@ -227,19 +227,19 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		val = t.val.Substring(1, t.val.Length - 2); 
 	}
 
-	void BoolVal(out object val) {
+	void BoolVal(out TomlObject val) {
 		val = null; 
 		if (la.kind == 9) {
 			Get();
-			val = true; 
+			val = new TomlValue<bool>(true); 
 		} else if (la.kind == 10) {
 			Get();
-			val = false; 
+			val = new TomlValue<bool>(false); 
 		} else SynErr(25);
 	}
 
-	void Array(out object val) {
-		object v = null; val = null; var a = new TomlArray(); 
+	void Array(out TomlObject val) {
+		TomlObject v = null; val = null; var a = new TomlArray(); 
 		Expect(11);
 		Value(out v);
 		a.Add(v); 
@@ -252,7 +252,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		val = a; 
 	}
 
-	void NumVal(out object val) {
+	void NumVal(out TomlObject val) {
 		bool neg = false; string sv = null; this.psb.Clear(); 
 		if (la.kind == 1 || la.kind == 2) {
 			Sign(out sv);
@@ -265,7 +265,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		}
 	}
 
-	void DateTimeVal(out object val) {
+	void DateTimeVal(out TomlObject val) {
 		val = null; string sv = null; this.psb.Clear(); 
 		Year();
 		Expect(2);
@@ -294,7 +294,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			this.psb.Append(t.val); 
 			Minute();
 		} else SynErr(26);
-		val = DateTime.Parse(this.psb.ToString()); 
+		val = new TomlValue<DateTime>(DateTime.Parse(this.psb.ToString())); 
 	}
 
 	void Sign(out string val) {
@@ -318,7 +318,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		}
 	}
 
-	void FloatPart(bool neg, out object val) {
+	void FloatPart(bool neg, out TomlObject val) {
 		val = null; string sv = null; 
 		if (la.kind == 17 || la.kind == 18) {
 			if (la.kind == 17) {

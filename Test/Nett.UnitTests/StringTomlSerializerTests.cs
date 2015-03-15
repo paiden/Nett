@@ -13,13 +13,12 @@ namespace Nett.UnitTests
         [InlineData("Key = 1", "Key", 1)]
         [InlineData("Key = +1", "Key", 1)]
         [InlineData("Key = -1", "Key", -1)]
-        public void Deserialize_SimpleyKeyValuePair_ProducesCorrectObject(string toParse, string key, object expectedValue)
+        public void Deserialize_SimpleyKeyValuePair_ProducesCorrectObject(string toParse, string key, long expectedValue)
         {
             var parsed = StringTomlSerializer.Deserialize(toParse);
 
             Assert.NotNull(parsed);
             Assert.Equal(expectedValue, parsed.Get<int>(key));
-            Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
         }
 
         [Fact]
@@ -37,7 +36,6 @@ namespace Nett.UnitTests
 
             Assert.NotNull(parsed);
             Assert.Equal(expectedValue, parsed.Get<int>(key));
-            Assert.Equal((long)(int)expectedValue, (long)parsed[key]);
         }
 
         [Theory]
@@ -187,7 +185,7 @@ trimmed in raw strings.
         public void Deserialize_Bool_DeseriailzesCorrectly(string src, bool expected)
         {
             var parsed = StringTomlSerializer.Deserialize(src);
-            Assert.Equal(expected, (bool)parsed["b"]);
+            Assert.Equal(expected, parsed["b"].Get<bool>());
         }
 
 
@@ -201,7 +199,7 @@ trimmed in raw strings.
 
             var parsed = StringTomlSerializer.Deserialize(src);
 
-            Assert.Equal(date, (DateTime)parsed["d"]);
+            Assert.Equal(date, parsed["d"].Get<DateTime>());
         }
 
         [Fact]
@@ -239,7 +237,7 @@ trimmed in raw strings.
             Assert.Equal(2, a.Count);
             var a1 = a.Get<TomlArray>(0);
             Assert.Equal(2, a1.Count);
-            Assert.Equal(1, (long)a1[0]);
+            Assert.Equal(1, a1[0].Get<long>());
             Assert.Equal(2, a1.Get<int>(1));
 
             var a2 = (TomlArray)a[1];
@@ -257,10 +255,10 @@ trimmed in raw strings.
             var a = (TomlArray)parsed["a"];
 
             Assert.Equal(4, a.Count);
-            Assert.Equal("all", (string)a[0]);
-            Assert.Equal("strings", (string)a[1]);
-            Assert.Equal("are the same", (string)a[2]);
-            Assert.Equal("type", (string)a[3]);
+            Assert.Equal("all", a[0].Get<string>());
+            Assert.Equal("strings", a[1].Get<string>());
+            Assert.Equal("are the same", a[2].Get<string>());
+            Assert.Equal("type", a[3].Get<string>());
         }
 
         [Fact]
@@ -301,7 +299,7 @@ key3 = ""value3""";
             var parsed = StringTomlSerializer.Deserialize(toParse);
 
             Assert.Equal(3, parsed.Rows.Count);
-            Assert.Equal("value1", (string)parsed["key1"]);
+            Assert.Equal("value1", parsed["key1"].Get<string>());
             Assert.Equal("value2", parsed.Get<string>("key2"));
             Assert.Equal("value3", parsed.Get<string>("key3"));
         }
@@ -317,7 +315,7 @@ key-3 = ""value3""";
             var parsed = StringTomlSerializer.Deserialize(toParse);
 
             Assert.Equal(3, parsed.Rows.Count);
-            Assert.Equal("value1", (string)parsed["key1"]);
+            Assert.Equal("value1", parsed["key1"].Get<string>());
             Assert.Equal("value2", parsed.Get<string>("key_2"));
             Assert.Equal("value3", parsed.Get<string>("key-3"));
         }
@@ -334,7 +332,7 @@ key-3 = ""value3""";
             var parsed = StringTomlSerializer.Deserialize(toParse);
 
             Assert.Equal(2, parsed.Rows.Count);
-            Assert.Equal("value1", (string)parsed["127.0.0.1"]);
+            Assert.Equal("value1", parsed["127.0.0.1"].Get<string>());
             Assert.Equal("value2", parsed.Get<string>("character encoding"));
             //Assert.Equal("value3", parsed.Get<string>("ʎǝʞ"));
         }

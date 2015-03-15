@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Nett
 {
-    public class TomlArray
+    public class TomlArray : TomlObject
     {
-        private readonly List<object> items = new List<object>();
+        private readonly List<TomlObject> items = new List<TomlObject>();
 
-        public void Add(object o)
+        public void Add(TomlObject o)
         {
             this.items.Add(o);
         }
@@ -22,7 +22,7 @@ namespace Nett
             }
         }
 
-        public object this[int index]
+        public TomlObject this[int index]
         {
             get
             {
@@ -32,7 +32,12 @@ namespace Nett
 
         public T Get<T>(int index)
         {
-            return Converter.Convert<T>(this.items[index]);
+            return this.items[index].Get<T>();
+        }
+
+        public override T Get<T>()
+        {
+            return Converter.Convert<T>(this);
         }
     }
 }
