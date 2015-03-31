@@ -13,9 +13,11 @@ namespace Nett
             throw new NotImplementedException();
         }
 
-        public static T Read<T>(string serialized)
+        public static T Read<T>(string toRead)
         {
-            throw new NotImplementedException();
+            TomlTable tt = Read(toRead);
+            T result = tt.MapTo<T>();
+            return result;
         }
 
         public static TomlTable Read(string toRead)

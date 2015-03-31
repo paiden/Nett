@@ -337,7 +337,6 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			Get();
 			this.psb.Append(t.val); 
 			IntNumS();
-			this.psb.Append(t.val); 
 			if (la.kind == 17 || la.kind == 18) {
 				if (la.kind == 17) {
 					Get();

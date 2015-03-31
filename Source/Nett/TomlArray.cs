@@ -39,5 +39,10 @@ namespace Nett
         {
             return Converter.Convert<T>(this);
         }
+
+        public override object Get(Type t)
+        {
+            return Converter.Convert(t, this);
+        }
     }
 }

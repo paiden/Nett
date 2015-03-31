@@ -102,7 +102,7 @@ PRODUCTIONS
 			IntNumS											
 		)													(. val = this.ParseFloatVal(this.psb, neg); .)	
 		| ( dot												(. this.psb.Append(t.val); .)
-			IntNumS											(. this.psb.Append(t.val); .)
+			IntNumS
 			 [(
 				('e' | 'E')									(. this.psb.Append(t.val); .)
 				[Sign<out sv>]								(. this.psb.Append(sv); .)		

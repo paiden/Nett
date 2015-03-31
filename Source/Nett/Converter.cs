@@ -41,5 +41,25 @@ namespace Nett
 
             throw new Exception(string.Format("Cannot convert from type '{0}' to type '{1}'.", src.GetType().Name, typeof(TRes).Name));
         }
+
+        public static object Convert(Type tRes, object src)
+        {
+            if (tRes == src.GetType())
+            {
+                return src;
+            }
+
+            Dictionary<Type, Func<object, object>> convertersForSourceType;
+            if (ConvertFunctions.TryGetValue(src.GetType(), out convertersForSourceType))
+            {
+                Func<object, object> convertFunc;
+                if (convertersForSourceType.TryGetValue(tRes, out convertFunc))
+                {
+                    return convertFunc(src);
+                }
+            }
+
+            throw new Exception(string.Format("Cannot convert from type '{0}' to type '{1}'.", src.GetType().Name, tRes.Name));
+        }
     }
 }

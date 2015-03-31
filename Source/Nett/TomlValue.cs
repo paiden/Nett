@@ -24,5 +24,10 @@ namespace Nett
         {
             return Converter.Convert<TRes>(this.Value);
         }
+
+        public override object Get(Type t)
+        {
+            return Converter.Convert(t, this.Value);
+        }
     }
 }

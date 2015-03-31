@@ -8,5 +8,6 @@ namespace Nett
     public abstract class TomlObject
     {
         public abstract T Get<T>();
+        public abstract object Get(Type t);
     }
 }

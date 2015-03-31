@@ -38,5 +38,27 @@ namespace Nett
         {
             throw new NotImplementedException();
         }
+
+        public override object Get(Type t)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T MapTo<T>()
+        {
+            var t = typeof(T);
+            var result = Activator.CreateInstance<T>();
+
+            foreach(var p in this.Rows)
+            {
+                var targetProperty = t.GetProperty(p.Key);
+                if(targetProperty != null)
+                {
+                    targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
+                }
+            }
+
+            return result;
+        }
     }
 }

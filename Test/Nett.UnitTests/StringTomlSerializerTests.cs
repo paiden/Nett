@@ -150,6 +150,7 @@ trimmed in raw strings.
 
         [Theory]
         [InlineData("d = +1.0", 1.0)]
+        [InlineData("d = 2.5", 2.5)]
         [InlineData("d = 3.1415", 3.1415)]
         [InlineData("d = -0.0101", -0.0101)]
         [InlineData("d = 5e+22", 5e+22)]
@@ -162,7 +163,7 @@ trimmed in raw strings.
         {
             var parsed = Toml.Read(src);
 
-            Assert.Equal(expected, parsed.Get<double>("d"), 4);
+            Assert.Equal(expected, parsed.Get<double>("d"));
         }
 
         [Theory]
