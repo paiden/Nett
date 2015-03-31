@@ -49,7 +49,7 @@
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamTomlSerializer.cs" />
-    <Compile Include="StringTomlSerializer.cs" />
+    <Compile Include="Toml.cs" />
     <Compile Include="TomlArray.cs" />
     <Compile Include="TomlObject.cs" />
     <Compile Include="TomlTable.cs" />

@@ -15,7 +15,7 @@ namespace Nett.UnitTests
         [InlineData("Key = -1", "Key", -1)]
         public void Deserialize_SimpleyKeyValuePair_ProducesCorrectObject(string toParse, string key, long expectedValue)
         {
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.NotNull(parsed);
             Assert.Equal(expectedValue, parsed.Get<int>(key));
@@ -24,7 +24,7 @@ namespace Nett.UnitTests
         [Fact]
         public void Deserialize_WithMultipleSignBeforeNumber_FailsToParse()
         {
-            Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize("key = --0"));
+            Assert.Throws<Exception>(() => Toml.Read("key = --0"));
         }
 
         [Theory]
@@ -32,7 +32,7 @@ namespace Nett.UnitTests
         [InlineData("Key = 1_2_3_4", "Key", 1234)]
         public void Deserialize_IntWithUnderscoreSeperator_ProducesCorrectObject(string toParse, string key, object expectedValue)
         {
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.NotNull(parsed);
             Assert.Equal(expectedValue, parsed.Get<int>(key));
@@ -43,7 +43,7 @@ namespace Nett.UnitTests
         [InlineData("Key = 0_1")]
         public void Deserilaize_IntWihtLeadingZeros_Fails(string toParse)
         {
-            Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize(toParse));
+            Assert.Throws<Exception>(() => Toml.Read(toParse));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Nett.UnitTests
             string toParse = "# I am a comment. Hear me roar. Roar." + Environment.NewLine +
                              "key = 0 # Yeah, you can do this. ";
 
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.NotNull(parsed);
             Assert.Equal(0, parsed.Get<int>("key"));
@@ -62,7 +62,7 @@ namespace Nett.UnitTests
         [InlineData(@"str = ""I'm a string. \""You can quote me\"". Name\tJos\u00E9\nLocation\tSF.""", "str", "I'm a string. \"You can quote me\". Name\tJos\u00E9\nLocation\tSF.")]
         public void Deserialize_SingleLineSringValue_DeserializesCorrectly(string toParse, string key, string expected)
         {
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.Equal(expected, parsed.Get<string>(key));
         }
@@ -70,13 +70,13 @@ namespace Nett.UnitTests
         [Fact]
         public void Deseriailze_SingleLineStringWithNewLine_FailsToDeserialize()
         {
-            Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize("str = \"\r\n\""));
+            Assert.Throws<Exception>(() => Toml.Read("str = \"\r\n\""));
         }
 
         [Fact]
         public void Deserilize_StringWithUTF32Char_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize(@"str = ""\u0000004D""");
+            var parsed = Toml.Read(@"str = ""\u0000004D""");
 
             Assert.Equal("\u0000004D", parsed.Get<string>("str"));
         }
@@ -88,7 +88,7 @@ namespace Nett.UnitTests
         [InlineData("str = \"\"\"\r\nHello\r\nYou  \"\"\"", "Hello\r\nYou  ")]
         public void Deserialize_MString_ProducesCorrectresult(string src, string expected)
         {
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
 
             Assert.Equal(expected, parsed.Get<string>("str"));
         }
@@ -111,7 +111,7 @@ The quick brown \
         [InlineData(Case2)]
         public void Deserialize_MStringWithSpaceReduction_ProducesCorrectResult(string src)
         {
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
 
             Assert.Equal("The quick brown fox jumps over the lazy dog.", parsed.Get<string>("str"));
         }
@@ -123,7 +123,7 @@ The quick brown \
         [InlineData(@"str = '<\i\c*\s*>'", @"<\i\c*\s*>")]
         public void Deserialize_LiteralString_ProducesCorrectResult(string src, string expected)
         {
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
 
             Assert.Equal(expected, parsed.Get<string>("str"));
         }
@@ -143,7 +143,7 @@ trimmed in raw strings.
 ")]
         public void Deserialize_MutliLineLiteralString_ProducesCorrectResult(string src, string expected)
         {
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
 
             Assert.Equal(expected, parsed.Get<string>("str"));
         }
@@ -160,7 +160,7 @@ trimmed in raw strings.
         [InlineData("d = 1e1_00", 1e100)]
         public void Deserialize_FloatKeyValuePair_ProducesCorrectResult(string src, double expected)
         {
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
 
             Assert.Equal(expected, parsed.Get<double>("d"), 4);
         }
@@ -175,7 +175,7 @@ trimmed in raw strings.
         [InlineData("d = 06.626e-34")]
         public void Deserialize_FloatWihtLeadingZeros_ThrowsExcption(string src)
         {
-            var exc = Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize(src));
+            var exc = Assert.Throws<Exception>(() => Toml.Read(src));
             Assert.Equal("Leading zeros are not allowed.", exc.Message);
         }
 
@@ -184,7 +184,7 @@ trimmed in raw strings.
         [InlineData("b = false", false)]
         public void Deserialize_Bool_DeseriailzesCorrectly(string src, bool expected)
         {
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
             Assert.Equal(expected, parsed["b"].Get<bool>());
         }
 
@@ -197,7 +197,7 @@ trimmed in raw strings.
         {
             var date = DateTime.Parse(expectedDate);
 
-            var parsed = StringTomlSerializer.Deserialize(src);
+            var parsed = Toml.Read(src);
 
             Assert.Equal(date, parsed["d"].Get<DateTime>());
         }
@@ -205,7 +205,7 @@ trimmed in raw strings.
         [Fact]
         public void Deserialze_WithIntArray_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize("a = [1,2,3]");
+            var parsed = Toml.Read("a = [1,2,3]");
 
             var a = (TomlArray)parsed["a"];
 
@@ -218,7 +218,7 @@ trimmed in raw strings.
         [Fact]
         public void Deserialize_WithStringArray_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize(@"a = [""red"", ""yellow"", ""green""]");
+            var parsed = Toml.Read(@"a = [""red"", ""yellow"", ""green""]");
 
             var a = (TomlArray)parsed["a"];
 
@@ -231,7 +231,7 @@ trimmed in raw strings.
         [Fact]
         public void Deserialize_NestedIntArray_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize("a = [ [1, 2], [3, 4, 5] ]");
+            var parsed = Toml.Read("a = [ [1, 2], [3, 4, 5] ]");
 
             var a = (TomlArray)parsed["a"];
             Assert.Equal(2, a.Count);
@@ -250,7 +250,7 @@ trimmed in raw strings.
         [Fact]
         public void Deserialize_ComplexStrings_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize(@"a = [""all"", 'strings', """"""are the same"""""", '''type''']");
+            var parsed = Toml.Read(@"a = [""all"", 'strings', """"""are the same"""""", '''type''']");
 
             var a = (TomlArray)parsed["a"];
 
@@ -264,7 +264,7 @@ trimmed in raw strings.
         [Fact]
         public void Deserialize_ArrayWithNesteArrayOfDiffernetTypes_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize(@"a = [ [1, 2], [""a"", ""b"",""c""]]");
+            var parsed = Toml.Read(@"a = [ [1, 2], [""a"", ""b"",""c""]]");
 
             var a = (TomlArray)parsed["a"];
 
@@ -282,7 +282,7 @@ trimmed in raw strings.
 
         public void Deserialize_Table_DeserializesCorrectly()
         {
-            var parsed = StringTomlSerializer.Deserialize(@"[table]");
+            var parsed = Toml.Read(@"[table]");
 
             Assert.Equal(1, parsed.Rows.Count);
             Assert.Equal("table", parsed.Get<TomlTable>("table").Name);
@@ -296,7 +296,7 @@ key1 = ""value1""
 key2 = ""value2""
 key3 = ""value3""";
 
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.Equal(3, parsed.Rows.Count);
             Assert.Equal("value1", parsed["key1"].Get<string>());
@@ -312,7 +312,7 @@ key1 = ""value1""
 key_2 = ""value2""
 key-3 = ""value3""";
 
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.Equal(3, parsed.Rows.Count);
             Assert.Equal("value1", parsed["key1"].Get<string>());
@@ -329,7 +329,7 @@ key-3 = ""value3""";
 // ""ʎǝʞ"" = ""value3"""; This case currently doesn't work, but it is such an unimportant case I don't want to put time into it
 // for now, as I really need a basic working TOML system. Hopfully I will have time to take care of this special cases soon.
 
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.Equal(2, parsed.Rows.Count);
             Assert.Equal("value1", parsed["127.0.0.1"].Get<string>());
@@ -347,7 +347,7 @@ type = ""pug""";
             // ""ʎǝʞ"" = ""value3"""; This case currently doesn't work, but it is such an unimportant case I don't want to put time into it
             // for now, as I really need a basic working TOML system. Hopfully I will have time to take care of this special cases soon.
 
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             Assert.NotNull(parsed["dog"]);
             var tt = (TomlTable)((TomlTable)parsed["dog"])["tater.man"];
@@ -364,7 +364,7 @@ b = 1
 [a]
 d = 2";
 
-            var exc = Assert.Throws<Exception>(() => StringTomlSerializer.Deserialize(toParse));
+            var exc = Assert.Throws<Exception>(() => Toml.Read(toParse));
             Assert.True(exc.Message.Contains("[a]"));
             Assert.True(exc.Message.Contains("Defining a table multiple times is not allowed."));
         }
@@ -385,7 +385,7 @@ sku = 284758393
 color = ""gray""
 ";
 
-            var parsed = StringTomlSerializer.Deserialize(toParse);
+            var parsed = Toml.Read(toParse);
 
             var a = (TomlArray)parsed["products"];
             Assert.Equal(3, a.Count);

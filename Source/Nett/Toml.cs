@@ -6,25 +6,25 @@ using System.IO;
 
 namespace Nett
 {
-    public class StringTomlSerializer
+    public class Toml
     {
         public static string Serialize<T>(T obj)
         {
             throw new NotImplementedException();
         }
 
-        public static T Deserialize<T>(string serialized)
+        public static T Read<T>(string serialized)
         {
             throw new NotImplementedException();
         }
 
-        public static TomlTable Deserialize(string serialized)
+        public static TomlTable Read(string toRead)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(serialized);
+            byte[] bytes = Encoding.UTF8.GetBytes(toRead);
             using (var ms = new MemoryStream())
             {
                 StreamWriter writer = new StreamWriter(ms);
-                writer.Write(serialized);
+                writer.Write(toRead);
                 writer.Flush();
                 ms.Position = 0;
                 return StreamTomlSerializer.Deserialize(ms);
