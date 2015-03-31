@@ -11,13 +11,12 @@ namespace Nett
         {
             { typeof(long), new Dictionary<Type, Func<object, object>>()
                 {
-                    { typeof(long), (l) => l },
                     { typeof(int), (l) => (int)(long)l },
                 }
             },
-            { typeof(string), new Dictionary<Type, Func<object, object>>()
+            { typeof(TomlArray), new Dictionary<Type, Func<object, object>>()
                 {
-                    { typeof(string), (s) => s },
+                    { typeof(int[]), (a) => ((TomlArray)a).To<int>().ToArray() }
                 }
             }
         };

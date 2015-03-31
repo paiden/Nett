@@ -44,5 +44,10 @@ namespace Nett
         {
             return Converter.Convert(t, this);
         }
+
+        public IEnumerable<T> To<T>()
+        {
+            return this.items.Select((to) => to.Get<T>());
+        }
     }
 }
