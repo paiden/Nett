@@ -36,23 +36,17 @@ namespace Nett
 
         public override T Get<T>()
         {
-            throw new NotImplementedException();
+            return (T)this.Get(typeof(T));
         }
 
         public override object Get(Type t)
         {
-            throw new NotImplementedException();
-        }
+            var result = Activator.CreateInstance(t);
 
-        public T MapTo<T>()
-        {
-            var t = typeof(T);
-            var result = Activator.CreateInstance<T>();
-
-            foreach(var p in this.Rows)
+            foreach (var p in this.Rows)
             {
                 var targetProperty = t.GetProperty(p.Key);
-                if(targetProperty != null)
+                if (targetProperty != null)
                 {
                     targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
                 }

@@ -16,7 +16,7 @@ namespace Nett
         public static T Read<T>(string toRead)
         {
             TomlTable tt = Read(toRead);
-            T result = tt.MapTo<T>();
+            T result = tt.Get<T>();
             return result;
         }
 
