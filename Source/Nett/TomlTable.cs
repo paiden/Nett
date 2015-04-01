@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.IO;
 
 namespace Nett
 {
@@ -53,6 +55,32 @@ namespace Nett
             }
 
             return result;
+        }
+
+        public static TomlTable From<T>(T obj)
+        {
+            TomlTable tt = new TomlTable("");
+
+            var t = obj.GetType();
+            var props = t.GetProperties();
+
+            foreach(var p in props)
+            {
+                object val = p.GetValue(obj, null);
+                tt.Add(p.Name, TomlValue.From(val, p.PropertyType));
+            }
+
+            return tt;
+        }
+
+        public override void WriteTo(StreamWriter sw)
+        {
+            foreach(var r in this.Rows)
+            {
+                sw.Write("{0} = ", r.Key);
+                r.Value.WriteTo(sw);
+                sw.WriteLine("");
+            }
         }
     }
 }

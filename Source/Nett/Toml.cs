@@ -8,9 +8,19 @@ namespace Nett
 {
     public class Toml
     {
-        public static string Serialize<T>(T obj)
+        public static string WriteString<T>(T obj)
         {
-            throw new NotImplementedException();
+            TomlTable tt = TomlTable.From(obj);
+
+            using (var ms = new MemoryStream(1024))
+            {
+                var sw = new StreamWriter(ms);
+                tt.WriteTo(sw);
+                sw.Flush();
+                ms.Position = 0;
+                StreamReader sr = new StreamReader(ms);
+                return sr.ReadToEnd();
+            }
         }
 
         public static T Read<T>(string toRead)
