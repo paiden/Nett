@@ -19,12 +19,13 @@ namespace Nett.UnitTests
             var s = Toml.WriteString(tc);
 
             // Assert
-            Assert.Equal(s, "StringProp = \"\"\r\n");
+            Assert.Equal(s, "StringProp = \"\"\r\nIntProp = 0\r\n");
         }
 
         private class TestClassA
         {
             public string StringProp { get; set; }
+            public int IntProp { get; set; }
         }
     }
 }

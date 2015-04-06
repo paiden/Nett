@@ -193,6 +193,8 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			val = ParseMLStringVal(t.val); 
 		} else if (la.kind == 11) {
 			Array(out val);
+		} else if (IsTimespan()) {
+			TimespanVal(out val);
 		} else if (NotADateTime()) {
 			NumVal(out val);
 		} else if (la.kind == 4) {
@@ -252,6 +254,18 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		val = a; 
 	}
 
+	void TimespanVal(out TomlObject val) {
+		val = null; this.psb.Clear(); 
+		Hour();
+		Expect(19);
+		this.psb.Append(t.val); 
+		Minute();
+		Expect(19);
+		this.psb.Append(t.val); 
+		Second();
+		val = this.ParseTimespanVal(this.psb.ToString()); 
+	}
+
 	void NumVal(out TomlObject val) {
 		bool neg = false; string sv = null; this.psb.Clear(); 
 		if (la.kind == 1 || la.kind == 2) {
@@ -274,13 +288,13 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		Expect(2);
 		this.psb.Append(t.val); 
 		Day();
-		Expect(19);
+		Expect(20);
 		this.psb.Append(t.val); 
 		Hour();
-		Expect(20);
+		Expect(19);
 		this.psb.Append(t.val); 
 		Minute();
-		Expect(20);
+		Expect(19);
 		this.psb.Append(t.val); 
 		Second();
 		if (la.kind == 21) {
@@ -290,7 +304,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			Sign(out sv);
 			this.psb.Append(sv); 
 			Hour();
-			Expect(20);
+			Expect(19);
 			this.psb.Append(t.val); 
 			Minute();
 		} else SynErr(26);
@@ -354,21 +368,6 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		} else SynErr(28);
 	}
 
-	void Year() {
-		Expect(4);
-		this.psb.Append(t.val); 
-	}
-
-	void Month() {
-		Expect(4);
-		this.psb.Append(t.val); 
-	}
-
-	void Day() {
-		Expect(4);
-		this.psb.Append(t.val); 
-	}
-
 	void Hour() {
 		Expect(4);
 		this.psb.Append(t.val); 
@@ -388,6 +387,21 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			Expect(4);
 			this.psb.Append(t.val); 
 		}
+	}
+
+	void Year() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Month() {
+		Expect(4);
+		this.psb.Append(t.val); 
+	}
+
+	void Day() {
+		Expect(4);
+		this.psb.Append(t.val); 
 	}
 
 
@@ -436,8 +450,8 @@ public class Errors {
 			case 16: s = "\"=\" expected"; break;
 			case 17: s = "\"e\" expected"; break;
 			case 18: s = "\"E\" expected"; break;
-			case 19: s = "\"T\" expected"; break;
-			case 20: s = "\":\" expected"; break;
+			case 19: s = "\":\" expected"; break;
+			case 20: s = "\"T\" expected"; break;
 			case 21: s = "\"Z\" expected"; break;
 			case 22: s = "??? expected"; break;
 			case 23: s = "invalid Key"; break;

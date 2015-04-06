@@ -263,6 +263,16 @@ trimmed in raw strings.
         }
 
         [Fact]
+        public void Deserialize_WihtTimepsan_DeserializesCorrectly()
+        {
+            var parsed = Toml.Read(@"a = 00:10:00.1");
+
+            var a = parsed.Get<TimeSpan>("a");
+
+            Assert.Equal(TimeSpan.Parse("00:10:00.1"), a);
+        }
+
+        [Fact]
         public void Deserialize_ArrayWithNesteArrayOfDiffernetTypes_DeserializesCorrectly()
         {
             var parsed = Toml.Read(@"a = [ [1, 2], [""a"", ""b"",""c""]]");

@@ -11,6 +11,7 @@ namespace Nett.Parser
     {
         private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
         private static readonly StringBuilder ssb = new StringBuilder(1024);
+        private static readonly TomlValue DefaultTimespanValue = new TomlValue<TimeSpan>(TimeSpan.Zero);
 
         private static readonly char[] WhitspaceCharSet =
         {
@@ -59,6 +60,18 @@ namespace Nett.Parser
             ssb.Remove(0, 1);
             ssb.Length--;
             return new TomlValue<string>(ProcessStringValueInCurrentBuilder());
+        }
+
+        private TomlValue ParseTimespanVal(string src)
+        {
+            if(this.errors.count <= 0)
+            {
+                return new TomlValue<TimeSpan>(TimeSpan.Parse(src));
+            }
+            else
+            {
+                return DefaultTimespanValue;
+            }
         }
 
         private static TomlObject ParseMStringVal(string source)
@@ -173,6 +186,18 @@ namespace Nett.Parser
         {
             Token t = la;
             return t.val.Length != 4 && scanner.Peek().val != "-";
+        }
+
+        private bool IsTimespan()
+        {
+            Token t = la;
+            if(t.val.Length != 2 || t.kind != _number) { return false; } else { t = scanner.Peek(); }
+            if(t.val != ":") { return false; } else { t = scanner.Peek(); }
+            if (t.val.Length != 2 || t.kind != _number) { return false; } else { t = scanner.Peek(); }
+            if (t.val != ":") { return false; } else { t = scanner.Peek(); }
+            if (t.val.Length != 2 || t.kind != _number) { return false; }
+
+            return true;
         }
 
         private bool NotAnArray()

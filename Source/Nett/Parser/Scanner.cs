@@ -323,7 +323,7 @@ public class Scanner {
 			case "false": t.kind = 10; break;
 			case "e": t.kind = 17; break;
 			case "E": t.kind = 18; break;
-			case "T": t.kind = 19; break;
+			case "T": t.kind = 20; break;
 			case "Z": t.kind = 21; break;
 			default: break;
 		}
@@ -561,7 +561,7 @@ public class Scanner {
 			case 60:
 				{t.kind = 16; break;}
 			case 61:
-				{t.kind = 20; break;}
+				{t.kind = 19; break;}
 
 		}
 		t.val = new String(tval, 0, tlen);

@@ -81,7 +81,8 @@ PRODUCTIONS
 		| lstring											(. val = ParseLStringVal(t.val); .)
 		| mlstring											(. val = ParseMLStringVal(t.val); .)
 		| Array<out val>
-		| IF(NotADateTime()) NumVal<out val>							
+		| IF(IsTimespan()) TimespanVal<out val>
+		| IF(NotADateTime()) NumVal<out val>		
 		| DateTimeVal<out val>.
 
 	NumVal<out TomlObject val>								(. bool neg = false; string sv = null; this.psb.Clear(); .)
@@ -123,6 +124,11 @@ PRODUCTIONS
 			Value<out v>									(. a.Add(v); .)
 		}
 		ac													(. val = a; .).
+	TimespanVal<out TomlObject val>							(. val = null; this.psb.Clear(); .)
+		= 
+		Hour ':'											(. this.psb.Append(t.val); .)
+		Minute ':'											(. this.psb.Append(t.val); .)
+		Second												(. val = this.ParseTimespanVal(this.psb.ToString()); .).	
 
 	DateTimeVal<out TomlObject val>							(. val = null; string sv = null; this.psb.Clear(); .)
 		= 
