@@ -25,8 +25,13 @@ namespace Nett
 
         public static T Read<T>(string toRead)
         {
+            return Read<T>(toRead, TomlConfig.DefaultInstance);
+        }
+
+        public static T Read<T>(string toRead, TomlConfig tomlConfig)
+        {
             TomlTable tt = Read(toRead);
-            T result = tt.Get<T>();
+            T result = tt.Get<T>(tomlConfig);
             return result;
         }
 

@@ -55,6 +55,7 @@
     <Compile Include="StringTomlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
+    <Compile Include="TomlConfigTests.cs" />
     <Compile Include="WriteTomlTests.cs" />
   </ItemGroup>
   <ItemGroup>

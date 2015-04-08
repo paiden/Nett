@@ -38,10 +38,20 @@ namespace Nett
 
         public override T Get<T>()
         {
+            return this.Get<T>(TomlConfig.DefaultInstance);
+        }
+
+        public override T Get<T>(TomlConfig config)
+        {
             return Converter.Convert<T>(this);
         }
 
         public override object Get(Type t)
+        {
+            return this.Get(t, TomlConfig.DefaultInstance);
+        }
+
+        public override object Get(Type t, TomlConfig config)
         {
             return Converter.Convert(t, this);
         }
@@ -52,6 +62,11 @@ namespace Nett
         }
 
         public override void WriteTo(StreamWriter sw)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteTo(StreamWriter writer, TomlConfig config)
         {
             throw new NotImplementedException();
         }

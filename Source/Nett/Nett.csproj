@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter.cs" />
+    <Compile Include="ITomlConverter.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Parser.UserCode.cs">
       <DependentUpon>Parser.cs</DependentUpon>
@@ -51,6 +52,9 @@
     <Compile Include="StreamTomlSerializer.cs" />
     <Compile Include="Toml.cs" />
     <Compile Include="TomlArray.cs" />
+    <Compile Include="TomlConfig.cs" />
+    <Compile Include="TomlConverter.cs" />
+    <Compile Include="TomlConverterBase.cs" />
     <Compile Include="TomlObject.cs" />
     <Compile Include="TomlTable.cs" />
     <Compile Include="TomlValue.cs" />

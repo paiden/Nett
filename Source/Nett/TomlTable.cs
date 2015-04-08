@@ -38,10 +38,20 @@ namespace Nett
 
         public override T Get<T>()
         {
-            return (T)this.Get(typeof(T));
+            return (T)this.Get<T>(TomlConfig.DefaultInstance);
+        }
+
+        public override T Get<T>(TomlConfig config)
+        {
+            return (T)this.Get(typeof(T), config);
         }
 
         public override object Get(Type t)
+        {
+            return this.Get(t, TomlConfig.DefaultInstance);
+        }
+
+        public override object Get(Type t, TomlConfig config)
         {
             var result = Activator.CreateInstance(t);
 
@@ -50,7 +60,17 @@ namespace Nett
                 var targetProperty = t.GetProperty(p.Key);
                 if (targetProperty != null)
                 {
-                    targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
+                    var converter = config.GetConverter(targetProperty.PropertyType);
+                    if (converter != null)
+                    {
+                        var src = p.Value.Get(converter.SourceType);
+                        var val = converter.FromToml(src);
+                        targetProperty.SetValue(result, val, null);
+                    }
+                    else
+                    {
+                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
+                    }
                 }
             }
 
@@ -75,7 +95,12 @@ namespace Nett
 
         public override void WriteTo(StreamWriter sw)
         {
-            foreach(var r in this.Rows)
+            this.WriteTo(sw, TomlConfig.DefaultInstance);
+        }
+
+        public override void WriteTo(StreamWriter sw, TomlConfig config)
+        {
+            foreach (var r in this.Rows)
             {
                 sw.Write("{0} = ", r.Key);
                 r.Value.WriteTo(sw);

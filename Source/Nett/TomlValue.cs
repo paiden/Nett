@@ -64,15 +64,30 @@ namespace Nett
 
         public override TRes Get<TRes>()
         {
+            return this.Get<TRes>(TomlConfig.DefaultInstance);
+        }
+
+        public override TRes Get<TRes>(TomlConfig config)
+        {
             return Converter.Convert<TRes>(this.Value);
         }
 
         public override object Get(Type t)
         {
+            return this.Get(t, TomlConfig.DefaultInstance);
+        }
+
+        public override object Get(Type t, TomlConfig config)
+        {
             return Converter.Convert(t, this.Value);
         }
 
         public override void WriteTo(StreamWriter writer)
+        {
+            this.WriteTo(writer, TomlConfig.DefaultInstance);
+        }
+
+        public override void WriteTo(StreamWriter writer, TomlConfig config)
         {
             if (ValueType == StringType)
             {
