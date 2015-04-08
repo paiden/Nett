@@ -37,6 +37,11 @@ namespace Nett
             throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", t.FullName));
         }
 
+        public static TomlValue<T> From<T>(T value)
+        {
+            return new TomlValue<T>(value);
+        }
+
         private static bool IsIntegerType(Type t)
         {
             for(int i = 0; i < IntTypes.Length; i++)

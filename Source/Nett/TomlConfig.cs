@@ -9,6 +9,8 @@ namespace Nett
     {
         internal static readonly TomlConfig DefaultInstance = Default();
         private readonly Dictionary<Type, ITomlConverter> converters = new Dictionary<Type, ITomlConverter>();
+        private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
+
         private TomlConfig()
         {
 
@@ -25,11 +27,30 @@ namespace Nett
             return this;
         }
 
+        public TomlConfig AddActivator<T>(Func<object> activator)
+        {
+            this.activators.Add(typeof(T), activator);
+            return this;
+        }
+
         public ITomlConverter GetConverter(Type targetType)
         {
             ITomlConverter conv;
             this.converters.TryGetValue(targetType, out conv);
             return conv;
+        }
+
+        public object GetActivatedInstance(Type t)
+        {
+            Func<object> a;
+            if(this.activators.TryGetValue(t, out a))
+            {
+                return a();
+            }
+            else
+            {
+                return Activator.CreateInstance(t);
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
-            var result = Activator.CreateInstance(t);
+            var result = config.GetActivatedInstance(t);
 
             foreach (var p in this.Rows)
             {
@@ -69,7 +69,7 @@ namespace Nett
                     }
                     else
                     {
-                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
+                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType, config), null);
                     }
                 }
             }
