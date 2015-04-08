@@ -47,5 +47,29 @@ namespace Nett
                 return StreamTomlSerializer.Deserialize(ms);
             }
         }
+
+        public static T ReadFile<T>(string filePath)
+        {
+            return ReadFile<T>(filePath, TomlConfig.DefaultInstance);
+        }
+
+        public static T ReadFile<T>(string filePath, TomlConfig config)
+        {
+            var tt = ReadFile(filePath, config);
+            return tt.Get<T>();
+        }
+
+        public static TomlTable ReadFile(string filePath)
+        {
+            return ReadFile(filePath, TomlConfig.DefaultInstance);
+        }
+
+        public static TomlTable ReadFile(string filePath, TomlConfig config)
+        {
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return StreamTomlSerializer.Deserialize(fs);
+            }
+        }
     }
 }
