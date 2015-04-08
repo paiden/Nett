@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Collections;
 
 namespace Nett
 {
     public sealed class TomlTable : TomlObject
     {
+        private static readonly Type EnumerableType = typeof(IEnumerable);
         public string Name { get; private set; } = "";
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
@@ -87,7 +89,14 @@ namespace Nett
             foreach(var p in props)
             {
                 object val = p.GetValue(obj, null);
-                tt.Add(p.Name, TomlValue.From(val, p.PropertyType));
+                if (EnumerableType.IsAssignableFrom(p.PropertyType))
+                {
+                    tt.Add(p.Name, TomlArray.From((IEnumerable)val));
+                }
+                else
+                {
+                    tt.Add(p.Name, TomlValue.From(val, p.PropertyType));
+                }
             }
 
             return tt;
