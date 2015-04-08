@@ -11,6 +11,7 @@ namespace Nett
     public sealed class TomlTable : TomlObject
     {
         private static readonly Type EnumerableType = typeof(IEnumerable);
+        private static readonly Type StringType = typeof(string);
         public string Name { get; private set; } = "";
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
@@ -89,7 +90,7 @@ namespace Nett
             foreach(var p in props)
             {
                 object val = p.GetValue(obj, null);
-                if (EnumerableType.IsAssignableFrom(p.PropertyType))
+                if (p.PropertyType != StringType && EnumerableType.IsAssignableFrom(p.PropertyType))
                 {
                     tt.Add(p.Name, TomlArray.From((IEnumerable)val));
                 }
