@@ -52,6 +52,8 @@
     <Compile Include="StreamTomlSerializer.cs" />
     <Compile Include="Toml.cs" />
     <Compile Include="TomlArray.cs" />
+    <Compile Include="TomlComment.cs" />
+    <Compile Include="TomlCommentAttribute.cs" />
     <Compile Include="TomlConfig.cs" />
     <Compile Include="TomlConverter.cs" />
     <Compile Include="TomlConverterBase.cs" />

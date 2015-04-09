@@ -5,12 +5,18 @@ using System.Text;
 
 namespace Nett
 {
+    enum TomlCommentLocation
+    {
+        Prepend,
+        Append,
+    }
+
     public class TomlConfig
     {
         internal static readonly TomlConfig DefaultInstance = Default();
         private readonly Dictionary<Type, ITomlConverter> converters = new Dictionary<Type, ITomlConverter>();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
-
+        private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
         {
 
@@ -50,6 +56,16 @@ namespace Nett
             else
             {
                 return Activator.CreateInstance(t);
+            }
+        }
+
+        internal TomlCommentLocation GetCommentLocation(TomlComment c)
+        {
+            switch(c.Location)
+            {
+                case CommentLocation.Append: return TomlCommentLocation.Append;
+                case CommentLocation.Prepend: return TomlCommentLocation.Prepend;
+                default: return DefaultCommentLocation;
             }
         }
     }
