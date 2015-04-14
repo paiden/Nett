@@ -15,6 +15,7 @@ namespace Nett
         protected static readonly Type UInt16Type = typeof(ushort);
         protected static readonly Type UInt32Type = typeof(uint);
         protected static readonly Type StringType = typeof(string);
+        protected static readonly Type TimespanType = typeof(TimeSpan);
 
         private static readonly Type[] IntTypes = new Type[]
             {
@@ -29,7 +30,11 @@ namespace Nett
             {
                 return new TomlValue<string>((string)val);
             }
-            if(IsIntegerType(t))
+            else if(TimespanType == t)
+            {
+                return new TomlValue<TimeSpan>((TimeSpan)val);
+            }
+            else if(IsIntegerType(t))
             {
                 return new TomlValue<long>((long)Convert.ChangeType(val, Int64Type));
             }

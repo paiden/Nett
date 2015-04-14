@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -61,14 +62,42 @@ namespace Nett
             return this.items.Select((to) => to.Get<T>());
         }
 
-        public override void WriteTo(StreamWriter sw)
+        public static TomlArray From(IEnumerable enumerable)
         {
-            throw new NotImplementedException();
+            var a = new TomlArray();
+
+            if (enumerable != null)
+            {
+                foreach (var e in enumerable)
+                {
+                    a.Add(TomlValue.From(e, e.GetType()));
+                }
+            }
+
+            return a;
+        }
+
+        public override void WriteTo(StreamWriter sw )
+        {
+            this.WriteTo(sw, TomlConfig.DefaultInstance);
         }
 
         public override void WriteTo(StreamWriter writer, TomlConfig config)
         {
-            throw new NotImplementedException();
+            writer.Write("[");
+
+            for (int i = 0; i < this.items.Count - 1; i++)
+            {
+                this.items[i].WriteTo(writer);
+                writer.Write(", ");
+            }
+
+            if(this.items.Count > 0)
+            {
+                this.items[this.items.Count - 1].WriteTo(writer);
+            }
+
+            writer.Write("]");
         }
     }
 }

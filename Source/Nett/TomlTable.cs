@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Collections;
 
 namespace Nett
 {
     public sealed class TomlTable : TomlObject
     {
+        private static readonly Type EnumerableType = typeof(IEnumerable);
+        private static readonly Type StringType = typeof(string);
         public string Name { get; private set; } = "";
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
@@ -87,7 +90,18 @@ namespace Nett
             foreach(var p in props)
             {
                 object val = p.GetValue(obj, null);
-                tt.Add(p.Name, TomlValue.From(val, p.PropertyType));
+                TomlObject to = null;
+                if (p.PropertyType != StringType && EnumerableType.IsAssignableFrom(p.PropertyType))
+                {
+                    to = TomlArray.From((IEnumerable)val);
+                }
+                else
+                {
+                    to = TomlValue.From(val, p.PropertyType);
+                }
+
+                AddComments(to, p);
+                tt.Add(p.Name, to);
             }
 
             return tt;
@@ -102,9 +116,37 @@ namespace Nett
         {
             foreach (var r in this.Rows)
             {
+                WriteRowTo(sw, r, config);
+            }
+        }
+
+        private static void WriteRowTo(StreamWriter sw, KeyValuePair<string, TomlObject> r, TomlConfig config)
+        {
+            var prependComments = r.Value.Comments.Where((c) => config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
+            var appendComments = r.Value.Comments.Where((c) => config.GetCommentLocation(c) == TomlCommentLocation.Append);
+
+            foreach(var ppc in prependComments)
+            {
+                sw.WriteLine("# {0}", ppc.CommentText);
+            }
+
                 sw.Write("{0} = ", r.Key);
                 r.Value.WriteTo(sw);
+
+            foreach(var apc in appendComments)
+            {
+                sw.Write(" # {0}", apc.CommentText);
+            }
+
                 sw.WriteLine("");
+            }
+
+        private static void AddComments(TomlObject obj, PropertyInfo pi)
+        {
+            var comments = pi.GetCustomAttributes(typeof(TomlCommentAttribute), false).Cast<TomlCommentAttribute>();
+            foreach(var c in comments)
+            {
+                obj.Comments.Add(new TomlComment(c.Comment, c.Location));
             }
         }
     }
