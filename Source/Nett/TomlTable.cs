@@ -57,7 +57,7 @@ namespace Nett
 
             foreach (var p in this.Rows)
             {
-                var targetProperty = t.GetProperty(p.Key);
+                var targetProperty = result.GetType().GetProperty(p.Key);
                 if (targetProperty != null)
                 {
                     var converter = config.GetConverter(targetProperty.PropertyType);

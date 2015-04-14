@@ -16,7 +16,7 @@ namespace Nett
             this.toToml = toToml;
         }
 
-        public static INeedsToTomlConverter<TTarget, TSource> FromlToml(Func<TSource, TTarget> from)
+        public static INeedsToTomlConverter<TTarget, TSource> FromToml(Func<TSource, TTarget> from)
         {
             return new TomlConverter<TTarget, TSource>(from, null);
         }

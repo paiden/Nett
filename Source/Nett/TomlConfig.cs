@@ -49,7 +49,14 @@ namespace Nett
             }
             else
             {
-                return Activator.CreateInstance(t);
+                try
+                {
+                    return Activator.CreateInstance(t);
+                }
+                catch(MissingMethodException exc)
+                {
+                    throw new Exception(string.Format("{0} Failed to create type '{1}'.", exc.Message, t.FullName));
+                }
             }
         }
     }
