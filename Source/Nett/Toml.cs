@@ -56,7 +56,7 @@ namespace Nett
         public static T ReadFile<T>(string filePath, TomlConfig config)
         {
             var tt = ReadFile(filePath, config);
-            return tt.Get<T>();
+            return tt.Get<T>(config);
         }
 
         public static TomlTable ReadFile(string filePath)

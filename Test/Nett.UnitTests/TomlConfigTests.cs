@@ -14,7 +14,7 @@ namespace Nett.UnitTests
         {
             // Arrange
             var conv = TomlConverter<TestStruct, int>
-                .FromlToml((i) => new TestStruct() { Value = i })
+                .FromToml((i) => new TestStruct() { Value = i })
                 .ToToml((s) => new TomlValue<int>(s.Value));
             var config = TomlConfig.Default().AddConverter(conv);
 

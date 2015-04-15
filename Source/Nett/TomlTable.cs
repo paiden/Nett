@@ -60,7 +60,7 @@ namespace Nett
 
             foreach (var p in this.Rows)
             {
-                var targetProperty = t.GetProperty(p.Key);
+                var targetProperty = result.GetType().GetProperty(p.Key);
                 if (targetProperty != null)
                 {
                     var converter = config.GetConverter(targetProperty.PropertyType);
@@ -130,16 +130,16 @@ namespace Nett
                 sw.WriteLine("# {0}", ppc.CommentText);
             }
 
-            sw.Write("{0} = ", r.Key);
-            r.Value.WriteTo(sw);
+                sw.Write("{0} = ", r.Key);
+                r.Value.WriteTo(sw);
 
             foreach(var apc in appendComments)
             {
                 sw.Write(" # {0}", apc.CommentText);
             }
 
-            sw.WriteLine("");
-        }
+                sw.WriteLine("");
+            }
 
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {
