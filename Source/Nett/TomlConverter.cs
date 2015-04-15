@@ -1,46 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace Nett
 {
-    public sealed class TomlConverter<TTarget, TSource> : TomlConverterBase<TTarget, TSource>, INeedsToTomlConverter<TTarget, TSource>
+    [DebuggerDisplay("{FromType} -> {ToType}")]
+    public sealed class TomlConverter<TFrom, TTo> : TomlConverterBase<TFrom, TTo>
     {
-        private readonly Func<TSource, TTarget> fromToml;
-        private readonly Func<TTarget, TomlObject> toToml;
+        private readonly Func<TFrom, TTo> convert;
 
-        private TomlConverter(Func<TSource, TTarget> fromToml, Func<TTarget, TomlObject> toToml)
+        public TomlConverter(Func<TFrom, TTo> convert)
         {
-            this.fromToml = fromToml;
-            this.toToml = toToml;
+            if(convert == null) { throw new ArgumentNullException(nameof(convert)); }
+
+            this.convert = convert;
         }
 
-        public static INeedsToTomlConverter<TTarget, TSource> FromToml(Func<TSource, TTarget> from)
+        public override TTo Convert(TFrom from)
         {
-            return new TomlConverter<TTarget, TSource>(from, null);
+            return this.convert(from);
         }
-
-        public override TTarget FromToml(TSource src)
-        {
-            return this.fromToml(src);
-        }
-
-        public override TomlObject ToToml(TTarget value)
-        {
-            return this.toToml(value);
-        }
-
-        public TomlConverter<TTarget, TSource> ToToml(Func<TTarget, TomlObject> convert)
-        {
-            if (convert == null) { throw new ArgumentNullException(nameof(convert)); }
-
-            return new TomlConverter<TTarget, TSource>(this.fromToml, convert);
-        }
-    }
-
-    public interface INeedsToTomlConverter<TTarget, TSource>
-    {
-        TomlConverter<TTarget, TSource> ToToml(Func<TTarget, TomlObject> convert);
     }
 }

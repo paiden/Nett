@@ -63,11 +63,11 @@ namespace Nett
                 var targetProperty = result.GetType().GetProperty(p.Key);
                 if (targetProperty != null)
                 {
-                    var converter = config.GetConverter(targetProperty.PropertyType);
+                    var converter = config.GetFromTomlConverter(targetProperty.PropertyType);
                     if (converter != null)
                     {
-                        var src = p.Value.Get(converter.SourceType);
-                        var val = converter.FromToml(src);
+                        var src = p.Value.Get(converter.FromType);
+                        var val = converter.Convert(src);
                         targetProperty.SetValue(result, val, null);
                     }
                     else
@@ -80,7 +80,7 @@ namespace Nett
             return result;
         }
 
-        public static TomlTable From<T>(T obj)
+        public static TomlTable From<T>(T obj, TomlConfig config)
         {
             TomlTable tt = new TomlTable("");
 
@@ -91,7 +91,13 @@ namespace Nett
             {
                 object val = p.GetValue(obj, null);
                 TomlObject to = null;
-                if (p.PropertyType != StringType && EnumerableType.IsAssignableFrom(p.PropertyType))
+
+                var converter = config.GetToTomlConverter(p.PropertyType);
+                if(converter != null)
+                {
+                    to = (TomlObject)converter.Convert(val);
+                }
+                else if (p.PropertyType != StringType && EnumerableType.IsAssignableFrom(p.PropertyType))
                 {
                     to = TomlArray.From((IEnumerable)val);
                 }

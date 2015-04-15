@@ -11,10 +11,11 @@ namespace Nett
         Append,
     }
 
-    public class TomlConfig
+    public sealed partial class TomlConfig
     {
         internal static readonly TomlConfig DefaultInstance = Default();
-        private readonly Dictionary<Type, ITomlConverter> converters = new Dictionary<Type, ITomlConverter>();
+        private readonly Dictionary<Type, ITomlConverter> fromTomlConverters = new Dictionary<Type, ITomlConverter>();
+        private readonly Dictionary<Type, ITomlConverter> toTomlConverters = new Dictionary<Type, ITomlConverter>();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
         private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
@@ -29,7 +30,15 @@ namespace Nett
 
         public TomlConfig AddConverter(ITomlConverter converter)
         {
-            this.converters.Add(converter.TargetType, converter);
+            if (typeof(TomlObject).IsAssignableFrom(converter.ToType))
+            {
+                this.toTomlConverters.Add(converter.FromType, converter);
+            }
+            else
+            {
+                this.fromTomlConverters.Add(converter.ToType, converter);
+            }
+
             return this;
         }
 
@@ -39,10 +48,17 @@ namespace Nett
             return this;
         }
 
-        public ITomlConverter GetConverter(Type targetType)
+        internal ITomlConverter GetFromTomlConverter(Type toType)
         {
             ITomlConverter conv;
-            this.converters.TryGetValue(targetType, out conv);
+            this.fromTomlConverters.TryGetValue(toType, out conv);
+            return conv;
+        }
+
+        internal ITomlConverter GetToTomlConverter(Type fromType)
+        {
+            ITomlConverter conv;
+            this.toTomlConverters.TryGetValue(fromType, out conv);
             return conv;
         }
 

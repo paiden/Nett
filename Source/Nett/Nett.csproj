@@ -54,6 +54,9 @@
     <Compile Include="TomlArray.cs" />
     <Compile Include="TomlComment.cs" />
     <Compile Include="TomlCommentAttribute.cs" />
+    <Compile Include="TomlConfig.Builder.cs">
+      <DependentUpon>TomlConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="TomlConfig.cs" />
     <Compile Include="TomlConverter.cs" />
     <Compile Include="TomlConverterBase.cs" />

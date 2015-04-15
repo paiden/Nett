@@ -10,7 +10,12 @@ namespace Nett
     {
         public static string WriteString<T>(T obj)
         {
-            TomlTable tt = TomlTable.From(obj);
+            return WriteString(obj, TomlConfig.DefaultInstance);
+        }
+
+        public static string WriteString<T>(T obj, TomlConfig config)
+        {
+            TomlTable tt = TomlTable.From(obj, config);
 
             using (var ms = new MemoryStream(1024))
             {

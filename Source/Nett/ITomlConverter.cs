@@ -7,16 +7,14 @@ namespace Nett
 {
     public interface ITomlConverter
     {
-        Type TargetType { get; }
-        Type SourceType { get; }
+        Type FromType { get; }
+        Type ToType { get; }
 
-        TomlObject ToToml(object value);
-        object FromToml(object value);
+        object Convert(object value);
     }
 
-    public interface ITomlConverter<TTarget, TSource> : ITomlConverter
+    public interface ITomlConverter<TFrom, TTo> : ITomlConverter
     {
-        TomlObject ToToml(TTarget value);
-        TTarget FromToml(TSource value);
+        TTo Convert(TFrom src);
     }
 }

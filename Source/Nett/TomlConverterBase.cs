@@ -5,24 +5,18 @@ using System.Text;
 
 namespace Nett
 {
-    public abstract class TomlConverterBase<TTarget, TSource> : ITomlConverter<TTarget, TSource>
+    public abstract class TomlConverterBase<TFrom, TTo> : ITomlConverter<TFrom, TTo>
     {
-        private static readonly Type TargetTypeInternal = typeof(TTarget);
-        private static readonly Type SourceTypeInternal = typeof(TSource);
-        public Type SourceType => SourceTypeInternal;
-        public Type TargetType => TargetTypeInternal;
+        public static readonly Type StaticFromType = typeof(TFrom);
+        public static readonly Type StaticToType = typeof(TTo);
 
-        public abstract TTarget FromToml(TSource src);
+        public Type FromType => StaticFromType;
+        public Type ToType => StaticToType;
 
-        public abstract TomlObject ToToml(TTarget value);
-
-        public TomlObject ToToml(object value)
+        public object Convert(object o)
         {
-            return this.ToToml((TTarget)value);
+            return (TTo)this.Convert((TFrom)o);
         }
-        public object FromToml(object value)
-        {
-            return this.FromToml((TSource)value);
-        }
+        public abstract TTo Convert(TFrom from);
     }
 }
