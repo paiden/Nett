@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="ClassReaderTests.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
+    <Compile Include="ReadTomlGenericTests.cs" />
     <Compile Include="StringTomlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />

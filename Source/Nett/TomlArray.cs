@@ -9,6 +9,8 @@ namespace Nett
 {
     public class TomlArray : TomlObject
     {
+        private readonly Type ListType = typeof(IList);
+        private readonly Type ObjectType = typeof(object);
         private readonly List<TomlObject> items = new List<TomlObject>();
 
         public void Add(TomlObject o)
@@ -54,7 +56,38 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
-            return Converter.Convert(t, this);
+            if(t.IsArray)
+            {
+                var et = t.GetElementType();
+                var a = Array.CreateInstance(et, this.items.Count);
+                int cnt = 0;
+                foreach(var i in this.items)
+                {
+                    a.SetValue(i.Get(et, config), cnt++);
+                }
+
+                return a;
+            }
+
+
+            if(!ListType.IsAssignableFrom(t))
+            {
+                throw new InvalidOperationException(string.Format("Cannot convert TOML array to '{0}'.", t.FullName));
+            }
+
+            var collection = (IList)Activator.CreateInstance(t);
+            Type itemType = ObjectType;
+            if(t.IsGenericType)
+            {
+                itemType = t.GetGenericArguments()[0];
+            }
+
+            foreach(var i in this.items)
+            {
+                collection.Add(i.Get(itemType));
+            }
+
+            return collection;
         }
 
         public IEnumerable<T> To<T>()

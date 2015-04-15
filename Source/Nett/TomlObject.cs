@@ -6,6 +6,12 @@ using System.Text;
 
 namespace Nett
 {
+    enum TomlObjectType
+    {
+        Array,
+        Value,
+    }
+
     public abstract class TomlObject
     {
         internal List<TomlComment> Comments { get; private set; }
