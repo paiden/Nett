@@ -89,7 +89,8 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
-            return Converter.Convert(t, this.Value);
+            var userConverter = config.GetFromTomlConverter(t);
+            return userConverter != null ? userConverter.Convert(this.Value) : Converter.Convert(t, this.value);
         }
 
         public override void WriteTo(StreamWriter writer)

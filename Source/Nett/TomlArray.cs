@@ -84,7 +84,7 @@ namespace Nett
 
             foreach(var i in this.items)
             {
-                collection.Add(i.Get(itemType));
+                collection.Add(i.Get(itemType, config));
             }
 
             return collection;

@@ -42,6 +42,30 @@ namespace Nett.UnitTests
             Assert.Equal("S = 222\r\n", ser);
         }
 
+        [Fact]
+        public void RadToml_WithGenricConverters_CanFindCorrectConverter()
+        {
+            // Arrange
+            var config = TomlConfig.Default()
+                .AddConversion().From<string>().To<IGeneric<int>>().As((s) => new GenericImpl<int>(int.Parse(s)))
+                .AddConversion().From<string>().To<IGeneric<string>>().As((s) => new GenericImpl<string>(s));
+
+            string toml = @"
+Foo = ""Hello""
+Foo2 = ""10""
+Foo3 = [""A""]";
+
+            // Act
+            var co = Toml.Read<GenericHost>(toml, config);
+
+            // Assert
+            Assert.NotNull(co);
+            Assert.NotNull(co.Foo);
+            Assert.Equal("Hello", co.Foo.Value);
+            Assert.NotNull(co.Foo2);
+            Assert.Equal(10, co.Foo2.Value);
+        }
+
         private class ConfigObject
         {
             public TestStruct S { get; set; }
@@ -50,6 +74,29 @@ namespace Nett.UnitTests
         private struct TestStruct
         {
             public int Value;
+        }
+
+        private class GenericHost
+        {
+            public IGeneric<string> Foo { get; set; }
+            public IGeneric<int> Foo2 { get; set; }
+
+            public List<IGeneric<string>> Foo3 { get; set; }
+        }
+
+        private interface IGeneric<T>
+        {
+            T Value { get; set;}
+        }
+
+        private class GenericImpl<T> : IGeneric<T>
+        {
+            public T Value { get; set; }
+
+            public GenericImpl(T val)
+            {
+                this.Value = val;
+            }
         }
     }
 }
