@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22512.0
+VisualStudioVersion = 14.0.22609.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.UnitTests", "..\..\Test\Nett.UnitTests\Nett.UnitTests.csproj", "{C7FDD1D2-70F8-4808-8F39-27267C159CF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett", "..\..\Source\Nett\Nett.csproj", "{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E524EAFD-2545-4294-A49C-E05200F9363F}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\build.ps1 = ..\..\build.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
