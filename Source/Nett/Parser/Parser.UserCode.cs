@@ -200,6 +200,11 @@ namespace Nett.Parser
             return true;
         }
 
+        private bool IsArray()
+        {
+            return la.val == "[" && scanner.Peek().val == "[";
+        }
+
         private bool NotAnArray()
         {
             Token t = la;

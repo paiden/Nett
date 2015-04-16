@@ -172,8 +172,10 @@ PRODUCTIONS
 		}
 		']'													(. this.CreateTable(tableNames); .)
 		(
-			{ TomlTable 
+			{ IF(IsArray()) TomlArrayTable
+			| TomlTable 
 			| KeyValuePair<out key, out val>				(. this.AddKeyValue(key, val); .)
+			
 			}
 		).
 

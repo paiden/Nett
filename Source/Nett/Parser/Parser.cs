@@ -136,7 +136,9 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		Expect(12);
 		this.CreateTable(tableNames); 
 		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
-			if (la.kind == 11) {
+			if (IsArray()) {
+				TomlArrayTable();
+			} else if (la.kind == 11) {
 				TomlTable();
 			} else {
 				KeyValuePair(out key, out val);

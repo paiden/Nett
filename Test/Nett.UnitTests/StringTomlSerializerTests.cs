@@ -410,5 +410,19 @@ color = ""gray""
             var t3 = (TomlTable)a[2];
             Assert.Equal("Nail", t3.Get<string>("name"));
         }
+
+
+        [Fact]
+        public void Deserialize_TableArrayAfterOtherItems_DeserializesCorrectly()
+        {
+            string toParse = @"
+[Runtime]
+[[Resource]]
+Dir = ""C:\\""
+Files = [ ""MyApp.exe"" ]
+";
+
+            var parsed = Toml.Read(toParse);
+        }
     }
 }
