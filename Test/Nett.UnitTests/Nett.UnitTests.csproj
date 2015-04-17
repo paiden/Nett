@@ -54,10 +54,12 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="ReadAdvancedTomlTests.cs" />
+    <Compile Include="ReadValidTomlUntypedTests.cs" />
     <Compile Include="StringTomlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TomlConfigTests.cs" />
+    <Compile Include="TomlStrings.cs" />
     <Compile Include="WriteTomlTests.cs" />
   </ItemGroup>
   <ItemGroup>

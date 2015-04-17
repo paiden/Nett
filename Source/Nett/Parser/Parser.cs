@@ -21,11 +21,8 @@ internal sealed partial class Parser {
 	public const int _mlstring = 8;
 	public const int _true = 9;
 	public const int _false = 10;
-	public const int _ao = 11;
-	public const int _ac = 12;
-	public const int _as = 13;
-	public const int _us = 14;
-	public const int _dot = 15;
+	public const int _us = 11;
+	public const int _dot = 12;
 	public const int maxT = 22;
 
 	const bool _T = true;
@@ -105,7 +102,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	
 	void Toml() {
 		string key; TomlObject val; 
-		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
+		while (la.kind == 3 || la.kind == 5 || la.kind == 16) {
 			if (la.kind == 3 || la.kind == 5) {
 				KeyValuePair(out key, out val);
 				this.AddKeyValue(key, val); 
@@ -119,26 +116,26 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void KeyValuePair(out string key, out TomlObject val) {
 		Key(out key);
-		Expect(16);
+		Expect(13);
 		Value(out val);
 	}
 
 	void TomlTable() {
 		string tableName = null; string key = null; TomlObject val = null; List<string> tableNames = new List<string>(); 
-		Expect(11);
+		Expect(16);
 		Key(out tableName);
 		tableNames.Add(tableName); 
-		while (la.kind == 15) {
+		while (la.kind == 12) {
 			Get();
 			Key(out tableName);
 			tableNames.Add(tableName); 
 		}
-		Expect(12);
+		Expect(18);
 		this.CreateTable(tableNames); 
-		while (la.kind == 3 || la.kind == 5 || la.kind == 11) {
+		while (la.kind == 3 || la.kind == 5 || la.kind == 16) {
 			if (IsArray()) {
 				TomlArrayTable();
-			} else if (la.kind == 11) {
+			} else if (la.kind == 16) {
 				TomlTable();
 			} else {
 				KeyValuePair(out key, out val);
@@ -149,18 +146,18 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void TomlArrayTable() {
 		string arrayName = null; string key= null; TomlObject val = null; 
-		Expect(11);
-		Expect(11);
+		Expect(16);
+		Expect(16);
 		Key(out arrayName);
 		var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); 
-		Expect(12);
-		Expect(12);
+		Expect(18);
+		Expect(18);
 		while (la.kind == 3 || la.kind == 5) {
 			KeyValuePair(out key, out val);
 			t.Add(key, val); 
 		}
-		while (la.kind == 11) {
-			if (la.kind == 11) {
+		while (la.kind == 16) {
+			if (la.kind == 16) {
 				TomlArrayTable();
 			} else {
 				TomlTable();
@@ -193,7 +190,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		} else if (la.kind == 8) {
 			Get();
 			val = ParseMLStringVal(t.val); 
-		} else if (la.kind == 11) {
+		} else if (la.kind == 16) {
 			Array(out val);
 		} else if (IsTimespan()) {
 			TimespanVal(out val);
@@ -244,15 +241,17 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void Array(out TomlObject val) {
 		TomlObject v = null; val = null; var a = new TomlArray(); 
-		Expect(11);
-		Value(out v);
-		a.Add(v); 
-		while (la.kind == 13) {
+		Expect(16);
+		while (StartOf(2)) {
+			Value(out v);
+			a.Add(v); 
+		}
+		while (la.kind == 17) {
 			Get();
 			Value(out v);
 			a.Add(v); 
 		}
-		Expect(12);
+		Expect(18);
 		val = a; 
 	}
 
@@ -276,7 +275,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		if(sv == "-") neg = true; 
 		IntNumS();
 		val = this.ParseIntVal(this.psb, neg); 
-		if (la.kind == 15 || la.kind == 17 || la.kind == 18) {
+		if (la.kind == 12 || la.kind == 14 || la.kind == 15) {
 			FloatPart(neg, out val);
 		}
 	}
@@ -327,7 +326,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	void IntNumS() {
 		Expect(4);
 		psb.Append(t.val); 
-		while (la.kind == 14) {
+		while (la.kind == 11) {
 			Get();
 			Expect(4);
 			psb.Append(t.val); 
@@ -336,8 +335,8 @@ private readonly StringBuilder psb = new StringBuilder(32);
 
 	void FloatPart(bool neg, out TomlObject val) {
 		val = null; string sv = null; 
-		if (la.kind == 17 || la.kind == 18) {
-			if (la.kind == 17) {
+		if (la.kind == 14 || la.kind == 15) {
+			if (la.kind == 14) {
 				Get();
 			} else {
 				Get();
@@ -349,12 +348,12 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			this.psb.Append(sv); 
 			IntNumS();
 			val = this.ParseFloatVal(this.psb, neg); 
-		} else if (la.kind == 15) {
+		} else if (la.kind == 12) {
 			Get();
 			this.psb.Append(t.val); 
 			IntNumS();
-			if (la.kind == 17 || la.kind == 18) {
-				if (la.kind == 17) {
+			if (la.kind == 14 || la.kind == 15) {
+				if (la.kind == 14) {
 					Get();
 				} else {
 					Get();
@@ -383,7 +382,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	void Second() {
 		Expect(4);
 		this.psb.Append(t.val); 
-		if (la.kind == 15) {
+		if (la.kind == 12) {
 			Get();
 			this.psb.Append(t.val); 
 			Expect(4);
@@ -419,7 +418,8 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	
 	static readonly bool[,] set = {
 		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-		{_x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x}
+		{_x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+		{_x,_T,_T,_x, _T,_T,_T,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x}
 
 	};
 } // end Parser
@@ -444,14 +444,14 @@ public class Errors {
 			case 8: s = "mlstring expected"; break;
 			case 9: s = "true expected"; break;
 			case 10: s = "false expected"; break;
-			case 11: s = "ao expected"; break;
-			case 12: s = "ac expected"; break;
-			case 13: s = "as expected"; break;
-			case 14: s = "us expected"; break;
-			case 15: s = "dot expected"; break;
-			case 16: s = "\"=\" expected"; break;
-			case 17: s = "\"e\" expected"; break;
-			case 18: s = "\"E\" expected"; break;
+			case 11: s = "us expected"; break;
+			case 12: s = "dot expected"; break;
+			case 13: s = "\"=\" expected"; break;
+			case 14: s = "\"e\" expected"; break;
+			case 15: s = "\"E\" expected"; break;
+			case 16: s = "\"[\" expected"; break;
+			case 17: s = "\",\" expected"; break;
+			case 18: s = "\"]\" expected"; break;
 			case 19: s = "\":\" expected"; break;
 			case 20: s = "\"T\" expected"; break;
 			case 21: s = "\"Z\" expected"; break;

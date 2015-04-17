@@ -38,9 +38,6 @@ TOKENS
 	mlstring = "\'\'\'" {ac} "\'\'\'".
 	true = "true".
 	false = "false".
-	ao = '['.
-	ac = ']'.
-	as = ','.
 	us = '_'.
 	dot = '.'.
 
@@ -117,13 +114,15 @@ PRODUCTIONS
 
 	Array<out TomlObject val>								(. TomlObject v = null; val = null; var a = new TomlArray(); .)
 		= 
-		ao
-		Value<out v>										(. a.Add(v); .)
+		'['
+		{ 
+			Value<out v>									(. a.Add(v); .) 
+		}									
 		{
-			as
+			','
 			Value<out v>									(. a.Add(v); .)
 		}
-		ac													(. val = a; .).
+		']'													(. val = a; .).
 	TimespanVal<out TomlObject val>							(. val = null; this.psb.Clear(); .)
 		= 
 		Hour ':'											(. this.psb.Append(t.val); .)
