@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Nett.UnitTests
+{
+    public class ReadAdvancedTomlTests
+    {
+        [Fact]
+        public void ReadAdvancedToml_WithArray()
+        {
+            // Arrange
+            var toml = @"
+StringArray = [""A"", ""B"", ""C""]
+IntArray = [1, 2, 3]
+StringList = [""A"", ""B"", ""C""]
+IntList = [1, 2, 3]";
+
+            // Act
+            var read = Toml.Read<WithArray>(toml);
+
+            // Assert
+            Assert.NotNull(read);
+            Assert.NotNull(read.StringList);
+            Assert.Equal(3, read.StringList.Count);
+            Assert.NotNull(read.IntList);
+            Assert.Equal(3, read.IntList.Count);
+            Assert.NotNull(read.StringArray);
+            Assert.Equal(3, read.StringArray.Length);
+            Assert.NotNull(read.IntArray);
+            Assert.Equal(3, read.IntArray.Length);
+        }
+
+        private class WithArray
+        {
+            public List<string> StringList { get; set; }
+
+            public List<int> IntList { get; set; }
+
+            public string[] StringArray { get; set; }
+
+            public int[] IntArray { get; set; }
+        }
+
+
+        [Fact]
+        public void ReadAdvancedToml_TableArrayAfterOtherItems()
+        {
+            string toParse = @"
+X = 0
+[Tbl]
+    [[Array]]
+        A = ""test""
+        B = [ ""SA"", ""SB"" ]
+";
+
+            var read = Toml.Read<Root>(toParse);
+
+            Assert.NotNull(read);
+            Assert.NotNull(read.Tbl);
+            Assert.NotNull(read.Tbl.Array);
+            Assert.Equal(1, read.Tbl.Array.Count);
+            var r = read.Tbl.Array[0];
+            Assert.Equal("test", r.A);
+            Assert.NotNull(r.B);
+            Assert.Equal(2, r.B.Length);
+            Assert.Equal("SA", r.B[0]);
+            Assert.Equal("SB", r.B[1]);
+        }
+
+        public class Root
+        {
+            public int X { get; set; }
+
+            public Tbl Tbl { get; set; }
+
+        }
+
+        public class Tbl
+        {
+            public List<ArrayType> Array { get; set; }
+        }
+
+        public class ArrayType
+        {
+            public string A { get; set; }
+            public string[] B { get; set; }
+        }
+    }
+}

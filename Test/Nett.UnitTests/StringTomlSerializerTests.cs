@@ -412,17 +412,5 @@ color = ""gray""
         }
 
 
-        [Fact]
-        public void Deserialize_TableArrayAfterOtherItems_DeserializesCorrectly()
-        {
-            string toParse = @"
-[Runtime]
-[[Resource]]
-Dir = ""C:\\""
-Files = [ ""MyApp.exe"" ]
-";
-
-            var parsed = Toml.Read(toParse);
-        }
     }
 }
