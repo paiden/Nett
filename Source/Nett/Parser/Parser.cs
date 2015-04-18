@@ -242,14 +242,17 @@ private readonly StringBuilder psb = new StringBuilder(32);
 	void Array(out TomlObject val) {
 		TomlObject v = null; val = null; var a = new TomlArray(); 
 		Expect(16);
-		while (StartOf(2)) {
+		if (StartOf(2)) {
 			Value(out v);
 			a.Add(v); 
-		}
-		while (la.kind == 17) {
-			Get();
-			Value(out v);
-			a.Add(v); 
+			while (CommaWithAppendedValueInArray()) {
+				Expect(17);
+				Value(out v);
+				a.Add(v); 
+			}
+			if (la.kind == 17) {
+				Get();
+			}
 		}
 		Expect(18);
 		val = a; 

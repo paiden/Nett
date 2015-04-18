@@ -115,13 +115,14 @@ PRODUCTIONS
 	Array<out TomlObject val>								(. TomlObject v = null; val = null; var a = new TomlArray(); .)
 		= 
 		'['
-		{ 
-			Value<out v>									(. a.Add(v); .) 
-		}									
-		{
-			','
-			Value<out v>									(. a.Add(v); .)
-		}
+		[ 
+			Value<out v>									(. a.Add(v); .) 								
+			{
+				IF(CommaWithAppendedValueInArray())','
+				Value<out v>								(. a.Add(v); .)
+			}
+			[',']
+		]
 		']'													(. val = a; .).
 	TimespanVal<out TomlObject val>							(. val = null; this.psb.Clear(); .)
 		= 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -61,6 +62,7 @@ namespace Nett
         }
     }
 
+    [DebuggerDisplay("{value}:{typeof(T).FullName}")]
     public sealed class TomlValue<T> : TomlValue
     {
         private static readonly Type ValueType = typeof(T);
