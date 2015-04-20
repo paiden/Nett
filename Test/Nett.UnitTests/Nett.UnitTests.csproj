@@ -54,6 +54,7 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="ReadAdvancedTomlTests.cs" />
+    <Compile Include="ReadValidTomlTypedTests.cs" />
     <Compile Include="ReadValidTomlUntypedTests.cs" />
     <Compile Include="StringTomlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
