@@ -17,6 +17,8 @@ namespace Nett
         protected static readonly Type UInt32Type = typeof(uint);
         protected static readonly Type StringType = typeof(string);
         protected static readonly Type TimespanType = typeof(TimeSpan);
+        protected static readonly Type FloatType = typeof(float);
+        protected static readonly Type DoubleType = typeof(double);
 
         private static readonly Type[] IntTypes = new Type[]
             {
@@ -25,28 +27,38 @@ namespace Nett
                 UInt16Type, UInt32Type,
             };
 
-        public static TomlValue From(object val, Type t)
+        public static TomlValue From(object val, Type targetType)
         {
-            if(StringType == t)
+            if(StringType == targetType)
             {
                 return new TomlValue<string>((string)val);
             }
-            else if(TimespanType == t)
+            else if(TimespanType == targetType)
             {
                 return new TomlValue<TimeSpan>((TimeSpan)val);
             }
-            else if(IsIntegerType(t))
+            else if(IsFloatType(targetType))
+            {
+                return new TomlValue<double>((double)Convert.ChangeType(val, DoubleType));
+            }
+            else if(IsIntegerType(targetType))
             {
                 return new TomlValue<long>((long)Convert.ChangeType(val, Int64Type));
             }
 
-            throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", t.FullName));
+            throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
         }
 
         public static TomlValue<T> From<T>(T value)
         {
             return new TomlValue<T>(value);
         }
+
+        internal static bool CanCreateFrom(Type t)
+        {
+            return t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t);
+        }
+
 
         private static bool IsIntegerType(Type t)
         {
@@ -59,6 +71,11 @@ namespace Nett
             }
 
             return false;
+        }
+
+        private static bool IsFloatType(Type t)
+        {
+            return t == DoubleType || t == FloatType;
         }
     }
 

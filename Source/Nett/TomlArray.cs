@@ -13,6 +13,8 @@ namespace Nett
         private readonly Type ObjectType = typeof(object);
         private readonly List<TomlObject> items = new List<TomlObject>();
 
+        internal List<Toml> Items { get { return this.items; } }
+
         public void Add(TomlObject o)
         {
             this.items.Add(o);
@@ -24,6 +26,11 @@ namespace Nett
             {
                 return this.items.Count;
             }
+        }
+
+        internal bool IsTableArrayInternal()
+        {
+            return this.items.Count > 0 && this.items[0].GetType() == Types.TomlTableType;
         }
 
         public TomlObject this[int index]
@@ -100,7 +107,7 @@ namespace Nett
             return this.items.Select((to) => to.Get<T>());
         }
 
-        public static TomlArray From(IEnumerable enumerable)
+        public static TomlArray From(IEnumerable enumerable, TomlConfig config)
         {
             var a = new TomlArray();
 
@@ -108,7 +115,7 @@ namespace Nett
             {
                 foreach (var e in enumerable)
                 {
-                    a.Add(TomlValue.From(e, e.GetType()));
+                    a.Add(TomlObject.From(e, config));
                 }
             }
 
@@ -122,8 +129,9 @@ namespace Nett
 
         public override void WriteTo(StreamWriter writer, TomlConfig config)
         {
+            
             writer.Write("[");
-
+            
             for (int i = 0; i < this.items.Count - 1; i++)
             {
                 this.items[i].WriteTo(writer);

@@ -10,6 +10,13 @@ namespace Nett
 {
     public sealed class TomlTable : TomlObject
     {
+        private enum RowType
+        {
+            Property,
+            Table,
+            TableArray,
+        }
+
         private static readonly Type EnumerableType = typeof(IEnumerable);
         private static readonly Type StringType = typeof(string);
         private static readonly Type TomlTableType = typeof(TomlTable);
@@ -93,21 +100,7 @@ namespace Nett
             foreach(var p in props)
             {
                 object val = p.GetValue(obj, null);
-                TomlObject to = null;
-
-                var converter = config.GetToTomlConverter(p.PropertyType);
-                if(converter != null)
-                {
-                    to = (TomlObject)converter.Convert(val);
-                }
-                else if (p.PropertyType != StringType && EnumerableType.IsAssignableFrom(p.PropertyType))
-                {
-                    to = TomlArray.From((IEnumerable)val);
-                }
-                else
-                {
-                    to = TomlValue.From(val, p.PropertyType);
-                }
+                TomlObject to = TomlObject.From(val, config);
 
                 AddComments(to, p);
                 tt.Add(p.Name, to);
@@ -123,13 +116,45 @@ namespace Nett
 
         public override void WriteTo(StreamWriter sw, TomlConfig config)
         {
-            foreach (var r in this.Rows)
+            WriteProperties(sw, config);
+            WriteSubTables(sw, config);
+            WriteTableArrays(sw, config);
+        }
+
+        private void WriteProperties(StreamWriter sw, TomlConfig config)
+        {
+            foreach(var r in this.Rows)
             {
-                WriteRowTo(sw, r, config);
+                if(!(r.Value.IsTable || r.Value.IsTableArray))
+                {
+                    WriteRowTo(sw, r, config, RowType.Property);
+                }
             }
         }
 
-        private static void WriteRowTo(StreamWriter sw, KeyValuePair<string, TomlObject> r, TomlConfig config)
+        private void WriteTableArrays(StreamWriter sw, TomlConfig config)
+        {
+            foreach(var r in this.Rows)
+            {
+                if (r.Value.IsTableArray)
+                {
+                    WriteRowTo(sw, r, config, RowType.TableArray);
+                }
+            }
+        }
+
+        private void WriteSubTables(StreamWriter sw, TomlConfig config)
+        {
+            foreach (var r in this.Rows)
+            {
+                if (r.Value.IsTable)
+                {
+                    WriteRowTo(sw, r, config, RowType.Table);
+                }
+            }
+        }
+
+        private void WriteRowTo(StreamWriter sw, KeyValuePair<string, TomlObject> r, TomlConfig config, RowType rt)
         {
             var prependComments = r.Value.Comments.Where((c) => config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
             var appendComments = r.Value.Comments.Where((c) => config.GetCommentLocation(c) == TomlCommentLocation.Append);
@@ -139,16 +164,34 @@ namespace Nett
                 sw.WriteLine("# {0}", ppc.CommentText);
             }
 
-                sw.Write("{0} = ", r.Key);
-                r.Value.WriteTo(sw);
+            switch(rt)
+            {
+                case RowType.Property: sw.Write("{0} = ", r.Key); break;
+                case RowType.Table: sw.WriteLine("[{0}]", r.Key); break;
+                case RowType.TableArray: TomlWriter.WriteTomlArrayTable(sw, (TomlArray)r.Value, this, r.Key, config); break;
+            }
+    
+            r.Value.WriteTo(sw);
 
             foreach(var apc in appendComments)
             {
                 sw.Write(" # {0}", apc.CommentText);
             }
 
-                sw.WriteLine("");
-            }
+            sw.WriteLine("");
+        }
+
+        private static void WritePropertyRow(StreamWriter sw, KeyValuePair<string, TomlObject> r, TomlConfig config)
+        {
+            sw.Write("{0} = ", r.Key);
+            r.Value.WriteTo(sw);
+        }
+
+        private static void WriteTableRow(StreamWriter sw, KeyValuePair<string, TomlObject> r, TomlConfig config)
+        {
+            sw.Write("[{0}]", r.Key);
+            r.Value.WriteTo(sw);
+        }
 
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {
