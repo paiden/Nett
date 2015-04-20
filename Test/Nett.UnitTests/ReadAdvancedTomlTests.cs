@@ -52,7 +52,7 @@ IntList = [1, 2, 3]";
             string toParse = @"
 X = 0
 [Tbl]
-    [[Array]]
+    [[Tbl.Array]]
         A = ""test""
         B = [ ""SA"", ""SB"" ]
 ";

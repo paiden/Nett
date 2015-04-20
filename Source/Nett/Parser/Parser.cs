@@ -157,13 +157,6 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			KeyValuePair(out key, out val);
 			t.Add(key, val); 
 		}
-		while (la.kind == 16) {
-			if (la.kind == 16) {
-				TomlArrayTable();
-			} else {
-				TomlTable();
-			}
-		}
 	}
 
 	void Key(out string val) {

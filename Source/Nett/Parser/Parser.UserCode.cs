@@ -253,7 +253,7 @@ namespace Nett.Parser
                 this.SemErr("Array has a invalid name.");
             }
             
-            TomlTable target = GetTarget(name, this.current, ref name);
+            TomlTable target = GetTarget(name, this.parsed, ref name);
             TomlObject value;
             if(target.Rows.TryGetValue(name, out value))
             {

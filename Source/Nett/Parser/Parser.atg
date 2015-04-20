@@ -193,10 +193,5 @@ PRODUCTIONS
 		']'']'	
 		{
 			KeyValuePair<out key, out val>					(. t.Add(key, val); .)
-		}
-		{
-			TomlArrayTable
-			|
-			TomlTable
 		}.
 END Toml.
