@@ -12,6 +12,7 @@ namespace Nett
     {
         private static readonly Type EnumerableType = typeof(IEnumerable);
         private static readonly Type StringType = typeof(string);
+        private static readonly Type TomlTableType = typeof(TomlTable);
         public string Name { get; private set; } = "";
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
@@ -56,6 +57,8 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
+            if(t == TomlTableType) { return this; }
+
             var result = config.GetActivatedInstance(t);
 
             foreach (var p in this.Rows)

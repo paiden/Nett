@@ -23,6 +23,25 @@ dates = [
   1979-05-27T07:32:00Z,
   2006-06-01T11:00:00Z,
 ]";
+            public const string TableArrayNested = @"
+[[albums]]
+name = ""Born to Run""
+
+  [[albums.songs]]
+  name = ""Jungleland""
+
+  [[albums.songs]]
+  name = ""Meeting Across the River""
+
+[[albums]]
+name = ""Born in the USA""
+  
+  [[albums.songs]]
+  name = ""Glory Days""
+
+  [[albums.songs]]
+  name = ""Dancing in the Dark""
+";
         }
     }
 }

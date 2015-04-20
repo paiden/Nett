@@ -90,6 +90,11 @@ namespace Nett
             return collection;
         }
 
+        public object Last()
+        {
+            return this.items[this.items.Count - 1];
+        }
+
         public IEnumerable<T> To<T>()
         {
             return this.items.Select((to) => to.Get<T>());

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 COMPILER Toml
 
 	private readonly StringBuilder psb = new StringBuilder(32);
+	private readonly StringBuilder psb2 = new StringBuilder(32); 
 	public readonly TomlTable parsed = new TomlTable("");
 	private TomlTable current;
 
@@ -59,6 +60,13 @@ PRODUCTIONS
 	Key<out string val>										(. val = ""; psb.Clear(); .)
 		= BareKey<out val>									
 		| QuoteKey<out val>.
+
+	NestedKey<out string val>								(. string tmp = null; this.psb2.Clear(); .)
+		= Key<out tmp>										(. psb2.Append(tmp); .)
+		{
+			'.'												
+			Key<out tmp>									(. this.psb2.Append(".").Append(tmp); .)
+		}													(. val = this.psb2.ToString(); .).
 
 	BareKey<out string val> 								(. val = null; this.psb.Clear(); .)
 		= letters											(. this.psb.Append(t.val); .)
@@ -181,7 +189,7 @@ PRODUCTIONS
 
 	TomlArrayTable =										(. string arrayName = null; string key= null; TomlObject val = null; .)
 		'[''['
-		Key<out arrayName>                                  (. var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
+		NestedKey<out arrayName>                            (. var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
 		']'']'	
 		{
 			KeyValuePair<out key, out val>					(. t.Add(key, val); .)

@@ -100,5 +100,30 @@ namespace Nett.UnitTests
             Assert.Equal(3, read.Get<TomlArray>("strings").Get<TomlArray>().Count);
             Assert.Equal(3, read.Get<TomlArray>("dates").Get<TomlArray>().Count);
         }
+
+        [Fact]
+        public void ReadValidToml_TableArrayNested()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.TableArrayNested;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(typeof(TomlArray), read.Rows["albums"].GetType());
+            var arr = read.Get<TomlArray>("albums");
+            Assert.Equal(2, arr.Count);
+
+            var t0 = arr.Get<TomlTable>(0);
+            Assert.Equal("Born to Run", t0.Get<string>("name"));
+            var t0s = t0.Get<TomlArray>("songs");
+            Assert.Equal(2, t0s.Count);
+            var s0 = t0s.Get<TomlTable>(0);
+            var s1 = t0s.Get<TomlTable>(1);
+            Assert.Equal("Jungleland", s0.Get<string>("name"));
+            Assert.Equal("Meeting Across the River", s1.Get<string>("name"));
+        }
     }
 }

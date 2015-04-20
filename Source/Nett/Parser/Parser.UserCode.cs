@@ -12,6 +12,7 @@ namespace Nett.Parser
         private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
         private static readonly StringBuilder ssb = new StringBuilder(1024);
         private static readonly TomlValue DefaultTimespanValue = new TomlValue<TimeSpan>(TimeSpan.Zero);
+        private static readonly string[] PathSplit = new string[] { "." };
 
         private static readonly char[] WhitspaceCharSet =
         {
@@ -251,11 +252,12 @@ namespace Nett.Parser
             {
                 this.SemErr("Array has a invalid name.");
             }
-
+            
+            TomlTable target = GetTarget(name, this.current, ref name);
             TomlObject value;
-            if(current.Rows.TryGetValue(name, out value))
+            if(target.Rows.TryGetValue(name, out value))
             {
-                var existing = current[name];
+                var existing = target[name];
                 var arr = existing as TomlArray;
 
                 if (arr == null && existing != null)
@@ -268,9 +270,26 @@ namespace Nett.Parser
             else
             {
                 var na = new TomlArray();
-                current.Rows.Add(name, na);
+                target.Rows.Add(name, na);
                 return na;
             }
+        }
+
+        private static TomlTable GetTarget(string key, TomlTable current, ref string propertyName)
+        {
+            if(!key.Contains(".")) { return current; }
+
+            string[] path = key.Split(PathSplit, StringSplitOptions.None);
+
+            for (int i = 0; i < path.Length - 1; i++)
+            {
+                var obj = current[path[i]];
+                current = (obj as TomlTable) ?? ((TomlArray)obj).Last() as TomlTable;
+            }
+
+            propertyName = path[path.Length - 1];
+
+            return current;
         }
 
         private string GetTableName(IEnumerable<string> tableNames)
