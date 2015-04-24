@@ -238,10 +238,10 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		val = null; 
 		if (la.kind == 9) {
 			Get();
-			val = new TomlValue<bool>(true); 
+			val = new TomlBool(true); 
 		} else if (la.kind == 10) {
 			Get();
-			val = new TomlValue<bool>(false); 
+			val = new TomlBool(false); 
 		} else SynErr(25);
 	}
 
@@ -318,7 +318,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			this.psb.Append(t.val); 
 			Minute();
 		} else SynErr(26);
-		val = new TomlValue<DateTime>(DateTime.Parse(this.psb.ToString())); 
+		val = new TomlDateTime(DateTime.Parse(this.psb.ToString())); 
 	}
 
 	void Sign(out string val) {

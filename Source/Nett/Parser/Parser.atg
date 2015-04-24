@@ -117,8 +117,8 @@ PRODUCTIONS
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
 
 	BoolVal<out TomlObject val>								(. val = null; .)
-		= true												(. val = new TomlValue<bool>(true); .)
-		  | false											(. val = new TomlValue<bool>(false); .).
+		= true												(. val = new TomlBool(true); .)
+		  | false											(. val = new TomlBool(false); .).
 
 	Array<out TomlObject val>								(. TomlObject v = null; val = null; var a = new TomlArray(); .)
 		= 
@@ -153,7 +153,7 @@ PRODUCTIONS
 			Hour ":"										(. this.psb.Append(t.val); .)
 			Minute											
 		 )
-		)													(. val = new TomlValue<DateTime>(DateTime.Parse(this.psb.ToString())); .).
+		)													(. val = new TomlDateTime(DateTime.Parse(this.psb.ToString())); .).
 	Year = number											(. this.psb.Append(t.val); .).
 	Month = number											(. this.psb.Append(t.val); .).
 	Day = number											(. this.psb.Append(t.val); .).

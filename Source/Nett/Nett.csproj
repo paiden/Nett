@@ -53,6 +53,7 @@
     <Compile Include="Toml.cs" />
     <Compile Include="TomlArray.cs" />
     <Compile Include="TomlArrayWriter.cs" />
+    <Compile Include="TomlBool.cs" />
     <Compile Include="TomlComment.cs" />
     <Compile Include="TomlCommentAttribute.cs" />
     <Compile Include="TomlConfig.Builder.cs">
@@ -61,10 +62,14 @@
     <Compile Include="TomlConfig.cs" />
     <Compile Include="TomlConverter.cs" />
     <Compile Include="TomlConverterBase.cs" />
+    <Compile Include="TomlDateTime.cs" />
+    <Compile Include="TomlFloat.cs" />
+    <Compile Include="TomlInt.cs" />
     <Compile Include="TomlObject.cs" />
+    <Compile Include="TomlString.cs" />
     <Compile Include="TomlTable.cs" />
+    <Compile Include="TomlTimeSpan.cs" />
     <Compile Include="TomlValue.cs" />
-    <Compile Include="TomlWriter.cs" />
     <Compile Include="Types.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -168,7 +168,6 @@ namespace Nett
             {
                 case RowType.Property: sw.Write("{0} = ", r.Key); break;
                 case RowType.Table: sw.WriteLine("[{0}]", r.Key); break;
-                case RowType.TableArray: TomlWriter.WriteTomlArrayTable(sw, (TomlArray)r.Value, this, r.Key, config); break;
             }
     
             r.Value.WriteTo(sw);

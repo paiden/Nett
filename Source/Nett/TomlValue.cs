@@ -19,6 +19,7 @@ namespace Nett
         protected static readonly Type TimespanType = typeof(TimeSpan);
         protected static readonly Type FloatType = typeof(float);
         protected static readonly Type DoubleType = typeof(double);
+        protected static readonly Type DateTimeType = typeof(DateTime);
 
         private static readonly Type[] IntTypes = new Type[]
             {
@@ -31,34 +32,32 @@ namespace Nett
         {
             if(StringType == targetType)
             {
-                return new TomlValue<string>((string)val);
+                return new TomlString((string)val);
             }
             else if(TimespanType == targetType)
             {
-                return new TomlValue<TimeSpan>((TimeSpan)val);
+                return new TomlTimeSpan((TimeSpan)val);
             }
             else if(IsFloatType(targetType))
             {
-                return new TomlValue<double>((double)Convert.ChangeType(val, DoubleType));
+                return new TomlFloat((double)Convert.ChangeType(val, DoubleType));
             }
             else if(IsIntegerType(targetType))
             {
-                return new TomlValue<long>((long)Convert.ChangeType(val, Int64Type));
+                return new TomlInt((long)Convert.ChangeType(val, Int64Type));
+            }
+            else if(DateTimeType == targetType)
+            {
+                return new TomlDateTime((DateTime)val);
             }
 
             throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
         }
 
-        public static TomlValue<T> From<T>(T value)
-        {
-            return new TomlValue<T>(value);
-        }
-
         internal static bool CanCreateFrom(Type t)
         {
-            return t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t);
+            return t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType;
         }
-
 
         private static bool IsIntegerType(Type t)
         {
@@ -80,7 +79,7 @@ namespace Nett
     }
 
     [DebuggerDisplay("{value}:{typeof(T).FullName}")]
-    public sealed class TomlValue<T> : TomlValue
+    public abstract class TomlValue<T> : TomlValue
     {
         private static readonly Type ValueType = typeof(T);
         private readonly T value;

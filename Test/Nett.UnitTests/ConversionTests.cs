@@ -15,7 +15,7 @@ namespace Nett.UnitTests
             // Arrange
             var config = TomlConfig.Default()
                 .AddConversion().From<int>().To<TestStruct>().As((i) => new TestStruct() { Value = i })
-                .AddConversion().From<TestStruct>().To<TomlValue>().As((s) => TomlValue.From(s.Value));
+                .AddConversion().From<TestStruct>().To<TomlValue>().As((s) => new TomlInt(s.Value));
 
             string toml = @"S = 10";
 
@@ -32,7 +32,7 @@ namespace Nett.UnitTests
             // Arrange
             var config = TomlConfig.Default()
                 .AddConversion().From<int>().To<TestStruct>().As((i) => new TestStruct() { Value = i })
-                .AddConversion().From<TestStruct>().To<TomlValue>().As((s) => TomlValue.From(s.Value));
+                .AddConversion().From<TestStruct>().To<TomlValue>().As((s) => new TomlInt(s.Value));
             var obj = new ConfigObject() { S = new TestStruct() { Value = 222 } };
 
             // Act

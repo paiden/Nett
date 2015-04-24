@@ -10,19 +10,6 @@ namespace Nett.UnitTests
     public class WriteTomlTests
     {
         [Fact]
-        public void WriteObjectTests()
-        {
-            // Arrange
-            var tc = new TestClassA();
-
-            // Act
-            var s = Toml.WriteString(tc);
-
-            // Assert
-            Assert.Equal("StringProp = \"\"\r\nIntProp = 0\r\n", s);
-        }
-
-        [Fact]
         public void Write_WithArray_WritesObjectCorrectly()
         {
             // Arrange
@@ -32,7 +19,7 @@ namespace Nett.UnitTests
             var s = Toml.WriteString(tc);
 
             // Assert
-            Assert.Equal("EmptyArray = []\r\nNonEmptyIntArray = [-100, 0, 100]\r\nNullArray = []\r\nStringList = [\"A\", \"B\", \"C\"]\r\n", s);
+            Assert.Equal("EmptyArray = []\r\nNonEmptyIntArray = [-100, 0, 100]\r\nStringList = [\"A\", \"B\", \"C\"]\r\n", s);
         }
 
         [Fact]
@@ -81,7 +68,7 @@ namespace Nett.UnitTests
                 
             };
 
-            var cfg = TomlConfig.Default().AddConversion().From<ConvProp>().To<TomlValue>().As((cp) => TomlValue.From(cp.Prop));
+            var cfg = TomlConfig.Default().AddConversion().From<ConvProp>().To<TomlString>().As((cp) => new TomlString(cp.Prop));
 
             // Act
             var s = Toml.WriteString(tc, cfg);
@@ -113,7 +100,6 @@ V = 666
         {
             public int[] EmptyArray => new int[0];
             public int[] NonEmptyIntArray => new int[] { -100, 0, 100 };
-            public TimeSpan[] NullArray => null;
 
             public List<string> StringList => new List<string>() {  "A", "B", "C" };
         }

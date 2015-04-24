@@ -13,8 +13,6 @@ namespace Nett
         private readonly Type ObjectType = typeof(object);
         private readonly List<TomlObject> items = new List<TomlObject>();
 
-        internal List<Toml> Items { get { return this.items; } }
-
         public void Add(TomlObject o)
         {
             this.items.Add(o);

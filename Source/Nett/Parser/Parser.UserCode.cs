@@ -11,7 +11,7 @@ namespace Nett.Parser
     {
         private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
         private static readonly StringBuilder ssb = new StringBuilder(1024);
-        private static readonly TomlValue DefaultTimespanValue = new TomlValue<TimeSpan>(TimeSpan.Zero);
+        private static readonly TomlValue DefaultTimespanValue = new TomlTimeSpan(TimeSpan.Zero);
         private static readonly string[] PathSplit = new string[] { "." };
 
         private static readonly char[] WhitspaceCharSet =
@@ -29,15 +29,15 @@ namespace Nett.Parser
                 if(sb.Length > 1 && sb[0] == '0') { throw new Exception("Leading zeros are not allowed."); }
 
                 var iv = long.Parse(sb.ToString());
-                return new TomlValue<long>(neg ? -iv : iv);
+                return new TomlInt(neg ? -iv : iv);
             }
             else
             {
-                return new TomlValue<long>(0);
+                return new TomlInt(0);
             }
         }
 
-        private TomlValue<double> ParseFloatVal(StringBuilder sb, bool neg)
+        private TomlFloat ParseFloatVal(StringBuilder sb, bool neg)
         {
             if (this.errors.count <= 0)
             {
@@ -45,11 +45,11 @@ namespace Nett.Parser
                 // the final value is int or float, so the int parse call will already do the correct value check
                 // so we can omit it here (performance).
                 var fv = double.Parse(sb.ToString(), CultureInfo.InvariantCulture);
-                return new TomlValue<double>(neg ? -fv : fv);
+                return new TomlFloat(neg ? -fv : fv);
             }
             else
             {
-                return new TomlValue<double>(0);
+                return new TomlFloat(0);
             }
         }
 
@@ -60,14 +60,14 @@ namespace Nett.Parser
             ssb.Append(source);
             ssb.Remove(0, 1);
             ssb.Length--;
-            return new TomlValue<string>(ProcessStringValueInCurrentBuilder());
+            return new TomlString(ProcessStringValueInCurrentBuilder());
         }
 
         private TomlValue ParseTimespanVal(string src)
         {
             if(this.errors.count <= 0)
             {
-                return new TomlValue<TimeSpan>(TimeSpan.Parse(src));
+                return new TomlTimeSpan(TimeSpan.Parse(src));
             }
             else
             {
@@ -81,12 +81,12 @@ namespace Nett.Parser
             ssb.Append(source);
             ssb.Remove(0, 3);
             ssb.Length -= 3;
-            
+
             if(ssb.Length > 0 && ssb[0] == '\r') { ssb.Remove(0, 1); }
             if(ssb.Length > 0 && ssb[0] == '\n') { ssb.Remove(0, 1); }
 
             string s = ProcessStringValueInCurrentBuilder();
-            return new TomlValue<string>(ReplaceDelimeterBackslash(s));
+            return new TomlString(ReplaceDelimeterBackslash(s), TomlString.TypeOfString.Multiline);
         }
 
         private static string ProcessStringValueInCurrentBuilder()
@@ -167,7 +167,7 @@ namespace Nett.Parser
         private static TomlValue<string> ParseLStringVal(string s)
         {
             s = s.Substring(1);
-            return new TomlValue<string>(s.Substring(0, s.Length - 1));
+            return new TomlString(s.Substring(0, s.Length - 1), TomlString.TypeOfString.Literal);
         }
 
         private static TomlValue<string> ParseMLStringVal(string source)
@@ -180,7 +180,7 @@ namespace Nett.Parser
             if (ssb.Length > 0 && ssb[0] == '\r') { ssb.Remove(0, 1); }
             if (ssb.Length > 0 && ssb[0] == '\n') { ssb.Remove(0, 1); }
 
-            return new TomlValue<string>(ssb.ToString());
+            return new TomlString(ssb.ToString(), TomlString.TypeOfString.MultilineLiteral);
         }
 
         private bool NotADateTime()
@@ -252,7 +252,7 @@ namespace Nett.Parser
             {
                 this.SemErr("Array has a invalid name.");
             }
-            
+
             TomlTable target = GetTarget(name, this.parsed, ref name);
             TomlObject value;
             if(target.Rows.TryGetValue(name, out value))
