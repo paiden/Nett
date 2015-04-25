@@ -13,7 +13,7 @@ namespace Nett.UnitTests
         public void ReadValidToml_EmptyArray()
         {
             // Arrange
-            var toml = TomlStrings.Valid.EmptyArray;
+            var toml = TomlStrings.Valid.ArrayEmpty;
 
             // Act
             var read = Toml.Read(toml);
@@ -47,7 +47,7 @@ namespace Nett.UnitTests
         public void ReadValidToml_HetArray()
         {
             // Arrange
-            var toml = TomlStrings.Valid.HetArray;
+            var toml = TomlStrings.Valid.ArrayHeterogenous;
 
             // Act
             var read = Toml.Read(toml);
@@ -124,6 +124,36 @@ namespace Nett.UnitTests
             var s1 = t0s.Get<TomlTable>(1);
             Assert.Equal("Jungleland", s0.Get<string>("name"));
             Assert.Equal("Meeting Across the River", s1.Get<string>("name"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_Boolean()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.Boolean;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(true, read.Get<bool>("t"));
+            Assert.Equal(false, read.Get<bool>("f"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_CommentsEverywere()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.CommentsEverywhere;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(42, read.Get<TomlTable>("group").Get<int>("answer"));
+            Assert.Equal(2, ((TomlTable)read["group"]).Get<int[]>("more").Length);
+            Assert.Equal(42, ((TomlTable)read["group"]).Get<List<int>>("more")[0]);
+            Assert.Equal(42, ((TomlTable)read["group"]).Get<int[]>("more")[0]);
         }
     }
 }

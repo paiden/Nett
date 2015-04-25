@@ -9,14 +9,31 @@ namespace Nett
     {
         private static readonly Dictionary<Type, Dictionary<Type, Func<object, object>>> ConvertFunctions = new Dictionary<Type, Dictionary<Type, Func<object, object>>>()
         {
-            { typeof(long), new Dictionary<Type, Func<object, object>>()
+            {
+                typeof(long), new Dictionary<Type, Func<object, object>>()
                 {
                     { typeof(int), (l) => (int)(long)l },
                 }
             },
-            { typeof(TomlArray), new Dictionary<Type, Func<object, object>>()
+            {
+                typeof(TomlArray), new Dictionary<Type, Func<object, object>>()
                 {
-                    { typeof(int[]), (a) => ((TomlArray)a).To<int>().ToArray() }
+                    { typeof(byte[]), (a) => ((TomlArray)a).To<byte>().ToArray() },
+                    { typeof(List<byte>), (a) => ((TomlArray)a).To<byte>().ToList() },
+                    { typeof(char[]), (a) => ((TomlArray)a).To<char>().ToArray() },
+                    { typeof(List<char>), (a) => ((TomlArray)a).To<char>().ToList() },
+                    { typeof(double[]), (a) => ((TomlArray)a).To<double>().ToArray() },
+                    { typeof(List<double>), (a) => ((TomlArray)a).To<double>().ToList() },
+                    { typeof(float[]), (a) => ((TomlArray)a).To<float>().ToArray() },
+                    { typeof(List<float>), (a) => ((TomlArray)a).To<float>().ToList() },
+                    { typeof(int[]), (a) => ((TomlArray)a).To<int>().ToArray() },
+                    { typeof(List<int>), (a) => ((TomlArray)a).To<int>().ToList() },
+                    { typeof(short[]), (a) => ((TomlArray)a).To<short>().ToArray() },
+                    { typeof(List<short>), (a) => ((TomlArray)a).To<short>().ToList() },
+                    { typeof(uint[]), (a) => ((TomlArray)a).To<uint>().ToArray() },
+                    { typeof(List<uint>), (a) => ((TomlArray)a).To<uint>().ToList() },
+                    { typeof(ushort[]), (a) => ((TomlArray)a).To<ushort>().ToArray() },
+                    { typeof(List<ushort>), (a) => ((TomlArray)a).To<ushort>().ToList() },
                 }
             }
         };

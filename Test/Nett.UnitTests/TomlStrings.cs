@@ -10,9 +10,9 @@ namespace Nett.UnitTests
     {
         public static class Valid
         {
-            public const string EmptyArray = "thevoid = [[]]";
+            public const string ArrayEmpty = "thevoid = [[]]";
             public const string ArrayNoSpaces = "ints = [1,2,3]";
-            public const string HetArray = "mixed = [[1, 2], [\"a\", \"b\"], [1.1, 2.1]]";
+            public const string ArrayHeterogenous = "mixed = [[1, 2], [\"a\", \"b\"], [1.1, 2.1]]";
             public const string ArraysNested = "nest = [[\"a\"], [\"b\"]]";
             public const string Arrays = @"
 ints = [1, 2, 3]
@@ -35,12 +35,42 @@ name = ""Born to Run""
 
 [[albums]]
 name = ""Born in the USA""
-  
+
   [[albums.songs]]
   name = ""Glory Days""
 
   [[albums.songs]]
   name = ""Dancing in the Dark""
+";
+            public const string Boolean = @"
+t = true
+f = false
+";
+            public const string CommentsEverywhere = @"
+# Top comment.
+  # Top comment.
+# Top comment.
+
+# [no-extraneous-groups-please]
+
+[group] # Comment
+answer = 42 # Comment
+# no-extraneous-keys-please = 999
+# Inbetween comment.
+more = [ # Comment
+  # What about multiple # comments?
+  # Can you handle it?
+  #
+          # Evil.
+# Evil.
+  42, 42, # Comments within arrays are fun.
+  # What about multiple # comments?
+  # Can you handle it?
+  #
+          # Evil.
+# Evil.
+# ] Did I fool you?
+] # Hopefully not.
 ";
         }
     }
