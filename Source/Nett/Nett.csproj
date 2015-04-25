@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Parser.UserCode.cs">
@@ -68,6 +69,7 @@
     <Compile Include="TomlObject.cs" />
     <Compile Include="TomlString.cs" />
     <Compile Include="TomlTable.cs" />
+    <Compile Include="TomlTableArray.cs" />
     <Compile Include="TomlTimeSpan.cs" />
     <Compile Include="TomlValue.cs" />
     <Compile Include="Types.cs" />

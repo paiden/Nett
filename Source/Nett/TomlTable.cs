@@ -102,6 +102,13 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 TomlObject to = TomlObject.From(val, config);
 
+                // Array table is the only case where the value also needs to know the key so that serialization works correctly
+                var ta = to as TomlTableArray;
+                if(ta != null)
+                {
+                    ta.Name = p.Name;
+                }
+
                 AddComments(to, p);
                 tt.Add(p.Name, to);
             }
@@ -167,7 +174,7 @@ namespace Nett
             switch(rt)
             {
                 case RowType.Property: sw.Write("{0} = ", r.Key); break;
-                case RowType.Table: sw.WriteLine("[{0}]", r.Key); break;
+                case RowType.Table: sw.WriteLine(); sw.WriteLine("[{0}]", r.Key); break;
             }
     
             r.Value.WriteTo(sw);

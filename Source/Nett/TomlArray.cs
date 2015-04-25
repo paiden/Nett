@@ -9,9 +9,25 @@ namespace Nett
 {
     public class TomlArray : TomlObject
     {
-        private readonly Type ListType = typeof(IList);
-        private readonly Type ObjectType = typeof(object);
-        private readonly List<TomlObject> items = new List<TomlObject>();
+        private static readonly Type ListType = typeof(IList);
+        private static readonly Type ObjectType = typeof(object);
+        protected readonly List<TomlObject> items = new List<TomlObject>();
+
+        public TomlArray()
+        {
+
+        }
+
+        public TomlArray(IEnumerable enumerable, TomlConfig config)
+        {
+            if (enumerable != null)
+            {
+                foreach (var e in enumerable)
+                {
+                    this.Add(From(e, config));
+                }
+            }
+        }
 
         public void Add(TomlObject o)
         {
@@ -103,21 +119,6 @@ namespace Nett
         public IEnumerable<T> To<T>()
         {
             return this.items.Select((to) => to.Get<T>());
-        }
-
-        public static TomlArray From(IEnumerable enumerable, TomlConfig config)
-        {
-            var a = new TomlArray();
-
-            if (enumerable != null)
-            {
-                foreach (var e in enumerable)
-                {
-                    a.Add(TomlObject.From(e, config));
-                }
-            }
-
-            return a;
         }
 
         public override void WriteTo(StreamWriter sw )

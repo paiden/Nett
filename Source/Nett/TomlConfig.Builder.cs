@@ -78,8 +78,4 @@ namespace Nett
     {
         TomlConfig As(Func<TFrom, TTo> convert);
     }
-
-
-
-
 }

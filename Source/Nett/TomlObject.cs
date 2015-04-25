@@ -36,7 +36,16 @@ namespace Nett
             }
             else if (t != StringType && EnumerableType.IsAssignableFrom(t))
             {
-                return TomlArray.From((IEnumerable)val, config);
+                var e = (IEnumerable)val;
+                var et = e.GetElementType();
+                if (et != null && !TomlValue.CanCreateFrom(et))
+                {
+                    return new TomlTableArray("", e, config);
+                }
+                else
+                {
+                    return new TomlArray((IEnumerable)val, config);
+                }
             }
             else if (TomlValue.CanCreateFrom(t))
             {

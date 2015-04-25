@@ -54,40 +54,39 @@ namespace Nett.UnitTests
             // Arrange
             var tc = new WithClassProperty()
             {
-                //StringProp = "sp",
-                //IntProp = 10,
-                //ClassProp = new ClassProperty()
-                //{
-                //    StringProp = "isp",
-                //    IntProp = 100,
-                //    IntList = new List<int>() { 1, 2 },
-                //    StringArray = new string[] { "A", "B" },
-                //    ConvProp = new ConvProp() { Prop = "cp" },
-                //},
+                StringProp = "sp",
+                IntProp = 10,
+                ClassProp = new ClassProperty()
+                {
+                    StringProp = "isp",
+                    IntProp = 100,
+                    IntList = new List<int>() { 1, 2 },
+                    StringArray = new string[] { "A", "B" },
+                    ConvProp = new ConvProp() { Prop = "cp" },
+                },
                 Acp = new List<ArrayClassProp>() { new ArrayClassProp() { V = 666 } },
-                
             };
 
             var cfg = TomlConfig.Default().AddConversion().From<ConvProp>().To<TomlString>().As((cp) => new TomlString(cp.Prop));
 
             // Act
-            var s = Toml.WriteString(tc, cfg);
-
-            // Assert
-            Assert.Equal(@"IntProp = 10
+            var exp = @"IntProp = 10
 StringProp = ""sp""
 
 [ClassProp]
 StringProp = ""isp""
 IntProp = 100
 IntList = [1, 2]
-StringArray = [A, B]
+StringArray = [""A"", ""B""]
 ConvProp = ""cp""
 
 [[Acp]]
 V = 666
+";
+            var s = Toml.WriteString(tc, cfg);
 
-", s);
+            // Assert
+            Assert.Equal(exp.Trim(), s.Trim());
         }
 
         private class TestClassA
@@ -118,9 +117,9 @@ V = 666
 
         private class WithClassProperty
         {
-            //public int IntProp {get; set;}
-            //public ClassProperty ClassProp { get; set; }
-            //public string StringProp { get; set; }
+            public int IntProp { get; set; }
+            public ClassProperty ClassProp { get; set; }
+            public string StringProp { get; set; }
 
             public List<ArrayClassProp> Acp { get; set; }
         }
