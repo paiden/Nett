@@ -155,5 +155,52 @@ namespace Nett.UnitTests
             Assert.Equal(42, ((TomlTable)read["group"]).Get<List<int>>("more")[0]);
             Assert.Equal(42, ((TomlTable)read["group"]).Get<int[]>("more")[0]);
         }
+
+        [Fact]
+        public void ReadValidTomlUntyped_DateTime()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.DateTime;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTime>("bestdayever"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_Empty()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.Empty;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(0, read.Rows.Count);
+        }
+
+        [Fact]
+        public void ReadValidToml_Example()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.Example;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTime>("best-day-ever"));
+            var tt = (TomlTable)read["numtheory"];
+            Assert.Equal(false, tt.Get<bool>("boring"));
+            var ta = (TomlArray)tt["perfection"];
+            Assert.Equal(3, ta.Count);
+            Assert.Equal(6, ta.Get<int>(0));
+            Assert.Equal(28, ta.Get<char>(1));
+            Assert.Equal(496, ta.Get<ushort>(2));
+        }
     }
 }

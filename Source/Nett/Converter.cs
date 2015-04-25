@@ -12,7 +12,13 @@ namespace Nett
             {
                 typeof(long), new Dictionary<Type, Func<object, object>>()
                 {
+                    { typeof(char), (l) => (char)(long)l },
+                    { typeof(double), (l) => (double)(long)l },
+                    { typeof(float), (l) => (float)(long)l },
                     { typeof(int), (l) => (int)(long)l },
+                    { typeof(short), (l) => (short)(long)l },
+                    { typeof(uint), (l) => (uint)(long)l },
+                    { typeof(ushort), (l) => (ushort)(long)l },
                 }
             },
             {
@@ -35,7 +41,7 @@ namespace Nett
                     { typeof(ushort[]), (a) => ((TomlArray)a).To<ushort>().ToArray() },
                     { typeof(List<ushort>), (a) => ((TomlArray)a).To<ushort>().ToList() },
                 }
-            }
+            },
         };
 
         public static TRes Convert<TRes>(object src)

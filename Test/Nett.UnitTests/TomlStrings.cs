@@ -72,6 +72,15 @@ more = [ # Comment
 # ] Did I fool you?
 ] # Hopefully not.
 ";
+            public const string DateTime = "bestdayever = 1987-07-05T17:45:00Z";
+            public const string Empty = "";
+            public const string Example = @"
+best-day-ever = 1987-07-05T17:45:00Z
+
+[numtheory]
+boring = false
+perfection = [6, 28, 496]
+";
         }
     }
 }

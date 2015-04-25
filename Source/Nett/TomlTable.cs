@@ -34,7 +34,16 @@ namespace Nett
 
         public TomlObject this[string key]
         {
-            get { return this.Rows[key]; }
+            get
+            {
+                TomlObject val;
+                if(!this.Rows.TryGetValue(key, out val))
+                {
+                    throw new KeyNotFoundException(string.Format("No row with key '{0}' exists in this TOML table.", key));
+                }
+
+                return val;
+            }
         }
 
         public T Get<T>(string key)
