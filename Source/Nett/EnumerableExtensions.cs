@@ -25,5 +25,13 @@ namespace Nett
 
             return null;
         }
+
+        public static IEnumerable<T> Select<T>(this IEnumerable enumerable, Func<object, T> selector)
+        {
+            foreach(var e in enumerable)
+            {
+                yield return selector(e);
+            }
+        }
     }
 }

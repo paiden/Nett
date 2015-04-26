@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,16 +113,16 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
-            Assert.Equal(typeof(TomlArray), read.Rows["albums"].GetType());
-            var arr = read.Get<TomlArray>("albums");
+            Assert.Equal(typeof(TomlTableArray), read.Rows["albums"].GetType());
+            var arr = read.Get<TomlTableArray>("albums");
             Assert.Equal(2, arr.Count);
 
-            var t0 = arr.Get<TomlTable>(0);
+            var t0 = arr[0];
             Assert.Equal("Born to Run", t0.Get<string>("name"));
-            var t0s = t0.Get<TomlArray>("songs");
+            var t0s = t0.Get<TomlTableArray>("songs");
             Assert.Equal(2, t0s.Count);
-            var s0 = t0s.Get<TomlTable>(0);
-            var s1 = t0s.Get<TomlTable>(1);
+            var s0 = t0s[0];
+            var s1 = t0s[1];
             Assert.Equal("Jungleland", s0.Get<string>("name"));
             Assert.Equal("Meeting Across the River", s1.Get<string>("name"));
         }
@@ -201,6 +202,293 @@ namespace Nett.UnitTests
             Assert.Equal(6, ta.Get<int>(0));
             Assert.Equal(28, ta.Get<char>(1));
             Assert.Equal(496, ta.Get<ushort>(2));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_Floats()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.Floats;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(3.14, read.Get<float>("pi"), 2);
+            Assert.Equal(-3.14, read.Get<double>("negpi"), 2);
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_ImplicitAndExplicitAfter()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.ImplicitAndExplicitAfter;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<int>("answer"));
+            Assert.Equal(43, read.Get<TomlTable>("a").Get<long>("better"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_ImplicitAndExplicitBefore()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.ImplicitAndExplicitBefore;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<int>("answer"));
+            Assert.Equal(43, read.Get<TomlTable>("a").Get<long>("better"));
+        }
+
+        [Fact]
+        public void ReadValidToml_ImplicitGroups()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.ImplicitGroups;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<char>("answer"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_Integer()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.Integer;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal((uint)42, read.Get<uint>("answer"));
+            Assert.Equal(-42, read.Get<short>("neganswer"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_KeyEqualsNoSpace()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.KeyEqualsNoSpace;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(42, read.Get<int>("answer"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_KeyEqualsSpace()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.KeyEqualsSpace;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(42, read.Get<int>("a b"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_KeySpecialChars()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.KeySpecialChars;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(42, read.Get<int>("~!@$^&*()_+-`1234567890[]|/?><.,;:'"));
+        }
+
+
+        [Fact]
+        public void ReadValidTomlUntyped_LongFloats()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.LongFloats;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(double.Parse("3.141592653589793", CultureInfo.InvariantCulture), read.Get<double>("longpi"));
+            Assert.Equal(double.Parse("-3.141592653589793", CultureInfo.InvariantCulture), read.Get<double>("neglongpi"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyped_LongInts()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.LongInts;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(9223372036854775806, read.Get<long>("answer"));
+            Assert.Equal(-9223372036854775807, read.Get<long>("neganswer"));
+        }
+
+
+        [Fact]
+        public void ReadValidTomlUntyped_MultiLineStrings()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.MultiLineStrings;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(7, read.Rows.Count);
+            Assert.Equal("", read.Get<string>("multiline_empty_one"));
+            Assert.Equal("", read.Get<string>("multiline_empty_two"));
+            Assert.Equal("", read.Get<string>("multiline_empty_three"));
+            Assert.Equal("" , read.Get<string>("multiline_empty_four"));
+            Assert.Equal("The quick brown fox jumps over the lazy dog.", read.Get<string>("equivalent_one"));
+            Assert.Equal("The quick brown fox jumps over the lazy dog.", read.Get<string>("equivalent_two"));
+            Assert.Equal("The quick brown fox jumps over the lazy dog.", read.Get<string>("equivalent_three"));
+        }
+
+        [Fact(Skip = "Error in tokenizer when there is a ' within the ''' tags. Not important rightnow.")]
+        public void ReadValidTomlUntyped_RawMultineStrings()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.RawMultilineStrings;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(3, read.Rows.Count);
+            Assert.Equal("This string has a ' quote character.", read.Get<string>("oneline"));
+            Assert.Equal("\r\nThis string has a ' quote character.", read.Get<string>("firstnl"));
+            Assert.Equal("\r\n\r\nThis string\r\n has a ' quote character\r\nand more than\r\none newline\r\nin it.", read.Get<string>("multiline"));
+        }
+
+        [Fact]
+        public void ReadValidStringsUntyped_RawStrings()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.RawStrings;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(7, read.Rows.Count);
+            Assert.Equal("This string has a \\b backspace character.", read.Get<string>("backspace"));
+            Assert.Equal("This string has a \\t tab character.", read.Get<string>("tab"));
+            Assert.Equal("This string has a \\n new line character.", read.Get<string>("newline"));
+            Assert.Equal("This string has a \\f form feed character.", read.Get<string>("formfeed"));
+            Assert.Equal("This string has a \\r carriage return character.", read.Get<string>("carriage"));
+            Assert.Equal("This string has a \\/ slash character.", read.Get<string>("slash"));
+            Assert.Equal("This string has a \\\\ backslash character.", read.Get<string>("backslash"));
+        }
+
+        [Fact]
+        public void ReadValidStringsUntyped_StringEmpty()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.StringEmpty;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal("", read.Get<string>("answer"));
+        }
+
+        [Fact(Skip = "Case 3 fails, because newline in string is not allowed, parsing will fail, Not important for now.")]
+        public void ReadValidStringsUntyped_StringEsapces()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.StringEscapes;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(11, read.Rows.Count);
+            Assert.Equal("This string has a \b backspace character.", read.Get<string>("backspace"));
+            Assert.Equal("This string has a \t tab character.", read.Get<string>("tab"));
+            Assert.Equal("This string has a \n new line character.", read.Get<string>("newline"));
+            Assert.Equal("This string has a \f form feed character.", read.Get<string>("formfeed"));
+            Assert.Equal("This string has a \r carriage return character.", read.Get<string>("carriage"));
+            Assert.Equal("This string has a \" quote character.", read.Get<string>("quote"));
+            Assert.Equal("This string has a \\ backslash character.", read.Get<string>("backslash"));
+            Assert.Equal("This string does not have a unicode \\u escape.", read.Get<string>("notunicode1"));
+            Assert.Equal("This string does not have a unicode \u005Cu escape.", read.Get<string>("notunicode2"));
+            Assert.Equal("This string does not have a unicode \\u0075 escape.", read.Get<string>("notunicode3"));
+            Assert.Equal("This string does not have a unicode \\\u0075 escape.", read.Get<string>("notunicode4"));
+        }
+
+        [Fact]
+        public void ReadValidStringsUntyped_StringWihtPound()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.StringWithPound;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal("We see no # comments here.", read.Get<string>("pound"));
+            Assert.Equal("But there are # some comments here.", read.Get<string>("poundcomment"));
+        }
+
+        [Fact(Skip = "Corner case more important stuff to get to work first")]
+        public void ReadValidStringsUntyped_TableArrayImplicit()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.TableArrayImplicit;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal("Glory Days", ((read.Get<TomlTableArray>("albums")[0]).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
+            Assert.Equal("We see no # comments here.", read.Get<string>("pound"));
+            Assert.Equal("But there are # some comments here.", read.Get<string>("poundcomment"));
+        }
+
+        [Fact]
+        public void ReadValidStringsUntyped_TableArrayMany()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.TableArrayMany;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(3, read.Get<TomlTableArray>("people").Count);
+            var tt = read.Get<TomlTableArray>("people")[0];
+            Assert.Equal("Bruce", tt.Get<string>("first_name"));
+            Assert.Equal("Springsteen", tt.Get<string>("last_name"));
         }
     }
 }

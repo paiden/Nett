@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Nett
 {
-    public class TomlArray : TomlObject
+    public sealed class TomlArray : TomlObject
     {
         private static readonly Type ListType = typeof(IList);
         private static readonly Type ObjectType = typeof(object);
-        protected readonly List<TomlObject> items = new List<TomlObject>();
+        private readonly List<TomlObject> items = new List<TomlObject>();
 
         public TomlArray()
         {

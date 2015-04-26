@@ -10,8 +10,20 @@ namespace Nett
         private static readonly Dictionary<Type, Dictionary<Type, Func<object, object>>> ConvertFunctions = new Dictionary<Type, Dictionary<Type, Func<object, object>>>()
         {
             {
+                typeof(double), new Dictionary<Type, Func<object, object>>()
+                {
+                    { typeof(char), (d) => (char)(double)d },
+                    { typeof(float), (d) => (float)(double)d },
+                    { typeof(int), (d) => (int)(double)d },
+                    { typeof(long), (d) => (long)(double)d },
+                    { typeof(short), (d) => (short)(double)d },
+                    { typeof(ushort), (d) => (ushort)(double)d },
+                }
+            },
+            {
                 typeof(long), new Dictionary<Type, Func<object, object>>()
                 {
+                    { typeof(byte), (l) => (byte)(long)l },
                     { typeof(char), (l) => (char)(long)l },
                     { typeof(double), (l) => (double)(long)l },
                     { typeof(float), (l) => (float)(long)l },

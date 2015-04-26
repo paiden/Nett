@@ -71,6 +71,14 @@ namespace Nett
             return this.Get(t, TomlConfig.DefaultInstance);
         }
 
+        public override bool IsTable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public override object Get(Type t, TomlConfig config)
         {
             if(t == TomlTableType) { return this; }

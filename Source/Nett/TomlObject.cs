@@ -40,7 +40,7 @@ namespace Nett
                 var et = e.GetElementType();
                 if (et != null && !TomlValue.CanCreateFrom(et))
                 {
-                    return new TomlTableArray("", e, config);
+                    return new TomlTableArray("", e.Select((o) => TomlTable.From(o, config)), config);
                 }
                 else
                 {
@@ -57,20 +57,19 @@ namespace Nett
             }
         }
 
-        public bool IsTable
+        public virtual bool IsTable
         {
             get
             {
-                return this.GetType() == Types.TomlTableType;
+                return false;
             }
         }
 
-        public bool IsTableArray
+        public virtual bool IsTableArray
         {
             get
             {
-                var a = this as TomlArray;
-                return a != null && a.IsTableArrayInternal();
+                return false;
             }
         }
 

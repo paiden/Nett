@@ -189,7 +189,7 @@ PRODUCTIONS
 
 	TomlArrayTable =										(. string arrayName = null; string key= null; TomlObject val = null; .)
 		'[''['
-		NestedKey<out arrayName>                            (. var a = this.CreateOrGetTomlArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
+		NestedKey<out arrayName>                            (. var a = this.CreateOrGetTomlTableArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
 		']'']'	
 		{
 			KeyValuePair<out key, out val>					(. t.Add(key, val); .)

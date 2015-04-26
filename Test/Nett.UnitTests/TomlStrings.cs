@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Nett.UnitTests
 {
+    /// <summary>
+    /// Contains all test cases from: https://github.com/BurntSushi/toml-test/tree/master/tests, except the completely trivial
+    /// ones that area already handled by other cases.
+    /// </summary>
     internal static class TomlStrings
     {
         public static class Valid
@@ -81,6 +85,103 @@ best-day-ever = 1987-07-05T17:45:00Z
 boring = false
 perfection = [6, 28, 496]
 ";
+            public const string Floats = @"
+pi = 3.14
+negpi = -3.14
+";
+            public const string ImplicitAndExplicitAfter = @"
+[a.b.c]
+answer = 42
+
+[a]
+better = 43";
+            public const string ImplicitAndExplicitBefore = @"
+[a]
+better = 43
+
+[a.b.c]
+answer = 42";
+            public const string ImplicitGroups = @"
+[a.b.c]
+answer = 42";
+            public const string Integer = @"
+answer = 42
+neganswer = -42";
+            public const string KeyEqualsNoSpace = @"answer=42";
+            public const string KeyEqualsSpace = @"""a b"" = 42";
+            public const string KeySpecialChars = @"""~!@$^&*()_+-`1234567890[]|/?><.,;:'"" = 42";
+            public const string LongFloats = @"longpi = 3.141592653589793
+neglongpi = -3.141592653589793";
+            public const string LongInts = @"answer = 9223372036854775806
+neganswer = -9223372036854775807";
+            public const string MultiLineStrings = @"
+multiline_empty_one = """"""""""""
+multiline_empty_two = """"""
+""""""
+multiline_empty_three = """"""\
+    """"""
+multiline_empty_four = """"""\
+   \
+   \
+   """"""
+
+equivalent_one = ""The quick brown fox jumps over the lazy dog.""
+equivalent_two = """"""
+The quick brown \
+
+
+  fox jumps over \
+    the lazy dog.""""""
+
+equivalent_three = """"""\
+       The quick brown \
+       fox jumps over \
+       the lazy dog.\
+       """"""";
+            public const string RawMultilineStrings = @"
+oneline = '''This string has a ' quote character.'''
+firstnl = '''
+This string has a ' quote character.'''
+multiline = '''
+This string
+has ' a quote character
+and more than
+one newline
+in it.'''";
+            public const string RawStrings = @"backspace = 'This string has a \b backspace character.'
+tab = 'This string has a \t tab character.'
+newline = 'This string has a \n new line character.'
+formfeed = 'This string has a \f form feed character.'
+carriage = 'This string has a \r carriage return character.'
+slash = 'This string has a \/ slash character.'
+backslash = 'This string has a \\ backslash character.'";
+            public const string StringEmpty = "answer = \"\"";
+            public const string StringEscapes = "backspace = \"This string has a \b backspace character.\"" +
+"\r\ntab = \"This string has a \t tab character.\"" +
+"\r\nnewline = \"This string has a \n new line character.\"" +
+"\r\nformfeed = \"This string has a \f form feed character.\"" +
+"\r\ncarriage = \"This string has a \r carriage return character.\"" +
+"\r\nquote = \"This string has a \" quote character.\"" +
+"\r\nbackslash = \"This string has a \\ backslash character.\"" +
+"\r\nnotunicode1 = \"This string does not have a unicode \\u escape.\"" +
+"\r\nnotunicode2 = \"This string does not have a unicode \u005Cu escape.\"" +
+"\r\nnotunicode3 = \"This string does not have a unicode \\u0075 escape.\"" +
+"\r\nnotunicode4 = \"This string does not have a unicode \\\u0075 escape.\"";
+            public const string StringWithPound = @"pound = ""We see no # comments here.""
+poundcomment = ""But there are # some comments here."" # Did I # mess you up?";
+            public const string TableArrayImplicit = @"[[albums.songs]]
+name = ""Glory Days""";
+            public const string TableArrayMany = @"[[people]]
+first_name = ""Bruce""
+last_name = ""Springsteen""
+
+[[people]]
+first_name = ""Eric""
+last_name = ""Clapton""
+
+[[people]]
+first_name = ""Bob""
+last_name = ""Seger""";
         }
     }
 }

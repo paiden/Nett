@@ -398,16 +398,16 @@ color = ""gray""
 
             var parsed = Toml.Read(toParse);
 
-            var a = (TomlArray)parsed["products"];
+            var a = (TomlTableArray)parsed["products"];
             Assert.Equal(3, a.Count);
 
-            var t1 = (TomlTable)a[0];
+            var t1 = a[0];
             Assert.Equal("Hammer", t1.Get<string>("name"));
 
-            var t2 = (TomlTable)a[1];
+            var t2 = a[1];
             Assert.Equal(0, t2.Rows.Count);
 
-            var t3 = (TomlTable)a[2];
+            var t3 = a[2];
             Assert.Equal("Nail", t3.Get<string>("name"));
         }
 

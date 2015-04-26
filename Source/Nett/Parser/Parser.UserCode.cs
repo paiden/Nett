@@ -246,11 +246,11 @@ namespace Nett.Parser
             }
         }
 
-        private TomlArray CreateOrGetTomlArray(string name)
+        private TomlTableArray CreateOrGetTomlTableArray(string name)
         {
             if(string.IsNullOrWhiteSpace(name))
             {
-                this.SemErr("Array has a invalid name.");
+                this.SemErr("Array table must have a name.");
             }
 
             TomlTable target = GetTarget(name, this.parsed, ref name);
@@ -258,7 +258,7 @@ namespace Nett.Parser
             if(target.Rows.TryGetValue(name, out value))
             {
                 var existing = target[name];
-                var arr = existing as TomlArray;
+                var arr = existing as TomlTableArray;
 
                 if (arr == null && existing != null)
                 {
@@ -269,7 +269,7 @@ namespace Nett.Parser
             }
             else
             {
-                var na = new TomlArray();
+                var na = new TomlTableArray(name);
                 target.Rows.Add(name, na);
                 return na;
             }
@@ -284,7 +284,7 @@ namespace Nett.Parser
             for (int i = 0; i < path.Length - 1; i++)
             {
                 var obj = current[path[i]];
-                current = (obj as TomlTable) ?? ((TomlArray)obj).Last() as TomlTable;
+                current = (obj as TomlTable) ?? ((TomlTableArray)obj).Last() as TomlTable;
             }
 
             propertyName = path[path.Length - 1];
