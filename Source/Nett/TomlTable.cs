@@ -117,17 +117,20 @@ namespace Nett
             foreach(var p in props)
             {
                 object val = p.GetValue(obj, null);
-                TomlObject to = TomlObject.From(val, config);
-
-                // Array table is the only case where the value also needs to know the key so that serialization works correctly
-                var ta = to as TomlTableArray;
-                if(ta != null)
+                if (val != null)
                 {
-                    ta.Name = p.Name;
-                }
+                    TomlObject to = TomlObject.From(val, config);
 
-                AddComments(to, p);
-                tt.Add(p.Name, to);
+                    // Array table is the only case where the value also needs to know the key so that serialization works correctly
+                    var ta = to as TomlTableArray;
+                    if (ta != null)
+                    {
+                        ta.Name = p.Name;
+                    }
+
+                    AddComments(to, p);
+                    tt.Add(p.Name, to);
+                }
             }
 
             return tt;

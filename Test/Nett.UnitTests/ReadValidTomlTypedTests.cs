@@ -7,8 +7,61 @@ using Xunit;
 
 namespace Nett.UnitTests
 {
+    /// <summary>
+    /// Test for the basic test examples from https://github.com/BurntSushi/toml-test/tree/master/tests
+    /// These cases handle some special cases and some document structure cases.
+    /// This test can only work when the Untyped* equivalent tests are OK. These tests proof that the transformation from a
+    /// generic TomlTable to some typed C# class via reflection works correctly.
+    /// </summary>
     public class ReadValidTomlTypedTests
     {
+        [Fact]
+        public void ReadValidTomlTyped_EmptyArray()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.ArrayEmpty;
+
+            // Act
+            var read = Toml.Read<EmptyArray>(toml);
+
+            // Assert
+            Assert.NotNull(read);
+            Assert.NotNull(read.thevoid);
+            Assert.Equal(1, read.thevoid.Count);
+            Assert.Equal(0, read.thevoid[0].Count);
+        }
+
+        [Fact]
+        public void ReadValidTomlTyped_ArrayNoSpaces()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.ArrayNoSpaces;
+
+            // Act
+            var read = Toml.Read<ArrayNoSpaces>(toml);
+
+            // Assert
+            Assert.Equal(3, read.ints.Length);
+            Assert.Equal(1, read.ints[0]);
+            Assert.Equal(2, read.ints[1]);
+            Assert.Equal(3, read.ints[2]);
+        }
+
+        [Fact]
+        public void ReadValidTomlTyped_ArraysNested()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.ArraysNested;
+
+            // Act
+            var read = Toml.Read<ArraysNested>(toml);
+
+            // Assert
+            Assert.Equal(2, read.nest.Count);
+            Assert.Equal("a", read.nest[0][0]);
+            Assert.Equal("b", read.nest[1][0]);
+        }
+
         [Fact]
         public void ReadValidToml_TableArrayNested()
         {
@@ -46,6 +99,21 @@ namespace Nett.UnitTests
         private class Song
         {
             public string name { get; set; }
+        }
+
+        private class EmptyArray
+        {
+            public List<List<double>> thevoid { get; set; }
+        }
+
+        private class ArrayNoSpaces
+        {
+            public int[] ints { get; set; }
+        }
+
+        private class ArraysNested
+        {
+            public List<string[]> nest { get; set; }
         }
     }
 }

@@ -8,10 +8,15 @@ using Xunit;
 
 namespace Nett.UnitTests
 {
+    /// <summary>
+    /// Test for the basic test examples from https://github.com/BurntSushi/toml-test/tree/master/tests
+    /// These cases handle some special cases and some document structure cases.
+    /// Everything will be deserialized into a generic TomlTable data structure. Extracting the data has to be done by hand.
+    /// </summary>  
     public class ReadValidTomlUntypedTests
     {
-        [Fact, ]
-        public void ReadValidToml_EmptyArray()
+        [Fact]
+        public void ReadValidTomlUntyped_EmptyArray()
         {
             // Arrange
             var toml = TomlStrings.Valid.ArrayEmpty;
@@ -489,6 +494,12 @@ namespace Nett.UnitTests
             var tt = read.Get<TomlTableArray>("people")[0];
             Assert.Equal("Bruce", tt.Get<string>("first_name"));
             Assert.Equal("Springsteen", tt.Get<string>("last_name"));
+            tt = read.Get<TomlTableArray>("people")[1];
+            Assert.Equal("Eric", tt.Get<string>("first_name"));
+            Assert.Equal("Clapton", tt.Get<string>("last_name"));
+            tt = read.Get<TomlTableArray>("people")[2];
+            Assert.Equal("Bob", tt.Get<string>("first_name"));
+            Assert.Equal("Seger", tt.Get<string>("last_name"));
         }
     }
 }
