@@ -32,7 +32,7 @@ namespace Nett
             if(this.type == TypeOfString.Default)
             {
                 var toWrite = TomlString.EspaceString(this.Value);
-                writer.WriteLine("{0}", toWrite);
+                writer.Write("{0}", toWrite);
             }
         }
 

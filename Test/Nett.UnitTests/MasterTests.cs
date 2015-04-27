@@ -67,15 +67,17 @@ namespace Nett.UnitTests
 
             public override bool Equals(object obj)
             {
-                return base.Equals(obj);
+                return this.Equals(obj as SystemConfig);
             }
 
-            public bool Euqals(SystemConfig config)
+            public bool Equals(SystemConfig config)
             {
                 if(config == null) { return false; }
 
-                return object.Equals(this.Env, config.Env) &&
-                    object.Equals(this.Resources, config.Resources) &&
+                return 
+                    object.ReferenceEquals(this, config) ||
+                    object.Equals(this.Env, config.Env) &&
+                    this.Resources.SequenceEqual(config.Resources) &&
                     object.Equals(this.Env2, config.Env2);
             }
 
@@ -90,6 +92,26 @@ namespace Nett.UnitTests
             public string Home { get; set; }
             public string[] ProbeDirectories { get; set; }
             public List<double> Values { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                return this.Equals(obj as Environment);
+            }
+
+            public bool Equals(Environment env)
+            {
+                if(env == null) { return false; }
+                return
+                    object.ReferenceEquals(this, env) ||
+                    object.Equals(this.Home, env.Home) &&
+                    this.ProbeDirectories.SequenceEqual(env.ProbeDirectories) &&
+                    this.Values.SequenceEqual(env.Values);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
 
         private class Resource
@@ -97,6 +119,26 @@ namespace Nett.UnitTests
             public string Location { get; set; }
 
             public int Type { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                return this.Equals(obj as Resource);
+            }
+
+            public bool Equals(Resource resource)
+            {
+                if(resource == null) { return false; }
+
+                return
+                    object.ReferenceEquals(this, resource) ||
+                    object.Equals(this.Location, resource.Location) &&
+                    object.Equals(this.Type, resource.Type);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
     }
 }

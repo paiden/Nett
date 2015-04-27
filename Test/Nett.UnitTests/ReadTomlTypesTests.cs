@@ -77,6 +77,17 @@ namespace Nett.UnitTests
             Assert.Throws<Exception>(() => Toml.Read("str = \"\r\n\""));
         }
 
+        [Theory]
+        [InlineData("X = \"C:\\\\test.txt\"", @"C:\test.txt")]
+        public void Read_StringWithEscapeChars_ReadsCorrectly(string toRead, string expected)
+        {
+            // Act
+            var parsed = Toml.Read(toRead);
+
+            // Assert
+            Assert.Equal(expected, parsed.Get<string>("X"));
+        }
+
         [Fact]
         public void Deserilize_StringWithUTF32Char_DeserializesCorrectly()
         {

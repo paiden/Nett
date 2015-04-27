@@ -24,9 +24,9 @@ namespace Nett.Parser
 
         private TomlValue<long> ParseIntVal(StringBuilder sb, bool neg)
         {
-            if(this.errors.count <= 0)
+            if (this.errors.count <= 0)
             {
-                if(sb.Length > 1 && sb[0] == '0') { throw new Exception("Leading zeros are not allowed."); }
+                if (sb.Length > 1 && sb[0] == '0') { throw new Exception("Leading zeros are not allowed."); }
 
                 var iv = long.Parse(sb.ToString());
                 return new TomlInt(neg ? -iv : iv);
@@ -60,12 +60,12 @@ namespace Nett.Parser
             ssb.Append(source);
             ssb.Remove(0, 1);
             ssb.Length--;
-            return new TomlString(ProcessStringValueInCurrentBuilder());
+            return new TomlString(Parser.Unescape(Parser.ssb.ToString()));
         }
 
         private TomlValue ParseTimespanVal(string src)
         {
-            if(this.errors.count <= 0)
+            if (this.errors.count <= 0)
             {
                 return new TomlTimeSpan(TimeSpan.Parse(src));
             }
@@ -82,43 +82,101 @@ namespace Nett.Parser
             ssb.Remove(0, 3);
             ssb.Length -= 3;
 
-            if(ssb.Length > 0 && ssb[0] == '\r') { ssb.Remove(0, 1); }
-            if(ssb.Length > 0 && ssb[0] == '\n') { ssb.Remove(0, 1); }
+            if (ssb.Length > 0 && ssb[0] == '\r') { ssb.Remove(0, 1); }
+            if (ssb.Length > 0 && ssb[0] == '\n') { ssb.Remove(0, 1); }
 
-            string s = ProcessStringValueInCurrentBuilder();
+            string s = Parser.ReplaceDelimeterBackslash(Parser.ssb.ToString());
+            s = Parser.Unescape(s);
             return new TomlString(ReplaceDelimeterBackslash(s), TomlString.TypeOfString.Multiline);
         }
 
-        private static string ProcessStringValueInCurrentBuilder()
+        //private static string ProcessStringValueInCurrentBuilder()
+        //{
+        //    var replaced = Parser.Unescape(ssb.ToString());
+
+        //    if (replaced.IndexOf(@"\u", StringComparison.OrdinalIgnoreCase) >= 0)
+        //    {
+        //        replaced = ReplaceUnicodeSequences(replaced);
+        //    }
+
+        //    return replaced;
+        //}
+
+        private static string Unescape(string s)
         {
-            ssb.Replace(@"\b", "\b")
-               .Replace(@"\t", "\t")
-               .Replace(@"\n", "\n")
-               .Replace(@"\f", "\f")
-               .Replace(@"\r", "\r")
-               .Replace(@"\""", "\"")
-               .Replace(@"\\", "\\");
+            StringBuilder sb = new StringBuilder();
+            Regex r = new Regex("\\\\[abfnrtv?\"'\\\\]|\\\\[0-3]?[0-7]{1,2}|\\\\u[0-9a-fA-F]{4}|\\\\U[0-9a-fA-F]{8}|.");
+            MatchCollection mc = r.Matches(s, 0);
 
-            var replaced = ssb.ToString();
-
-            if (replaced.IndexOf(@"\u", StringComparison.OrdinalIgnoreCase) >= 0)
+            foreach (Match m in mc)
             {
-                replaced = ReplaceUnicodeSequences(replaced);
+                if (m.Length == 1)
+                {
+                    sb.Append(m.Value);
+                }
+                else
+                {
+                    if (m.Value[1] >= '0' && m.Value[1] <= '7')
+                    {
+                        int i = Convert.ToInt32(m.Value.Substring(1), 8);
+                        sb.Append((char)i);
+                    }
+                    else if (m.Value[1] == 'u')
+                    {
+                        int i = Convert.ToInt32(m.Value.Substring(2), 16);
+                        sb.Append((char)i);
+                    }
+                    else if (m.Value[1] == 'U')
+                    {
+                        int i = Convert.ToInt32(m.Value.Substring(2), 16);
+                        sb.Append(char.ConvertFromUtf32(i));
+                    }
+                    else
+                    {
+                        switch (m.Value[1])
+                        {
+                            case 'a':
+                                sb.Append('\a');
+                                break;
+                            case 'b':
+                                sb.Append('\b');
+                                break;
+                            case 'f':
+                                sb.Append('\f');
+                                break;
+                            case 'n':
+                                sb.Append('\n');
+                                break;
+                            case 'r':
+                                sb.Append('\r');
+                                break;
+                            case 't':
+                                sb.Append('\t');
+                                break;
+                            case 'v':
+                                sb.Append('\v');
+                                break;
+                            default:
+                                sb.Append(m.Value[1]);
+                                break;
+                        }
+                    }
+                }
             }
 
-            return replaced;
+            return sb.ToString();
         }
 
-        private static string ReplaceUnicodeSequences(string source)
-        {
-            var replaced = RegexUtf8Short.Replace(source, (m) =>
-                ((char)int.Parse(m.Value.Substring(2), NumberStyles.HexNumber)).ToString());
-            return replaced;
-        }
+        //private static string ReplaceUnicodeSequences(string source)
+        //{
+        //    var replaced = RegexUtf8Short.Replace(source, (m) =>
+        //        ((char)int.Parse(m.Value.Substring(2), NumberStyles.HexNumber)).ToString());
+        //    return replaced;
+        //}
 
         private static string ReplaceDelimeterBackslash(string source)
         {
-            for(int d = DelimeterBackslashPos(source, 0); d >= 0; d = DelimeterBackslashPos(source, d))
+            for (int d = DelimeterBackslashPos(source, 0); d >= 0; d = DelimeterBackslashPos(source, d))
             {
                 var nnw = NextNonWhitespaceCharacer(source, d + 1);
                 source = source.Remove(d, nnw - d);
@@ -138,9 +196,9 @@ namespace Nett.Parser
 
         private static int NextNonWhitespaceCharacer(string source, int startIndex)
         {
-            for(int i = startIndex; i < source.Length; i++)
+            for (int i = startIndex; i < source.Length; i++)
             {
-                if(!WhitspaceCharSet.Contains(source[i]))
+                if (!WhitspaceCharSet.Contains(source[i]))
                 {
                     return i;
                 }
@@ -153,9 +211,9 @@ namespace Nett.Parser
         {
             int currenMin = int.MaxValue;
 
-            for(int i = 0; i < values.Length; i++)
+            for (int i = 0; i < values.Length; i++)
             {
-                if(values[i] >= absoluteMin && values[i] < currenMin)
+                if (values[i] >= absoluteMin && values[i] < currenMin)
                 {
                     currenMin = values[i];
                 }
@@ -192,8 +250,8 @@ namespace Nett.Parser
         private bool IsTimespan()
         {
             Token t = la;
-            if(t.val.Length != 2 || t.kind != _number) { return false; } else { t = scanner.Peek(); }
-            if(t.val != ":") { return false; } else { t = scanner.Peek(); }
+            if (t.val.Length != 2 || t.kind != _number) { return false; } else { t = scanner.Peek(); }
+            if (t.val != ":") { return false; } else { t = scanner.Peek(); }
             if (t.val.Length != 2 || t.kind != _number) { return false; } else { t = scanner.Peek(); }
             if (t.val != ":") { return false; } else { t = scanner.Peek(); }
             if (t.val.Length != 2 || t.kind != _number) { return false; }
@@ -221,9 +279,9 @@ namespace Nett.Parser
         {
             this.current = this.parsed;
 
-            foreach(var p in tableNames)
+            foreach (var p in tableNames)
             {
-                if(!this.current.Rows.ContainsKey(p))
+                if (!this.current.Rows.ContainsKey(p))
                 {
                     var c = new TomlTable(p);
                     this.current.Add(p, c);
@@ -248,14 +306,14 @@ namespace Nett.Parser
 
         private TomlTableArray CreateOrGetTomlTableArray(string name)
         {
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 this.SemErr("Array table must have a name.");
             }
 
             TomlTable target = GetTarget(name, this.parsed, ref name);
             TomlObject value;
-            if(target.Rows.TryGetValue(name, out value))
+            if (target.Rows.TryGetValue(name, out value))
             {
                 var existing = target[name];
                 var arr = existing as TomlTableArray;
@@ -277,7 +335,7 @@ namespace Nett.Parser
 
         private static TomlTable GetTarget(string key, TomlTable current, ref string propertyName)
         {
-            if(!key.Contains(".")) { return current; }
+            if (!key.Contains(".")) { return current; }
 
             string[] path = key.Split(PathSplit, StringSplitOptions.None);
 
