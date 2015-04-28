@@ -1,0 +1,14 @@
+<package>
+  <metadata>
+    <version>$version$</version>
+    <id>Nett</id>
+    <authors>Philipp Haiden</authors>
+    <owners>Philipp Haiden</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Library for reading and writing TOML files</description>
+    <tags>TOML Api Reading Writing Parsing</tags>
+  </metadata>
+  <files>
+    <file src="Source\Nett\bin\$configuration$\Nett.dll" target="lib\" />
+  </files>
+</package>
