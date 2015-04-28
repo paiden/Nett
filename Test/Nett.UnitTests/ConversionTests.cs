@@ -66,6 +66,17 @@ Foo3 = [""A""]";
             Assert.Equal(10, co.Foo2.Value);
         }
 
+        [Fact]
+        public void WriteToml_ConverterIsUsedAndConvertedPropertiesAreNotEvaluated()
+        {
+            // Arrange
+            var config = TomlConfig.Default()
+                .AddConversion().From<ClassWithTrowingProp>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used, and property not accessed"));
+            var toWrite = new Foo();
+            // Act
+            var written = Toml.WriteString(toWrite, config);
+        }
+
         private class ConfigObject
         {
             public TestStruct S { get; set; }
@@ -97,6 +108,26 @@ Foo3 = [""A""]";
             {
                 this.Value = val;
             }
+        }
+
+        private class Foo
+        {
+            public IClassWithTrowingProp Prop { get; set; }
+
+            public Foo()
+            {
+                this.Prop = new ClassWithTrowingProp();
+            }
+        }
+
+        private interface IClassWithTrowingProp
+        {
+            object Value { get; }
+        }
+
+        private class ClassWithTrowingProp : IClassWithTrowingProp
+        {
+            public object Value { get { throw new NotImplementedException(); } }
         }
     }
 }
