@@ -20,7 +20,7 @@ namespace Nett.UnitTests
         }
 
         [Theory]
-        [PropertyData(nameof(WriteTomlStringData))]
+        [MemberData(nameof(WriteTomlStringData))]
         public void WriteTomlStrings(StringType s, string expected)
         {
             // Act

@@ -178,7 +178,7 @@ trimmed in raw strings.
         {
             var parsed = Toml.Read(src);
 
-            Assert.Equal(expected, parsed.Get<double>("d"));
+            Assert.Equal(expected, parsed.Get<double>("d"), 8);
         }
 
         [Theory]
