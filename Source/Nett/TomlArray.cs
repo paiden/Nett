@@ -18,14 +18,11 @@ namespace Nett
 
         }
 
-        public TomlArray(IEnumerable enumerable, TomlConfig config)
-        {
-            if (enumerable != null)
+        public TomlArray(IEnumerable<TomlValue> values)
+        {   
+            foreach (var v in values)
             {
-                foreach (var e in enumerable)
-                {
-                    this.Add(From(e, config));
-                }
+                this.Add(v);
             }
         }
 

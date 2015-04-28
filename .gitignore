@@ -1,7 +1,8 @@
 #File Types
 *.cache
-*.old
 *.log
+*.nupkg
+*.old
 *.suo
 *.user
 

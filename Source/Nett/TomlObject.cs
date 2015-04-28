@@ -30,30 +30,62 @@ namespace Nett
         {
             var t = val.GetType();
             var converter = config.GetToTomlConverter(t);
+            IEnumerable enumerable;
             if (converter != null)
             {
                 return (TomlObject)converter.Convert(val);
             }
-            else if (t != StringType && EnumerableType.IsAssignableFrom(t))
+            else if (t != StringType && (enumerable = val as IEnumerable) != null)
             {
-                var e = (IEnumerable)val;
-                var et = e.GetElementType();
-                if (et != null && !TomlValue.CanCreateFrom(et))
-                {
-                    return new TomlTableArray("", e.Select((o) => TomlTable.From(o, config)), config);
-                }
-                else
-                {
-                    return new TomlArray((IEnumerable)val, config);
-                }
+                return CreateArrayType(enumerable, config);
             }
             else if (TomlValue.CanCreateFrom(t))
             {
-                return TomlValue.From(val, t);
+                return TomlValue.ValueFrom(val);
             }
             else
             {
                 return TomlTable.From(val, config);
+            }
+        }
+
+        private static TomlObject CreateArrayType(IEnumerable e, TomlConfig config)
+        {
+            var et = e.GetElementType();
+
+            if (et != null)
+            {
+                var conv = config.GetToTomlConverter(et);
+                if (conv != null)
+                {
+                    if (typeof(TomlValue).IsAssignableFrom(conv.ToType))
+                    {
+                        var values = e.Select((o) => (TomlValue)conv.Convert(o));
+                        return new TomlArray(values);
+                    }
+                    else if (typeof(TomlTable).IsAssignableFrom(conv.ToType))
+                    {
+                        return new TomlTableArray("", e.Select((o) => (TomlTable)conv.Convert(o)), config);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException($"Cannot create array type from enumerable with elemen type {et.FullName}");
+                    }
+                }
+                else if (TomlValue.CanCreateFrom(et))
+                {
+                    var values = e.Select((o) => TomlValue.ValueFrom(o));
+                    return new TomlArray(values);
+                }
+                else
+                {
+                    return new TomlTableArray("", e.Select((o) => TomlTable.From(o, config)), config);
+                }
+            }
+            else
+            {
+                var values = e.Select((o) => TomlValue.ValueFrom(o));
+                return new TomlArray(values);
             }
         }
 

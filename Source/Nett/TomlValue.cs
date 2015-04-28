@@ -28,8 +28,10 @@ namespace Nett
                 UInt16Type, UInt32Type,
             };
 
-        public static TomlValue From(object val, Type targetType)
+        public static TomlValue ValueFrom(object val)
         {
+            var targetType = val.GetType();
+
             if(StringType == targetType)
             {
                 return new TomlString((string)val);

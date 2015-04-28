@@ -73,8 +73,27 @@ Foo3 = [""A""]";
             var config = TomlConfig.Default()
                 .AddConversion().From<ClassWithTrowingProp>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used, and property not accessed"));
             var toWrite = new Foo();
+            
             // Act
             var written = Toml.WriteString(toWrite, config);
+
+            // Assert
+            Assert.Equal(@"Prop = ""Yeah converter was used, and property not accessed""", written.Trim());
+        }
+
+        [Fact]
+        public void WriteToml_WithListItemConverter_UsesConverter()
+        {
+            // Arrange
+            var config = TomlConfig.Default()
+                .AddConversion().From<GenProp<GenType>>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used."));
+            var toWrite = new GenHost();
+
+            // Act
+            var written = Toml.WriteString(toWrite, config);
+
+            // Assert
+            Assert.Equal(@"Props = [""Yeah converter was used."", ""Yeah converter was used.""]", written.Trim());
         }
 
         private class ConfigObject
@@ -128,6 +147,31 @@ Foo3 = [""A""]";
         private class ClassWithTrowingProp : IClassWithTrowingProp
         {
             public object Value { get { throw new NotImplementedException(); } }
+        }
+
+        private class GenHost
+        {
+            public List<GenProp<GenType>> Props { get; set; }
+
+            public GenHost()
+            {
+
+                this.Props = new List<GenProp<GenType>>()
+                {
+                    new GenProp<GenType>() { Value = new GenType() },
+                    new GenProp<GenType>() { Value = new GenType() },
+                };
+            }
+        }
+
+        private class GenProp<T>
+        {
+            public T Value { get; set; }
+        }
+
+        private class GenType
+        {
+            public string Value { get { throw new NotImplementedException(); } }
         }
     }
 }
