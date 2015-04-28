@@ -56,10 +56,8 @@ namespace Nett
             throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
         }
 
-        internal static bool CanCreateFrom(Type t)
-        {
-            return t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType;
-        }
+        internal static bool CanCreateFrom(Type t) => 
+            t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType;
 
         private static bool IsIntegerType(Type t)
         {
@@ -74,10 +72,7 @@ namespace Nett
             return false;
         }
 
-        private static bool IsFloatType(Type t)
-        {
-            return t == DoubleType || t == FloatType;
-        }
+        private static bool IsFloatType(Type t) => t == DoubleType || t == FloatType;
     }
 
     [DebuggerDisplay("{value}:{typeof(T).FullName}")]
@@ -92,20 +87,11 @@ namespace Nett
             this.value = value;
         }
 
-        public override TRes Get<TRes>()
-        {
-            return this.Get<TRes>(TomlConfig.DefaultInstance);
-        }
+        public override TRes Get<TRes>() => this.Get<TRes>(TomlConfig.DefaultInstance);
 
-        public override TRes Get<TRes>(TomlConfig config)
-        {
-            return Converter.Convert<TRes>(this.Value);
-        }
+        public override TRes Get<TRes>(TomlConfig config) => Converter.Convert<TRes>(this.Value);
 
-        public override object Get(Type t)
-        {
-            return this.Get(t, TomlConfig.DefaultInstance);
-        }
+        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
 
         public override object Get(Type t, TomlConfig config)
         {

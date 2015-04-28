@@ -15,8 +15,8 @@ namespace Nett
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
     public class TomlCommentAttribute : Attribute
     {
-        public string Comment { get; private set; }
-        public CommentLocation Location { get; private set; }
+        public string Comment { get; }
+        public CommentLocation Location { get; }
 
         public TomlCommentAttribute(string comment, CommentLocation location = CommentLocation.UseDefault)
         {

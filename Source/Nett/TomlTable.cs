@@ -20,7 +20,7 @@ namespace Nett
         private static readonly Type EnumerableType = typeof(IEnumerable);
         private static readonly Type StringType = typeof(string);
         private static readonly Type TomlTableType = typeof(TomlTable);
-        public string Name { get; private set; } = "";
+        public string Name { get; } = "";
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
         internal bool IsDefined { get; set; }
@@ -46,38 +46,20 @@ namespace Nett
             }
         }
 
-        public T Get<T>(string key)
-        {
-            return this[key].Get<T>();
-        }
+        public T Get<T>(string key) => this[key].Get<T>();
 
         public void Add(string key, TomlObject value)
         {
             this.Rows.Add(key, value);
         }
 
-        public override T Get<T>()
-        {
-            return (T)this.Get<T>(TomlConfig.DefaultInstance);
-        }
+        public override T Get<T>() => (T)this.Get<T>(TomlConfig.DefaultInstance);
 
-        public override T Get<T>(TomlConfig config)
-        {
-            return (T)this.Get(typeof(T), config);
-        }
+        public override T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);
 
-        public override object Get(Type t)
-        {
-            return this.Get(t, TomlConfig.DefaultInstance);
-        }
+        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
 
-        public override bool IsTable
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsTable => true;
 
         public override object Get(Type t, TomlConfig config)
         {

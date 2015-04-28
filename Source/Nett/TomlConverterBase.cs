@@ -13,10 +13,7 @@ namespace Nett
         public Type FromType => StaticFromType;
         public Type ToType => StaticToType;
 
-        public object Convert(object o)
-        {
-            return (TTo)this.Convert((TFrom)o);
-        }
+        public object Convert(object o) => (TTo)this.Convert((TFrom)o);
         public abstract TTo Convert(TFrom from);
     }
 }

@@ -7,8 +7,8 @@ namespace Nett
 {
     internal class TomlComment
     {
-        public string CommentText { get; private set; }
-        public CommentLocation Location { get; private set; }
+        public string CommentText { get; }
+        public CommentLocation Location { get; }
 
         public TomlComment(string commentText, CommentLocation location)
         {

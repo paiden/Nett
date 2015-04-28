@@ -8,10 +8,7 @@ namespace Nett
 {
     public class Toml
     {
-        public static string WriteString<T>(T obj)
-        {
-            return WriteString(obj, TomlConfig.DefaultInstance);
-        }
+        public static string WriteString<T>(T obj) => WriteString(obj, TomlConfig.DefaultInstance);
 
         public static string WriteString<T>(T obj, TomlConfig config)
         {
@@ -28,10 +25,7 @@ namespace Nett
             }
         }
 
-        public static T Read<T>(string toRead)
-        {
-            return Read<T>(toRead, TomlConfig.DefaultInstance);
-        }
+        public static T Read<T>(string toRead) => Read<T>(toRead, TomlConfig.DefaultInstance);
 
         public static T Read<T>(string toRead, TomlConfig tomlConfig)
         {
@@ -53,10 +47,7 @@ namespace Nett
             }
         }
 
-        public static T ReadFile<T>(string filePath)
-        {
-            return ReadFile<T>(filePath, TomlConfig.DefaultInstance);
-        }
+        public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);
 
         public static T ReadFile<T>(string filePath, TomlConfig config)
         {
@@ -64,10 +55,7 @@ namespace Nett
             return tt.Get<T>(config);
         }
 
-        public static TomlTable ReadFile(string filePath)
-        {
-            return ReadFile(filePath, TomlConfig.DefaultInstance);
-        }
+        public static TomlTable ReadFile(string filePath) => ReadFile(filePath, TomlConfig.DefaultInstance);
 
         public static TomlTable ReadFile(string filePath, TomlConfig config)
         {

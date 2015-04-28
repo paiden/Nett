@@ -18,9 +18,6 @@ namespace Nett
             this.convert = convert;
         }
 
-        public override TTo Convert(TFrom from)
-        {
-            return this.convert(from);
-        }
+        public override TTo Convert(TFrom from) => this.convert(from);
     }
 }

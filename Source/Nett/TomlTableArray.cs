@@ -35,43 +35,22 @@ namespace Nett
             }
         }
 
-        public override bool IsTableArray
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsTableArray => true;
 
-        public int Count { get { return this.items.Count; } }
+        public int Count => this.items.Count;
 
         public void Add(TomlTable table)
         {
             this.items.Add(table);
         }
 
-        public override T Get<T>()
-        {
-            return this.Get<T>(TomlConfig.DefaultInstance);
-        }
+        public override T Get<T>() => this.Get<T>(TomlConfig.DefaultInstance);
 
-        public override T Get<T>(TomlConfig config)
-        {
-            return (T)this.Get(typeof(T), config);
-        }
+        public override T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);
 
-        public override object Get(Type t)
-        {
-            return this.Get(t, TomlConfig.DefaultInstance);
-        }
+        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
 
-        public TomlTable this[int index]
-        {
-            get
-            {
-                return this.items[index];
-            }
-        }
+        public TomlTable this[int index] => this.items[index];
 
         public override object Get(Type t, TomlConfig config)
         {
@@ -111,10 +90,7 @@ namespace Nett
             return collection;
         }
 
-        public object Last()
-        {
-            return this.items[this.items.Count - 1];
-        }
+        public object Last() => this.items[this.items.Count - 1];
 
         public override void WriteTo(StreamWriter writer)
         {

@@ -18,7 +18,7 @@ namespace Nett
         private static readonly Type StringType = typeof(string);
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
-        internal List<TomlComment> Comments { get; private set; }
+        internal List<TomlComment> Comments { get; }
         public abstract T Get<T>();
         public abstract T Get<T>(TomlConfig config);
         public abstract object Get(Type t);
@@ -89,21 +89,9 @@ namespace Nett
             }
         }
 
-        public virtual bool IsTable
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsTable => false;
 
-        public virtual bool IsTableArray
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsTableArray => false;
 
         public TomlObject()
         {

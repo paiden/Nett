@@ -27,22 +27,20 @@ namespace Nett.UnitTests
         }
 
 
-        private SystemConfig CreateTestConfig()
+        private SystemConfig CreateTestConfig() => new SystemConfig()
         {
-            return new SystemConfig()
+            Env = new Environment()
             {
-                Env = new Environment()
-                {
-                    Home = "C:\\test.txt",
-                    ProbeDirectories = new string[]
+                Home = "C:\\test.txt",
+                ProbeDirectories = new string[]
                     {
                         "C:\\dir1",
                         "C:\\dir2",
                         "C:\\dir3",
                     },
-                    Values = new List<double>(),
-                },
-                Resources = new List<Resource>()
+                Values = new List<double>(),
+            },
+            Resources = new List<Resource>()
                 {
                     new Resource()
                     {
@@ -55,8 +53,7 @@ namespace Nett.UnitTests
                         Type = 229
                     }
                 },
-            };
-        }
+        };
 
         private class SystemConfig
         {
@@ -65,10 +62,7 @@ namespace Nett.UnitTests
 
             public Environment Env2 { get; set; }
 
-            public override bool Equals(object obj)
-            {
-                return this.Equals(obj as SystemConfig);
-            }
+            public override bool Equals(object obj) => this.Equals(obj as SystemConfig);
 
             public bool Equals(SystemConfig config)
             {
@@ -81,10 +75,7 @@ namespace Nett.UnitTests
                     object.Equals(this.Env2, config.Env2);
             }
 
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            public override int GetHashCode() => base.GetHashCode();
         }
 
         private class Environment
@@ -93,10 +84,7 @@ namespace Nett.UnitTests
             public string[] ProbeDirectories { get; set; }
             public List<double> Values { get; set; }
 
-            public override bool Equals(object obj)
-            {
-                return this.Equals(obj as Environment);
-            }
+            public override bool Equals(object obj) => this.Equals(obj as Environment);
 
             public bool Equals(Environment env)
             {
@@ -108,10 +96,7 @@ namespace Nett.UnitTests
                     this.Values.SequenceEqual(env.Values);
             }
 
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            public override int GetHashCode() => base.GetHashCode();
         }
 
         private class Resource
@@ -120,10 +105,7 @@ namespace Nett.UnitTests
 
             public int Type { get; set; }
 
-            public override bool Equals(object obj)
-            {
-                return this.Equals(obj as Resource);
-            }
+            public override bool Equals(object obj) => this.Equals(obj as Resource);
 
             public bool Equals(Resource resource)
             {
@@ -135,10 +117,7 @@ namespace Nett.UnitTests
                     object.Equals(this.Type, resource.Type);
             }
 
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            public override int GetHashCode() => base.GetHashCode();
         }
     }
 }

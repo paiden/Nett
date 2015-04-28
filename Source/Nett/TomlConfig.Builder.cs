@@ -8,10 +8,7 @@ namespace Nett
 {
     public sealed partial class TomlConfig
     {
-        public IFrom AddConversion()
-        {
-            return new From(this);
-        }
+        public IFrom AddConversion() => new From(this);
 
         private class From : IFrom
         {
@@ -22,12 +19,9 @@ namespace Nett
                 this.config = config;
             }
 
-            public Type FromType { get; private set; }
+            public Type FromType { get; }
 
-            ITo<T> IFrom.From<T>()
-            {
-                return new To<T>(this.config);
-            }
+            ITo<T> IFrom.From<T>() => new To<T>(this.config);
         }
 
         private sealed class To<TFrom> : ITo<TFrom>
@@ -39,10 +33,7 @@ namespace Nett
                 Debug.Assert(config != null);
                 this.config = config;
             }
-            IAs<TFrom, T> ITo<TFrom>.To<T>()
-            {
-                return new As<TFrom, T>(this.config);
-            }
+            IAs<TFrom, T> ITo<TFrom>.To<T>() => new As<TFrom, T>(this.config);
         }
 
         internal sealed class As<TFrom, TTo> : IAs<TFrom, TTo>

@@ -31,46 +31,19 @@ namespace Nett
             this.items.Add(o);
         }
 
-        public int Count
-        {
-            get
-            {
-                return this.items.Count;
-            }
-        }
+        public int Count => this.items.Count;
 
-        internal bool IsTableArrayInternal()
-        {
-            return this.items.Count > 0 && this.items[0].GetType() == Types.TomlTableType;
-        }
+        internal bool IsTableArrayInternal() => this.items.Count > 0 && this.items[0].GetType() == Types.TomlTableType;
 
-        public TomlObject this[int index]
-        {
-            get
-            {
-                return this.items[index];
-            }
-        }
+        public TomlObject this[int index] => this.items[index];
 
-        public T Get<T>(int index)
-        {
-            return this.items[index].Get<T>();
-        }
+        public T Get<T>(int index) => this.items[index].Get<T>();
 
-        public override T Get<T>()
-        {
-            return this.Get<T>(TomlConfig.DefaultInstance);
-        }
+        public override T Get<T>() => this.Get<T>(TomlConfig.DefaultInstance);
 
-        public override T Get<T>(TomlConfig config)
-        {
-            return Converter.Convert<T>(this);
-        }
+        public override T Get<T>(TomlConfig config) => Converter.Convert<T>(this);
 
-        public override object Get(Type t)
-        {
-            return this.Get(t, TomlConfig.DefaultInstance);
-        }
+        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
 
         public override object Get(Type t, TomlConfig config)
         {
@@ -108,15 +81,9 @@ namespace Nett
             return collection;
         }
 
-        public object Last()
-        {
-            return this.items[this.items.Count - 1];
-        }
+        public object Last() => this.items[this.items.Count - 1];
 
-        public IEnumerable<T> To<T>()
-        {
-            return this.items.Select((to) => to.Get<T>());
-        }
+        public IEnumerable<T> To<T>() => this.items.Select((to) => to.Get<T>());
 
         public override void WriteTo(StreamWriter sw )
         {

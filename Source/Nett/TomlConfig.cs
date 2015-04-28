@@ -23,10 +23,7 @@ namespace Nett
 
         }
 
-        public static TomlConfig Default()
-        {
-            return new TomlConfig();
-        }
+        public static TomlConfig Default() => new TomlConfig();
 
         public TomlConfig AddConverter(ITomlConverter converter)
         {
