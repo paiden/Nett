@@ -31,20 +31,8 @@ namespace Nett
         {
             if(this.type == TypeOfString.Default)
             {
-                var toWrite = TomlString.EspaceString(this.Value);
-                writer.Write("{0}", toWrite);
-            }
-        }
-
-        private static string EspaceString(string source)
-        {
-            using (var writer = new StringWriter())
-            {
-                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
-                {
-                    provider.GenerateCodeFromExpression(new CodePrimitiveExpression(source), writer, null);
-                    return writer.ToString();
-                }
+                var toWrite = this.Value.Escape();
+                writer.Write("\"{0}\"", toWrite);
             }
         }
     }

@@ -96,6 +96,21 @@ Foo3 = [""A""]";
             Assert.Equal(@"Props = [""Yeah converter was used."", ""Yeah converter was used.""]", written.Trim());
         }
 
+        [Fact]
+        public void WriteToml_WithListItemConverterAndPropertyUsesInterface_UsesConverter()
+        {
+            // Arrange
+            var config = TomlConfig.Default()
+                .AddConversion().From<IGenProp<GenType>>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used."));
+            var toWrite = new GenInterfaceHost();
+
+            // Act
+            var written = Toml.WriteString(toWrite, config);
+
+            // Assert
+            Assert.Equal(@"Props = [""Yeah converter was used."", ""Yeah converter was used.""]", written.Trim());
+        }
+
         private class ConfigObject
         {
             public TestStruct S { get; set; }
@@ -164,7 +179,27 @@ Foo3 = [""A""]";
             }
         }
 
-        private class GenProp<T>
+        private class GenInterfaceHost
+        {
+            public List<IGenProp<GenType>> Props { get; set; }
+
+            public GenInterfaceHost()
+            {
+
+                this.Props = new List<IGenProp<GenType>>()
+                {
+                    new GenProp<GenType>() { Value = new GenType() },
+                    new GenProp<GenType>() { Value = new GenType() },
+                };
+            }
+        }
+
+        private interface IGenProp<T>
+        {
+            T Value { get; set; }
+        }
+
+        private class GenProp<T> : IGenProp<T>
         {
             public T Value { get; set; }
         }

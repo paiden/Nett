@@ -21,5 +21,17 @@ namespace Nett.UnitTests
             // Assert
             Assert.Equal(expected, s);
         }
+
+        [Theory]
+        [InlineData("", "")]
+        [InlineData(@"C:\Windows\System32\BestPractices\v1.0\Models\Microsoft\Windows\Hyper-V\en-US\test.txt", @"C:\\Windows\\System32\\BestPractices\\v1.0\\Models\\Microsoft\\Windows\\Hyper-V\\en-US\\test.txt" )]
+        public void Escape(string src, string expected)
+        {
+            // Act
+            var escaped = src.Escape();
+
+            // Assert
+            Assert.Equal(expected, escaped);
+        }
     }
 }
