@@ -57,11 +57,11 @@ namespace Nett
                     }
                     else if (typeof(TomlTable).IsAssignableFrom(conv.ToType))
                     {
-                        return new TomlTableArray("", e.Select((o) => (TomlTable)conv.Convert(o)), config);
+                        return new TomlTableArray(e.Select((o) => (TomlTable)conv.Convert(o)));
                     }
                     else
                     {
-                        throw new NotSupportedException($"Cannot create array type from enumerable with elemen type {et.FullName}");
+                        throw new NotSupportedException($"Cannot create array type from enumerable with element type {et.FullName}");
                     }
                 }
                 else if (TomlValue.CanCreateFrom(et))
@@ -71,7 +71,7 @@ namespace Nett
                 }
                 else
                 {
-                    return new TomlTableArray("", e.Select((o) => TomlTable.From(o, config)), config);
+                    return new TomlTableArray(e.Select((o) => TomlTable.From(o, config)));
                 }
             }
             else

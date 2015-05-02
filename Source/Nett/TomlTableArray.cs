@@ -16,17 +16,13 @@ namespace Nett
         private readonly List<TomlTable> items = new List<TomlTable>();
         public List<TomlTable> Items => this.items;
 
-        public string Name { get; set; }
-
-        public TomlTableArray(string tableName)
+        public TomlTableArray()
+            : this(null)
         {
-            this.Name = tableName;
         }
 
-        public TomlTableArray(string tableName, IEnumerable<TomlTable> enumerable, TomlConfig config)
+        public TomlTableArray(IEnumerable<TomlTable> enumerable)
         {
-            this.Name = tableName;
-
             if (enumerable != null)
             {
                 foreach (var e in enumerable)

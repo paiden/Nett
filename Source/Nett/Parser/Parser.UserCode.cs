@@ -236,7 +236,7 @@ namespace Nett.Parser
             }
             else
             {
-                var na = new TomlTableArray(name);
+                var na = new TomlTableArray();
                 target.Rows.Add(name, na);
                 return na;
             }

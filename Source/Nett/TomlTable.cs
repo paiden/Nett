@@ -86,14 +86,6 @@ namespace Nett
                 if (val != null)
                 {
                     TomlObject to = TomlObject.From(val, config);
-
-                    // Array table is the only case where the value also needs to know the key so that serialization works correctly
-                    var ta = to as TomlTableArray;
-                    if (ta != null)
-                    {
-                        ta.Name = p.Name;
-                    }
-
                     AddComments(to, p);
                     allObjects.Add(Tuple.Create(p.Name, to));
                 }
