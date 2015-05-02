@@ -87,33 +87,10 @@ namespace Nett
             this.value = value;
         }
 
-        public override TRes Get<TRes>() => this.Get<TRes>(TomlConfig.DefaultInstance);
-
-        public override TRes Get<TRes>(TomlConfig config) => Converter.Convert<TRes>(this.Value);
-
-        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
-
         public override object Get(Type t, TomlConfig config)
         {
             var userConverter = config.GetFromTomlConverter(t);
             return userConverter != null ? userConverter.Convert(this.Value) : Converter.Convert(t, this.value);
-        }
-
-        public override void WriteTo(StreamWriter writer)
-        {
-            this.WriteTo(writer, TomlConfig.DefaultInstance);
-        }
-
-        public override void WriteTo(StreamWriter writer, TomlConfig config)
-        {
-            if (ValueType == StringType)
-            {
-                writer.Write(@"""{0}""", (string)(object)this.Value ?? "");
-            }
-            else
-            {
-                writer.Write(this.Value);
-            }
         }
     }
 }

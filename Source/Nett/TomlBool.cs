@@ -12,5 +12,10 @@ namespace Nett
         {
 
         }
+
+        public override void Visit(TomlObjectVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

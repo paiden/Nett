@@ -68,11 +68,13 @@
     <Compile Include="TomlFloat.cs" />
     <Compile Include="TomlInt.cs" />
     <Compile Include="TomlObject.cs" />
+    <Compile Include="TomlObjectVisitor.cs" />
     <Compile Include="TomlString.cs" />
     <Compile Include="TomlTable.cs" />
     <Compile Include="TomlTableArray.cs" />
     <Compile Include="TomlTimeSpan.cs" />
     <Compile Include="TomlValue.cs" />
+    <Compile Include="TomlStreamWriter.cs" />
     <Compile Include="Types.cs" />
   </ItemGroup>
   <ItemGroup>

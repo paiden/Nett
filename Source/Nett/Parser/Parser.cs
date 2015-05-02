@@ -37,8 +37,8 @@ internal sealed partial class Parser {
 	int errDist = minErrDist;
 
 private readonly StringBuilder psb = new StringBuilder(32);
-	private readonly StringBuilder psb2 = new StringBuilder(32); 
-	public readonly TomlTable parsed = new TomlTable("");
+	private readonly StringBuilder psb2 = new StringBuilder(32);
+	public readonly TomlTable parsed = new TomlTable();
 	private TomlTable current;
 
 
@@ -150,7 +150,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 		Expect(16);
 		Expect(16);
 		NestedKey(out arrayName);
-		var a = this.CreateOrGetTomlTableArray(arrayName); var t = new TomlTable(""); a.Add(t); 
+		var a = this.CreateOrGetTomlTableArray(arrayName); var t = new TomlTable(); a.Add(t); 
 		Expect(18);
 		Expect(18);
 		while (la.kind == 3 || la.kind == 5) {

@@ -311,7 +311,7 @@ trimmed in raw strings.
             var parsed = Toml.Read(@"[table]");
 
             Assert.Equal(1, parsed.Rows.Count);
-            Assert.Equal("table", parsed.Get<TomlTable>("table").Name);
+            Assert.NotNull(parsed.Get<TomlTable>("table"));
         }
 
         [Fact]

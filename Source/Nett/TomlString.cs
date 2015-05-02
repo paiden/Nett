@@ -27,13 +27,9 @@ namespace Nett
             this.type = type;
         }
 
-        public override void WriteTo(StreamWriter writer, TomlConfig config)
+        public override void Visit(TomlObjectVisitor visitor)
         {
-            if(this.type == TypeOfString.Default)
-            {
-                var toWrite = this.Value.Escape();
-                writer.Write("\"{0}\"", toWrite);
-            }
+            visitor.Visit(this);
         }
     }
 }

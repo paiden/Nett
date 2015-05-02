@@ -7,24 +7,16 @@ using System.Text;
 
 namespace Nett
 {
-    enum TomlObjectType
-    {
-        Array,
-        Value,
-    }
-
     public abstract class TomlObject
     {
         private static readonly Type StringType = typeof(string);
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
         internal List<TomlComment> Comments { get; }
-        public abstract T Get<T>();
-        public abstract T Get<T>(TomlConfig config);
-        public abstract object Get(Type t);
+        public T Get<T>() => (T)this.Get(typeof(T), TomlConfig.DefaultInstance);
+        public T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);
+        public object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
         public abstract object Get(Type t, TomlConfig config);
-        public abstract void WriteTo(StreamWriter writer);
-        public abstract void WriteTo(StreamWriter writer, TomlConfig config);
 
         internal static TomlObject From(object val, TomlConfig config)
         {
@@ -89,9 +81,7 @@ namespace Nett
             }
         }
 
-        public virtual bool IsTable => false;
-
-        public virtual bool IsTableArray => false;
+        public abstract void Visit(TomlObjectVisitor visitor);
 
         public TomlObject()
         {

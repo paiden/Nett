@@ -9,9 +9,11 @@ namespace Nett
 {
     public sealed class TomlArray : TomlObject
     {
+        private static readonly Type TomlArrayType = typeof(TomlArray);
         private static readonly Type ListType = typeof(IList);
         private static readonly Type ObjectType = typeof(object);
         private readonly List<TomlObject> items = new List<TomlObject>();
+        internal List<TomlObject> Items => this.items;
 
         public TomlArray()
         {
@@ -19,7 +21,7 @@ namespace Nett
         }
 
         public TomlArray(IEnumerable<TomlValue> values)
-        {   
+        {
             foreach (var v in values)
             {
                 this.Add(v);
@@ -39,14 +41,10 @@ namespace Nett
 
         public T Get<T>(int index) => this.items[index].Get<T>();
 
-        public override T Get<T>() => this.Get<T>(TomlConfig.DefaultInstance);
-
-        public override T Get<T>(TomlConfig config) => Converter.Convert<T>(this);
-
-        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
-
         public override object Get(Type t, TomlConfig config)
         {
+            if(t == TomlArrayType) { return this; }
+
             if(t.IsArray)
             {
                 var et = t.GetElementType();
@@ -83,30 +81,12 @@ namespace Nett
 
         public object Last() => this.items[this.items.Count - 1];
 
-        public IEnumerable<T> To<T>() => this.items.Select((to) => to.Get<T>());
+        public IEnumerable<T> To<T>() => this.To<T>(TomlConfig.DefaultInstance);
+        public IEnumerable<T> To<T>(TomlConfig config) => this.items.Select((to) => to.Get<T>(config));
 
-        public override void WriteTo(StreamWriter sw )
+        public override void Visit(TomlObjectVisitor visitor)
         {
-            this.WriteTo(sw, TomlConfig.DefaultInstance);
-        }
-
-        public override void WriteTo(StreamWriter writer, TomlConfig config)
-        {
-            
-            writer.Write("[");
-            
-            for (int i = 0; i < this.items.Count - 1; i++)
-            {
-                this.items[i].WriteTo(writer);
-                writer.Write(", ");
-            }
-
-            if(this.items.Count > 0)
-            {
-                this.items[this.items.Count - 1].WriteTo(writer);
-            }
-
-            writer.Write("]");
+            visitor.Visit(this);
         }
     }
 }

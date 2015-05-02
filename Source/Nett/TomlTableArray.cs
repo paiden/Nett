@@ -14,6 +14,7 @@ namespace Nett
         private static readonly Type TableArrayType = typeof(TomlTableArray);
 
         private readonly List<TomlTable> items = new List<TomlTable>();
+        public List<TomlTable> Items => this.items;
 
         public string Name { get; set; }
 
@@ -35,7 +36,10 @@ namespace Nett
             }
         }
 
-        public override bool IsTableArray => true;
+        public override void Visit(TomlObjectVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
 
         public int Count => this.items.Count;
 
@@ -43,12 +47,6 @@ namespace Nett
         {
             this.items.Add(table);
         }
-
-        public override T Get<T>() => this.Get<T>(TomlConfig.DefaultInstance);
-
-        public override T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);
-
-        public override object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
 
         public TomlTable this[int index] => this.items[index];
 
@@ -91,20 +89,5 @@ namespace Nett
         }
 
         public object Last() => this.items[this.items.Count - 1];
-
-        public override void WriteTo(StreamWriter writer)
-        {
-            this.WriteTo(writer, TomlConfig.DefaultInstance);
-        }
-
-        public override void WriteTo(StreamWriter writer, TomlConfig config)
-        {
-            foreach (var i in this.items)
-            {
-                writer.WriteLine("[[{0}]]", this.Name);
-                i.WriteTo(writer);
-                writer.WriteLine();
-            }
-        }
     }
 }

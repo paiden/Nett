@@ -192,7 +192,7 @@ namespace Nett.Parser
             {
                 if (!this.current.Rows.ContainsKey(p))
                 {
-                    var c = new TomlTable(p);
+                    var c = new TomlTable();
                     this.current.Add(p, c);
                     this.current = c;
                 }

@@ -17,7 +17,8 @@ namespace Nett
             using (var ms = new MemoryStream(1024))
             {
                 var sw = new StreamWriter(ms);
-                tt.WriteTo(sw);
+                var writer = new TomlStreamWriter(sw, config);
+                tt.Visit(writer);
                 sw.Flush();
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);

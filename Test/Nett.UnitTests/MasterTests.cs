@@ -24,7 +24,7 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(toSerialize, read);
-        }
+        }   
 
 
         private SystemConfig CreateTestConfig() => new SystemConfig()

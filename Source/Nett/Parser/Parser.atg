@@ -6,8 +6,8 @@ using System.Collections.Generic;
 COMPILER Toml
 
 	private readonly StringBuilder psb = new StringBuilder(32);
-	private readonly StringBuilder psb2 = new StringBuilder(32); 
-	public readonly TomlTable parsed = new TomlTable("");
+	private readonly StringBuilder psb2 = new StringBuilder(32);
+	public readonly TomlTable parsed = new TomlTable();
 	private TomlTable current;
 
 CHARACTERS
@@ -25,7 +25,7 @@ TOKENS
 	minus = '-'.
 	letters = letter {letter}.
 	number = digit{digit}.
-	string =	"\"" { singleLineStringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" 
+	string =	"\"" { singleLineStringChar | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v"
 											| "\\x" hexDigit [hexDigit] [hexDigit] [hexDigit]
 											| "\\u" hexDigit hexDigit hexDigit hexDigit
 											| "\\U" hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit hexDigit
@@ -48,23 +48,23 @@ IGNORE '\r' + '\n'
 
 PRODUCTIONS
 	Toml 													(. string key; TomlObject val; .)
-		= { 
+		= {
 			KeyValuePair<out key, out val> 					(. this.AddKeyValue(key, val); .)
 			| IF(NotAnArray()) TomlTable
 			| TomlArrayTable
 		  }.
-	
+
 	KeyValuePair<out string key, out TomlObject val>
 		= Key<out key> '=' Value<out val>					.
-		
+
 	Key<out string val>										(. val = ""; psb.Clear(); .)
-		= BareKey<out val>									
+		= BareKey<out val>
 		| QuoteKey<out val>.
 
 	NestedKey<out string val>								(. string tmp = null; this.psb2.Clear(); .)
 		= Key<out tmp>										(. psb2.Append(tmp); .)
 		{
-			'.'												
+			'.'
 			Key<out tmp>									(. this.psb2.Append(".").Append(tmp); .)
 		}													(. val = this.psb2.ToString(); .).
 
@@ -87,7 +87,7 @@ PRODUCTIONS
 		| mlstring											(. val = ParseMLStringVal(t.val); .)
 		| Array<out val>
 		| IF(IsTimespan()) TimespanVal<out val>
-		| IF(NotADateTime()) NumVal<out val>		
+		| IF(NotADateTime()) NumVal<out val>
 		| DateTimeVal<out val>.
 
 	NumVal<out TomlObject val>								(. bool neg = false; string sv = null; this.psb.Clear(); .)
@@ -95,24 +95,24 @@ PRODUCTIONS
 		IntNumS												(. val = this.ParseIntVal(this.psb, neg); .)
 		[FloatPart<neg, out val>]							.
 
-	IntNumS = 
+	IntNumS =
 		   number											(. psb.Append(t.val); .)
 		   {
 				us number									(. psb.Append(t.val); .)
 		   }												.
 
-	FloatPart<bool neg, out TomlObject val>					(. val = null; string sv = null; .)	
+	FloatPart<bool neg, out TomlObject val>					(. val = null; string sv = null; .)
 		= (
 			('e' | 'E')										(. this.psb.Append(t.val); .)
-			[Sign<out sv>]									(. this.psb.Append(sv); .)											
-			IntNumS											
-		)													(. val = this.ParseFloatVal(this.psb, neg); .)	
+			[Sign<out sv>]									(. this.psb.Append(sv); .)
+			IntNumS
+		)													(. val = this.ParseFloatVal(this.psb, neg); .)
 		| ( dot												(. this.psb.Append(t.val); .)
 			IntNumS
 			 [(
 				('e' | 'E')									(. this.psb.Append(t.val); .)
-				[Sign<out sv>]								(. this.psb.Append(sv); .)		
-				IntNumS										
+				[Sign<out sv>]								(. this.psb.Append(sv); .)
+				IntNumS
 			  )]
 		)													(. val = this.ParseFloatVal(this.psb, neg); .).
 
@@ -121,10 +121,10 @@ PRODUCTIONS
 		  | false											(. val = new TomlBool(false); .).
 
 	Array<out TomlObject val>								(. TomlObject v = null; val = null; var a = new TomlArray(); .)
-		= 
+		=
 		'['
-		[ 
-			Value<out v>									(. a.Add(v); .) 								
+		[
+			Value<out v>									(. a.Add(v); .)
 			{
 				IF(CommaWithAppendedValueInArray())','
 				Value<out v>								(. a.Add(v); .)
@@ -133,25 +133,25 @@ PRODUCTIONS
 		]
 		']'													(. val = a; .).
 	TimespanVal<out TomlObject val>							(. val = null; this.psb.Clear(); .)
-		= 
+		=
 		Hour ':'											(. this.psb.Append(t.val); .)
 		Minute ':'											(. this.psb.Append(t.val); .)
-		Second												(. val = this.ParseTimespanVal(this.psb.ToString()); .).	
+		Second												(. val = this.ParseTimespanVal(this.psb.ToString()); .).
 
 	DateTimeVal<out TomlObject val>							(. val = null; string sv = null; this.psb.Clear(); .)
-		= 
+		=
 		Year minus											(. this.psb.Append(t.val); .)
 		Month minus											(. this.psb.Append(t.val); .)
 		Day "T"												(. this.psb.Append(t.val); .)
 		Hour ":"										    (. this.psb.Append(t.val); .)
 		Minute ":"											(. this.psb.Append(t.val); .)
-		Second												
+		Second
 		("Z"												(. this.psb.Append(t.val); .)
 		 |
 		 (
-			Sign<out sv>									(. this.psb.Append(sv); .)											
+			Sign<out sv>									(. this.psb.Append(sv); .)
 			Hour ":"										(. this.psb.Append(t.val); .)
-			Minute											
+			Minute
 		 )
 		)													(. val = new TomlDateTime(DateTime.Parse(this.psb.ToString())); .).
 	Year = number											(. this.psb.Append(t.val); .).
@@ -166,31 +166,31 @@ PRODUCTIONS
 		].
 
 	Sign<out string val>									(. val = null; .)
-		=									
+		=
 		plus												(. val = t.val; .)
-		| 
+		|
 		minus												(. val = t.val; .).
 
 	TomlTable =												(. string tableName = null; string key = null; TomlObject val = null; List<string> tableNames = new List<string>(); .)
-		'[' 
+		'['
 		Key<out tableName>									(. tableNames.Add(tableName); .)
-		{	
-			'.' 
+		{
+			'.'
 			Key<out tableName>                              (. tableNames.Add(tableName); .)
 		}
 		']'													(. this.CreateTable(tableNames); .)
 		(
 			{ IF(IsArray()) TomlArrayTable
-			| TomlTable 
+			| TomlTable
 			| KeyValuePair<out key, out val>				(. this.AddKeyValue(key, val); .)
-			
+
 			}
 		).
 
 	TomlArrayTable =										(. string arrayName = null; string key= null; TomlObject val = null; .)
 		'[''['
-		NestedKey<out arrayName>                            (. var a = this.CreateOrGetTomlTableArray(arrayName); var t = new TomlTable(""); a.Add(t); .)
-		']'']'	
+		NestedKey<out arrayName>                            (. var a = this.CreateOrGetTomlTableArray(arrayName); var t = new TomlTable(); a.Add(t); .)
+		']'']'
 		{
 			KeyValuePair<out key, out val>					(. t.Add(key, val); .)
 		}.
