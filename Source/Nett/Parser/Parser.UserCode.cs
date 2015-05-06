@@ -159,7 +159,7 @@ namespace Nett.Parser
         private bool NotADateTime()
         {
             Token t = la;
-            return t.val.Length != 4 && scanner.Peek().val != "-";
+            return t.val.Length != 4 || scanner.Peek().val != "-";
         }
 
         private bool IsTimespan()

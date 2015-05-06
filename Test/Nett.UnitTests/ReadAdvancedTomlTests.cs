@@ -71,12 +71,39 @@ X = 0
             Assert.Equal("SB", r.B[1]);
         }
 
+
+
+        [Fact]
+        public void ReadAdvancedToml_DbConfig()
+        {
+            string toParse = @"
+[database]
+server = ""192.168.1.1""
+ports = [8001, 8001, 8002]
+";
+
+            var read = Toml.Read<DbConfig>(toParse);
+
+        }
+
         public class Root
         {
             public int X { get; set; }
 
             public Tbl Tbl { get; set; }
 
+        }
+
+        public class DbConfig
+        {
+
+        }
+
+        public class DataBase
+        {
+            public string Server { get; set; }
+
+            public int[] Ports { get; set; }
         }
 
         public class Tbl
