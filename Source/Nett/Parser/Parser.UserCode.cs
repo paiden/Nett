@@ -12,6 +12,7 @@ namespace Nett.Parser
         private static readonly StringBuilder ssb = new StringBuilder(1024);
         private static readonly TomlValue DefaultTimespanValue = new TomlTimeSpan(TimeSpan.Zero);
         private static readonly string[] PathSplit = new string[] { "." };
+        private static readonly string[] DateTimeFormats = new string[] { "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ss.ffK", "yyyy-MM-ddTHH:mm:ssZ", "yyyy-MM-ddTHH:mm:ss.ffZ" };
 
         private static readonly char[] WhitspaceCharSet =
         {
@@ -33,6 +34,19 @@ namespace Nett.Parser
             else
             {
                 return new TomlInt(0);
+            }
+        }
+
+        private TomlDateTime ParseDateTimeVal(StringBuilder sb)
+        {
+            if(errors.count <= 0)
+            {
+                var dto = DateTimeOffset.Parse(sb.ToString());
+                return new TomlDateTime(dto.UtcDateTime);
+            }
+            else
+            {
+                return new TomlDateTime(DateTime.MinValue);
             }
         }
 

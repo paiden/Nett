@@ -12,7 +12,7 @@ namespace Nett.UnitTests
     /// Test for the basic test examples from https://github.com/BurntSushi/toml-test/tree/master/tests
     /// These cases handle some special cases and some document structure cases.
     /// Everything will be deserialized into a generic TomlTable data structure. Extracting the data has to be done by hand.
-    /// </summary>  
+    /// </summary>
     public class ReadValidTomlUntypedTests
     {
         [Fact]
@@ -172,7 +172,7 @@ namespace Nett.UnitTests
             var read = Toml.Read(toml);
 
             // Assert
-            Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTime>("bestdayever"));
+            Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTimeOffset>("bestdayever"));
         }
 
         [Fact]
@@ -199,7 +199,7 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
-            Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTime>("best-day-ever"));
+            Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTimeOffset>("best-day-ever"));
             var tt = (TomlTable)read["numtheory"];
             Assert.Equal(false, tt.Get<bool>("boring"));
             var ta = (TomlArray)tt["perfection"];

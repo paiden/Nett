@@ -318,7 +318,7 @@ private readonly StringBuilder psb = new StringBuilder(32);
 			this.psb.Append(t.val); 
 			Minute();
 		} else SynErr(26);
-		val = new TomlDateTime(DateTime.Parse(this.psb.ToString())); 
+		val = this.ParseDateTimeVal(this.psb); 
 	}
 
 	void Sign(out string val) {

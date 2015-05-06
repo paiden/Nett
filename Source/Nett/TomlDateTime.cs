@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Nett
 {
-    public sealed class TomlDateTime : TomlValue<DateTime>
+    public sealed class TomlDateTime : TomlValue<DateTimeOffset>
     {
-        public TomlDateTime(DateTime value)
+        public TomlDateTime(DateTimeOffset value)
             : base(value)
         {
 

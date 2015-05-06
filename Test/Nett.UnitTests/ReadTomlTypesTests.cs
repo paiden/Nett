@@ -211,11 +211,11 @@ trimmed in raw strings.
         [InlineData("d = 1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
         public void Deserialize_DatetTime_DeseriaizesCorrectly(string src, string expectedDate)
         {
-            var date = DateTime.Parse(expectedDate);
+            var date = DateTimeOffset.Parse(expectedDate);
 
             var parsed = Toml.Read(src);
 
-            Assert.Equal(date, parsed["d"].Get<DateTime>());
+            Assert.Equal(date, parsed["d"].Get<DateTimeOffset>());
         }
 
         [Fact]
