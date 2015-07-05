@@ -8,10 +8,8 @@ with Debug configuration.
 
 Quick-Targets:
   -ngp, -nuGetPackage
-  -gs, -generateShortcuts
-  -ds, -deleteShortcuts
 
-  Please note that quick targets are mutally exclusive and only one can
+  Please note that quick targets are mutually exclusive and only one can
   be selected and determines the parameter set.
 
 Additional flags/params (availability depends on param set):
@@ -26,7 +24,7 @@ Make a build that after the default builds also creates the final NuGet
 package
 
 .PARAMETER nugetPackageVersion
-Version the generated NuGet package should have. Required for the 
+Version the generated NuGet package should have. Required for the
 nuGetPackage quick target.
 
 .PARAMETER release
@@ -73,7 +71,7 @@ if(-not $disableStdBuild) {
 }
 
 if($NuGetPackage) {
-    
+
     $nuget = Join-Path -Path $PSScriptRoot -ChildPath Tools\NuGet.exe
     $nuspec = Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec
 
