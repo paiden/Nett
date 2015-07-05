@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22609.0
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.UnitTests", "..\..\Test\Nett.UnitTests\Nett.UnitTests.csproj", "{C7FDD1D2-70F8-4808-8F39-27267C159CF3}"
 EndProject
@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\build.ps1 = ..\..\build.ps1
 		..\..\README.md = ..\..\README.md
 	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nett.UnitTests.FS", "..\..\Test\Nett.UnitTests.FS\Nett.UnitTests.FS.fsproj", "{85B81C65-5547-4AD0-99BF-DB35558AEFBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85B81C65-5547-4AD0-99BF-DB35558AEFBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85B81C65-5547-4AD0-99BF-DB35558AEFBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85B81C65-5547-4AD0-99BF-DB35558AEFBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85B81C65-5547-4AD0-99BF-DB35558AEFBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

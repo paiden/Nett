@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Nett
 {
-    public class Toml
+    public static class Toml
     {
         public static string WriteString<T>(T obj) => WriteString(obj, TomlConfig.DefaultInstance);
 

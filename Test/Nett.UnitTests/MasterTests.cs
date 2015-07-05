@@ -24,7 +24,7 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(toSerialize, read);
-        }   
+        }
 
 
         private SystemConfig CreateTestConfig() => new SystemConfig()
@@ -68,7 +68,7 @@ namespace Nett.UnitTests
             {
                 if(config == null) { return false; }
 
-                return 
+                return
                     object.ReferenceEquals(this, config) ||
                     object.Equals(this.Env, config.Env) &&
                     this.Resources.SequenceEqual(config.Resources) &&
