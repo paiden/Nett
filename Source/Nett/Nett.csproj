@@ -54,7 +54,6 @@
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Toml.cs" />
     <Compile Include="TomlArray.cs" />
-    <Compile Include="TomlArrayWriter.cs" />
     <Compile Include="TomlBool.cs" />
     <Compile Include="TomlComment.cs" />
     <Compile Include="TomlCommentAttribute.cs" />
