@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-Executes the Ranorex Dex build.
+Executes various advanced Nett build scenarios.
 
 .DESCRIPTION
-Without options executes a build that simply builds the Ranorex.Dex Solution
+Without options executes a build that simply builds the Nett Main Solution
 with Debug configuration.
 
 Quick-Targets:
