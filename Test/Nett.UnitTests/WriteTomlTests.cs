@@ -32,8 +32,8 @@ namespace Nett.UnitTests
             Assert.Equal("#This is a comment\r\nCommented = 0\r\n", s);
         }
 
-        [Fact(Skip = "Not supporrted yet")]
-        public void Write_WithMultilineComment_WritesObjectCorrectyl()
+        [Fact]
+        public void Write_WithMultilineComment_WritesObjectCorrectly()
         {
             // Arrange
             var tc = new WithMultilineComment();
@@ -42,7 +42,7 @@ namespace Nett.UnitTests
             var s = Toml.WriteString(tc);
 
             // Assert
-            s.Should().Be("#This is a\r\r#multiline comment\r\nCommentedA = 0\r\n#This is a\nmultiline comment\r\nCommentedB = 0\r\n");
+            s.Should().Be("#This is a\r\n# multiline comment\r\nCommentedA = 0\r\n#This is a \n#multiline comment\r\nCommentedB = 0\r\n");
         }
 
         [Fact]
@@ -124,7 +124,7 @@ V = 666
             [TomlComment("This is a\r\n multiline comment")]
             public int CommentedA { get; set; }
 
-            [TomlComment("This is a \nmultiliene comment")]
+            [TomlComment("This is a \nmultiline comment")]
             public int CommentedB { get; set; }
         }
 

@@ -112,7 +112,7 @@ namespace Nett
             var prepend = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
             foreach (var p in prepend)
             {
-                this.sw.WriteLine($"#{p.CommentText}");
+                this.sw.WriteLine($"#{FixMultilineComment(p.CommentText)}");
             }
         }
 
@@ -121,8 +121,13 @@ namespace Nett
             var append = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Append);
             foreach (var a in append)
             {
-                this.sw.Write($" #{a.CommentText}");
+                this.sw.Write($" #{FixMultilineComment(a.CommentText)}");
             }
+        }
+
+        private static string FixMultilineComment(string src)
+        {
+            return src.Replace("\n", "\n#");
         }
 
         private class DisableWriteValueKeyContext : IDisposable
