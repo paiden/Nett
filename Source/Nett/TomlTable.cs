@@ -97,6 +97,11 @@ namespace Nett
             return tt;
         }
 
+        internal object Merge(TomlTable tt)
+        {
+            throw new NotImplementedException();
+        }
+
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {
             var comments = pi.GetCustomAttributes(typeof(TomlCommentAttribute), false).Cast<TomlCommentAttribute>();

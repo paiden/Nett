@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests
@@ -32,7 +29,20 @@ namespace Nett.UnitTests
             var s = Toml.WriteString(tc);
 
             // Assert
-            Assert.Equal("# This is a comment\r\nCommented = 0\r\n", s);
+            Assert.Equal("#This is a comment\r\nCommented = 0\r\n", s);
+        }
+
+        [Fact(Skip = "Not supporrted yet")]
+        public void Write_WithMultilineComment_WritesObjectCorrectyl()
+        {
+            // Arrange
+            var tc = new WithMultilineComment();
+
+            // Act
+            var s = Toml.WriteString(tc);
+
+            // Assert
+            s.Should().Be("#This is a\r\r#multiline comment\r\nCommentedA = 0\r\n#This is a\nmultiline comment\r\nCommentedB = 0\r\n");
         }
 
         [Fact]
@@ -45,7 +55,7 @@ namespace Nett.UnitTests
             var s = Toml.WriteString(tc);
 
             // Assert
-            Assert.Equal("Commented = 0 # This is a comment\r\n", s);
+            Assert.Equal("Commented = 0 #This is a comment\r\n", s);
         }
 
         [Fact]
@@ -100,7 +110,7 @@ V = 666
             public int[] EmptyArray => new int[0];
             public int[] NonEmptyIntArray => new int[] { -100, 0, 100 };
 
-            public List<string> StringList => new List<string>() {  "A", "B", "C" };
+            public List<string> StringList => new List<string>() { "A", "B", "C" };
         }
 
         private class WithDefaultComment
@@ -108,6 +118,16 @@ V = 666
             [TomlComment("This is a comment")]
             public int Commented { get; set; }
         }
+
+        private class WithMultilineComment
+        {
+            [TomlComment("This is a\r\n multiline comment")]
+            public int CommentedA { get; set; }
+
+            [TomlComment("This is a \nmultiliene comment")]
+            public int CommentedB { get; set; }
+        }
+
 
         private class WithAppendComment
         {

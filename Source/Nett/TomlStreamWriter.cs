@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Nett
 {
@@ -17,7 +16,7 @@ namespace Nett
 
         public TomlStreamWriter(StreamWriter streamWriter, TomlConfig config)
         {
-            if(streamWriter == null) { throw new ArgumentNullException(nameof(StreamWriter)); }
+            if (streamWriter == null) { throw new ArgumentNullException(nameof(StreamWriter)); }
             this.config = config ?? TomlConfig.DefaultInstance;
 
             this.sw = streamWriter;
@@ -26,7 +25,7 @@ namespace Nett
             this.VisitFloat = (f) => this.WriteKeyedValue(f, () => this.sw.Write(f.Value));
             this.VisitInt = (i) => this.WriteKeyedValue(i, () => this.sw.Write(i.Value));
             this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.Value));
-            this.VisitTimespan = (ts) => this.WriteKeyedValue(ts, () =>  this.sw.Write(ts.Value));
+            this.VisitTimespan = (ts) => this.WriteKeyedValue(ts, () => this.sw.Write(ts.Value));
             this.VisitString = (s) => this.WriteKeyedValue(s, () => this.sw.Write(string.Format("\"{0}\"", s.Value.Escape() ?? "")));
 
             this.VisitArray = (a) => this.WriteTomlArray(a);
@@ -39,7 +38,7 @@ namespace Nett
         private void WriteKeyedValue(TomlObject obj, Action writeValue)
         {
             this.WritePrependComments(obj);
-            if(writeValueKey)
+            if (writeValueKey)
             {
                 Debug.Assert(this.CurrentRowKey != null);
                 this.sw.Write($"{this.CurrentRowKey} = ");
@@ -59,7 +58,7 @@ namespace Nett
                 this.WriteApppendComments(table);
             }
 
-            foreach(var r in table.Rows)
+            foreach (var r in table.Rows)
             {
                 this.rowKeys.Push(r.Key);
                 r.Value.Visit(this);
@@ -70,7 +69,7 @@ namespace Nett
 
         private void WriteTomlArray(TomlArray array)
         {
-            using(new DisableWriteValueKeyContext(this))
+            using (new DisableWriteValueKeyContext(this))
             {
                 Debug.Assert(this.CurrentRowKey != null);
                 this.WritePrependComments(array);
@@ -111,18 +110,18 @@ namespace Nett
         private void WritePrependComments(TomlObject obj)
         {
             var prepend = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
-            foreach(var p in prepend)
+            foreach (var p in prepend)
             {
-                this.sw.WriteLine($"# {p.CommentText}");
+                this.sw.WriteLine($"#{p.CommentText}");
             }
         }
 
         private void WriteApppendComments(TomlObject obj)
         {
             var append = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Append);
-            foreach(var a in append)
+            foreach (var a in append)
             {
-                this.sw.Write($" # {a.CommentText}");
+                this.sw.Write($" #{a.CommentText}");
             }
         }
 
