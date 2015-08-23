@@ -1,6 +1,5 @@
 ﻿using System;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Nett.UnitTests
 {
@@ -352,8 +351,8 @@ key-3 = ""value3""";
             string toParse = @"
 ""127.0.0.1""= ""value1""
 ""character encoding"" = ""value2""";
-// ""ʎǝʞ"" = ""value3"""; This case currently doesn't work, but it is such an unimportant case I don't want to put time into it
-// for now, as I really need a basic working TOML system. Hopfully I will have time to take care of this special cases soon.
+            // ""ʎǝʞ"" = ""value3"""; This case currently doesn't work, but it is such an unimportant case I don't want to put time into it
+            // for now, as I really need a basic working TOML system. Hopfully I will have time to take care of this special cases soon.
 
             var parsed = Toml.Read(toParse);
 

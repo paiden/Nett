@@ -33,6 +33,10 @@ namespace Nett
 
         public T Get<T>(string key) => this[key].Get<T>(TomlConfig.DefaultInstance);
 
+        public TomlTable()
+        {
+
+        }
         public void Add(string key, TomlObject value)
         {
             this.Rows.Add(key, value);

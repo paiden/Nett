@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Nett
 {
@@ -12,7 +9,7 @@ namespace Nett
         private static readonly Type StringType = typeof(string);
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
-        internal List<TomlComment> Comments { get; }
+        internal List<TomlComment> Comments { get; set; }
         public T Get<T>() => (T)this.Get(typeof(T), TomlConfig.DefaultInstance);
         public T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);
         public object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
