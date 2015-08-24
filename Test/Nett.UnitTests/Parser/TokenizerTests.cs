@@ -63,5 +63,21 @@ namespace Nett.UnitTests.Parser
             tkn.type.Should().Be(TokenType.Float);
             tkn.value.Should().Be(token);
         }
+
+        [Theory]
+        [InlineData("true")]
+        [InlineData("false")]
+        public void TokenizeBool(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.La(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.Bool);
+            tkn.value.Should().Be(token);
+        }
     }
 }

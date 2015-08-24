@@ -12,6 +12,7 @@ namespace Nett.Parser
         private static readonly MatcherBase[] Matchers = new MatcherBase[]
         {
             new IntMatcher(),
+            new BoolMatcher(),
         };
 
         private readonly StreamReader reader;

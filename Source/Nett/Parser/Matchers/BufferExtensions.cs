@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Nett.Parser.Matchers
 {
@@ -27,6 +28,27 @@ namespace Nett.Parser.Matchers
         public static bool TokenDone(this LookaheadBuffer<char> buffer)
         {
             return buffer.End || buffer.PeekIsWhitespace();
+        }
+
+        public static bool LaSequenceIs(this LookaheadBuffer<char> buffer, string seq)
+        {
+            for (int i = 0; i < seq.Length; i++)
+            {
+                if (buffer.La(i) != seq[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static IEnumerable<char> Consume(this LookaheadBuffer<char> buffer, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return buffer.Consume();
+            }
         }
     }
 }

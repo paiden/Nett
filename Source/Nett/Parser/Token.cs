@@ -7,6 +7,7 @@
         BareKey,
         Integer,
         Float,
+        Bool,
         NormalString,
         LiteralString,
         MultilineString,
