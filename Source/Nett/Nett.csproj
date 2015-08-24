@@ -44,7 +44,11 @@
     <Compile Include="Converter.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
+    <Compile Include="Parser\Matchers\BufferExtensions.cs" />
+    <Compile Include="Parser\Matchers\FloatMatcher.cs" />
+    <Compile Include="Parser\Matchers\IntMatcher.cs" />
     <Compile Include="Parser\LookaheadBuffer.cs" />
+    <Compile Include="Parser\Matchers\MatcherBase.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Token.cs" />
     <Compile Include="Parser\Tokenizer.cs" />

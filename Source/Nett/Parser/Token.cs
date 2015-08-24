@@ -2,7 +2,11 @@
 {
     enum TokenType
     {
-        Key,
+        Unknown,
+        Eof,
+        BareKey,
+        Integer,
+        Float,
         NormalString,
         LiteralString,
         MultilineString,

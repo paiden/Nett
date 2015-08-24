@@ -27,7 +27,7 @@ namespace Nett.UnitTests.Parser
             while (lab.HasNext())
             {
                 sb.Append(lab.La(0));
-                lab.Next();
+                lab.Consume();
             }
 
             sb.Append(lab.La(0));

@@ -1,11 +1,18 @@
 ﻿using System.IO;
 using System.Text;
+using Nett.Parser.Matchers;
 
 namespace Nett.Parser
 {
     class Tokenizer
     {
         private const int SBS = 256;
+
+        private static readonly Token Eof = new Token(TokenType.Eof, null);
+        private static readonly MatcherBase[] Matchers = new MatcherBase[]
+        {
+            new IntMatcher(),
+        };
 
         private readonly StreamReader reader;
         private readonly LookaheadBuffer<char> characters;
@@ -28,31 +35,79 @@ namespace Nett.Parser
 
         private Token? NextToken()
         {
-            StringBuilder sb = new StringBuilder(SBS);
-
-            switch (this.characters.La(0))
+            if (this.characters.End)
             {
-                case '\"': sb.Append(this.characters.Consume()); return StringToken(sb);
+                return Eof;
             }
 
-            return new Token?();
+            foreach (var m in Matchers)
+            {
+                var tkn = m.Match(this.characters);
+
+                if (tkn.HasValue)
+                {
+                    return tkn;
+                }
+            }
+
+            return Eof;
         }
 
-        private Token StringToken(StringBuilder sb)
+
+
+        private Token ConsumeStringToken(StringBuilder sb)
         {
+            sb.Append(Consume());
+
             while (!this.characters.LaIs(0, '\"'))
             {
-                sb.Append(this.characters.Consume());
+                sb.Append(Consume());
                 if (this.characters.LaIs(0, '\\'))
                 {
-                    sb.Append(this.characters.Consume());
-                    sb.Append(this.characters.Consume());
+                    sb.Append(Consume());
+                    sb.Append(Consume());
                 }
             }
 
             sb.Append(this.characters.Consume());
 
             return new Token(TokenType.NormalString, sb.ToString());
+        }
+
+        private Token ConsumeBareKeyToken(StringBuilder sb)
+        {
+            while (PeekIsBareKeyChar())
+            {
+                sb.Append(Consume());
+            }
+
+            return new Token(TokenType.BareKey, sb.ToString());
+        }
+
+        private bool PeekIsBareKeyChar()
+        {
+            return PeekInRange('a', 'z') || PeekInRange('A', 'Z') || PeekInRange('0', '9') || PeekIs('_');
+        }
+
+        private char Peek()
+        {
+            return this.characters.La(0);
+        }
+
+        private bool PeekIs(char expected)
+        {
+            return this.characters.LaIs(0, expected);
+        }
+
+        private bool PeekInRange(char min, char max)
+        {
+            var p = this.characters.La(0);
+            return p >= min && p <= max;
+        }
+
+        private char Consume()
+        {
+            return this.characters.Consume();
         }
     }
 }

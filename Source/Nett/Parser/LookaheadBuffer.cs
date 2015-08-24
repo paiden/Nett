@@ -35,10 +35,20 @@ namespace Nett.Parser
             return this.buffer[index];
         }
 
+        public T Peek()
+        {
+            return this.La(0);
+        }
+
         public bool LaIs(int la, T expected)
         {
             var laVal = this.La(la);
             return object.Equals(laVal, expected);
+        }
+
+        public bool PeekIs(T expected)
+        {
+            return !this.End && object.Equals(this.Peek(), expected);
         }
 
         public bool HasNext()
@@ -46,16 +56,22 @@ namespace Nett.Parser
             return readIndex != this.writeIndex;
         }
 
-        public void Next()
-        {
-            this.IncIndex(ref this.readIndex);
-            this.Read();
-        }
+        public bool End => readIndex == -1 && this.writeIndex == -1;
 
         public T Consume()
         {
             T ret = this.buffer[this.readIndex];
-            this.Next();
+
+            if (this.readIndex == this.writeIndex) // We are at the end of the stream there isn't any more data
+            {
+                this.readIndex = this.writeIndex = -1;
+            }
+            else
+            {
+                this.IncIndex(ref this.readIndex);
+                this.Read();
+            }
+
             return ret;
         }
 

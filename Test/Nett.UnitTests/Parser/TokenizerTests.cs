@@ -1,7 +1,7 @@
-﻿using Nett.Parser;
-using Xunit;
+﻿using FluentAssertions;
+using Nett.Parser;
 using Nett.UnitTests.TestUtil;
-using FluentAssertions;
+using Xunit;
 
 namespace Nett.UnitTests.Parser
 {
@@ -17,7 +17,51 @@ namespace Nett.UnitTests.Parser
             var tkn = t.Tokens.La(0);
 
             // Assert
-            tkn.type.Should().Be(TokenType.Key);
+            tkn.type.Should().Be(TokenType.BareKey);
+            tkn.value.Should().Be("key");
+        }
+
+
+        [Theory]
+        [InlineData("123")]
+        [InlineData("+123")]
+        [InlineData("-123")]
+        [InlineData("+1_2_3")]
+        [InlineData("-1_23")]
+        public void TokenizeInteger(string intToken)
+        {
+            // Arrange
+            var t = new Tokenizer(intToken.ToStream());
+
+            // Act
+            var tkn = t.Tokens.La(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.Integer);
+            tkn.value.Should().Be(intToken);
+        }
+
+        [Theory]
+        [InlineData("+1.0")]
+        [InlineData("3.145")]
+        [InlineData("-0.01")]
+        [InlineData("5e+22")]
+        [InlineData("1e6")]
+        [InlineData("-2E-2")]
+        [InlineData("6.26E-34")]
+        [InlineData("9_224_617.445_991_228_313")]
+        [InlineData("1e1_000")]
+        public void TokenizeFloat(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.La(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.Float);
+            tkn.value.Should().Be(token);
         }
     }
 }
