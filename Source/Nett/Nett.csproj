@@ -50,6 +50,7 @@
     <Compile Include="Parser\Matchers\IntMatcher.cs" />
     <Compile Include="Parser\LookaheadBuffer.cs" />
     <Compile Include="Parser\Matchers\MatcherBase.cs" />
+    <Compile Include="Parser\Matchers\StringMatcher.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Token.cs" />
     <Compile Include="Parser\Tokenizer.cs" />

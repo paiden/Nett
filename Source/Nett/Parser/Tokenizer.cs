@@ -13,6 +13,7 @@ namespace Nett.Parser
         {
             new IntMatcher(),
             new BoolMatcher(),
+            new StringMatcher(),
         };
 
         private readonly StreamReader reader;

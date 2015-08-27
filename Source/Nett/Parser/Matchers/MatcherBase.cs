@@ -4,6 +4,8 @@ namespace Nett.Parser.Matchers
 {
     internal abstract class MatcherBase
     {
+        protected static readonly Token? NoMatch = new Token?();
+
         internal virtual Token? Match(LookaheadBuffer<char> cs)
         {
             StringBuilder sb = new StringBuilder(64);

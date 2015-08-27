@@ -79,5 +79,21 @@ namespace Nett.UnitTests.Parser
             tkn.type.Should().Be(TokenType.Bool);
             tkn.value.Should().Be(token);
         }
+
+        [Theory]
+        [InlineData(@"""""")]
+        [InlineData(@"""X""")]
+        public void TokenizeString(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.La(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.NormalString);
+            tkn.value.Should().Be(token);
+        }
     }
 }
