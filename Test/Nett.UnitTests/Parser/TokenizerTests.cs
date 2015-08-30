@@ -113,5 +113,21 @@ namespace Nett.UnitTests.Parser
             tkn.type.Should().Be(TokenType.DateTime);
             tkn.value.Should().Be(token);
         }
+
+        [Theory]
+        [InlineData("0.01:02:03.4")]
+        [InlineData("-0.01:02:03.4")]
+        public void TokenizeTimespan(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.La(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.Timespan);
+            tkn.value.Should().Be(token);
+        }
     }
 }

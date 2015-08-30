@@ -13,6 +13,7 @@
         MultilineString,
         MultilineLiteralString,
         DateTime,
+        Timespan,
     }
 
     internal struct Token
