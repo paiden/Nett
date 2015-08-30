@@ -17,6 +17,11 @@ namespace Nett.Parser.Matchers
 
             while (cs.Peek() != '\"')
             {
+                if (cs.PeekIs('\\'))
+                {
+                    sb.Append(cs.Consume());
+                }
+
                 sb.Append(cs.Consume());
             }
 

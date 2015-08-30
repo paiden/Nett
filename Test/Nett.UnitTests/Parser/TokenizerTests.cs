@@ -83,6 +83,7 @@ namespace Nett.UnitTests.Parser
         [Theory]
         [InlineData(@"""""")]
         [InlineData(@"""X""")]
+        [InlineData("\"X\\\"\"")]
         public void TokenizeString(string token)
         {
             // Arrange
