@@ -46,6 +46,7 @@
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
     <Compile Include="Parser\Matchers\BufferExtensions.cs" />
+    <Compile Include="Parser\Matchers\DateTimeMatcher.cs" />
     <Compile Include="Parser\Matchers\FloatMatcher.cs" />
     <Compile Include="Parser\Matchers\IntMatcher.cs" />
     <Compile Include="Parser\LookaheadBuffer.cs" />

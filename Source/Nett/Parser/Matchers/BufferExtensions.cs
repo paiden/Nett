@@ -50,5 +50,10 @@ namespace Nett.Parser.Matchers
                 yield return buffer.Consume();
             }
         }
+
+        public static bool PeekIsDigit(this LookaheadBuffer<char> buffer)
+        {
+            return buffer.PeekInRange('0', '9');
+        }
     }
 }

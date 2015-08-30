@@ -17,6 +17,12 @@ namespace Nett.Parser.Matchers
                     sb.Append(cs.Consume());
                 }
 
+                if(cs.PeekIs('-') && sb.Length == 4)
+                {
+                    var dtm = new DateTimeMatcher(sb);
+                    return dtm.Match(cs);
+                }
+
                 if (cs.End || cs.PeekIsWhitespace())
                 {
                     return new Token(TokenType.Integer, sb.ToString());

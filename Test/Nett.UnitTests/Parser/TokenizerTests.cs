@@ -96,5 +96,22 @@ namespace Nett.UnitTests.Parser
             tkn.type.Should().Be(TokenType.NormalString);
             tkn.value.Should().Be(token);
         }
+
+        [Theory]
+        [InlineData("1979-05-27T07:32:00Z")]
+        [InlineData("1979-05-27T00:32:00-07:00")]
+        [InlineData("1979-05-27T00:32:00.999999-07:00")]
+        public void TokenizeDateTime(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.La(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.DateTime);
+            tkn.value.Should().Be(token);
+        }
     }
 }
