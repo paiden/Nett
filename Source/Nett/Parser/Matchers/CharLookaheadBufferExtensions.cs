@@ -39,6 +39,11 @@ namespace Nett.Parser.Matchers
 
         public static bool Expect(this LookaheadBuffer<char> buffer, string seq)
         {
+            if (buffer.ItemsAvailable < seq.Length)
+            {
+                return false;
+            }
+
             for (int i = 0; i < seq.Length; i++)
             {
                 if (buffer.PeekAt(i) != seq[i])
