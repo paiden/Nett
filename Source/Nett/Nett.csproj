@@ -53,6 +53,7 @@
     <Compile Include="Parser\LookaheadBuffer.cs" />
     <Compile Include="Parser\Matchers\LiteralStringMatcher.cs" />
     <Compile Include="Parser\Matchers\MatcherBase.cs" />
+    <Compile Include="Parser\Matchers\MultilineLiteralStringMatcher.cs" />
     <Compile Include="Parser\Matchers\StringMatcher.cs" />
     <Compile Include="Parser\Matchers\TimespanMatcher.cs" />
     <Compile Include="Parser\Parser.cs" />

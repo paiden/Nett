@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class LiteralStringMatcher : MatcherBase
+    internal sealed class MultilineLiteralStringMatcher : MatcherBase
     {
-        private readonly MultilineLiteralStringMatcher multiLineLiteralMatcher = new MultilineLiteralStringMatcher();
-
-        private const char StringTag = '\'';
+        private const string StringTag = "'''";
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
@@ -17,12 +16,7 @@ namespace Nett.Parser.Matchers
                 return NoMatch;
             }
 
-            if (cs.ItemsAvailable > 2 && cs.ExpectAt(1, StringTag) && cs.ExpectAt(2, StringTag))
-            {
-                return this.multiLineLiteralMatcher.Match(cs);
-            }
-
-            sb.Append(cs.Consume());
+            sb.Append(cs.Consume(3).ToArray());
 
             while (!cs.End && !cs.Expect(StringTag))
             {
@@ -35,8 +29,8 @@ namespace Nett.Parser.Matchers
             }
             else
             {
-                sb.Append(cs.Consume());
-                return new Token(TokenType.LiteralString, sb.ToString());
+                sb.Append(cs.Consume(StringTag.Length).ToArray());
+                return new Token(TokenType.MultilineLiteralString, sb.ToString());
             }
         }
     }

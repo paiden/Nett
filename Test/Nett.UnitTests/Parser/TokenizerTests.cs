@@ -127,6 +127,24 @@ namespace Nett.UnitTests.Parser
         }
 
         [Theory]
+        [InlineData("''''''")]
+        [InlineData("'''X\\'''")]
+        [InlineData(@"'''
+2nd line'''")]
+        public void TokenizeMultilineLiteralString(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.PeekAt(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.MultilineLiteralString);
+            tkn.value.Should().Be(token);
+        }
+
+        [Theory]
         [InlineData("1979-05-27T07:32:00Z")]
         [InlineData("1979-05-27T00:32:00-07:00")]
         [InlineData("1979-05-27T00:32:00.999999-07:00")]

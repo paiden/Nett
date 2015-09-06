@@ -13,6 +13,8 @@ namespace Nett.Parser
         private int readIndex = 0;
         private int writeIndex = -1;
 
+        public int ItemsAvailable { get; private set; }
+
         public LookaheadBuffer(Func<T?> read, int lookAhead)
         {
             buffer = new T[lookAhead];
@@ -69,6 +71,7 @@ namespace Nett.Parser
             else
             {
                 this.IncIndex(ref this.readIndex);
+                this.ItemsAvailable--;
                 this.Read();
             }
 
@@ -82,6 +85,7 @@ namespace Nett.Parser
             {
                 this.IncIndex(ref writeIndex);
                 this.buffer[writeIndex] = val.Value;
+                this.ItemsAvailable++;
             }
         }
 
