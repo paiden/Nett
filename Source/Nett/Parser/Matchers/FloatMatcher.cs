@@ -13,7 +13,7 @@ namespace Nett.Parser.Matchers
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            if (cs.PeekIs('.'))
+            if (cs.Expect('.'))
             {
                 this.sb.Append(cs.Consume());
                 var im = new IntMatcher();
@@ -21,7 +21,7 @@ namespace Nett.Parser.Matchers
                 this.sb.Append(intFrac.Value.value);
             }
 
-            if (cs.PeekIs('e') || cs.PeekIs('E'))
+            if (cs.Expect('e') || cs.Expect('E'))
             {
                 this.sb.Append(cs.Consume());
                 var fractionMatcher = new IntMatcher();

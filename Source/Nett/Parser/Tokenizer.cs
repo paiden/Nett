@@ -42,7 +42,7 @@ namespace Nett.Parser
                 return Eof;
             }
 
-            while (!this.characters.End && this.characters.PeekIsWhitespace())
+            while (!this.characters.End && this.characters.ExpectWhitespace())
             {
                 this.characters.Consume();
             }
@@ -71,10 +71,10 @@ namespace Nett.Parser
         {
             sb.Append(Consume());
 
-            while (!this.characters.LaIs(0, '\"'))
+            while (!this.characters.ExpectAt(0, '\"'))
             {
                 sb.Append(Consume());
-                if (this.characters.LaIs(0, '\\'))
+                if (this.characters.ExpectAt(0, '\\'))
                 {
                     sb.Append(Consume());
                     sb.Append(Consume());
@@ -103,17 +103,17 @@ namespace Nett.Parser
 
         private char Peek()
         {
-            return this.characters.La(0);
+            return this.characters.PeekAt(0);
         }
 
         private bool PeekIs(char expected)
         {
-            return this.characters.LaIs(0, expected);
+            return this.characters.ExpectAt(0, expected);
         }
 
         private bool PeekInRange(char min, char max)
         {
-            var p = this.characters.La(0);
+            var p = this.characters.PeekAt(0);
             return p >= min && p <= max;
         }
 

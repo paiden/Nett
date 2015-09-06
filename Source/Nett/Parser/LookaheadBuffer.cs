@@ -24,9 +24,12 @@ namespace Nett.Parser
             }
         }
 
+        public T Peek()
+        {
+            return this.PeekAt(0);
+        }
 
-
-        public T La(int la)
+        public T PeekAt(int la)
         {
             if (la > this.buffer.Length - 1)
             {
@@ -37,18 +40,13 @@ namespace Nett.Parser
             return this.buffer[index];
         }
 
-        public T Peek()
+        public bool ExpectAt(int la, T expected)
         {
-            return this.La(0);
-        }
-
-        public bool LaIs(int la, T expected)
-        {
-            var laVal = this.La(la);
+            var laVal = this.PeekAt(la);
             return object.Equals(laVal, expected);
         }
 
-        public bool PeekIs(T expected)
+        public bool Expect(T expected)
         {
             return !this.End && object.Equals(this.Peek(), expected);
         }

@@ -17,7 +17,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer("key".ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.BareKey);
@@ -37,7 +37,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer(intToken.ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.Integer);
@@ -60,7 +60,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer(token.ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.Float);
@@ -76,7 +76,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer(token.ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.Bool);
@@ -93,7 +93,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer(token.ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.NormalString);
@@ -110,7 +110,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer(token.ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.DateTime);
@@ -126,7 +126,7 @@ namespace Nett.UnitTests.Parser
             var t = new Tokenizer(token.ToStream());
 
             // Act
-            var tkn = t.Tokens.La(0);
+            var tkn = t.Tokens.PeekAt(0);
 
             // Assert
             tkn.type.Should().Be(TokenType.Timespan);

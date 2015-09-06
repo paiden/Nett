@@ -46,11 +46,12 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
-    <Compile Include="Parser\Matchers\BufferExtensions.cs" />
+    <Compile Include="Parser\Matchers\CharLookaheadBufferExtensions.cs" />
     <Compile Include="Parser\Matchers\DateTimeMatcher.cs" />
     <Compile Include="Parser\Matchers\FloatMatcher.cs" />
     <Compile Include="Parser\Matchers\IntMatcher.cs" />
     <Compile Include="Parser\LookaheadBuffer.cs" />
+    <Compile Include="Parser\Matchers\LiteralStringMatcher.cs" />
     <Compile Include="Parser\Matchers\MatcherBase.cs" />
     <Compile Include="Parser\Matchers\StringMatcher.cs" />
     <Compile Include="Parser\Matchers\TimespanMatcher.cs" />

@@ -8,7 +8,7 @@ namespace Nett.Parser.Matchers
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
             StringBuilder sb = new StringBuilder(256);
-            if (!cs.PeekIs('\"'))
+            if (!cs.Expect('\"'))
             {
                 return NoMatch;
             }
@@ -17,7 +17,7 @@ namespace Nett.Parser.Matchers
 
             while (cs.Peek() != '\"')
             {
-                if (cs.PeekIs('\\'))
+                if (cs.Expect('\\'))
                 {
                     sb.Append(cs.Consume());
                 }

@@ -26,11 +26,11 @@ namespace Nett.UnitTests.Parser
 
             while (lab.HasNext())
             {
-                sb.Append(lab.La(0));
+                sb.Append(lab.PeekAt(0));
                 lab.Consume();
             }
 
-            sb.Append(lab.La(0));
+            sb.Append(lab.PeekAt(0));
 
             // Assert
             sb.ToString().Should().Be(content);

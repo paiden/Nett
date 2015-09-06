@@ -13,21 +13,21 @@ namespace Nett.Parser.Matchers
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            Debug.Assert(cs.PeekIs('.'));
+            Debug.Assert(cs.Expect('.'));
             this.sb.Append(cs.Consume());
 
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs('.')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect('.')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
 
-            while (!cs.End && cs.PeekIsDigit())
+            while (!cs.End && cs.ExpectDigit())
             {
                 this.sb.Append(cs.Consume());
             }

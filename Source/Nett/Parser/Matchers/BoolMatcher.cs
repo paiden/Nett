@@ -4,12 +4,12 @@
     {
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            if (cs.LaSequenceIs("true"))
+            if (cs.Expect("true"))
             {
                 cs.Consume(4);
                 return new Token(TokenType.Bool, "true");
             }
-            else if (cs.LaSequenceIs("false"))
+            else if (cs.Expect("false"))
             {
                 cs.Consume(4);
                 return new Token(TokenType.Bool, "false");

@@ -13,25 +13,25 @@ namespace Nett.Parser.Matchers
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            Debug.Assert(cs.PeekIs('-'));
+            Debug.Assert(cs.Expect('-'));
 
             this.sb.Append(cs.Consume());
 
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs('T')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.PeekIs('Z'))
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect('T')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.Expect('Z'))
             {
                 this.sb.Append(cs.Consume());
                 if (cs.TokenDone())
@@ -43,15 +43,15 @@ namespace Nett.Parser.Matchers
                     return NoMatch;
                 }
             }
-            else if (cs.PeekIs('-'))
+            else if (cs.Expect('-'))
             {
                 this.sb.Append(cs.Consume());
 
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIs(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
 
                 if (cs.TokenDone())
                 {
@@ -62,21 +62,21 @@ namespace Nett.Parser.Matchers
                     return NoMatch;
                 }
             }
-            else if (cs.PeekIs('.'))
+            else if (cs.Expect('.'))
             {
                 this.sb.Append(cs.Consume());
 
-                while (cs.PeekIsDigit())
+                while (cs.ExpectDigit())
                 {
                     this.sb.Append(cs.Consume());
                 }
 
-                if (cs.PeekIs('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIs(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.PeekIsDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.Expect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
 
                 if (cs.TokenDone())
                 {
