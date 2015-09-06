@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Nett.Parser
 {
+    [DebuggerDisplay("{DebuggerDisplay}")]
     internal sealed class LookaheadBuffer<T> where T : struct
     {
 
@@ -92,5 +94,7 @@ namespace Nett.Parser
                 index = 0;
             }
         }
+
+        private T[] DebuggerDisplay => buffer.SubArray(this.readIndex, this.buffer.Length - this.readIndex);
     }
 }

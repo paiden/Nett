@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Nett.Parser.Matchers
 {
@@ -21,6 +22,11 @@ namespace Nett.Parser.Matchers
 
         public static bool PeekIsWhitespace(this LookaheadBuffer<char> buffer)
         {
+            if (buffer.End)
+            {
+                return false;
+            }
+
             char pv = buffer.Peek();
             return WhitspaceCharSet.Contains(pv);
         }
@@ -43,17 +49,32 @@ namespace Nett.Parser.Matchers
             return true;
         }
 
-        public static IEnumerable<char> Consume(this LookaheadBuffer<char> buffer, int count)
+        public static IList<char> Consume(this LookaheadBuffer<char> buffer, int count)
         {
+            List<char> c = new List<char>();
             for (int i = 0; i < count; i++)
             {
-                yield return buffer.Consume();
+                c.Add(buffer.Consume());
             }
+
+            return c;
         }
 
         public static bool PeekIsDigit(this LookaheadBuffer<char> buffer)
         {
             return buffer.PeekInRange('0', '9');
+        }
+
+        public static string ConsumeTillWhitespaceOrEnd(this LookaheadBuffer<char> buffer)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            while (!buffer.End && !buffer.PeekIsWhitespace())
+            {
+                sb.Append(buffer.Consume());
+            }
+
+            return sb.ToString();
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using FluentAssertions;
 using Nett.Parser;
 using Nett.UnitTests.TestUtil;
 using Xunit;
@@ -128,6 +131,63 @@ namespace Nett.UnitTests.Parser
             // Assert
             tkn.type.Should().Be(TokenType.Timespan);
             tkn.value.Should().Be(token);
+        }
+
+        internal static IEnumerable<Token> Tokens
+        {
+            get
+            {
+                yield return new Token(TokenType.Integer, "0");
+                yield return new Token(TokenType.NormalString, "\"X\"");
+                yield return new Token(TokenType.Float, "2.0");
+                yield return new Token(TokenType.Bool, "true");
+            }
+        }
+
+
+        public static IEnumerable<object[]> TknData
+        {
+            get
+            {
+                var tokens = new List<Token>(Tokens);
+                for (int i = 0; i < tokens.Count(); i++)
+                {
+
+                    var append = tokens[0];
+                    tokens.RemoveAt(0);
+                    tokens.Add(append);
+                    var tknString = TokensToString(tokens);
+                    yield return new object[] { tknString, tokens.ToArray() };
+
+                }
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(TknData))]
+        internal void TokenizeMultipleToken(string tokenString, Token[] tokens)
+        {
+            // Act
+            var t = new Tokenizer(tokenString.ToStream());
+
+            // Assert
+            foreach (var tkn in tokens)
+            {
+                t.Tokens.Peek().type.Should().Be(tkn.type);
+                t.Tokens.Peek().value.Should().Be(tkn.value);
+                t.Tokens.Consume();
+            }
+        }
+
+        private static string TokensToString(IEnumerable<Token> tokens)
+        {
+            var sb = new StringBuilder();
+            foreach (var tk in tokens)
+            {
+                sb.Append(tk.value).Append(" ");
+            }
+
+            return sb.ToString();
         }
     }
 }

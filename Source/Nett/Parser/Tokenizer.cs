@@ -4,7 +4,7 @@ using Nett.Parser.Matchers;
 
 namespace Nett.Parser
 {
-    class Tokenizer
+    internal sealed class Tokenizer
     {
         private const int SBS = 256;
 
@@ -42,6 +42,16 @@ namespace Nett.Parser
                 return Eof;
             }
 
+            while (!this.characters.End && this.characters.PeekIsWhitespace())
+            {
+                this.characters.Consume();
+            }
+
+            if (this.characters.End)
+            {
+                return Eof;
+            }
+
             foreach (var m in Matchers)
             {
                 var tkn = m.Match(this.characters);
@@ -52,7 +62,7 @@ namespace Nett.Parser
                 }
             }
 
-            return Eof;
+            return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd());
         }
 
 
