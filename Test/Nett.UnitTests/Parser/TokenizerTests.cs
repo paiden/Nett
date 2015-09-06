@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
@@ -97,6 +98,31 @@ namespace Nett.UnitTests.Parser
 
             // Assert
             tkn.type.Should().Be(TokenType.String);
+            tkn.value.Should().Be(token);
+        }
+
+        [Fact]
+        public void TokenizeLiteralString_WhenClosingTagMissing_ThrowsException()
+        {
+            Action a = () => new Tokenizer("'not closed".ToStream());
+
+            a.ShouldThrow<Exception>();
+        }
+
+        [Theory]
+        [InlineData("''")]
+        [InlineData("'X'")]
+        [InlineData(@"'X\\'")]
+        public void TokenizeLiteralString(string token)
+        {
+            // Arrange
+            var t = new Tokenizer(token.ToStream());
+
+            // Act
+            var tkn = t.Tokens.PeekAt(0);
+
+            // Assert
+            tkn.type.Should().Be(TokenType.LiteralString);
             tkn.value.Should().Be(token);
         }
 
