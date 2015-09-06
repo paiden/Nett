@@ -14,6 +14,7 @@ namespace Nett.Parser
             new IntMatcher(),
             new BoolMatcher(),
             new StringMatcher(),
+            new LiteralStringMatcher(),
         };
 
         private readonly StreamReader reader;
@@ -83,7 +84,7 @@ namespace Nett.Parser
 
             sb.Append(this.characters.Consume());
 
-            return new Token(TokenType.NormalString, sb.ToString());
+            return new Token(TokenType.String, sb.ToString());
         }
 
         private Token ConsumeBareKeyToken(StringBuilder sb)

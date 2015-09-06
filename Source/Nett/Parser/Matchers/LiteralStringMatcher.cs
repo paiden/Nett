@@ -1,12 +1,11 @@
-﻿using System;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
-    internal sealed class LiteralStringMatcher : MatcherBase
+    internal sealed class LiteralStringMatcher : SingleLineStringMatcher
     {
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        public LiteralStringMatcher()
+            : base('\'', TokenType.LiteralString)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

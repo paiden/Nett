@@ -96,7 +96,7 @@ namespace Nett.UnitTests.Parser
             var tkn = t.Tokens.PeekAt(0);
 
             // Assert
-            tkn.type.Should().Be(TokenType.NormalString);
+            tkn.type.Should().Be(TokenType.String);
             tkn.value.Should().Be(token);
         }
 
@@ -138,9 +138,10 @@ namespace Nett.UnitTests.Parser
             get
             {
                 yield return new Token(TokenType.Integer, "0");
-                yield return new Token(TokenType.NormalString, "\"X\"");
+                yield return new Token(TokenType.String, "\"X\"");
                 yield return new Token(TokenType.Float, "2.0");
                 yield return new Token(TokenType.Bool, "true");
+                yield return new Token(TokenType.LiteralString, "\'LS\'");
             }
         }
 

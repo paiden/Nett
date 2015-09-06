@@ -1,39 +1,11 @@
-﻿using System;
-using System.Text;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
-    internal sealed class StringMatcher : MatcherBase
+    internal sealed class StringMatcher : SingleLineStringMatcher
     {
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        public StringMatcher()
+            : base('\"', TokenType.String)
         {
-            StringBuilder sb = new StringBuilder(256);
-            if (!cs.Expect('\"'))
-            {
-                return NoMatch;
-            }
 
-            sb.Append(cs.Consume());
-
-            while (cs.Peek() != '\"')
-            {
-                if (cs.Expect('\\'))
-                {
-                    sb.Append(cs.Consume());
-                }
-
-                sb.Append(cs.Consume());
-            }
-
-            if (cs.Peek() != '\"')
-            {
-                throw new Exception($"Closing '\"' not found for string {sb.ToString()}'");
-            }
-            else
-            {
-                sb.Append(cs.Consume());
-                return new Token(TokenType.NormalString, sb.ToString());
-            }
         }
     }
 }

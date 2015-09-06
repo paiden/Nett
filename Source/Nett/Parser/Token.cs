@@ -8,7 +8,7 @@
         Integer,
         Float,
         Bool,
-        NormalString,
+        String,
         LiteralString,
         MultilineString,
         MultilineLiteralString,
