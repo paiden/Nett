@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace Nett.Parser.Matchers
 {
@@ -46,7 +45,8 @@ namespace Nett.Parser.Matchers
                     }
                     else
                     {
-                        throw new NotSupportedException();
+                        var matcher = new BareKeyMatcher(sb);
+                        return matcher.Match(cs);
                     }
                 }
             }

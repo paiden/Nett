@@ -1,7 +1,13 @@
-﻿namespace Nett.Parser
+﻿using System;
+using System.IO;
+
+namespace Nett.Parser
 {
     internal sealed class Parser
     {
+        private readonly Tokenizer tokenizer;
+        private LookaheadBuffer<Token> Tokens => this.tokenizer.Tokens;
+
         private static readonly char[] WhitspaceCharSet =
         {
             '\u0009', '\u000A', '\u000B', '\u000D', '\u0020', '\u0085', '\u00A0',
@@ -9,5 +15,26 @@
             '\u2007', '\u2008', '\u2009', '\u200A', '\u2028', '\u2029', '\u202F', '\u205F',
             '\u3000',
         };
+
+        public Parser(Stream s)
+        {
+            this.tokenizer = new Tokenizer(s);
+        }
+
+        public TomlTable Parse(Stream s)
+        {
+            return this.Toml();
+        }
+
+        private TomlTable Toml()
+        {
+            while (!this.Tokens.End)
+            {
+                throw new NotImplementedException();
+            }
+
+            return null;
+
+        }
     }
 }

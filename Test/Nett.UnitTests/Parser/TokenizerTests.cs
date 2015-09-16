@@ -242,6 +242,23 @@ namespace Nett.UnitTests.Parser
             }
         }
 
+        [Fact]
+        public void TokenizeTomlTableName()
+        {
+            // Arrange + Act
+            var t = new Tokenizer(" [   TableName  ]  ".ToStream());
+
+            // Assert.
+            t.Tokens.PeekAt(0).type.Should().Be(TokenType.LBrac);
+            t.Tokens.PeekAt(0).value.Should().Be("[");
+
+            t.Tokens.PeekAt(1).type.Should().Be(TokenType.BareKey);
+            t.Tokens.PeekAt(1).value.Should().Be("TableName");
+
+            t.Tokens.PeekAt(2).type.Should().Be(TokenType.RBrac);
+            t.Tokens.PeekAt(2).value.Should().Be("]");
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();

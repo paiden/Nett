@@ -11,10 +11,12 @@ namespace Nett.Parser
         private static readonly Token Eof = new Token(TokenType.Eof, null);
         private static readonly MatcherBase[] Matchers = new MatcherBase[]
         {
+            new SymbolsMatcher(),
             new IntMatcher(),
             new BoolMatcher(),
             new StringMatcher(),
             new LiteralStringMatcher(),
+            new BareKeyMatcher(),
         };
 
         private readonly StreamReader reader;

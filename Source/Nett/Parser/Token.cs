@@ -14,6 +14,9 @@
         MultilineLiteralString,
         DateTime,
         Timespan,
+        LBrac,
+        RBrac,
+        Key,
     }
 
     internal struct Token

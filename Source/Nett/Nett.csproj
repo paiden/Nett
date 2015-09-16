@@ -45,7 +45,9 @@
     <Compile Include="Converter.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
+    <Compile Include="Parser\Matchers\BareKeyMatcher.cs" />
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
+    <Compile Include="Parser\Matchers\CharExtensions.cs" />
     <Compile Include="Parser\Matchers\CharLookaheadBufferExtensions.cs" />
     <Compile Include="Parser\Matchers\DateTimeMatcher.cs" />
     <Compile Include="Parser\Matchers\FloatMatcher.cs" />
@@ -56,6 +58,7 @@
     <Compile Include="Parser\Matchers\MultilineLiteralStringMatcher.cs" />
     <Compile Include="Parser\Matchers\MultilineStringMatcher.cs" />
     <Compile Include="Parser\Matchers\StringMatcher.cs" />
+    <Compile Include="Parser\Matchers\SymbolsMatcher.cs" />
     <Compile Include="Parser\Matchers\TimespanMatcher.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Token.cs" />
