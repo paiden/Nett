@@ -191,7 +191,6 @@ trimmed in raw strings.
         public void Deserialize_FloatWihtLeadingZeros_ThrowsExcption(string src)
         {
             var exc = Assert.Throws<Exception>(() => Toml.Read(src));
-            Assert.Equal("Leading zeros are not allowed.", exc.Message);
         }
 
         [Theory]

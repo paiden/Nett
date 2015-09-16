@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Nett.Parser
@@ -21,20 +23,71 @@ namespace Nett.Parser
             this.tokenizer = new Tokenizer(s);
         }
 
-        public TomlTable Parse(Stream s)
+        public TomlTable Parse()
         {
             return this.Toml();
         }
 
         private TomlTable Toml()
         {
-            while (!this.Tokens.End)
+            var table = new TomlTable();
+            while (!this.Tokens.End && this.Tokens.Peek().type != TokenType.Eof)
             {
-                throw new NotImplementedException();
+                var kvp = KeyValuePair();
+                table.Add(kvp.Key, kvp.Value);
             }
 
-            return null;
+            return table;
 
+        }
+
+        private KeyValuePair<string, TomlObject> KeyValuePair()
+        {
+            var key = this.Key();
+            if (!this.Tokens.Expect(TokenType.Assign))
+            {
+                throw new Exception($"Failed to parse key value pair because token '{this.Tokens.Peek().value}' was found but '=' was expected.");
+            }
+
+            this.Tokens.Consume();
+
+            var value = this.Value();
+
+            return new KeyValuePair<string, TomlObject>(key, value);
+        }
+
+        private string Key()
+        {
+            if (this.Tokens.Expect(TokenType.BareKey)) { return this.Tokens.Consume().value; }
+            else if (this.Tokens.Expect(TokenType.String)) { return this.Tokens.Consume().value.Replace("\"", ""); }
+            else
+            {
+                throw new System.Exception($"Failed to parse key because unexpected token '{Tokens.Peek().value}' was found.");
+            }
+        }
+
+        private TomlObject Value()
+        {
+            if (this.Tokens.Expect(TokenType.Integer)) { return new TomlInt(long.Parse(this.Tokens.Consume().value.Replace("_", ""))); }
+            else if (this.Tokens.Expect(TokenType.Float)) { return ParseTomlFloat(); }
+
+
+            throw new Exception($"Failed to parse TOML file as '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
+        }
+
+        private TomlFloat ParseTomlFloat()
+        {
+            var floatToken = this.Tokens.Consume();
+
+            var check = floatToken.value;
+            int startToCheckForZeros = check[0] == '+' || check[0] == '-' ? 1 : 0;
+
+            if (check[startToCheckForZeros] == '0' && check[startToCheckForZeros + 1] != '.')
+            {
+                throw new Exception($"Failed to parse TOML float with '{floatToken.value}' because it has  a leading '0' which is not allowed by the TOML specification.");
+            }
+
+            return new TomlFloat(double.Parse(floatToken.value.Replace("_", ""), CultureInfo.InvariantCulture));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Nett.Parser
+﻿using System.Diagnostics;
+
+namespace Nett.Parser
 {
     enum TokenType
     {
@@ -17,8 +19,10 @@
         LBrac,
         RBrac,
         Key,
+        Assign,
     }
 
+    [DebuggerDisplay("{value}")]
     internal struct Token
     {
         public TokenType type;

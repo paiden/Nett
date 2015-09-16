@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Nett
 {
@@ -7,7 +6,8 @@ namespace Nett
     {
         public static TomlTable Deserialize(Stream s)
         {
-            throw new NotImplementedException();
+            var parser = new Parser.Parser(s);
+            return parser.Parse();
         }
     }
 }

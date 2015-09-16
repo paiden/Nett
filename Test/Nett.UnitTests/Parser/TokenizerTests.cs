@@ -259,6 +259,21 @@ namespace Nett.UnitTests.Parser
             t.Tokens.PeekAt(2).value.Should().Be("]");
         }
 
+        [Fact]
+        public void TokenizeKeyValuePair()
+        {
+            var t = new Tokenizer("   key =   1929  ".ToStream());
+
+            t.Tokens.PeekAt(0).type.Should().Be(TokenType.BareKey);
+            t.Tokens.PeekAt(0).value.Should().Be("key");
+
+            t.Tokens.PeekAt(0).type.Should().Be(TokenType.Assign);
+            t.Tokens.PeekAt(0).value.Should().Be("=");
+
+            t.Tokens.PeekAt(0).type.Should().Be(TokenType.Integer);
+            t.Tokens.PeekAt(0).value.Should().Be("1929");
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();
