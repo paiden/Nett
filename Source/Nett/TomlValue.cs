@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Nett
 {
@@ -20,6 +16,7 @@ namespace Nett
         protected static readonly Type FloatType = typeof(float);
         protected static readonly Type DoubleType = typeof(double);
         protected static readonly Type DateTimeType = typeof(DateTime);
+        protected static readonly Type BoolType = typeof(bool);
 
         private static readonly Type[] IntTypes = new Type[]
             {
@@ -32,38 +29,42 @@ namespace Nett
         {
             var targetType = val.GetType();
 
-            if(StringType == targetType)
+            if (StringType == targetType)
             {
                 return new TomlString((string)val);
             }
-            else if(TimespanType == targetType)
+            else if (TimespanType == targetType)
             {
                 return new TomlTimeSpan((TimeSpan)val);
             }
-            else if(IsFloatType(targetType))
+            else if (IsFloatType(targetType))
             {
                 return new TomlFloat((double)Convert.ChangeType(val, DoubleType));
             }
-            else if(IsIntegerType(targetType))
+            else if (IsIntegerType(targetType))
             {
                 return new TomlInt((long)Convert.ChangeType(val, Int64Type));
             }
-            else if(DateTimeType == targetType)
+            else if (DateTimeType == targetType)
             {
                 return new TomlDateTime((DateTime)val);
+            }
+            else if (BoolType == targetType)
+            {
+                return new TomlBool((bool)val);
             }
 
             throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
         }
 
-        internal static bool CanCreateFrom(Type t) => 
-            t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType;
+        internal static bool CanCreateFrom(Type t) =>
+            t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType || t == BoolType;
 
         private static bool IsIntegerType(Type t)
         {
-            for(int i = 0; i < IntTypes.Length; i++)
+            for (int i = 0; i < IntTypes.Length; i++)
             {
-                if(IntTypes[i] == t)
+                if (IntTypes[i] == t)
                 {
                     return true;
                 }

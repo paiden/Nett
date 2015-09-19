@@ -99,6 +99,17 @@ V = 666
             Assert.Equal(exp.Trim(), s.Trim());
         }
 
+        [Fact]
+        public void WriteClassWithBoolCreatesCorrecToml()
+        {
+            var s = Toml.WriteString(new WithBoolProperty());
+
+            s.Should().Be(
+                @"TheInt = 0
+TheBool = false
+");
+        }
+
         private class TestClassA
         {
             public string StringProp { get; set; }
@@ -133,6 +144,12 @@ V = 666
         {
             [TomlComment("This is a comment", CommentLocation.Append)]
             public int Commented { get; set; }
+        }
+
+        private class WithBoolProperty
+        {
+            public int TheInt { get; set; }
+            public bool TheBool { get; set; }
         }
 
         private class WithClassProperty

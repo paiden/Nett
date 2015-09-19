@@ -21,7 +21,7 @@ namespace Nett
 
             this.sw = streamWriter;
 
-            this.VisitBool = (b) => this.WriteKeyedValue(b, () => this.sw.Write(b.Value));
+            this.VisitBool = (b) => this.WriteKeyedValue(b, () => this.sw.Write(b.Value.ToString().ToLower()));
             this.VisitFloat = (f) => this.WriteKeyedValue(f, () => this.sw.Write(f.Value));
             this.VisitInt = (i) => this.WriteKeyedValue(i, () => this.sw.Write(i.Value));
             this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.Value));
