@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Nett.Parser
 {
@@ -77,6 +78,7 @@ namespace Nett.Parser
             else if (this.Expect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(this.Tokens.Consume().value)); }
             else if (this.Expect(TokenType.String)) { return ParseStringValue(); }
             else if (this.Expect(TokenType.LiteralString)) { return ParseLiteralString(); }
+            else if (this.Expect(TokenType.MultilineString)) { return ParseMultilineString(); }
 
             throw new Exception($"Failed to parse TOML file as token '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
         }
@@ -116,6 +118,70 @@ namespace Nett.Parser
             var s = t.value.TrimNChars(1);
 
             return new TomlString(s, TomlString.TypeOfString.Literal);
+        }
+
+        private TomlString ParseMultilineString()
+        {
+            var t = this.Consume();
+            Debug.Assert(t.type == TokenType.MultilineString);
+
+            var s = t.value.TrimNChars(3);
+
+            // Trim newline following the """ tag immediate
+            if (s.Length > 0 && s[0] == '\r') { s = s.Substring(1); }
+            if (s.Length > 0 && s[0] == '\n') { s = s.Substring(1); }
+
+            s = ReplaceDelimeterBackslash(s);
+
+            return new TomlString(s, TomlString.TypeOfString.Multiline);
+        }
+
+        private static string ReplaceDelimeterBackslash(string source)
+        {
+            for (int d = DelimeterBackslashPos(source, 0); d >= 0; d = DelimeterBackslashPos(source, d))
+            {
+                var nnw = NextNonWhitespaceCharacer(source, d + 1);
+                source = source.Remove(d, nnw - d);
+            }
+
+            return source;
+        }
+
+        private static int DelimeterBackslashPos(string source, int startIndex)
+        {
+            int i1 = source.IndexOf("\\\r", startIndex);
+            int i2 = source.IndexOf("\\\n", startIndex);
+
+            var minIndex = MinGreaterThan(0, -1, i1, i2);
+            return minIndex;
+        }
+
+        private static int NextNonWhitespaceCharacer(string source, int startIndex)
+        {
+            for (int i = startIndex; i < source.Length; i++)
+            {
+                if (!WhitspaceCharSet.Contains(source[i]))
+                {
+                    return i;
+                }
+            }
+
+            return source.Length;
+        }
+
+        private static int MinGreaterThan(int absoluteMin, int defaultValue, params int[] values)
+        {
+            int currenMin = int.MaxValue;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] >= absoluteMin && values[i] < currenMin)
+                {
+                    currenMin = values[i];
+                }
+            }
+
+            return currenMin == int.MaxValue ? defaultValue : currenMin;
         }
     }
 }
