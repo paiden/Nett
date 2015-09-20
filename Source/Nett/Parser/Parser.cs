@@ -76,6 +76,7 @@ namespace Nett.Parser
             else if (this.Expect(TokenType.Float)) { return ParseTomlFloat(); }
             else if (this.Expect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(this.Tokens.Consume().value)); }
             else if (this.Expect(TokenType.String)) { return ParseStringValue(); }
+            else if (this.Expect(TokenType.LiteralString)) { return ParseLiteralString(); }
 
             throw new Exception($"Failed to parse TOML file as token '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
         }
@@ -101,9 +102,20 @@ namespace Nett.Parser
 
             Debug.Assert(t.type == TokenType.String);
 
-            var s = t.value.Substring(1).Substring(0, t.value.Length - 2).Unescape();
+            var s = t.value.TrimNChars(1).Unescape();
 
-            return new TomlString(s);
+            return new TomlString(s, TomlString.TypeOfString.Normal);
+        }
+
+        private TomlString ParseLiteralString()
+        {
+            var t = this.Consume();
+
+            Debug.Assert(t.type == TokenType.LiteralString);
+
+            var s = t.value.TrimNChars(1);
+
+            return new TomlString(s, TomlString.TypeOfString.Literal);
         }
     }
 }
