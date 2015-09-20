@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -41,6 +42,9 @@ namespace Nett.Parser
 
         }
 
+        private bool Expect(TokenType tt) => this.Tokens.Expect(tt);
+        private Token Consume() => this.Tokens.Consume();
+
         private KeyValuePair<string, TomlObject> KeyValuePair()
         {
             var key = this.Key();
@@ -69,10 +73,11 @@ namespace Nett.Parser
         private TomlObject Value()
         {
             if (this.Tokens.Expect(TokenType.Integer)) { return new TomlInt(long.Parse(this.Tokens.Consume().value.Replace("_", ""))); }
-            else if (this.Tokens.Expect(TokenType.Float)) { return ParseTomlFloat(); }
+            else if (this.Expect(TokenType.Float)) { return ParseTomlFloat(); }
+            else if (this.Expect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(this.Tokens.Consume().value)); }
+            else if (this.Expect(TokenType.String)) { return ParseStringValue(); }
 
-
-            throw new Exception($"Failed to parse TOML file as '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
+            throw new Exception($"Failed to parse TOML file as token '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
         }
 
         private TomlFloat ParseTomlFloat()
@@ -88,6 +93,17 @@ namespace Nett.Parser
             }
 
             return new TomlFloat(double.Parse(floatToken.value.Replace("_", ""), CultureInfo.InvariantCulture));
+        }
+
+        private TomlString ParseStringValue()
+        {
+            var t = this.Consume();
+
+            Debug.Assert(t.type == TokenType.String);
+
+            var s = t.value.Substring(1).Substring(0, t.value.Length - 2).Unescape();
+
+            return new TomlString(s);
         }
     }
 }
