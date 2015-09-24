@@ -282,6 +282,18 @@ namespace Nett.UnitTests.Parser
             t.Tokens.PeekAt(1).type.Should().Be(TokenType.Integer);
         }
 
+        [Fact]
+        public void TokenizeArraySequence()
+        {
+            var t = new Tokenizer("a = [0.0]".ToStream());
+
+            t.Tokens.PeekAt(0).type.Should().Be(TokenType.BareKey);
+            t.Tokens.PeekAt(1).type.Should().Be(TokenType.Assign);
+            t.Tokens.PeekAt(2).type.Should().Be(TokenType.LBrac);
+            t.Tokens.PeekAt(3).type.Should().Be(TokenType.Float);
+            t.Tokens.PeekAt(4).type.Should().Be(TokenType.RBrac);
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();

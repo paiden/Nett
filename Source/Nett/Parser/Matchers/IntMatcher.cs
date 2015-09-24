@@ -32,7 +32,7 @@ namespace Nett.Parser.Matchers
                     return tsm.Match(cs);
                 }
 
-                if (cs.End || cs.ExpectWhitespace() || !cs.Peek().IsBareKeyChar())
+                if (cs.End || cs.ExpectWhitespace() || cs.TokenDone())
                 {
                     return new Token(TokenType.Integer, sb.ToString());
                 }

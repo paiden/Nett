@@ -79,8 +79,8 @@ namespace Nett.UnitTests
         [InlineData("a = [0]", new object[] { 0 })]
         [InlineData("a = [0,]", new object[] { 0 })]
         [InlineData("a = [0,1]", new object[] { 0, 1 })]
-        [InlineData("a = [0,1,]", new object[] { 0, 1 })]
-        public void ReadValidTomlArray(string toml, object[] expected)
+        [InlineData("a = [0, 1,  ]", new object[] { 0, 1 })]
+        public void ReadValidTomlIntArray(string toml, object[] expected)
         {
             var t = Toml.Read(toml);
 
@@ -90,6 +90,25 @@ namespace Nett.UnitTests
             for (int i = 0; i < expected.Length; i++)
             {
                 ((TomlInt)a[i]).Value.Should().Be((int)expected[i]);
+            }
+        }
+
+        [Theory]
+        [InlineData("a = []", new object[] { })]
+        [InlineData("a = [0.0]", new object[] { 0.0 })]
+        [InlineData("a = [0.0,]", new object[] { 0.0 })]
+        [InlineData("a = [0.0,1.0]", new object[] { 0.0, 1.0 })]
+        [InlineData("a = [0.0,  1.0,  ]", new object[] { 0.0, 1.0 })]
+        public void ReadValidTomlDoubleArray(string toml, object[] expected)
+        {
+            var t = Toml.Read(toml);
+
+            var a = t.Get<TomlArray>("a");
+
+            a.Count.Should().Be(expected.Length);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                ((TomlFloat)a[i]).Value.Should().Be((double)expected[i]);
             }
         }
 
