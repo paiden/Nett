@@ -12,6 +12,11 @@
             return tokens.Peek().type == tt;
         }
 
+        public static bool ExpectAt(this LookaheadBuffer<Token> tokens, int index, TokenType tt)
+        {
+            return tokens.PeekAt(index).type == tt;
+        }
+
         public static bool ExpectAt(this LookaheadBuffer<Token> tokens, TokenType tt)
         {
             return tokens.Peek().type == tt;

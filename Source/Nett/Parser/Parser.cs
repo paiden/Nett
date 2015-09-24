@@ -44,6 +44,8 @@ namespace Nett.Parser
         }
 
         private bool Expect(TokenType tt) => this.Tokens.Expect(tt);
+        private bool ExpectAt(int index, TokenType tt) => this.Tokens.ExpectAt(index, tt);
+
         private Token Consume() => this.Tokens.Consume();
 
         private KeyValuePair<string, TomlObject> KeyValuePair()
@@ -56,7 +58,7 @@ namespace Nett.Parser
 
             this.Tokens.Consume();
 
-            var value = this.Value();
+            var value = this.ParseValue();
 
             return new KeyValuePair<string, TomlObject>(key, value);
         }
@@ -71,7 +73,19 @@ namespace Nett.Parser
             }
         }
 
-        private TomlObject Value()
+        private TomlObject ParseValue()
+        {
+            var v = this.TryParseTomlValue();
+
+            if (v == null)
+            {
+                throw new Exception($"Failed to parse TOML file as token '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
+            }
+
+            return v;
+        }
+
+        private TomlObject TryParseTomlValue()
         {
             if (this.Tokens.Expect(TokenType.Integer)) { return this.ParseTomlInt(); }
             else if (this.Expect(TokenType.Float)) { return ParseTomlFloat(); }
@@ -80,8 +94,9 @@ namespace Nett.Parser
             else if (this.Expect(TokenType.LiteralString)) { return ParseLiteralString(); }
             else if (this.Expect(TokenType.MultilineString)) { return ParseMultilineString(); }
             else if (this.Expect(TokenType.Bool)) { return new TomlBool(bool.Parse(this.Consume().value)); }
+            else if (this.Expect(TokenType.LBrac)) { return this.ParseTomlArray(); }
 
-            throw new Exception($"Failed to parse TOML file as token '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
+            return null;
         }
 
         private TomlInt ParseTomlInt()
@@ -147,6 +162,56 @@ namespace Nett.Parser
             s = ReplaceDelimeterBackslash(s);
 
             return new TomlString(s, TomlString.TypeOfString.Multiline);
+        }
+
+        private TomlArray ParseTomlArray()
+        {
+            TomlArray a = new TomlArray();
+
+            var t = this.Consume();
+            Debug.Assert(t.type == TokenType.LBrac);
+
+            var v = this.TryParseTomlValue();
+            if (v != null)
+            {
+                a.Add(v);
+
+                while (this.Expect(TokenType.Comma) && !this.ExpectAt(1, TokenType.RBrac))
+                {
+                    this.Consume();
+
+                    v = this.TryParseTomlValue();
+                    if (v != null)
+                    {
+                        a.Add(v);
+                    }
+                    else
+                    {
+                        if (this.Expect(TokenType.RBrac))
+                        {
+                            this.Consume();
+                            return a;
+                        }
+                        else
+                        {
+                            throw new Exception($"Failed to parse array. Expected ']' but found '{this.Tokens.Peek().value}'.");
+                        }
+                    }
+                }
+            }
+
+            if (this.Expect(TokenType.Comma)) { this.Consume(); }
+
+            if (this.Expect(TokenType.RBrac))
+            {
+                this.Consume();
+            }
+            else
+            {
+                throw new Exception($"Failed to parse array. Expected ']' but found '{this.Tokens.Peek().value}'.");
+            }
+
+            return a;
         }
 
         private static string ReplaceDelimeterBackslash(string source)

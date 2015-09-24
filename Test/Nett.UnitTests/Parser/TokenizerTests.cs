@@ -274,6 +274,14 @@ namespace Nett.UnitTests.Parser
             t.Tokens.PeekAt(0).value.Should().Be("1929");
         }
 
+        [Fact]
+        public void TokenizeIntEmbeddedInArray_ShouldGiveInToken()
+        {
+            var t = new Tokenizer("[0]".ToStream());
+
+            t.Tokens.PeekAt(1).type.Should().Be(TokenType.Integer);
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();

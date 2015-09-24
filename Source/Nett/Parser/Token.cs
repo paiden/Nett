@@ -20,6 +20,7 @@ namespace Nett.Parser
         RBrac,
         Key,
         Assign,
+        Comma,
     }
 
     [DebuggerDisplay("{value}")]

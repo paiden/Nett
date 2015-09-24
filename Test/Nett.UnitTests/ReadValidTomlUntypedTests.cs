@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests
@@ -71,6 +72,25 @@ namespace Nett.UnitTests
             var doubleArray = a.Get<TomlArray>(2);
             Assert.Equal(1.1, doubleArray.Get<double>(0));
             Assert.Equal(2.1, doubleArray.Get<double>(1));
+        }
+
+        [Theory]
+        [InlineData("a = []", new object[] { })]
+        [InlineData("a = [0]", new object[] { 0 })]
+        [InlineData("a = [0,]", new object[] { 0 })]
+        [InlineData("a = [0,1]", new object[] { 0, 1 })]
+        [InlineData("a = [0,1,]", new object[] { 0, 1 })]
+        public void ReadValidTomlArray(string toml, object[] expected)
+        {
+            var t = Toml.Read(toml);
+
+            var a = t.Get<TomlArray>("a");
+
+            a.Count.Should().Be(expected.Length);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                ((TomlInt)a[i]).Value.Should().Be((int)expected[i]);
+            }
         }
 
         [Fact]

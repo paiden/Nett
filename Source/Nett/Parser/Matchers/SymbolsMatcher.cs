@@ -7,6 +7,7 @@
             if (cs.Expect('[')) return new Token(TokenType.LBrac, new string(cs.Consume(), 1));
             else if (cs.Expect(']')) return new Token(TokenType.RBrac, new string(cs.Consume(), 1));
             else if (cs.Expect('=')) return new Token(TokenType.Assign, new string(cs.Consume(), 1));
+            else if (cs.Expect(',')) return new Token(TokenType.Comma, new string(cs.Consume(), 1));
 
             return null;
         }
