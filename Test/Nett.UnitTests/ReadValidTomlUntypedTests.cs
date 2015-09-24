@@ -131,6 +131,38 @@ namespace Nett.UnitTests
         }
 
         [Fact]
+        public void ReadValidTomlArrayOfIntArray()
+        {
+            var tml = Toml.Read("a = [[1]]");
+
+            var a = tml.Get<TomlArray>("a");
+            var aa = a.Get<TomlArray>(0);
+
+            a.Count.Should().Be(1);
+            aa.Count.Should().Be(1);
+            aa.Get<int>(0).Should().Be(1);
+        }
+
+        [Fact]
+        public void ReadValidTomlArrayOfIntArrays()
+        {
+            var tml = Toml.Read("a = [[1], [2, 3], ]");
+
+            var a = tml.Get<TomlArray>("a");
+            var aa = a.Get<TomlArray>(0);
+            var aaa = a.Get<TomlArray>(1);
+
+            a.Count.Should().Be(2);
+            aa.Count.Should().Be(1);
+            aa.Get<int>(0).Should().Be(1);
+
+            aaa.Count.Should().Be(2);
+            aaa.Get<int>(0).Should().Be(2);
+            aaa.Get<int>(1).Should().Be(3);
+        }
+
+
+        [Fact]
         public void RealValidToml_NestedArrays()
         {
             // Arrange
