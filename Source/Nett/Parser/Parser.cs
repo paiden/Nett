@@ -73,14 +73,27 @@ namespace Nett.Parser
 
         private TomlObject Value()
         {
-            if (this.Tokens.Expect(TokenType.Integer)) { return new TomlInt(long.Parse(this.Tokens.Consume().value.Replace("_", ""))); }
+            if (this.Tokens.Expect(TokenType.Integer)) { return this.ParseTomlInt(); }
             else if (this.Expect(TokenType.Float)) { return ParseTomlFloat(); }
             else if (this.Expect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(this.Tokens.Consume().value)); }
             else if (this.Expect(TokenType.String)) { return ParseStringValue(); }
             else if (this.Expect(TokenType.LiteralString)) { return ParseLiteralString(); }
             else if (this.Expect(TokenType.MultilineString)) { return ParseMultilineString(); }
+            else if (this.Expect(TokenType.Bool)) { return new TomlBool(bool.Parse(this.Consume().value)); }
 
             throw new Exception($"Failed to parse TOML file as token '{this.Tokens.Peek().value}' cannot be converted to valid TOML value.");
+        }
+
+        private TomlInt ParseTomlInt()
+        {
+            var token = this.Consume();
+
+            if (token.value.Length > 1 && token.value[0] == '0')
+            {
+                throw new Exception($"Failed to parse TOML int with '{token.value}' because it has  a leading '0' which is not allowed by the TOML specification.");
+            }
+
+            return new TomlInt(long.Parse(token.value.Replace("_", "")));
         }
 
         private TomlFloat ParseTomlFloat()
