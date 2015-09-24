@@ -93,6 +93,7 @@ namespace Nett.Parser
             else if (this.Expect(TokenType.String)) { return ParseStringValue(); }
             else if (this.Expect(TokenType.LiteralString)) { return ParseLiteralString(); }
             else if (this.Expect(TokenType.MultilineString)) { return ParseMultilineString(); }
+            else if (this.Expect(TokenType.MultilineLiteralString)) { return this.ParseMultilineLiteralString(); }
             else if (this.Expect(TokenType.Bool)) { return new TomlBool(bool.Parse(this.Consume().value)); }
             else if (this.Expect(TokenType.LBrac)) { return this.ParseTomlArray(); }
 
@@ -162,6 +163,20 @@ namespace Nett.Parser
             s = ReplaceDelimeterBackslash(s);
 
             return new TomlString(s, TomlString.TypeOfString.Multiline);
+        }
+
+        private TomlString ParseMultilineLiteralString()
+        {
+            var t = this.Consume();
+            Debug.Assert(t.type == TokenType.MultilineLiteralString);
+
+            var s = t.value.TrimNChars(3);
+
+            // Trim newline following the """ tag immediate
+            if (s.Length > 0 && s[0] == '\r') { s = s.Substring(1); }
+            if (s.Length > 0 && s[0] == '\n') { s = s.Substring(1); }
+
+            return new TomlString(s, TomlString.TypeOfString.MultilineLiteral);
         }
 
         private TomlArray ParseTomlArray()

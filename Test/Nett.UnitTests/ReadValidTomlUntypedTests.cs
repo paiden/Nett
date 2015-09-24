@@ -112,6 +112,24 @@ namespace Nett.UnitTests
             }
         }
 
+        [Theory]
+        [InlineData("a = []", new object[] { })]
+        [InlineData("a = [\"a\"]", new object[] { "a" })]
+        [InlineData("a = [\"a\", 'b', '''cf''']", new object[] { "a", "b", "cf" })]
+        [InlineData("a = ['''s''']", new object[] { "s" })]
+        public void ReadValidTomlStringArray(string toml, object[] expected)
+        {
+            var t = Toml.Read(toml);
+
+            var a = t.Get<TomlArray>("a");
+
+            a.Count.Should().Be(expected.Length);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                ((TomlString)a[i]).Value.Should().Be((string)expected[i]);
+            }
+        }
+
         [Fact]
         public void RealValidToml_NestedArrays()
         {
