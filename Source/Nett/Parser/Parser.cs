@@ -26,7 +26,6 @@ namespace Nett.Parser
             TomlTable root = new TomlTable();
             TomlTable current = root;
 
-
             while (!Tokens.End)
             {
                 var exp = new ExpressionsProduction(current, root);

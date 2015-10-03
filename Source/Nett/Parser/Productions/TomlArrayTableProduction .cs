@@ -9,7 +9,7 @@ namespace Nett.Parser.Productions
         public override string Apply(LookaheadBuffer<Token> tokens)
         {
             if (!tokens.ExpectAt(0, TokenType.LBrac)) { return null; }
-            if (!tokens.ExpectAt(1, TokenType.RBrac)) { return null; }
+            if (!tokens.ExpectAt(1, TokenType.LBrac)) { return null; }
 
             tokens.Consume();
             tokens.Consume();
