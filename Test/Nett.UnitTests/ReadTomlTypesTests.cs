@@ -389,8 +389,7 @@ b = 1
 d = 2";
 
             var exc = Assert.Throws<Exception>(() => Toml.Read(toParse));
-            Assert.True(exc.Message.Contains("[a]"));
-            Assert.True(exc.Message.Contains("Defining a table multiple times is not allowed."));
+            Assert.True(exc.Message.Contains("'a'"));
         }
 
         [Fact]

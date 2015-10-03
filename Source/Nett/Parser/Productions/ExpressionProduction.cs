@@ -35,7 +35,18 @@ namespace Nett.Parser.Productions
             {
                 var newTable = new TomlTable();
                 var addTo = GetTargetTableForTable(this.root, tableKeyChain);
-                addTo.Add(tableKeyChain.Last(), newTable);
+
+                string name = tableKeyChain.Last();
+                var existingRow = addTo.TryGet<TomlObject>(name);
+                if (existingRow == null)
+                {
+                    addTo.Add(name, newTable);
+                }
+                else
+                {
+                    throw new Exception($"Failed to add new table because the target table already contains a row with the key '{name}' of type '{existingRow.ReadableTypeName}'.");
+                }
+
                 return newTable;
             }
 
