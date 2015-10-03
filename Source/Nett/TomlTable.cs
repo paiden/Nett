@@ -76,6 +76,13 @@ namespace Nett
             return result;
         }
 
+        public T TryGet<T>(string key) where T : TomlObject
+        {
+            TomlObject o;
+            this.Rows.TryGetValue(key, out o);
+            return o as T;
+        }
+
         public static TomlTable From<T>(T obj, TomlConfig config)
         {
             TomlTable tt = new TomlTable();

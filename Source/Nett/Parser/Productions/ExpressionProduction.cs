@@ -34,7 +34,7 @@ namespace Nett.Parser.Productions
             if (tableKeyChain != null)
             {
                 var newTable = new TomlTable();
-                var addTo = CalculateTargetTable(this.root, tableKeyChain);
+                var addTo = GetTargetTableForTable(this.root, tableKeyChain);
                 addTo.Add(tableKeyChain.Last(), newTable);
                 return newTable;
             }
@@ -47,6 +47,30 @@ namespace Nett.Parser.Productions
             }
 
             return null;
+        }
+
+        private static TomlTable GetTargetTableForTable(TomlTable root, IList<string> keyChain)
+        {
+            var tgt = root;
+            for (int i = 0; i < keyChain.Count - 1; i++)
+            {
+                tgt = GetExistingTableOrCreateAndAdd(tgt, keyChain[i]);
+            }
+
+            return tgt;
+        }
+
+        private static TomlTable GetExistingTableOrCreateAndAdd(TomlTable tbl, string key)
+        {
+            var existing = tbl.TryGet<TomlTable>(key);
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            var newTable = new TomlTable();
+            tbl.Add(key, newTable);
+            return newTable;
         }
 
         private static TomlTable CalculateTargetTable(TomlTable root, IList<string> keyChain)
