@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nett
+﻿namespace Nett
 {
     public sealed class TomlBool : TomlValue<bool>
     {
+        public override string ReadableTypeName => "bool";
+
         public TomlBool(bool value)
             : base(value)
         {

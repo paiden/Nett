@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Nett
 {
@@ -14,6 +12,8 @@ namespace Nett
         private static readonly Type ObjectType = typeof(object);
         private readonly List<TomlObject> items = new List<TomlObject>();
         internal List<TomlObject> Items => this.items;
+
+        public override string ReadableTypeName => "array";
 
         public TomlArray()
         {
@@ -43,14 +43,14 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
-            if(t == TomlArrayType) { return this; }
+            if (t == TomlArrayType) { return this; }
 
-            if(t.IsArray)
+            if (t.IsArray)
             {
                 var et = t.GetElementType();
                 var a = Array.CreateInstance(et, this.items.Count);
                 int cnt = 0;
-                foreach(var i in this.items)
+                foreach (var i in this.items)
                 {
                     a.SetValue(i.Get(et, config), cnt++);
                 }
@@ -59,19 +59,19 @@ namespace Nett
             }
 
 
-            if(!ListType.IsAssignableFrom(t))
+            if (!ListType.IsAssignableFrom(t))
             {
                 throw new InvalidOperationException(string.Format("Cannot convert TOML array to '{0}'.", t.FullName));
             }
 
             var collection = (IList)Activator.CreateInstance(t);
             Type itemType = ObjectType;
-            if(t.IsGenericType)
+            if (t.IsGenericType)
             {
                 itemType = t.GetGenericArguments()[0];
             }
 
-            foreach(var i in this.items)
+            foreach (var i in this.items)
             {
                 collection.Add(i.Get(itemType, config));
             }

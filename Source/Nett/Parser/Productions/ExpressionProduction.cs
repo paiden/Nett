@@ -1,4 +1,6 @@
-﻿namespace Nett.Parser.Productions
+﻿using System;
+
+namespace Nett.Parser.Productions
 {
     internal sealed class ExpressionsProduction : Production<TomlTable>
     {
@@ -22,7 +24,7 @@
             {
                 string name = CalcArrayName(arrayKey);
                 var addTo = CalculateTargetTable(this.root, arrayKey);
-                var arr = GetExistingOrCreate(addTo, name);
+                var arr = GetExistingOrCreateAndAdd(addTo, name);
                 var newArrayEntry = new TomlTable();
                 arr.Add(newArrayEntry);
                 return newArrayEntry;
@@ -52,9 +54,26 @@
             return root;
         }
 
-        private static TomlTableArray GetExistingOrCreate(TomlTable target, string name)
+        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name)
         {
-            return new TomlTableArray();
+            TomlObject existing = null;
+            target.Rows.TryGetValue(name, out existing);
+
+            var typed = existing as TomlTableArray;
+
+            if (existing != null && typed == null)
+            {
+                throw new InvalidOperationException($"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'.");
+            }
+            else if (typed != null)
+            {
+                return typed;
+            }
+
+            var newTableArray = new TomlTableArray();
+            target.Add(name, newTableArray);
+
+            return newTableArray;
         }
 
         private static string CalcArrayName(string key)

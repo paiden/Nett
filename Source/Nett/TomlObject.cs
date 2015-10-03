@@ -9,6 +9,8 @@ namespace Nett
         private static readonly Type StringType = typeof(string);
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
+        public abstract string ReadableTypeName { get; }
+
         internal List<TomlComment> Comments { get; set; }
         public T Get<T>() => (T)this.Get(typeof(T), TomlConfig.DefaultInstance);
         public T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);

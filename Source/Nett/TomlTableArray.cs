@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Nett
 {
@@ -15,6 +12,8 @@ namespace Nett
 
         private readonly List<TomlTable> items = new List<TomlTable>();
         public List<TomlTable> Items => this.items;
+
+        public override string ReadableTypeName => "array of tables";
 
         public TomlTableArray()
             : this(null)
@@ -48,7 +47,7 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
-            if(t == TableArrayType) { return this; }
+            if (t == TableArrayType) { return this; }
 
             if (t.IsArray)
             {

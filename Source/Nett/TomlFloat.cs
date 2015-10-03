@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nett
+﻿namespace Nett
 {
     public sealed class TomlFloat : TomlValue<double>
     {
+        public override string ReadableTypeName => "float";
+
         public TomlFloat(double value)
             : base(value)
         {

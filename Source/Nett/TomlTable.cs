@@ -17,6 +17,8 @@ namespace Nett
 
         internal bool IsDefined { get; set; }
 
+        public override string ReadableTypeName => "table";
+
         public TomlObject this[string key]
         {
             get
