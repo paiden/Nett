@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class KeyValuePairProduction : Production<KeyValuePair<string, TomlObject>?>
+    internal sealed class KeyValuePairProduction : Production<Tuple<string, TomlObject>>
     {
         private readonly KeyProduction keyProduction = new KeyProduction();
         private readonly ValueProduction valueProduction = new ValueProduction();
 
-        public override KeyValuePair<string, TomlObject>? Apply(LookaheadBuffer<Token> tokens)
+        public override Tuple<string, TomlObject> Apply(LookaheadBuffer<Token> tokens)
         {
             var key = this.keyProduction.Apply(tokens);
 
@@ -28,7 +27,7 @@ namespace Nett.Parser.Productions
                 throw new Exception($"Expected a value while parsing key value pair but value incompatible token '{tokens.Peek().value}' was found.");
             }
 
-            return new KeyValuePair<string, TomlObject>(key, value);
+            return Tuple.Create(key, value);
         }
     }
 }

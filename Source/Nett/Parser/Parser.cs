@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using Nett.Parser.Productions;
 
 namespace Nett.Parser
@@ -27,8 +23,26 @@ namespace Nett.Parser
 
         private TomlTable Toml()
         {
-            var p = new TomlTableProduction();
-            return (TomlTable)p.Apply(this.Tokens);
+            TomlTable root = new TomlTable();
+            TomlTable current = root;
+
+
+            while (!Tokens.End)
+            {
+                var exp = new ExpressionsProduction(current, root);
+                current = exp.Apply(this.Tokens);
+                if (current == null)
+                {
+                    if (!Tokens.End)
+                    {
+                        throw new Exception();
+                    }
+
+                    break;
+                }
+            }
+
+            return root;
         }
     }
 }

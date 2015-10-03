@@ -1,19 +1,30 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class TomlArrayTableProduction : Production<TomlTableArray>
+    internal sealed class TomlArrayTableProduction : Production<string>
     {
-        public override TomlTableArray Apply(LookaheadBuffer<Token> tokens)
+        private static readonly KeyProduction keyProduction = new KeyProduction();
+
+        public override string Apply(LookaheadBuffer<Token> tokens)
         {
+            if (!tokens.ExpectAt(0, TokenType.LBrac)) { return null; }
+            if (!tokens.ExpectAt(1, TokenType.RBrac)) { return null; }
 
-            //var t0 = this.Consume();
-            //var t1 = this.Consume();
+            tokens.Consume();
+            tokens.Consume();
 
-            //Debug.Assert(t0.type == TokenType.LBrac && t1.type == TokenType.LBrac);
+            var key = keyProduction.Apply(tokens);
 
-            return null;
+            if (key == null) { throw new Exception(); }
+
+            if (!tokens.ExpectAt(0, TokenType.RBrac)) { throw new Exception(); }
+            if (!tokens.ExpectAt(1, TokenType.RBrac)) { throw new Exception(); }
+
+            tokens.Consume();
+            tokens.Consume();
+
+            return key;
         }
     }
 }

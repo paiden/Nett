@@ -2,34 +2,34 @@
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class TomlTableProduction : Production<TomlTable>
+    internal sealed class TomlTableProduction : Production<string>
     {
-        private readonly TomlArrayTableProduction tableArray = new TomlArrayTableProduction();
-        private readonly KeyValuePairProduction keyValuePair = new KeyValuePairProduction();
+        private static readonly KeyProduction key = new KeyProduction();
 
-        public override TomlTable Apply(LookaheadBuffer<Token> tokens)
+        public override string Apply(LookaheadBuffer<Token> tokens)
         {
-            var table = new TomlTable();
-
-            while (!tokens.End && tokens.Peek().type != TokenType.Eof)
+            if (!tokens.Expect(TokenType.LBrac))
             {
-                var ta = this.tableArray.Apply(tokens);
-
-                if (ta != null)
-                {
-                    throw new NotImplementedException();
-                    //continue;
-                }
-
-                var kvp = keyValuePair.Apply(tokens);
-                if (kvp != null)
-                {
-                    table.Add(kvp.Value.Key, kvp.Value.Value);
-                    continue;
-                }
+                return null;
             }
 
-            return table;
+            tokens.Consume();
+
+            string tableName = key.Apply(tokens);
+
+            if (tableName == null)
+            {
+                throw new Exception();
+            }
+
+            if (!tokens.Expect(TokenType.RBrac))
+            {
+                throw new Exception();
+            }
+
+            tokens.Consume();
+
+            return tableName;
         }
     }
 }
