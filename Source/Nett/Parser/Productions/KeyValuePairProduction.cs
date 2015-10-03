@@ -4,7 +4,7 @@ namespace Nett.Parser.Productions
 {
     internal static class KeyValuePairProduction
     {
-        public static Tuple<string, TomlObject> Apply(LookaheadBuffer<Token> tokens)
+        public static Tuple<string, TomlObject> Apply(TokenBuffer tokens)
         {
             var key = KeyProduction.Apply(tokens);
             tokens.ExpectAndConsume(TokenType.Assign);

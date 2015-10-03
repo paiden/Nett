@@ -4,26 +4,26 @@ using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal static class MultilineLiteralStringMatcher 
+    internal static class MultilineLiteralStringMatcher
     {
         private const string StringTag = "'''";
 
-        internal static Token? TryMatch(LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(CharBuffer cs)
         {
             StringBuilder sb = new StringBuilder(256);
-            if (!cs.Expect(StringTag))
+            if (!cs.TryExpect(StringTag))
             {
                 return null;
             }
 
             sb.Append(cs.Consume(3).ToArray());
 
-            while (!cs.End && !cs.Expect(StringTag))
+            while (!cs.End && !cs.TryExpect(StringTag))
             {
                 sb.Append(cs.Consume());
             }
 
-            if (!cs.Expect(StringTag))
+            if (!cs.TryExpect(StringTag))
             {
                 throw new Exception($"Closing '{StringTag}' not found for literal string '{sb.ToString()}'");
             }

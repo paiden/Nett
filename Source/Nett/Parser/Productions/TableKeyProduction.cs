@@ -4,7 +4,7 @@ namespace Nett.Parser.Productions
 {
     internal static class TableKeyProduction
     {
-        public static IList<string> Apply(LookaheadBuffer<Token> tokens)
+        public static IList<string> Apply(TokenBuffer tokens)
         {
             List<string> keyChain = new List<string>();
             var key = KeyProduction.Apply(tokens);

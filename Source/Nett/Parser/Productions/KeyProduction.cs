@@ -2,10 +2,10 @@
 {
     internal static class KeyProduction
     {
-        public static string Apply(LookaheadBuffer<Token> tokens) => ApplyInternal(tokens, required: true);
-        public static string TryApply(LookaheadBuffer<Token> tokens) => ApplyInternal(tokens, required: false);
+        public static string Apply(TokenBuffer tokens) => ApplyInternal(tokens, required: true);
+        public static string TryApply(TokenBuffer tokens) => ApplyInternal(tokens, required: false);
 
-        private static string ApplyInternal(LookaheadBuffer<Token> tokens, bool required)
+        private static string ApplyInternal(TokenBuffer tokens, bool required)
         {
             if (tokens.TryExpect(TokenType.BareKey)) { return tokens.Consume().value; }
             else if (tokens.TryExpect(TokenType.String)) { return tokens.Consume().value.Replace("\"", ""); }

@@ -5,21 +5,21 @@
         private const string T = "true";
         private const string F = "false";
 
-        public static Token? TryMatch(LookaheadBuffer<char> cs)
+        public static Token? TryMatch(CharBuffer cs)
         {
-            if (cs.Expect(T))
+            if (cs.TryExpect(T))
             {
                 cs.Consume(T.Length);
                 return new Token(TokenType.Bool, T);
             }
-            else if (cs.Expect(F))
+            else if (cs.TryExpect(F))
             {
                 cs.Consume(F.Length);
                 return new Token(TokenType.Bool, F);
             }
             else
             {
-                return new Token?();
+                return null;
             }
         }
     }

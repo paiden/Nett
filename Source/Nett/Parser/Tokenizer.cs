@@ -9,16 +9,16 @@ namespace Nett.Parser
         private const int SBS = 256;
 
         private readonly StreamReader reader;
-        private readonly LookaheadBuffer<char> characters;
-        private readonly LookaheadBuffer<Token> tokens;
+        private readonly CharBuffer characters;
+        private readonly TokenBuffer tokens;
 
-        public LookaheadBuffer<Token> Tokens => this.tokens;
+        public TokenBuffer Tokens => this.tokens;
 
         public Tokenizer(Stream sr)
         {
             this.reader = new StreamReader(sr);
-            this.characters = new LookaheadBuffer<char>(this.ReadChar, 64);
-            this.tokens = new LookaheadBuffer<Token>(this.NextToken, 5);
+            this.characters = new CharBuffer(this.ReadChar, 64);
+            this.tokens = new TokenBuffer(this.NextToken, 5);
         }
 
         private char? ReadChar()
@@ -34,7 +34,7 @@ namespace Nett.Parser
                 return null;
             }
 
-            while (!this.characters.End && this.characters.ExpectWhitespace())
+            while (!this.characters.End && this.characters.TryExpectWhitespace())
             {
                 this.characters.Consume();
             }

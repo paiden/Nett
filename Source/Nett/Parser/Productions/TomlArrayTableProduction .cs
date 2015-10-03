@@ -4,7 +4,7 @@ namespace Nett.Parser.Productions
 {
     internal static class TomlArrayTableProduction
     {
-        public static IList<string> TryApply(LookaheadBuffer<Token> tokens)
+        public static IList<string> TryApply(TokenBuffer tokens)
         {
             if (!tokens.TryExpectAt(0, TokenType.LBrac)) { return null; }
             if (!tokens.TryExpectAt(1, TokenType.LBrac)) { return null; }
@@ -12,7 +12,7 @@ namespace Nett.Parser.Productions
             return Apply(tokens);
         }
 
-        public static IList<string> Apply(LookaheadBuffer<Token> tokens)
+        public static IList<string> Apply(TokenBuffer tokens)
         {
             tokens.ExpectAndConsume(TokenType.LBrac);
             tokens.ExpectAndConsume(TokenType.LBrac);

@@ -7,7 +7,7 @@ namespace Nett.Parser.Matchers
     {
         private const char StringTag = '\'';
 
-        internal static Token? TryMatch(LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(CharBuffer cs)
         {
             StringBuilder sb = new StringBuilder(256);
             if (!cs.TryExpect(StringTag))

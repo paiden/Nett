@@ -5,27 +5,27 @@ namespace Nett.Parser.Matchers
 {
     internal static class DateTimeMatcher
     {
-        internal static Token? TryMatch(StringBuilder matchedAlready, LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(StringBuilder matchedAlready, CharBuffer cs)
         {
             var sb = matchedAlready;
             Debug.Assert(cs.TryExpect('-'));
 
             sb.Append(cs.Consume());
 
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect('T')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect('Z'))
             {
                 sb.Append(cs.Consume());
@@ -42,11 +42,11 @@ namespace Nett.Parser.Matchers
             {
                 sb.Append(cs.Consume());
 
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
                 if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
 
                 if (cs.TokenDone())
                 {
@@ -61,17 +61,17 @@ namespace Nett.Parser.Matchers
             {
                 sb.Append(cs.Consume());
 
-                while (cs.ExpectDigit())
+                while (cs.TryExpectDigit())
                 {
                     sb.Append(cs.Consume());
                 }
 
                 if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
                 if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
 
                 if (cs.TokenDone())
                 {

@@ -5,24 +5,24 @@ namespace Nett.Parser.Matchers
 {
     internal static class TimespanMatcher
     {
-        internal static Token? TryMatch(StringBuilder matchedAlready, LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(StringBuilder matchedAlready, CharBuffer cs)
         {
             var sb = matchedAlready;
             Debug.Assert(cs.TryExpect('.'));
             sb.Append(cs.Consume());
 
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect('.')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
 
-            while (!cs.End && cs.ExpectDigit())
+            while (!cs.End && cs.TryExpectDigit())
             {
                 sb.Append(cs.Consume());
             }

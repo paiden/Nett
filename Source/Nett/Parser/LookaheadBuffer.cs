@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Nett.Parser
 {
     [DebuggerDisplay("{DebuggerDisplay}")]
-    internal sealed class LookaheadBuffer<T> where T : struct
+    internal abstract class LookaheadBuffer<T> where T : struct
     {
 
         private readonly T[] buffer;

@@ -8,14 +8,14 @@ namespace Nett.Parser.Matchers
     {
         private const string StringTag = "\"\"\"";
 
-        public static Token? TryMatch(LookaheadBuffer<char> cs)
+        public static Token? TryMatch(CharBuffer cs)
         {
-            if (!cs.Expect(StringTag)) { return null; }
+            if (!cs.TryExpect(StringTag)) { return null; }
 
             StringBuilder sb = new StringBuilder(64);
             sb.Append(cs.Consume(StringTag.Length).ToArray());
 
-            while (!cs.Expect(StringTag))
+            while (!cs.TryExpect(StringTag))
             {
                 if (cs.End)
                 {
@@ -30,7 +30,7 @@ namespace Nett.Parser.Matchers
                 sb.Append(cs.Consume());
             }
 
-            if (!cs.Expect(StringTag))
+            if (!cs.TryExpect(StringTag))
             {
                 throw new Exception($"Closing '{StringTag}' not found for string {sb.ToString()}'");
             }

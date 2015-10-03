@@ -16,7 +16,7 @@ namespace Nett.Parser.Productions
         };
 
 
-        public static TomlObject Apply(LookaheadBuffer<Token> tokens)
+        public static TomlObject Apply(TokenBuffer tokens)
         {
             var value = ParseTomlValue(tokens);
 
@@ -28,7 +28,7 @@ namespace Nett.Parser.Productions
             return value;
         }
 
-        private static TomlObject ParseTomlValue(LookaheadBuffer<Token> tokens)
+        private static TomlObject ParseTomlValue(TokenBuffer tokens)
         {
             if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(tokens); }
             else if (tokens.TryExpect(TokenType.Float)) { return ParseTomlFloat(tokens); }
@@ -128,7 +128,7 @@ namespace Nett.Parser.Productions
             return new TomlString(s, TomlString.TypeOfString.MultilineLiteral);
         }
 
-        private static TomlArray ParseTomlArray(LookaheadBuffer<Token> tokens)
+        private static TomlArray ParseTomlArray(TokenBuffer tokens)
         {
             TomlArray a = new TomlArray();
 

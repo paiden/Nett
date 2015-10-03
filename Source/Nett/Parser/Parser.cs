@@ -7,7 +7,7 @@ namespace Nett.Parser
     internal sealed class Parser
     {
         private readonly Tokenizer tokenizer;
-        private LookaheadBuffer<Token> Tokens => this.tokenizer.Tokens;
+        private TokenBuffer Tokens => this.tokenizer.Tokens;
 
 
 

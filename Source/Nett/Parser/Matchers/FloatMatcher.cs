@@ -5,7 +5,7 @@ namespace Nett.Parser.Matchers
 {
     internal static class FloatMatcher
     {
-        internal static Token? TryMatch(StringBuilder beforeFraction, LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(StringBuilder beforeFraction, CharBuffer cs)
         {
             if (cs.TryExpect('.'))
             {

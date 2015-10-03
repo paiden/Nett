@@ -7,7 +7,7 @@ namespace Nett.Parser.Productions
 {
     internal sealed class ExpressionsProduction
     {
-        public static TomlTable TryApply(TomlTable current, TomlTable root, LookaheadBuffer<Token> tokens)
+        public static TomlTable TryApply(TomlTable current, TomlTable root, TokenBuffer tokens)
         {
             var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
             if (arrayKeyChain != null)

@@ -16,7 +16,7 @@ namespace Nett.UnitTests.Parser
             var content = "This is";
             var sb = new StringBuilder();
             var sr = new StreamReader(content.ToStream());
-            var lab = new LookaheadBuffer<char>(() =>
+            var lab = new CharBuffer(() =>
             {
                 int read = sr.Read();
                 return read != -1 ? new char?((char)read) : new char?();

@@ -47,6 +47,7 @@
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="Parser\Matchers\BareKeyMatcher.cs" />
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
+    <Compile Include="Parser\CharBuffer.cs" />
     <Compile Include="Parser\Matchers\CharExtensions.cs" />
     <Compile Include="Parser\Matchers\CharLookaheadBufferExtensions.cs" />
     <Compile Include="Parser\Matchers\CommentMatcher.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Parser\Productions\TomlTableProduction.cs" />
     <Compile Include="Parser\Productions\ValueProduction.cs" />
     <Compile Include="Parser\Token.cs" />
+    <Compile Include="Parser\TokenBuffer.cs" />
     <Compile Include="Parser\Tokenizer.cs" />
     <Compile Include="Parser\TokenLookaheadBufferExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
