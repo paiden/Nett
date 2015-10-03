@@ -8,7 +8,6 @@ namespace Nett.Parser
     {
         private const int SBS = 256;
 
-        private static readonly Token Eof = new Token(TokenType.Eof, null);
         private readonly MatcherBase[] Matchers = new MatcherBase[]
         {
             new SymbolsMatcher(),
@@ -35,14 +34,14 @@ namespace Nett.Parser
         private char? ReadChar()
         {
             var r = this.reader.Read();
-            return r != -1 ? new char?((char)r) : new char?();
+            return r != '\uffff' && r != -1 ? new char?((char)r) : new char?();
         }
 
         private Token? NextToken()
         {
             if (this.characters.End)
             {
-                return Eof;
+                return null;
             }
 
             while (!this.characters.End && this.characters.ExpectWhitespace())
@@ -52,7 +51,7 @@ namespace Nett.Parser
 
             if (this.characters.End)
             {
-                return Eof;
+                return null;
             }
 
             foreach (var m in Matchers)

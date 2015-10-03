@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
@@ -292,6 +293,16 @@ namespace Nett.UnitTests.Parser
             t.Tokens.PeekAt(2).type.Should().Be(TokenType.LBrac);
             t.Tokens.PeekAt(3).type.Should().Be(TokenType.Float);
             t.Tokens.PeekAt(4).type.Should().Be(TokenType.RBrac);
+        }
+
+        [Theory]
+        [InlineData("d = 1e6")]
+        [Description("An error in the tokenizer caused this test to produce 5 instead of 3 tokens")]
+        public void TokenizeDoubleKeyValuePair(string input)
+        {
+            var t = new Tokenizer(input.ToStream());
+
+            t.Tokens.ItemsAvailable.Should().Be(3);
         }
 
         private static string TokensToString(IEnumerable<Token> tokens)
