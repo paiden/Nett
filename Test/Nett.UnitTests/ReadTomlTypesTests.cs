@@ -73,7 +73,7 @@ namespace Nett.UnitTests
         [Fact]
         public void Deseriailze_SingleLineStringWithNewLine_FailsToDeserialize()
         {
-            Assert.Throws<Exception>(() => Toml.Read("str = \"\r\n\""));
+            Assert.Throws<ArgumentException>(() => Toml.Read("str = \"\r\n\""));
         }
 
         [Theory]

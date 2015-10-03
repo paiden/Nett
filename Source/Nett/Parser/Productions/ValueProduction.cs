@@ -77,6 +77,11 @@ namespace Nett.Parser.Productions
 
             Debug.Assert(t.type == TokenType.String);
 
+            if (t.value.Contains("\n"))
+            {
+                throw new ArgumentException($"String '{t.value}' is invalid because it contains newlines.");
+            }
+
             var s = t.value.TrimNChars(1).Unescape();
 
             return new TomlString(s, TomlString.TypeOfString.Normal);
