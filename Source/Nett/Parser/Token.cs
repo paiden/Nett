@@ -6,6 +6,7 @@ namespace Nett.Parser
     {
         Unknown,
 
+        Comment,
         Dot,
         Eof,
         BareKey,

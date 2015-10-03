@@ -2,9 +2,9 @@
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class KeyValuePairProduction : Production<Tuple<string, TomlObject>>
+    internal static class KeyValuePairProduction
     {
-        public override Tuple<string, TomlObject> Apply(LookaheadBuffer<Token> tokens)
+        public static Tuple<string, TomlObject> Apply(LookaheadBuffer<Token> tokens)
         {
             var key = KeyProduction.Apply(tokens);
             tokens.ExpectAndConsume(TokenType.Assign);

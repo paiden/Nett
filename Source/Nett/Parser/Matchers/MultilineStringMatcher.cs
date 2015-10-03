@@ -4,18 +4,15 @@ using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class MultilineStringMatcher : MatcherBase
+    internal static class MultilineStringMatcher
     {
         private const string StringTag = "\"\"\"";
 
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        public static Token? TryMatch(LookaheadBuffer<char> cs)
         {
-            StringBuilder sb = new StringBuilder(128);
-            if (!cs.Expect(StringTag))
-            {
-                return NoMatch;
-            }
+            if (!cs.Expect(StringTag)) { return null; }
 
+            StringBuilder sb = new StringBuilder(64);
             sb.Append(cs.Consume(StringTag.Length).ToArray());
 
             while (!cs.Expect(StringTag))

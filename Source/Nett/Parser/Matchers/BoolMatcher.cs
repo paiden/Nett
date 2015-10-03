@@ -1,11 +1,11 @@
 ﻿namespace Nett.Parser.Matchers
 {
-    internal sealed class BoolMatcher : MatcherBase
+    internal static class BoolMatcher
     {
         private const string T = "true";
         private const string F = "false";
 
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        public static Token? TryMatch(LookaheadBuffer<char> cs)
         {
             if (cs.Expect(T))
             {

@@ -5,19 +5,19 @@ namespace Nett.Parser.Matchers
     /// <summary>
     /// Note this doesn't match the all bare keys e.g. '1234'. So all keys are only recognized at the parser level.
     /// </summary>
-    internal class BareKeyMatcher : MatcherBase
+    internal static class BareKeyMatcher
     {
-        private readonly StringBuilder alreadyMatched;
-        public BareKeyMatcher(StringBuilder alreadyMatched)
+        public static Token? TryContinueMatch(StringBuilder alreadyMatched, LookaheadBuffer<char> cs)
         {
-            this.alreadyMatched = alreadyMatched;
+            return TryMatchInternal(alreadyMatched, cs);
         }
 
-        public BareKeyMatcher()
+        public static Token? TryMatch(LookaheadBuffer<char> cs)
         {
+            return TryMatchInternal(null, cs);
         }
 
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        private static Token? TryMatchInternal(StringBuilder alreadyMatched, LookaheadBuffer<char> cs)
         {
             var sb = alreadyMatched ?? new StringBuilder(64);
 

@@ -28,8 +28,7 @@ namespace Nett.Parser
 
             while (!Tokens.End)
             {
-                var exp = new ExpressionsProduction(current, root);
-                current = exp.Apply(this.Tokens);
+                current = ExpressionsProduction.TryApply(current, root, this.Tokens);
                 if (current == null)
                 {
                     if (!Tokens.End)

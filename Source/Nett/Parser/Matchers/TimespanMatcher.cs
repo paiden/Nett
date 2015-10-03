@@ -3,42 +3,37 @@ using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class TimespanMatcher : MatcherBase
+    internal static class TimespanMatcher
     {
-        private readonly StringBuilder sb;
-        public TimespanMatcher(StringBuilder sb)
+        internal static Token? TryMatch(StringBuilder matchedAlready, LookaheadBuffer<char> cs)
         {
-            this.sb = sb;
-        }
-
-        internal override Token? Match(LookaheadBuffer<char> cs)
-        {
+            var sb = matchedAlready;
             Debug.Assert(cs.TryExpect('.'));
-            this.sb.Append(cs.Consume());
+            sb.Append(cs.Consume());
 
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect('.')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect('.')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
 
             while (!cs.End && cs.ExpectDigit())
             {
-                this.sb.Append(cs.Consume());
+                sb.Append(cs.Consume());
             }
 
             if (cs.TokenDone())
             {
-                return new Token(TokenType.Timespan, this.sb.ToString());
+                return new Token(TokenType.Timespan, sb.ToString());
             }
             else
             {
-                return NoMatch;
+                return null;
             }
         }
     }

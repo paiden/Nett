@@ -8,16 +8,6 @@ namespace Nett.Parser
     {
         private const int SBS = 256;
 
-        private readonly MatcherBase[] Matchers = new MatcherBase[]
-        {
-            new SymbolsMatcher(),
-            new IntMatcher(),
-            new BoolMatcher(),
-            new StringMatcher(),
-            new LiteralStringMatcher(),
-            new BareKeyMatcher(),
-        };
-
         private readonly StreamReader reader;
         private readonly LookaheadBuffer<char> characters;
         private readonly LookaheadBuffer<Token> tokens;
@@ -54,14 +44,17 @@ namespace Nett.Parser
                 return null;
             }
 
-            foreach (var m in Matchers)
-            {
-                var tkn = m.Match(this.characters);
+            var token = SymbolsMatcher.TryMatch(this.characters)
+                ?? BoolMatcher.TryMatch(this.characters)
+                ?? StringMatcher.TryMatch(this.characters)
+                ?? LiteralStringMatcher.TryMatch(this.characters)
+                ?? IntMatcher.TryMatch(this.characters)
+                ?? BareKeyMatcher.TryMatch(this.characters)
+                ?? CommentMatcher.TryMatch(this.characters);
 
-                if (tkn.HasValue)
-                {
-                    return tkn;
-                }
+            if (token != null)
+            {
+                return token;
             }
 
             return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd());

@@ -4,16 +4,16 @@ using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class MultilineLiteralStringMatcher : MatcherBase
+    internal static class MultilineLiteralStringMatcher 
     {
         private const string StringTag = "'''";
 
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(LookaheadBuffer<char> cs)
         {
             StringBuilder sb = new StringBuilder(256);
             if (!cs.Expect(StringTag))
             {
-                return NoMatch;
+                return null;
             }
 
             sb.Append(cs.Consume(3).ToArray());

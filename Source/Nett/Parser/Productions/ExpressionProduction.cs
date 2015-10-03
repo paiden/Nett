@@ -5,25 +5,14 @@ using System.Linq;
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class ExpressionsProduction : Production<TomlTable>
+    internal sealed class ExpressionsProduction
     {
-        private static readonly KeyValuePairProduction keyValueProduction = new KeyValuePairProduction();
-
-        private TomlTable root;
-        private TomlTable current;
-
-        public ExpressionsProduction(TomlTable current, TomlTable root)
-        {
-            this.current = current;
-            this.root = root;
-        }
-
-        public override TomlTable Apply(LookaheadBuffer<Token> tokens)
+        public static TomlTable TryApply(TomlTable current, TomlTable root, LookaheadBuffer<Token> tokens)
         {
             var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
             if (arrayKeyChain != null)
             {
-                var addTo = CalculateTargetTable(this.root, arrayKeyChain);
+                var addTo = CalculateTargetTable(root, arrayKeyChain);
                 var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last());
                 var newArrayEntry = new TomlTable();
                 arr.Add(newArrayEntry);
@@ -34,7 +23,7 @@ namespace Nett.Parser.Productions
             if (tableKeyChain != null)
             {
                 var newTable = new TomlTable();
-                var addTo = GetTargetTableForTable(this.root, tableKeyChain);
+                var addTo = GetTargetTableForTable(root, tableKeyChain);
 
                 string name = tableKeyChain.Last();
                 var existingRow = addTo.TryGet<TomlObject>(name);
@@ -50,7 +39,7 @@ namespace Nett.Parser.Productions
                 return newTable;
             }
 
-            var kvp = keyValueProduction.Apply(tokens);
+            var kvp = KeyValuePairProduction.Apply(tokens);
             if (kvp != null)
             {
                 current.Add(kvp.Item1, kvp.Item2);

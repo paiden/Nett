@@ -21,3 +21,6 @@ No releases yet
 + Value Validation when reading/writing TOML objects/files
 + Better error message in many cases
     +  `@a = [""C:\dir1""]`. Very weird error message because tokenizer fails, so parser hasn't chance to produce better message.
+
+# Noted TestCases
++ Error message when the fraction part of a float is missing

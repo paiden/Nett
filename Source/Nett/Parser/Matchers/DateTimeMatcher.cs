@@ -3,99 +3,94 @@ using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class DateTimeMatcher : MatcherBase
+    internal static class DateTimeMatcher
     {
-        private readonly StringBuilder sb;
-        public DateTimeMatcher(StringBuilder sb)
+        internal static Token? TryMatch(StringBuilder matchedAlready, LookaheadBuffer<char> cs)
         {
-            this.sb = sb;
-        }
-
-        internal override Token? Match(LookaheadBuffer<char> cs)
-        {
+            var sb = matchedAlready;
             Debug.Assert(cs.TryExpect('-'));
 
-            this.sb.Append(cs.Consume());
+            sb.Append(cs.Consume());
 
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect('T')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect('T')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect('Z'))
             {
-                this.sb.Append(cs.Consume());
+                sb.Append(cs.Consume());
                 if (cs.TokenDone())
                 {
-                    return this.FinishDatetimeToken();
+                    return FinishDatetimeToken(sb);
                 }
                 else
                 {
-                    return NoMatch;
+                    return null;
                 }
             }
             else if (cs.TryExpect('-'))
             {
-                this.sb.Append(cs.Consume());
+                sb.Append(cs.Consume());
 
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
 
                 if (cs.TokenDone())
                 {
-                    return this.FinishDatetimeToken();
+                    return FinishDatetimeToken(sb);
                 }
                 else
                 {
-                    return NoMatch;
+                    return null;
                 }
             }
             else if (cs.TryExpect('.'))
             {
-                this.sb.Append(cs.Consume());
+                sb.Append(cs.Consume());
 
                 while (cs.ExpectDigit())
                 {
-                    this.sb.Append(cs.Consume());
+                    sb.Append(cs.Consume());
                 }
 
-                if (cs.TryExpect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.ExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
 
                 if (cs.TokenDone())
                 {
-                    return this.FinishDatetimeToken();
+                    return FinishDatetimeToken(sb);
                 }
                 else
                 {
-                    return NoMatch;
+                    return null;
                 }
             }
             else
             {
-                return NoMatch;
+                return null;
             }
         }
 
-        private Token? FinishDatetimeToken()
+        private static Token? FinishDatetimeToken(StringBuilder sb)
         {
-            return new Token(TokenType.DateTime, this.sb.ToString());
+            return new Token(TokenType.DateTime, sb.ToString());
         }
     }
 }

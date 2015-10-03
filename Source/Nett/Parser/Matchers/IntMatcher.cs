@@ -2,16 +2,14 @@
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class IntMatcher : MatcherBase
+    internal static class IntMatcher
     {
-        private bool hasPos = false;
-        private bool hasSign = false;
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(LookaheadBuffer<char> cs)
         {
-            this.hasPos = cs.TryExpect('+');
-            this.hasSign = this.hasPos || cs.TryExpect('-');
+            bool hasPos = cs.TryExpect('+');
+            bool hasSign = hasPos || cs.TryExpect('-');
 
-            if (this.hasSign || cs.ExpectInRange('0', '9'))
+            if (hasSign || cs.ExpectInRange('0', '9'))
             {
                 StringBuilder sb = new StringBuilder(16);
                 sb.Append(cs.Consume());
@@ -21,15 +19,13 @@ namespace Nett.Parser.Matchers
                     sb.Append(cs.Consume());
                 }
 
-                if (cs.TryExpect('-') && sb.Length == 4 && !this.hasSign)
+                if (cs.TryExpect('-') && sb.Length == 4 && !hasSign)
                 {
-                    var dtm = new DateTimeMatcher(sb);
-                    return dtm.Match(cs);
+                    return DateTimeMatcher.TryMatch(sb, cs);
                 }
-                else if (cs.TryExpect('.') && cs.ExpectAt(3, ':') && !this.hasPos)
+                else if (cs.TryExpect('.') && cs.ExpectAt(3, ':') && !hasPos)
                 {
-                    var tsm = new TimespanMatcher(sb);
-                    return tsm.Match(cs);
+                    return TimespanMatcher.TryMatch(sb, cs);
                 }
 
                 if (cs.End || cs.ExpectWhitespace() || cs.TokenDone())
@@ -40,19 +36,17 @@ namespace Nett.Parser.Matchers
                 {
                     if (cs.TryExpect('E') || cs.TryExpect('e') || cs.TryExpect('.'))
                     {
-                        var matcher = new FloatMatcher(sb);
-                        return matcher.Match(cs);
+                        return FloatMatcher.TryMatch(sb, cs);
                     }
                     else
                     {
-                        var matcher = new BareKeyMatcher(sb);
-                        return matcher.Match(cs);
+                        return BareKeyMatcher.TryContinueMatch(sb, cs);
                     }
                 }
             }
             else
             {
-                return new Token?();
+                return null;
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿namespace Nett.Parser.Matchers
 {
-    internal sealed class SymbolsMatcher : MatcherBase
+    internal static class SymbolsMatcher
     {
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(LookaheadBuffer<char> cs)
         {
             if (cs.TryExpect('[')) return new Token(TokenType.LBrac, new string(cs.Consume(), 1));
             else if (cs.TryExpect(']')) return new Token(TokenType.RBrac, new string(cs.Consume(), 1));

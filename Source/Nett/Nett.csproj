@@ -49,12 +49,12 @@
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
     <Compile Include="Parser\Matchers\CharExtensions.cs" />
     <Compile Include="Parser\Matchers\CharLookaheadBufferExtensions.cs" />
+    <Compile Include="Parser\Matchers\CommentMatcher.cs" />
     <Compile Include="Parser\Matchers\DateTimeMatcher.cs" />
     <Compile Include="Parser\Matchers\FloatMatcher.cs" />
     <Compile Include="Parser\Matchers\IntMatcher.cs" />
     <Compile Include="Parser\LookaheadBuffer.cs" />
     <Compile Include="Parser\Matchers\LiteralStringMatcher.cs" />
-    <Compile Include="Parser\Matchers\MatcherBase.cs" />
     <Compile Include="Parser\Matchers\MultilineLiteralStringMatcher.cs" />
     <Compile Include="Parser\Matchers\MultilineStringMatcher.cs" />
     <Compile Include="Parser\Matchers\StringMatcher.cs" />
@@ -66,7 +66,6 @@
     <Compile Include="Parser\Productions\KeyValuePairProduction.cs" />
     <Compile Include="Parser\Productions\TableKeyProduction.cs" />
     <Compile Include="Parser\Productions\TomlArrayTableProduction .cs" />
-    <Compile Include="Parser\Productions\Production.cs" />
     <Compile Include="Parser\Productions\TomlKey.cs" />
     <Compile Include="Parser\Productions\TomlTableProduction.cs" />
     <Compile Include="Parser\Productions\ValueProduction.cs" />

@@ -3,35 +3,27 @@ using System.Text;
 
 namespace Nett.Parser.Matchers
 {
-    internal sealed class FloatMatcher : MatcherBase
+    internal static class FloatMatcher
     {
-        private readonly StringBuilder sb;
-        public FloatMatcher(StringBuilder beforeFraction)
-        {
-            this.sb = beforeFraction;
-        }
-
-        internal override Token? Match(LookaheadBuffer<char> cs)
+        internal static Token? TryMatch(StringBuilder beforeFraction, LookaheadBuffer<char> cs)
         {
             if (cs.TryExpect('.'))
             {
-                this.sb.Append(cs.Consume());
-                var im = new IntMatcher();
-                var intFrac = im.Match(cs);
-                this.sb.Append(intFrac.Value.value);
+                beforeFraction.Append(cs.Consume());
+                var intFrac = IntMatcher.TryMatch(cs);
+                beforeFraction.Append(intFrac.Value.value);
             }
 
             if (cs.TryExpect('e') || cs.TryExpect('E'))
             {
-                this.sb.Append(cs.Consume());
-                var fractionMatcher = new IntMatcher();
-                var intPar = fractionMatcher.Match(cs);
-                this.sb.Append(intPar.Value.value);
+                beforeFraction.Append(cs.Consume());
+                var intPar = IntMatcher.TryMatch(cs);
+                beforeFraction.Append(intPar.Value.value);
             }
 
             if (cs.TokenDone())
             {
-                return new Token(TokenType.Float, this.sb.ToString());
+                return new Token(TokenType.Float, beforeFraction.ToString());
             }
             else
             {
