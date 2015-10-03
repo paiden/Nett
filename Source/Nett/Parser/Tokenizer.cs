@@ -44,6 +44,9 @@ namespace Nett.Parser
                 return null;
             }
 
+            int line = this.characters.Line;
+            int column = this.characters.Column;
+
             var token = SymbolsMatcher.TryMatch(this.characters)
                 ?? BoolMatcher.TryMatch(this.characters)
                 ?? StringMatcher.TryMatch(this.characters)
@@ -54,10 +57,12 @@ namespace Nett.Parser
 
             if (token != null)
             {
-                return token;
+                return new Token(token.Value.type, token.Value.value) { line = line, col = column };
             }
-
-            return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd());
+            else
+            {
+                return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd()) { line = line, col = column };
+            }
         }
 
 

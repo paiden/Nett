@@ -60,7 +60,7 @@ namespace Nett.Parser
 
         public bool End => readIndex == -1 && this.writeIndex == -1;
 
-        public T Consume()
+        public virtual T Consume()
         {
             T ret = this.buffer[this.readIndex];
 

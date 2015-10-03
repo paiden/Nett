@@ -15,9 +15,27 @@ namespace Nett.Parser
             '\u3000',
         };
 
+        public int Line { get; private set; }
+        public int Column { get; private set; }
+
         public CharBuffer(Func<char?> read, int lookAhead)
             : base(read, lookAhead)
         {
+            this.Line = 1;
+            this.Column = 1;
+        }
+
+        public override char Consume()
+        {
+            this.Column++; //TODO adapt counting for non visible characters, ignore for now not important enough
+
+            if (this.Peek() == '\n')
+            {
+                this.Line++;
+                this.Column = 1;
+            }
+
+            return base.Consume();
         }
 
         public IList<char> Consume(int count)

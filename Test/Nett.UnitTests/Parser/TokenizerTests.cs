@@ -196,6 +196,26 @@ namespace Nett.UnitTests.Parser
             tkn.value.Should().Be(token);
         }
 
+        [Fact]
+        public void TokizingAssignsLineAndColumnNumbersOneBased()
+        {
+            string input =
+@"x
+ x
+  x";
+
+            var t = new Tokenizer(input.ToStream());
+
+            t.Tokens.PeekAt(0).line.Should().Be(1);
+            t.Tokens.PeekAt(0).col.Should().Be(1);
+
+            t.Tokens.PeekAt(1).line.Should().Be(2);
+            t.Tokens.PeekAt(1).col.Should().Be(2);
+
+            t.Tokens.PeekAt(2).line.Should().Be(3);
+            t.Tokens.PeekAt(2).col.Should().Be(3);
+        }
+
         internal static IEnumerable<Token> Tokens
         {
             get
