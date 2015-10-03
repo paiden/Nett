@@ -305,6 +305,20 @@ namespace Nett.UnitTests.Parser
             t.Tokens.ItemsAvailable.Should().Be(3);
         }
 
+        [Fact]
+        [Description("An error caused tokenizer to produce mixed up tokens")]
+        public void TokenizeLongFloats()
+        {
+            var t = new Tokenizer(TomlStrings.Valid.LongFloats.ToStream());
+
+            t.Tokens.Consume().value.Should().Be("longpi");
+            t.Tokens.Consume().value.Should().Be("=");
+            t.Tokens.Consume().value.Should().Be("3.141592653589793");
+            t.Tokens.Consume().value.Should().Be("neglongpi");
+            t.Tokens.Consume().value.Should().Be("=");
+            t.Tokens.Consume().value.Should().Be("-3.141592653589793");
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();

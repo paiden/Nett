@@ -7,25 +7,26 @@ namespace Nett.Parser.Matchers
     /// </summary>
     internal class BareKeyMatcher : MatcherBase
     {
-        private StringBuilder sb;
+        private readonly StringBuilder alreadyMatched;
         public BareKeyMatcher(StringBuilder alreadyMatched)
         {
-            this.sb = alreadyMatched;
+            this.alreadyMatched = alreadyMatched;
         }
 
         public BareKeyMatcher()
         {
-            this.sb = new StringBuilder();
         }
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
+            var sb = alreadyMatched ?? new StringBuilder(64);
+
             while (!cs.End && cs.Peek().IsBareKeyChar())
             {
-                this.sb.Append(cs.Consume());
+                sb.Append(cs.Consume());
             }
 
-            return this.sb.Length > 0 ? new Token(TokenType.BareKey, sb.ToString()) : new Token?();
+            return sb.Length > 0 ? new Token(TokenType.BareKey, sb.ToString()) : new Token?();
         }
     }
 }
