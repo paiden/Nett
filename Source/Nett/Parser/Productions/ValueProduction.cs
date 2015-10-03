@@ -5,38 +5,46 @@ using System.Linq;
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class ValueProduction : Production<TomlObject>
+    internal static class ValueProduction
     {
         private static readonly char[] WhitspaceCharSet =
-{
+        {
             '\u0009', '\u000A', '\u000B', '\u000D', '\u0020', '\u0085', '\u00A0',
             '\u1680', '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006',
             '\u2007', '\u2008', '\u2009', '\u200A', '\u2028', '\u2029', '\u202F', '\u205F',
             '\u3000',
         };
 
-        public override TomlObject Apply(LookaheadBuffer<Token> tokens)
+
+        public static TomlObject Apply(LookaheadBuffer<Token> tokens)
         {
-            return this.ParseTomlValue(tokens);
+            var value = ParseTomlValue(tokens);
+
+            if (value == null)
+            {
+                throw new Exception($"Expected a value while parsing key value pair but value incompatible token '{tokens.Peek().value}' was found.");
+            }
+
+            return value;
         }
 
-        private TomlObject ParseTomlValue(LookaheadBuffer<Token> tokens)
+        private static TomlObject ParseTomlValue(LookaheadBuffer<Token> tokens)
         {
-            if (tokens.Expect(TokenType.Integer)) { return this.ParseTomlInt(tokens); }
-            else if (tokens.Expect(TokenType.Float)) { return ParseTomlFloat(tokens); }
-            else if (tokens.Expect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(tokens.Consume().value)); }
-            else if (tokens.Expect(TokenType.Timespan)) { return new TomlTimeSpan(TimeSpan.Parse(tokens.Consume().value, CultureInfo.InvariantCulture)); }
-            else if (tokens.Expect(TokenType.String)) { return ParseStringValue(tokens); }
-            else if (tokens.Expect(TokenType.LiteralString)) { return ParseLiteralString(tokens); }
-            else if (tokens.Expect(TokenType.MultilineString)) { return ParseMultilineString(tokens); }
-            else if (tokens.Expect(TokenType.MultilineLiteralString)) { return this.ParseMultilineLiteralString(tokens); }
-            else if (tokens.Expect(TokenType.Bool)) { return new TomlBool(bool.Parse(tokens.Consume().value)); }
-            else if (tokens.Expect(TokenType.LBrac)) { return this.ParseTomlArray(tokens); }
+            if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(tokens); }
+            else if (tokens.TryExpect(TokenType.Float)) { return ParseTomlFloat(tokens); }
+            else if (tokens.TryExpect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(tokens.Consume().value)); }
+            else if (tokens.TryExpect(TokenType.Timespan)) { return new TomlTimeSpan(TimeSpan.Parse(tokens.Consume().value, CultureInfo.InvariantCulture)); }
+            else if (tokens.TryExpect(TokenType.String)) { return ParseStringValue(tokens); }
+            else if (tokens.TryExpect(TokenType.LiteralString)) { return ParseLiteralString(tokens); }
+            else if (tokens.TryExpect(TokenType.MultilineString)) { return ParseMultilineString(tokens); }
+            else if (tokens.TryExpect(TokenType.MultilineLiteralString)) { return ParseMultilineLiteralString(tokens); }
+            else if (tokens.TryExpect(TokenType.Bool)) { return new TomlBool(bool.Parse(tokens.Consume().value)); }
+            else if (tokens.TryExpect(TokenType.LBrac)) { return ParseTomlArray(tokens); }
 
             return null;
         }
 
-        private TomlInt ParseTomlInt(LookaheadBuffer<Token> tokens)
+        private static TomlInt ParseTomlInt(LookaheadBuffer<Token> tokens)
         {
             var token = tokens.Consume();
 
@@ -48,7 +56,7 @@ namespace Nett.Parser.Productions
             return new TomlInt(long.Parse(token.value.Replace("_", "")));
         }
 
-        private TomlFloat ParseTomlFloat(LookaheadBuffer<Token> tokens)
+        private static TomlFloat ParseTomlFloat(LookaheadBuffer<Token> tokens)
         {
             var floatToken = tokens.Consume();
 
@@ -63,7 +71,7 @@ namespace Nett.Parser.Productions
             return new TomlFloat(double.Parse(floatToken.value.Replace("_", ""), CultureInfo.InvariantCulture));
         }
 
-        private TomlString ParseStringValue(LookaheadBuffer<Token> tokens)
+        private static TomlString ParseStringValue(LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
 
@@ -74,7 +82,7 @@ namespace Nett.Parser.Productions
             return new TomlString(s, TomlString.TypeOfString.Normal);
         }
 
-        private TomlString ParseLiteralString(LookaheadBuffer<Token> tokens)
+        private static TomlString ParseLiteralString(LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
 
@@ -85,7 +93,7 @@ namespace Nett.Parser.Productions
             return new TomlString(s, TomlString.TypeOfString.Literal);
         }
 
-        private TomlString ParseMultilineString(LookaheadBuffer<Token> tokens)
+        private static TomlString ParseMultilineString(LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.MultilineString);
@@ -101,7 +109,7 @@ namespace Nett.Parser.Productions
             return new TomlString(s, TomlString.TypeOfString.Multiline);
         }
 
-        private TomlString ParseMultilineLiteralString(LookaheadBuffer<Token> tokens)
+        private static TomlString ParseMultilineLiteralString(LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.MultilineLiteralString);
@@ -115,30 +123,30 @@ namespace Nett.Parser.Productions
             return new TomlString(s, TomlString.TypeOfString.MultilineLiteral);
         }
 
-        private TomlArray ParseTomlArray(LookaheadBuffer<Token> tokens)
+        private static TomlArray ParseTomlArray(LookaheadBuffer<Token> tokens)
         {
             TomlArray a = new TomlArray();
 
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.LBrac);
 
-            var v = this.ParseTomlValue(tokens);
+            var v = ParseTomlValue(tokens);
             if (v != null)
             {
                 a.Add(v);
 
-                while (tokens.Expect(TokenType.Comma) && !tokens.ExpectAt(1, TokenType.RBrac))
+                while (tokens.TryExpect(TokenType.Comma) && !tokens.TryExpectAt(1, TokenType.RBrac))
                 {
                     tokens.Consume();
 
-                    v = this.ParseTomlValue(tokens);
+                    v = ParseTomlValue(tokens);
                     if (v != null)
                     {
                         a.Add(v);
                     }
                     else
                     {
-                        if (tokens.Expect(TokenType.RBrac))
+                        if (tokens.TryExpect(TokenType.RBrac))
                         {
                             tokens.Consume();
                             return a;
@@ -151,9 +159,9 @@ namespace Nett.Parser.Productions
                 }
             }
 
-            if (tokens.Expect(TokenType.Comma)) { tokens.Consume(); }
+            if (tokens.TryExpect(TokenType.Comma)) { tokens.Consume(); }
 
-            if (tokens.Expect(TokenType.RBrac))
+            if (tokens.TryExpect(TokenType.RBrac))
             {
                 tokens.Consume();
             }

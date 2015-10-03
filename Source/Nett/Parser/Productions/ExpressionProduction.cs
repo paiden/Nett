@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Nett.Parser.Productions
 {
     internal sealed class ExpressionsProduction : Production<TomlTable>
     {
         private static readonly KeyValuePairProduction keyValueProduction = new KeyValuePairProduction();
-        private static readonly TomlTableProduction tomlTableProduction = new TomlTableProduction();
-        private static readonly TomlArrayTableProduction arrayTableProduction = new TomlArrayTableProduction();
 
         private TomlTable root;
         private TomlTable current;
@@ -19,23 +20,22 @@ namespace Nett.Parser.Productions
 
         public override TomlTable Apply(LookaheadBuffer<Token> tokens)
         {
-            var arrayKey = arrayTableProduction.Apply(tokens);
-            if (arrayKey != null)
+            var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
+            if (arrayKeyChain != null)
             {
-                string name = CalcArrayName(arrayKey);
-                var addTo = CalculateTargetTable(this.root, arrayKey);
-                var arr = GetExistingOrCreateAndAdd(addTo, name);
+                var addTo = CalculateTargetTable(this.root, arrayKeyChain);
+                var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last());
                 var newArrayEntry = new TomlTable();
                 arr.Add(newArrayEntry);
                 return newArrayEntry;
             }
 
-            var tableKey = tomlTableProduction.Apply(tokens);
-            if (tableKey != null)
+            var tableKeyChain = TomlTableProduction.TryApply(tokens);
+            if (tableKeyChain != null)
             {
                 var newTable = new TomlTable();
-                var addTo = CalculateTargetTable(this.root, tableKey);
-                addTo.Add(tableKey, newTable);
+                var addTo = CalculateTargetTable(this.root, tableKeyChain);
+                addTo.Add(tableKeyChain.Last(), newTable);
                 return newTable;
             }
 
@@ -49,9 +49,21 @@ namespace Nett.Parser.Productions
             return null;
         }
 
-        private static TomlTable CalculateTargetTable(TomlTable root, string key)
+        private static TomlTable CalculateTargetTable(TomlTable root, IList<string> keyChain)
         {
-            return root;
+            var tgt = root;
+            for (int i = 0; i < keyChain.Count - 1; i++)
+            {
+                var tmp = tgt.Get(keyChain[i]);
+                var tbl = tmp as TomlTable;
+                var arr = tmp as TomlTableArray;
+
+                Debug.Assert(tbl != null || arr != null);
+
+                tgt = tbl ?? arr.Last();
+            }
+
+            return tgt;
         }
 
         private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name)

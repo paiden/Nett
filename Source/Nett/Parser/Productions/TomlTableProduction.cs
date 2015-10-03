@@ -1,35 +1,17 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Nett.Parser.Productions
 {
-    internal sealed class TomlTableProduction : Production<string>
+    internal static class TomlTableProduction
     {
-        private static readonly KeyProduction key = new KeyProduction();
+        public static IList<string> TryApply(LookaheadBuffer<Token> tokens) => !tokens.TryExpect(TokenType.LBrac) ? null : Apply(tokens);
 
-        public override string Apply(LookaheadBuffer<Token> tokens)
+        public static IList<string> Apply(LookaheadBuffer<Token> tokens)
         {
-            if (!tokens.Expect(TokenType.LBrac))
-            {
-                return null;
-            }
-
-            tokens.Consume();
-
-            string tableName = key.Apply(tokens);
-
-            if (tableName == null)
-            {
-                throw new Exception();
-            }
-
-            if (!tokens.Expect(TokenType.RBrac))
-            {
-                throw new Exception();
-            }
-
-            tokens.Consume();
-
-            return tableName;
+            tokens.ExpectAndConsume(TokenType.LBrac);
+            IList<string> tableKeyChain = TableKeyProduction.Apply(tokens);
+            tokens.ExpectAndConsume(TokenType.RBrac);
+            return tableKeyChain;
         }
     }
 }

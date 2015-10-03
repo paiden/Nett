@@ -13,25 +13,25 @@ namespace Nett.Parser.Matchers
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            Debug.Assert(cs.Expect('-'));
+            Debug.Assert(cs.TryExpect('-'));
 
             this.sb.Append(cs.Consume());
 
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect('T')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect('T')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect('Z'))
+            if (cs.TryExpect('Z'))
             {
                 this.sb.Append(cs.Consume());
                 if (cs.TokenDone())
@@ -43,13 +43,13 @@ namespace Nett.Parser.Matchers
                     return NoMatch;
                 }
             }
-            else if (cs.Expect('-'))
+            else if (cs.TryExpect('-'))
             {
                 this.sb.Append(cs.Consume());
 
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
 
@@ -62,7 +62,7 @@ namespace Nett.Parser.Matchers
                     return NoMatch;
                 }
             }
-            else if (cs.Expect('.'))
+            else if (cs.TryExpect('.'))
             {
                 this.sb.Append(cs.Consume());
 
@@ -71,10 +71,10 @@ namespace Nett.Parser.Matchers
                     this.sb.Append(cs.Consume());
                 }
 
-                if (cs.Expect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.TryExpect('-')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-                if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+                if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
                 if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
 

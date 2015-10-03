@@ -13,18 +13,18 @@ namespace Nett.Parser.Matchers
 
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            Debug.Assert(cs.Expect('.'));
+            Debug.Assert(cs.TryExpect('.'));
             this.sb.Append(cs.Consume());
 
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect(':')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
-            if (cs.Expect('.')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
+            if (cs.TryExpect('.')) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
             if (cs.ExpectDigit()) { this.sb.Append(cs.Consume()); } else { return NoMatch; }
 
             while (!cs.End && cs.ExpectDigit())

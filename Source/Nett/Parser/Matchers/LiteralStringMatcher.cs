@@ -12,7 +12,7 @@ namespace Nett.Parser.Matchers
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
             StringBuilder sb = new StringBuilder(256);
-            if (!cs.Expect(StringTag))
+            if (!cs.TryExpect(StringTag))
             {
                 return NoMatch;
             }
@@ -24,12 +24,12 @@ namespace Nett.Parser.Matchers
 
             sb.Append(cs.Consume());
 
-            while (!cs.End && !cs.Expect(StringTag))
+            while (!cs.End && !cs.TryExpect(StringTag))
             {
                 sb.Append(cs.Consume());
             }
 
-            if (!cs.Expect(StringTag))
+            if (!cs.TryExpect(StringTag))
             {
                 throw new Exception($"Closing '{StringTag}' not found for literal string '{sb.ToString()}'");
             }

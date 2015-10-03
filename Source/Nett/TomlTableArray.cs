@@ -83,6 +83,6 @@ namespace Nett
             return collection;
         }
 
-        public object Last() => this.items[this.items.Count - 1];
+        public TomlTable Last() => this.items[this.items.Count - 1];
     }
 }

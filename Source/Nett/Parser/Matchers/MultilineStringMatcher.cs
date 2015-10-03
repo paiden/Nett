@@ -25,7 +25,7 @@ namespace Nett.Parser.Matchers
                     break;
                 }
 
-                if (cs.Expect('\\'))
+                if (cs.TryExpect('\\'))
                 {
                     sb.Append(cs.Consume());
                 }

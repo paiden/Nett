@@ -48,7 +48,7 @@ namespace Nett.Parser
             return object.Equals(laVal, expected);
         }
 
-        public bool Expect(T expected)
+        public bool TryExpect(T expected)
         {
             return !this.End && object.Equals(this.Peek(), expected);
         }

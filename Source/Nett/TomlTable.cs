@@ -1,10 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
-using System.IO;
-using System.Collections;
 
 namespace Nett
 {
@@ -24,7 +22,7 @@ namespace Nett
             get
             {
                 TomlObject val;
-                if(!this.Rows.TryGetValue(key, out val))
+                if (!this.Rows.TryGetValue(key, out val))
                 {
                     throw new KeyNotFoundException(string.Format("No row with key '{0}' exists in this TOML table.", key));
                 }
@@ -34,6 +32,7 @@ namespace Nett
         }
 
         public T Get<T>(string key) => this[key].Get<T>(TomlConfig.DefaultInstance);
+        public TomlObject Get(string key) => this[key];
 
         public TomlTable()
         {
@@ -51,7 +50,7 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
-            if(t == TomlTableType) { return this; }
+            if (t == TomlTableType) { return this; }
 
             var result = config.GetActivatedInstance(t);
 
@@ -86,7 +85,7 @@ namespace Nett
 
             var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach(var p in props)
+            foreach (var p in props)
             {
                 object val = p.GetValue(obj, null);
                 if (val != null)
@@ -111,7 +110,7 @@ namespace Nett
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {
             var comments = pi.GetCustomAttributes(typeof(TomlCommentAttribute), false).Cast<TomlCommentAttribute>();
-            foreach(var c in comments)
+            foreach (var c in comments)
             {
                 obj.Comments.Add(new TomlComment(c.Comment, c.Location));
             }
@@ -131,7 +130,7 @@ namespace Nett
 
         private void AddViaAdder(Adder adder, List<Tuple<string, TomlObject>> allObjects)
         {
-            foreach(var o in allObjects)
+            foreach (var o in allObjects)
             {
                 adder.RowKey = o.Item1;
                 o.Item2.Visit(adder);

@@ -1,14 +1,21 @@
 ﻿namespace Nett.Parser.Productions
 {
-    internal sealed class KeyProduction : Production<string>
+    internal static class KeyProduction
     {
-        public override string Apply(LookaheadBuffer<Token> tokens)
+        public static string Apply(LookaheadBuffer<Token> tokens) => ApplyInternal(tokens, required: true);
+        public static string TryApply(LookaheadBuffer<Token> tokens) => ApplyInternal(tokens, required: false);
+
+        private static string ApplyInternal(LookaheadBuffer<Token> tokens, bool required)
         {
-            if (tokens.Expect(TokenType.BareKey)) { return tokens.Consume().value; }
-            else if (tokens.Expect(TokenType.String)) { return tokens.Consume().value.Replace("\"", ""); }
-            else
+            if (tokens.TryExpect(TokenType.BareKey)) { return tokens.Consume().value; }
+            else if (tokens.TryExpect(TokenType.String)) { return tokens.Consume().value.Replace("\"", ""); }
+            else if (required)
             {
                 throw new System.Exception($"Failed to parse key because unexpected token '{tokens.Peek().value}' was found.");
+            }
+            else
+            {
+                return null;
             }
         }
     }

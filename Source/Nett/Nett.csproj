@@ -64,8 +64,10 @@
     <Compile Include="Parser\Productions\ExpressionProduction.cs" />
     <Compile Include="Parser\Productions\KeyProduction.cs" />
     <Compile Include="Parser\Productions\KeyValuePairProduction.cs" />
+    <Compile Include="Parser\Productions\TableKeyProduction.cs" />
     <Compile Include="Parser\Productions\TomlArrayTableProduction .cs" />
     <Compile Include="Parser\Productions\Production.cs" />
+    <Compile Include="Parser\Productions\TomlKey.cs" />
     <Compile Include="Parser\Productions\TomlTableProduction.cs" />
     <Compile Include="Parser\Productions\ValueProduction.cs" />
     <Compile Include="Parser\Token.cs" />

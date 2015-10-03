@@ -79,7 +79,7 @@ namespace Nett.Parser.Matchers
 
         public static bool TokenDone(this LookaheadBuffer<char> buffer)
         {
-            return buffer.End || buffer.ExpectWhitespace() || buffer.Expect(']') || buffer.Expect(',');
+            return buffer.End || buffer.ExpectWhitespace() || buffer.TryExpect(']') || buffer.TryExpect(',');
         }
     }
 }
