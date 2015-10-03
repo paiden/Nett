@@ -25,6 +25,7 @@ namespace Nett.Parser.Productions
             if (tokens.Expect(TokenType.Integer)) { return this.ParseTomlInt(tokens); }
             else if (tokens.Expect(TokenType.Float)) { return ParseTomlFloat(tokens); }
             else if (tokens.Expect(TokenType.DateTime)) { return new TomlDateTime(DateTimeOffset.Parse(tokens.Consume().value)); }
+            else if (tokens.Expect(TokenType.Timespan)) { return new TomlTimeSpan(TimeSpan.Parse(tokens.Consume().value, CultureInfo.InvariantCulture)); }
             else if (tokens.Expect(TokenType.String)) { return ParseStringValue(tokens); }
             else if (tokens.Expect(TokenType.LiteralString)) { return ParseLiteralString(tokens); }
             else if (tokens.Expect(TokenType.MultilineString)) { return ParseMultilineString(tokens); }

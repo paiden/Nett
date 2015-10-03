@@ -276,9 +276,9 @@ trimmed in raw strings.
         }
 
         [Fact]
-        public void Deserialize_WihtTimepsan_DeserializesCorrectly()
+        public void Deserialize_WithTimepsan_DeserializesCorrectly()
         {
-            var parsed = Toml.Read(@"a = 00:10:00.1");
+            var parsed = Toml.Read(@"a = 0.00:10:00.1");
 
             var a = parsed.Get<TimeSpan>("a");
 
