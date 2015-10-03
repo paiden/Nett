@@ -2,17 +2,20 @@
 {
     internal sealed class BoolMatcher : MatcherBase
     {
+        private const string T = "true";
+        private const string F = "false";
+
         internal override Token? Match(LookaheadBuffer<char> cs)
         {
-            if (cs.Expect("true"))
+            if (cs.Expect(T))
             {
-                cs.Consume(4);
-                return new Token(TokenType.Bool, "true");
+                cs.Consume(T.Length);
+                return new Token(TokenType.Bool, T);
             }
-            else if (cs.Expect("false"))
+            else if (cs.Expect(F))
             {
-                cs.Consume(4);
-                return new Token(TokenType.Bool, "false");
+                cs.Consume(F.Length);
+                return new Token(TokenType.Bool, F);
             }
             else
             {
