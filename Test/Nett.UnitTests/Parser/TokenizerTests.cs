@@ -268,11 +268,11 @@ namespace Nett.UnitTests.Parser
             t.Tokens.PeekAt(0).type.Should().Be(TokenType.BareKey);
             t.Tokens.PeekAt(0).value.Should().Be("key");
 
-            t.Tokens.PeekAt(0).type.Should().Be(TokenType.Assign);
-            t.Tokens.PeekAt(0).value.Should().Be("=");
+            t.Tokens.PeekAt(1).type.Should().Be(TokenType.Assign);
+            t.Tokens.PeekAt(1).value.Should().Be("=");
 
-            t.Tokens.PeekAt(0).type.Should().Be(TokenType.Integer);
-            t.Tokens.PeekAt(0).value.Should().Be("1929");
+            t.Tokens.PeekAt(2).type.Should().Be(TokenType.Integer);
+            t.Tokens.PeekAt(2).value.Should().Be("1929");
         }
 
         [Fact]
