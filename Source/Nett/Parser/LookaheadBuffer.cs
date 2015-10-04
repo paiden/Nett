@@ -29,7 +29,7 @@ namespace Nett.Parser
 
         public T Peek()
         {
-            return this.PeekAt(0);
+            return this.End ? default(T) : this.PeekAt(0);
         }
 
         public T PeekAt(int la)
@@ -45,7 +45,7 @@ namespace Nett.Parser
 
         public bool TryExpectAt(int la, T expected)
         {
-            if(this.ItemsAvailable < la + 1) { return false; }
+            if (this.ItemsAvailable < la + 1) { return false; }
 
             var laVal = this.PeekAt(la);
             return object.Equals(laVal, expected);

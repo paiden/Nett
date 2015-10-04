@@ -13,7 +13,7 @@ namespace Nett.UnitTests
     /// </summary>
     public class ReadValidTomlUntypedTests
     {
-        [Fact(Skip = "Test doesnt finish ATM")]
+        [Fact]
         public void ReadValidTomlUntyped_EmptyArray()
         {
             // Arrange
@@ -236,7 +236,7 @@ namespace Nett.UnitTests
         public void ReadValidTomlUntyped_CommentsEverywere()
         {
             // Arrange
-            var toml = TomlStrings.Valid.CommentsEverywhere;
+            var toml = TomlStrings.Valid.CommentsEverywhereABNFCompatible;
 
             // Act
             var read = Toml.Read(toml);
@@ -460,7 +460,7 @@ namespace Nett.UnitTests
             Assert.Equal("The quick brown fox jumps over the lazy dog.", read.Get<string>("equivalent_three"));
         }
 
-        [Fact(Skip = "Error in tokenizer when there is a ' within the ''' tags. Not important rightnow.")]
+        [Fact]
         public void ReadValidTomlUntyped_RawMultineStrings()
         {
             // Arrange
@@ -472,8 +472,8 @@ namespace Nett.UnitTests
             // Assert
             Assert.Equal(3, read.Rows.Count);
             Assert.Equal("This string has a ' quote character.", read.Get<string>("oneline"));
-            Assert.Equal("\r\nThis string has a ' quote character.", read.Get<string>("firstnl"));
-            Assert.Equal("\r\n\r\nThis string\r\n has a ' quote character\r\nand more than\r\none newline\r\nin it.", read.Get<string>("multiline"));
+            Assert.Equal("This string has a ' quote character.", read.Get<string>("firstnl"));
+            Assert.Equal("This string\r\n has a ' quote character\r\n and more than\r\n one newline\r\n in it.", read.Get<string>("multiline"));
         }
 
         [Fact]
@@ -510,7 +510,7 @@ namespace Nett.UnitTests
             Assert.Equal("", read.Get<string>("answer"));
         }
 
-        [Fact(Skip = "Case 3 fails, because newline in string is not allowed, parsing will fail, Not important for now.")]
+        [Fact]
         public void ReadValidStringsUntyped_StringEsapces()
         {
             // Arrange
@@ -549,7 +549,7 @@ namespace Nett.UnitTests
             Assert.Equal("But there are # some comments here.", read.Get<string>("poundcomment"));
         }
 
-        [Fact(Skip = "Corner case more important stuff to get to work first")]
+        [Fact]
         public void ReadValidStringsUntyped_TableArrayImplicit()
         {
             // Arrange

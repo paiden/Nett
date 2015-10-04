@@ -17,12 +17,12 @@ namespace Nett.Parser
 
         public bool TryExpect(TokenType tt)
         {
-            return this.Peek().type == tt;
+            return !this.End && this.Peek().type == tt;
         }
 
         public bool TryExpectAt(int index, TokenType tt)
         {
-            return this.PeekAt(index).type == tt;
+            return !this.End && this.PeekAt(index).type == tt;
         }
 
         public bool TryExpectAt(TokenType tt)

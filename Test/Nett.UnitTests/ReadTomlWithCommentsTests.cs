@@ -6,17 +6,19 @@ namespace Nett.UnitTests
     public class ReadTomlWithCommentsTests
     {
         [Fact]
-        public void WhenTomlOnlyContainsComments_RootTableGetsAppendCommentBlock()
+        public void WhenTomlOnlyContainsComments_RootTableGetsCommentBlock()
         {
             const string TML = @"# fc
 #sc
 
-#nlc";
+#nlc ";
 
             var tt = Toml.Read(TML);
 
             tt.Comments.Count.Should().Be(3);
-            tt.Comments[1].Should().Be("# fc\r\n#sc\r\n\r\n#nlc");
+            tt.Comments[0].CommentText.Should().Be(" fc");
+            tt.Comments[1].CommentText.Should().Be("sc");
+            tt.Comments[2].CommentText.Should().Be("nlc ");
         }
 
         [Fact]

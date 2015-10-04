@@ -9,11 +9,18 @@ namespace Nett.Parser.Productions
     {
         public static TomlTable TryApply(TomlTable current, TomlTable root, TokenBuffer tokens)
         {
+            var preComments = CommentProduction.TryParsePreExpressionCommenst(tokens);
+            var expressionToken = tokens.Peek();
+
             var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
             if (arrayKeyChain != null)
             {
                 var addTo = CalculateTargetTable(root, arrayKeyChain);
                 var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last());
+
+                arr.Comments.AddRange(preComments);
+                arr.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
+
                 var newArrayEntry = new TomlTable();
                 arr.Add(newArrayEntry);
                 return newArrayEntry;
@@ -22,7 +29,10 @@ namespace Nett.Parser.Productions
             var tableKeyChain = TomlTableProduction.TryApply(tokens);
             if (tableKeyChain != null)
             {
-                var newTable = new TomlTable();
+                var newTable = new TomlTable() { IsDefined = true };
+                newTable.Comments.AddRange(preComments);
+                newTable.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
+
                 var addTo = GetTargetTableForTable(root, tableKeyChain);
 
                 string name = tableKeyChain.Last();
@@ -33,18 +43,35 @@ namespace Nett.Parser.Productions
                 }
                 else
                 {
-                    throw new Exception($"Failed to add new table because the target table already contains a row with the key '{name}' of type '{existingRow.ReadableTypeName}'.");
+                    var tbl = existingRow as TomlTable;
+                    if (tbl.IsDefined)
+                    {
+                        throw new Exception($"Failed to add new table because the target table already contains a row with the key '{name}' of type '{existingRow.ReadableTypeName}'.");
+                    }
+                    else
+                    {
+                        tbl.IsDefined = true;
+                        return tbl;
+                    }
                 }
 
                 return newTable;
             }
 
-            var kvp = KeyValuePairProduction.Apply(tokens);
-            if (kvp != null)
+            if (!tokens.End)
             {
-                current.Add(kvp.Item1, kvp.Item2);
-                return current;
+                var kvp = KeyValuePairProduction.Apply(tokens);
+                if (kvp != null)
+                {
+                    kvp.Item2.Comments.AddRange(preComments);
+                    kvp.Item2.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
+
+                    current.Add(kvp.Item1, kvp.Item2);
+                    return current;
+                }
             }
+
+            root.Comments.AddRange(preComments);
 
             return null;
         }
@@ -110,11 +137,6 @@ namespace Nett.Parser.Productions
             target.Add(name, newTableArray);
 
             return newTableArray;
-        }
-
-        private static string CalcArrayName(string key)
-        {
-            return key;
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nett.UnitTests
+﻿namespace Nett.UnitTests
 {
     /// <summary>
     /// Contains all test cases from: https://github.com/BurntSushi/toml-test/tree/master/tests, except the completely trivial
@@ -50,6 +44,12 @@ name = ""Born in the USA""
 t = true
 f = false
 ";
+
+            /// <summary>
+            /// For now I will not use this string for testing but a slightly simplified version. The reason is, that the ABNF create by the TOML initiator
+            /// says that this case is not allowed https://github.com/toml-lang/toml/blob/abnf/toml.abnf, at least when I didn't misinterpret it.
+            /// For now I will stick to the ABNF that says that comments are only allowed 'after' there was an array value. This case is in the CommentsEverywhereABNFCompatible member.
+            /// </summary>
             public const string CommentsEverywhere = @"
 # Top comment.
   # Top comment.
@@ -76,6 +76,29 @@ more = [ # Comment
 # ] Did I fool you?
 ] # Hopefully not.
 ";
+
+            public const string CommentsEverywhereABNFCompatible = @"
+# Top comment.
+  # Top comment.
+# Top comment.
+
+# [no-extraneous-groups-please]
+
+[group] # Comment
+answer = 42 # Comment
+# no-extraneous-keys-please = 999
+# Inbetween comment.
+more = [
+  42, 42, # Comments within arrays are fun.
+  # What about multiple # comments?
+  # Can you handle it?
+  #
+          # Evil.
+# Evil.
+# ] Did I fool you?
+] # Hopefully not.
+";
+
             public const string DateTime = "bestdayever = 1987-07-05T17:45:00Z";
             public const string Empty = "";
             public const string Example = @"
@@ -144,10 +167,10 @@ firstnl = '''
 This string has a ' quote character.'''
 multiline = '''
 This string
-has ' a quote character
-and more than
-one newline
-in it.'''";
+ has a quote character
+ and more than
+ one newline
+ in it.'''";
             public const string RawStrings = @"backspace = 'This string has a \b backspace character.'
 tab = 'This string has a \t tab character.'
 newline = 'This string has a \n new line character.'
@@ -156,17 +179,17 @@ carriage = 'This string has a \r carriage return character.'
 slash = 'This string has a \/ slash character.'
 backslash = 'This string has a \\ backslash character.'";
             public const string StringEmpty = "answer = \"\"";
-            public const string StringEscapes = "backspace = \"This string has a \b backspace character.\"" +
-"\r\ntab = \"This string has a \t tab character.\"" +
-"\r\nnewline = \"This string has a \n new line character.\"" +
-"\r\nformfeed = \"This string has a \f form feed character.\"" +
-"\r\ncarriage = \"This string has a \r carriage return character.\"" +
-"\r\nquote = \"This string has a \" quote character.\"" +
-"\r\nbackslash = \"This string has a \\ backslash character.\"" +
-"\r\nnotunicode1 = \"This string does not have a unicode \\u escape.\"" +
-"\r\nnotunicode2 = \"This string does not have a unicode \u005Cu escape.\"" +
-"\r\nnotunicode3 = \"This string does not have a unicode \\u0075 escape.\"" +
-"\r\nnotunicode4 = \"This string does not have a unicode \\\u0075 escape.\"";
+            public const string StringEscapes = "backspace = \"This string has a \\b backspace character.\"" +
+"\r\ntab = \"This string has a \\t tab character.\"" +
+"\r\nnewline = \"This string has a \\n new line character.\"" +
+"\r\nformfeed = \"This string has a \\f form feed character.\"" +
+"\r\ncarriage = \"This string has a \\r carriage return character.\"" +
+"\r\nquote = \"This string has a \\\" quote character.\"" +
+"\r\nbackslash = \"This string has a \\\\ backslash character.\"" +
+"\r\nnotunicode1 = \"This string does not have a unicode \\\\u escape.\"" +
+"\r\nnotunicode2 = \"This string does not have a unicode \\u005Cu escape.\"" +
+"\r\nnotunicode3 = \"This string does not have a unicode \\\\u0075 escape.\"" +
+"\r\nnotunicode4 = \"This string does not have a unicode \\\\\\u0075 escape.\"";
             public const string StringWithPound = @"pound = ""We see no # comments here.""
 poundcomment = ""But there are # some comments here."" # Did I # mess you up?";
             public const string TableArrayImplicit = @"[[albums.songs]]

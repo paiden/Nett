@@ -132,48 +132,33 @@ namespace Nett.Parser.Productions
         {
             TomlArray a = new TomlArray();
 
-            var t = tokens.Consume();
-            Debug.Assert(t.type == TokenType.LBrac);
-
-            var v = ParseTomlValue(tokens);
-            if (v != null)
-            {
-                a.Add(v);
-
-                while (tokens.TryExpect(TokenType.Comma) && !tokens.TryExpectAt(1, TokenType.RBrac))
-                {
-                    tokens.Consume();
-
-                    v = ParseTomlValue(tokens);
-                    if (v != null)
-                    {
-                        a.Add(v);
-                    }
-                    else
-                    {
-                        if (tokens.TryExpect(TokenType.RBrac))
-                        {
-                            tokens.Consume();
-                            return a;
-                        }
-                        else
-                        {
-                            throw new Exception($"Failed to parse array. Expected ']' but found '{tokens.Peek().value}'.");
-                        }
-                    }
-                }
-            }
-
-            if (tokens.TryExpect(TokenType.Comma)) { tokens.Consume(); }
+            tokens.ExpectAndConsume(TokenType.LBrac);
 
             if (tokens.TryExpect(TokenType.RBrac))
             {
                 tokens.Consume();
+                return a;
             }
             else
             {
-                throw new Exception($"Failed to parse array. Expected ']' but found '{tokens.Peek().value}'.");
+                var v = ParseTomlValue(tokens);
+                a.Add(v);
+
+                while (!tokens.TryExpect(TokenType.RBrac))
+                {
+                    tokens.ExpectAndConsume(TokenType.Comma);
+                    a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+
+                    if (!tokens.TryExpect(TokenType.RBrac))
+                    {
+                        v = ParseTomlValue(tokens);
+                        a.Add(v);
+                    }
+                }
             }
+
+            a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+            tokens.ExpectAndConsume(TokenType.RBrac);
 
             return a;
         }

@@ -29,6 +29,8 @@ namespace Nett.Parser
     [DebuggerDisplay("{value}")]
     internal struct Token
     {
+        public static Token Eof = new Token(TokenType.Eof, "<End of input>");
+
         public TokenType type;
         public string value;
         public int line;

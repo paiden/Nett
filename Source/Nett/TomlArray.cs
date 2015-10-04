@@ -79,7 +79,7 @@ namespace Nett
             return collection;
         }
 
-        public object Last() => this.items[this.items.Count - 1];
+        public TomlObject Last() => this.items[this.items.Count - 1];
 
         public IEnumerable<T> To<T>() => this.To<T>(TomlConfig.DefaultInstance);
         public IEnumerable<T> To<T>(TomlConfig config) => this.items.Select((to) => to.Get<T>(config));
