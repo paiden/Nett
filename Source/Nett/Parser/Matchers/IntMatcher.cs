@@ -23,7 +23,7 @@ namespace Nett.Parser.Matchers
                 {
                     return DateTimeMatcher.TryMatch(sb, cs);
                 }
-                else if (cs.TryExpect('.') && cs.ExpectAt(3, ':') && !hasPos)
+                else if (cs.TryExpect('.') && cs.TryExpectAt(3, ':') && !hasPos)
                 {
                     return TimespanMatcher.TryMatch(sb, cs);
                 }

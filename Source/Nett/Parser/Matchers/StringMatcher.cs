@@ -15,7 +15,7 @@ namespace Nett.Parser.Matchers
                 return null;
             }
 
-            if (cs.ItemsAvailable > 2 && cs.ExpectAt(1, StringTag) && cs.ExpectAt(2, StringTag))
+            if (cs.TryExpectAt(1, StringTag) && cs.TryExpectAt(2, StringTag))
             {
                 return MultilineStringMatcher.TryMatch(cs);
             }

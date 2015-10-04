@@ -322,7 +322,10 @@ namespace Nett.UnitTests.Parser
         {
             var t = new Tokenizer(input.ToStream());
 
-            t.Tokens.ItemsAvailable.Should().Be(3);
+            t.Tokens.Consume();
+            t.Tokens.Consume();
+            t.Tokens.Consume();
+            t.Tokens.End.Should().Be(true);
         }
 
         [Fact]

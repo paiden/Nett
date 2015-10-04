@@ -13,16 +13,17 @@ namespace Nett.Parser
         private int readIndex = 0;
         private int writeIndex = -1;
 
-        public int ItemsAvailable { get; private set; }
+        protected int ItemsAvailable { get; private set; }
 
         public LookaheadBuffer(Func<T?> read, int lookAhead)
         {
             buffer = new T[lookAhead];
             this.read = read;
 
-            for (int i = 0; i < this.buffer.Length; i++)
+            bool couldRead = true;
+            for (int i = 0; i < this.buffer.Length && couldRead; i++)
             {
-                this.Read();
+                couldRead = this.Read();
             }
         }
 
@@ -42,8 +43,10 @@ namespace Nett.Parser
             return this.buffer[index];
         }
 
-        public bool ExpectAt(int la, T expected)
+        public bool TryExpectAt(int la, T expected)
         {
+            if(this.ItemsAvailable < la + 1) { return false; }
+
             var laVal = this.PeekAt(la);
             return object.Equals(laVal, expected);
         }
@@ -58,7 +61,7 @@ namespace Nett.Parser
             return readIndex != this.writeIndex;
         }
 
-        public bool End => readIndex == -1 && this.writeIndex == -1;
+        public bool End => this.ItemsAvailable <= 0;
 
         public virtual T Consume()
         {
@@ -67,6 +70,7 @@ namespace Nett.Parser
             if (this.readIndex == this.writeIndex) // We are at the end of the stream there isn't any more data
             {
                 this.readIndex = this.writeIndex = -1;
+                this.ItemsAvailable = 0;
             }
             else
             {
@@ -78,7 +82,7 @@ namespace Nett.Parser
             return ret;
         }
 
-        private void Read()
+        private bool Read()
         {
             T? val = this.read();
             if (val.HasValue)
@@ -86,7 +90,10 @@ namespace Nett.Parser
                 this.IncIndex(ref writeIndex);
                 this.buffer[writeIndex] = val.Value;
                 this.ItemsAvailable++;
+                return true;
             }
+
+            return false;
         }
 
         private void IncIndex(ref int index)

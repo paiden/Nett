@@ -71,10 +71,10 @@ namespace Nett.Parser
         {
             sb.Append(Consume());
 
-            while (!this.characters.ExpectAt(0, '\"'))
+            while (!this.characters.TryExpectAt(0, '\"'))
             {
                 sb.Append(Consume());
-                if (this.characters.ExpectAt(0, '\\'))
+                if (this.characters.TryExpectAt(0, '\\'))
                 {
                     sb.Append(Consume());
                     sb.Append(Consume());
@@ -108,7 +108,7 @@ namespace Nett.Parser
 
         private bool PeekIs(char expected)
         {
-            return this.characters.ExpectAt(0, expected);
+            return this.characters.TryExpectAt(0, expected);
         }
 
         private bool PeekInRange(char min, char max)
