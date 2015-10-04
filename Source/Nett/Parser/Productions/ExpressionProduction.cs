@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Nett.Parser.Productions
 {
     internal sealed class ExpressionsProduction
     {
+        private enum CreateImplicitelyType
+        {
+            Table,
+            ArrayOfTables,
+        }
         public static TomlTable TryApply(TomlTable current, TomlTable root, TokenBuffer tokens)
         {
             var preComments = CommentProduction.TryParsePreExpressionCommenst(tokens);
@@ -15,7 +19,7 @@ namespace Nett.Parser.Productions
             var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
             if (arrayKeyChain != null)
             {
-                var addTo = CalculateTargetTable(root, arrayKeyChain);
+                var addTo = GetTargetTable(root, arrayKeyChain, CreateImplicitelyType.ArrayOfTables);
                 var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last());
 
                 arr.Comments.AddRange(preComments);
@@ -33,7 +37,7 @@ namespace Nett.Parser.Productions
                 newTable.Comments.AddRange(preComments);
                 newTable.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
-                var addTo = GetTargetTableForTable(root, tableKeyChain);
+                var addTo = GetTargetTable(root, tableKeyChain, CreateImplicitelyType.Table);
 
                 string name = tableKeyChain.Last();
                 var existingRow = addTo.TryGet<TomlObject>(name);
@@ -76,45 +80,63 @@ namespace Nett.Parser.Productions
             return null;
         }
 
-        private static TomlTable GetTargetTableForTable(TomlTable root, IList<string> keyChain)
+        private static TomlTable GetTargetTable(TomlTable root, IList<string> keyChain, CreateImplicitelyType ct)
         {
             var tgt = root;
             for (int i = 0; i < keyChain.Count - 1; i++)
             {
-                tgt = GetExistingTableOrCreateAndAdd(tgt, keyChain[i]);
+                tgt = ct == CreateImplicitelyType.Table
+                    ? GetExistingOrCreateAndAddTable(tgt, keyChain[i])
+                    : GetExistingOrCreateAndAddTableArray(tgt, keyChain[i]);
             }
 
             return tgt;
         }
 
-        private static TomlTable GetExistingTableOrCreateAndAdd(TomlTable tbl, string key)
+        private static TomlTable GetExistingOrCreateAndAddTable(TomlTable tbl, string key)
         {
-            var existing = tbl.TryGet<TomlTable>(key);
-            if (existing != null)
-            {
-                return existing;
-            }
+            Func<TomlTable, TomlTable> createNew = (e) =>
+                {
+                    var newTable = new TomlTable();
+                    tbl.Add(key, newTable);
+                    return newTable;
+                };
 
-            var newTable = new TomlTable();
-            tbl.Add(key, newTable);
-            return newTable;
+            return GetExistinOrCreateAndAdd(tbl, key, createNew);
         }
 
-        private static TomlTable CalculateTargetTable(TomlTable root, IList<string> keyChain)
+        private static TomlTable GetExistingOrCreateAndAddTableArray(TomlTable tbl, string key)
         {
-            var tgt = root;
-            for (int i = 0; i < keyChain.Count - 1; i++)
+            Func<TomlTable, TomlTable> createNew = (e) =>
             {
-                var tmp = tgt.Get(keyChain[i]);
-                var tbl = tmp as TomlTable;
-                var arr = tmp as TomlTableArray;
+                var array = new TomlTableArray();
+                var newTable = new TomlTable();
+                array.Add(newTable);
+                tbl.Add(key, array);
+                return newTable;
+            };
 
-                Debug.Assert(tbl != null || arr != null);
+            return GetExistinOrCreateAndAdd(tbl, key, createNew);
+        }
 
-                tgt = tbl ?? arr.Last();
+        private static TomlTable GetExistinOrCreateAndAdd(TomlTable tbl, string key, Func<TomlTable, TomlTable> createNewItem)
+        {
+            var existingTargetTable = TryGetTableEntry(tbl.TryGet<TomlObject>(key));
+            if (existingTargetTable != null)
+            {
+                return existingTargetTable;
             }
 
-            return tgt;
+            return createNewItem(tbl);
+        }
+
+        private static TomlTable TryGetTableEntry(TomlObject obj)
+        {
+            if (obj == null) { return null; }
+            var tbl = obj as TomlTable;
+            var arr = obj as TomlTableArray;
+
+            return tbl ?? arr?.Last();
         }
 
         private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name)

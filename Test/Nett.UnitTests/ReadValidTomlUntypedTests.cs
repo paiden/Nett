@@ -559,10 +559,23 @@ namespace Nett.UnitTests
             var read = Toml.Read(toml);
 
             // Assert
-            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count);
             Assert.Equal("Glory Days", ((read.Get<TomlTableArray>("albums")[0]).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
-            Assert.Equal("We see no # comments here.", read.Get<string>("pound"));
-            Assert.Equal("But there are # some comments here.", read.Get<string>("poundcomment"));
+        }
+
+        [Fact]
+        public void ReadValidStringsUntyped_NestedArraysOfTables()
+        {
+            // Arrange
+            var toml = TomlStrings.Valid.NestedArrayOfTables;
+
+            // Act
+            var read = Toml.Read(toml);
+
+            // Assert
+            read.Get<TomlTableArray>("fruits").Count.Should().Be(2);
+            read.Get<TomlTableArray>("fruits")[0].Get<TomlTableArray>("variety").Count.Should().Be(2);
+            read.Get<TomlTableArray>("fruits")[1].Get<TomlTableArray>("variety").Count.Should().Be(1);
         }
 
         [Fact]

@@ -23,7 +23,7 @@ namespace Nett.Parser
 
         private TomlTable Toml()
         {
-            TomlTable root = new TomlTable();
+            TomlTable root = new TomlTable() { IsDefined = true };
             TomlTable current = root;
 
             while (!Tokens.End)

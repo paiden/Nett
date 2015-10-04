@@ -167,7 +167,7 @@ firstnl = '''
 This string has a ' quote character.'''
 multiline = '''
 This string
- has a quote character
+ has a ' quote character
  and more than
  one newline
  in it.'''";
@@ -205,6 +205,26 @@ last_name = ""Clapton""
 [[people]]
 first_name = ""Bob""
 last_name = ""Seger""";
+
+            public const string NestedArrayOfTables = @"
+[[fruits]]
+  name = ""apple""
+
+  [fruits.physical]
+            color = ""red""
+    shape = ""round""
+
+  [[fruits.variety]]
+    name = ""red delicious""
+
+  [[fruits.variety]]
+    name = ""granny smith""
+
+[[fruits]]
+  name = ""banana""
+
+  [[fruits.variety]]
+    name = ""plantain""";
         }
     }
 }
