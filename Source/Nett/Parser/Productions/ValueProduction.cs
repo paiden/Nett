@@ -22,7 +22,7 @@ namespace Nett.Parser.Productions
 
             if (value == null)
             {
-                throw new Exception($"Expected a value while parsing key value pair but value incompatible token '{tokens.Peek().value}' was found.");
+                throw new Exception($"Expected a value while parsing key value pair but value incompatible token '{tokens.Peek().value}' of type '{tokens.Peek().type}' was found.");
             }
 
             return value;

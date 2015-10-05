@@ -1,30 +1,35 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Text;
 
 namespace Nett.Parser.Matchers
 {
     internal static class TimespanMatcher
     {
-        internal static Token? TryMatch(StringBuilder matchedAlready, CharBuffer cs)
+        internal static Token? ContinueMatchFromInteger(StringBuilder matchedAlready, CharBuffer cs)
         {
             var sb = matchedAlready;
-            Debug.Assert(cs.TryExpect('.'));
-            sb.Append(cs.Consume());
 
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpect('.')) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-
-            while (!cs.End && cs.TryExpectDigit())
+            if (cs.TryExpect("."))
             {
                 sb.Append(cs.Consume());
+                sb.Append(cs.ExpectAndConsumeDigit());
+                sb.Append(cs.ExpectAndConsumeDigit());
+            }
+
+            ExpectColonSperatedSegment(sb, cs);
+
+            if (!cs.TokenDone())
+            {
+                ExpectColonSperatedSegment(sb, cs);
+            }
+
+            if (!cs.TokenDone() && cs.TryExpect('.'))
+            {
+                sb.Append(cs.Consume());
+                while (!cs.End && cs.TryExpectDigit())
+                {
+                    sb.Append(cs.Consume());
+                }
             }
 
             if (cs.TokenDone())
@@ -33,8 +38,15 @@ namespace Nett.Parser.Matchers
             }
             else
             {
-                return null;
+                throw new Exception($"Failed to parse timespan token because unexpected character '{cs.Peek()}' was found.");
             }
+        }
+
+        private static void ExpectColonSperatedSegment(StringBuilder sb, CharBuffer cs)
+        {
+            sb.Append(cs.ExpectAndConsume(':'));
+            sb.Append(cs.ExpectAndConsumeDigit());
+            sb.Append(cs.ExpectAndConsumeDigit());
         }
     }
 }

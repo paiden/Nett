@@ -79,15 +79,47 @@ namespace Nett.Parser
             return true;
         }
 
+        public char ExpectAndConsume(char c)
+        {
+            if (this.TryExpect(c))
+            {
+                return this.Consume();
+            }
+            else
+            {
+                throw new Exception($"Expected character '{c}' but '{this.Peek()}' was found.");
+            }
+        }
+
         public bool TryExpectDigit()
         {
             return this.TryExpectInRange('0', '9');
+        }
+
+        public char ExpectAndConsumeDigit()
+        {
+            var c = this.ExpectInRange('0', '9');
+            this.Consume();
+            return c;
         }
 
         public bool TryExpectInRange(char min, char max)
         {
             char pv = this.Peek();
             return pv >= min && pv <= max;
+        }
+
+        public char ExpectInRange(char min, char max)
+        {
+            char pv = this.Peek();
+            if (pv >= min && pv <= max)
+            {
+                return pv;
+            }
+            else
+            {
+                throw new Exception($"Expected character in range '{min} to {max}' but character '{pv}' was found.");
+            }
         }
 
         public bool TryExpectWhitespace()

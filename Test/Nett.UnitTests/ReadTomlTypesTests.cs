@@ -275,14 +275,18 @@ trimmed in raw strings.
             Assert.Equal("type", a[3].Get<string>());
         }
 
-        [Fact]
-        public void Deserialize_WithTimepsan_DeserializesCorrectly()
+        [Theory]
+        [InlineData("02:01")]
+        [InlineData("03:02:01")]
+        [InlineData("4.03:02:01")]
+        [InlineData("4.03:02:01.001")]
+        public void Deserialize_WithTimepsanInAllSupportedFormats_DeserializesCorrectly(string timespan)
         {
-            var parsed = Toml.Read(@"a = 0.00:10:00.1");
+            var parsed = Toml.Read($"a = {timespan}");
 
             var a = parsed.Get<TimeSpan>("a");
 
-            Assert.Equal(TimeSpan.Parse("00:10:00.1"), a);
+            Assert.Equal(TimeSpan.Parse(timespan), a);
         }
 
         [Fact]

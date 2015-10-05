@@ -23,9 +23,9 @@ namespace Nett.Parser.Matchers
                 {
                     return DateTimeMatcher.TryMatch(sb, cs);
                 }
-                else if (cs.TryExpect('.') && cs.TryExpectAt(3, ':') && !hasPos)
+                else if (((cs.TryExpect('.') && cs.TryExpectAt(3, ':')) || cs.TryExpect(":")) && !hasPos)
                 {
-                    return TimespanMatcher.TryMatch(sb, cs);
+                    return TimespanMatcher.ContinueMatchFromInteger(sb, cs);
                 }
 
                 if (cs.End || cs.TryExpectWhitespace() || cs.TokenDone())
