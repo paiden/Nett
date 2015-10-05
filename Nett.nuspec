@@ -1,14 +1,16 @@
 <package>
   <metadata>
     <version>$version$</version>
-    <id>Nett</id>
-    <authors>Philipp Haiden</authors>
-    <owners>Philipp Haiden</owners>
+    <id>Nett$SNE$</id>
+    <authors>paiden@outlook.com</authors>
+    <owners>paiden@outlook.com</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library for reading and writing TOML files</description>
-    <tags>TOML Api Reading Writing Parsing</tags>
+    <tags>TOML API Reading Writing Parsing Serialization Configuration</tags>
   </metadata>
   <files>
-    <file src="Source\Nett\bin\$configuration$\Nett.dll" target="lib\" />
+    <file src="Source\Nett\bin\$configuration$$SNE$\Nett.dll" target="lib\" />
+    <file src="Source\Nett\bin\$configuration$\Nett.pdb" target="lib\" />
+    <file src="Source\Nett\**\*.cs" target="src\" />
   </files>
 </package>

@@ -100,6 +100,9 @@
     <Compile Include="TomlStreamWriter.cs" />
     <Compile Include="Types.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

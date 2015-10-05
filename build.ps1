@@ -32,7 +32,7 @@ Build with release configuration
 
 #>
 
-[CmdletBinding(DefaultParameterSetName="none")]
+[CmdletBinding(DefaultParameterSetName="none", SupportsShouldProcess=$true)]
 Param(
     # mutually exclusive quick targets
 
@@ -44,17 +44,35 @@ Param(
     [parameter(ParameterSetName="NuGetPackage", Mandatory=$true)]
     [Version]$nugetPackageVersion,
 
+    [parameter(ParameterSetName="NuGetPackage")]
+    [switch]$strongName,
+
     # Multi set parameters
 
     # Set independent parameters
-    [switch]$release,
+    [ValidateSet("Debug", "Release")]
+    [string]$configuration = "Debug",
     [switch]$disableStdBuild,
 
 
     [parameter(Position=0, ValueFromRemainingArguments=$true, DontShow)] $rest
 )
 
-$configuration = if($release) { "Debug" } else { "Release" }
+
+#Helper to support whatif for native invocations
+function Invoke-ExpandedChecked {
+[CmdletBinding(
+    SupportsShouldProcess = $true,
+    ConfirmImpact = 'Medium')]
+    param([ScriptBlock]$ScriptBlock)
+
+    $expanded = $ExecutionContext.InvokeCommand.ExpandString($ScriptBlock)
+    $script = [scriptblock]::Create($expanded)
+    if ($PSCmdlet.ShouldProcess($script.ToString(), "Invoke External Command"))
+    {
+        & $script
+    }
+}
 
 $msbuild = Join-Path ${env:ProgramFiles(x86)} ".\MSBuild\14.0\bin\msbuild.exe"
 $buildItem = Join-Path -Path $PSScriptRoot -ChildPath Solutions\Nett\Nett.sln
@@ -63,20 +81,37 @@ if (!(Test-Path $msbuild)) {
     write-error "ERROR: Could not find MSBuild."
     return 1
 }
+else {
+    $msbuild = "`"$msbuild`"";
+}
 
 if(-not $disableStdBuild) {
     $msBuildOptions = "/p:Configuration=$configuration", "/m", "/nologo"
     $msBuildOptions += $rest
-    & $msbuild $buildItem $msBuildOptions
+    Invoke-ExpandedChecked { & $msbuild $buildItem $msBuildOptions }
 }
 
 if($NuGetPackage) {
 
-    $nuget = Join-Path -Path $PSScriptRoot -ChildPath Tools\NuGet.exe
-    $nuspec = Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec
+    $snTool = "`"$(Join-Path $PSScriptRoot -ChildPath .\Solutions\nett\packages\Brutal.Dev.StrongNameSigner.1.5.1\tools\StrongNameSigner.Console.exe)`""
+    $src = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration\Nett.dll")"
+    $dst = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration.StrongNamed\Nett.dll")"
+    $sne=""
+    
+    if($strongName) {
+        $sne = '.StrongNamed'
+        New-Item -ItemType File -Path $dst -Force
+        Copy-Item $src -Destination $dst
+        $qdst = "`"$dst`""
+        $devsnk = "`"$env:DEVSNK`""
+        Invoke-ExpandedChecked { & $snTool -AssemblyFile $qdst -KeyFile $devsnk }
+    }
 
-    # Build second time with DoMerge set to create merged libs
-    & $msbuild $buildItem $msBuildOptions
-    & $nuget pack $nuspec -Version $nugetPackageVersion.ToString() -Properties configuration=$configuration
+    $v = $nugetPackageVersion.ToString()
+    $nuspec = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec)`""
+    $props = "`"$configuration;SNE=$sne`""
+    if($configuration -eq "Debug") { $v += '-debug' }
+
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspec -Version $v -Properties configuration=$props }
 }
 
