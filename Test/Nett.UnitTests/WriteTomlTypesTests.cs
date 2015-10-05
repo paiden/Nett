@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Nett.UnitTests
 {
@@ -29,6 +26,25 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(expected, written.Trim());
+        }
+
+        [Theory]
+        [InlineData("02:01")]
+        [InlineData("03:02:01")]
+        [InlineData("4.03:02:01")]
+        [InlineData("4.03:02:01.001")]
+        public void WriteTimespan_WritesTheTimepspansInCultureInvariantFormatAndMinimized(string span)
+        {
+            var t = new TimespanType() { Ts = TimeSpan.Parse(span) };
+
+            var written = Toml.WriteString(t);
+
+            written.Should().Be($"Ts = {span}\r\n");
+        }
+
+        public class TimespanType
+        {
+            public TimeSpan Ts { get; set; }
         }
 
         public class StringType

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Globalization;
 using System.IO;
+using System.Text;
+using Nett.Util;
 
 namespace Nett
 {
@@ -16,7 +15,7 @@ namespace Nett
 
             using (var ms = new MemoryStream(1024))
             {
-                var sw = new StreamWriter(ms);
+                var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
                 var writer = new TomlStreamWriter(sw, config);
                 tt.Visit(writer);
                 sw.Flush();

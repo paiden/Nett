@@ -99,10 +99,12 @@
     <Compile Include="TomlValue.cs" />
     <Compile Include="TomlStreamWriter.cs" />
     <Compile Include="Types.cs" />
+    <Compile Include="Util\FormattingStreamWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
