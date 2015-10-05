@@ -29,17 +29,17 @@ namespace Nett.UnitTests
         }
 
         [Theory]
-        [InlineData("02:01")]
-        [InlineData("03:02:01")]
-        [InlineData("4.03:02:01")]
-        [InlineData("4.03:02:01.001")]
-        public void WriteTimespan_WritesTheTimepspansInCultureInvariantFormatAndMinimized(string span)
+        [InlineData("02:01", "02:01:00")]
+        [InlineData("03:02:01", "03:02:01")]
+        [InlineData("4.03:02:01", "4.03:02:01")]
+        [InlineData("4.03:02:01.001", "4.03:02:01.0010000")]
+        public void WriteTimespan_WritesTheTimepspansInCultureInvariantFormat(string span, string expected)
         {
             var t = new TimespanType() { Ts = TimeSpan.Parse(span) };
 
             var written = Toml.WriteString(t);
 
-            written.Should().Be($"Ts = {span}\r\n");
+            written.Should().Be($"Ts = {expected}\r\n");
         }
 
         public class TimespanType
