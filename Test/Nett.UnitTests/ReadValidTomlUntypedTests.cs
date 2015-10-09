@@ -600,5 +600,13 @@ namespace Nett.UnitTests
             Assert.Equal("Bob", tt.Get<string>("first_name"));
             Assert.Equal("Seger", tt.Get<string>("last_name"));
         }
+
+        [Fact]
+        public void ReadTomlFileWithSpecialChars_ReadsTomlCorrectly()
+        {
+            var tml = Toml.ReadFile("TomlWithSpecialCharacters.tml");
+
+            tml.Get<string>("p0").Should().Be(@"c:\äöü");
+        }
     }
 }
