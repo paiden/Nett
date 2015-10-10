@@ -110,10 +110,33 @@ TheBool = false
 ");
         }
 
+        [Fact]
+        public void Write_WritesTableArraysAfterProperties()
+        {
+            var s = Toml.WriteString(new TestOrder());
+
+            s.Should().StartWith("Property");
+        }
+
         private class TestClassA
         {
             public string StringProp { get; set; }
             public int IntProp { get; set; }
+        }
+
+        private class TestOrder
+        {
+            public List<TestClassA> TableArray { get; set; }
+
+            public int Property { get; set; }
+
+            public TestOrder()
+            {
+                TableArray = new List<TestClassA>()
+                {
+                    new TestClassA(),
+                };
+            }
         }
 
         private class WithArray
