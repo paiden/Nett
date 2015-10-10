@@ -90,6 +90,8 @@ namespace Nett
 
         public override object Get(Type t, TomlConfig config)
         {
+            if (this.GetType() == t) { return this; }
+
             var userConverter = config.GetFromTomlConverter(t);
             return userConverter != null ? userConverter.Convert(this.Value) : Converter.Convert(t, this.value);
         }

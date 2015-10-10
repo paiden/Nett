@@ -5,11 +5,20 @@ namespace Nett.Parser
     enum TokenType
     {
         Unknown,
+        Eof,
 
+        BareKey,
         Comment,
         Dot,
-        Eof,
-        BareKey,
+        Key,
+        Assign,
+        Comma,
+
+        LBrac,
+        RBrac,
+        LCurly,
+        RCurly,
+
         Integer,
         Float,
         Bool,
@@ -19,11 +28,6 @@ namespace Nett.Parser
         MultilineLiteralString,
         DateTime,
         Timespan,
-        LBrac,
-        RBrac,
-        Key,
-        Assign,
-        Comma,
     }
 
     [DebuggerDisplay("{value}")]

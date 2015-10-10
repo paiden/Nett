@@ -80,6 +80,7 @@
     <Compile Include="TestUtil\StringExtensions.cs" />
     <Compile Include="TomlConfigTests.cs" />
     <Compile Include="TomlStrings.cs" />
+    <Compile Include="TomlValueTests.cs" />
     <Compile Include="WriteTomlTests.cs" />
     <Compile Include="WriteTomlTypesTests.cs" />
   </ItemGroup>

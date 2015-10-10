@@ -40,6 +40,7 @@ namespace Nett.Parser.Productions
             else if (tokens.TryExpect(TokenType.MultilineLiteralString)) { return ParseMultilineLiteralString(tokens); }
             else if (tokens.TryExpect(TokenType.Bool)) { return new TomlBool(bool.Parse(tokens.Consume().value)); }
             else if (tokens.TryExpect(TokenType.LBrac)) { return ParseTomlArray(tokens); }
+            else if (tokens.TryExpect(TokenType.LCurly)) { return InlineTableProduction.Apply(tokens); }
 
             return null;
         }

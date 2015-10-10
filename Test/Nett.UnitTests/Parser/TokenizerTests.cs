@@ -197,6 +197,20 @@ namespace Nett.UnitTests.Parser
         }
 
         [Fact]
+        public void Tokenizer_CanTokenizeCurlyBraces()
+        {
+            // Arrange + Act
+            var t = new Tokenizer("{   }".ToStream());
+
+            // Assert
+            t.Tokens.PeekAt(0).type.Should().Be(TokenType.LCurly);
+            t.Tokens.PeekAt(0).value.Should().Be("{");
+
+            t.Tokens.PeekAt(1).type.Should().Be(TokenType.RCurly);
+            t.Tokens.PeekAt(1).value.Should().Be("}");
+        }
+
+        [Fact]
         public void TokizingAssignsLineAndColumnNumbersOneBased()
         {
             string input =

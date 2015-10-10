@@ -608,5 +608,19 @@ namespace Nett.UnitTests
 
             tml.Get<string>("p0").Should().Be(@"c:\äöü");
         }
+
+        [Fact]
+        public void ReadTom_WithInlineTable_ReadsItCorrect()
+        {
+            // Act
+            var tml = Toml.Read("name = { first = \"Tom\", last = \"Preston-Werner\" }");
+
+            // Assert
+            tml.TryGet<TomlTable>("name").Should().NotBeNull();
+            var t = tml.Get<TomlTable>("name");
+            t.Rows.Count.Should().Be(2);
+            t.Get<string>("first").Should().Be("Tom");
+            t.Get<string>("last").Should().Be("Preston-Werner");
+        }
     }
 }
