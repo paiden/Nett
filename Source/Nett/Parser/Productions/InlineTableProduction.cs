@@ -4,7 +4,7 @@
     {
         public static TomlTable Apply(TokenBuffer tokens)
         {
-            TomlTable inlineTable = new TomlTable();
+            TomlTable inlineTable = new TomlTable(TomlTable.TableTypes.Inline);
 
             tokens.ExpectAndConsume(TokenType.LCurly);
 

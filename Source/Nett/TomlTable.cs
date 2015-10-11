@@ -8,6 +8,12 @@ namespace Nett
 {
     public sealed class TomlTable : TomlObject
     {
+        public enum TableTypes
+        {
+            Default,
+            Inline,
+        }
+
         private static readonly Type EnumerableType = typeof(IEnumerable);
         private static readonly Type StringType = typeof(string);
         private static readonly Type TomlTableType = typeof(TomlTable);
@@ -31,13 +37,16 @@ namespace Nett
             }
         }
 
+        public TableTypes TableType { get; }
+
         public T Get<T>(string key) => this[key].Get<T>(TomlConfig.DefaultInstance);
         public TomlObject Get(string key) => this[key];
 
-        public TomlTable()
+        public TomlTable(TableTypes tableType = TableTypes.Default)
         {
-
+            this.TableType = tableType;
         }
+
         public void Add(string key, TomlObject value)
         {
             this.Rows.Add(key, value);
@@ -83,9 +92,9 @@ namespace Nett
             return o as T;
         }
 
-        public static TomlTable From<T>(T obj, TomlConfig config)
+        public static TomlTable From<T>(T obj, TomlConfig config, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
-            TomlTable tt = new TomlTable();
+            TomlTable tt = new TomlTable(tableType);
 
             var t = obj.GetType();
             var props = t.GetProperties();
@@ -97,7 +106,7 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = TomlObject.From(val, config);
+                    TomlObject to = TomlObject.From(val, p, config);
                     AddComments(to, p);
                     allObjects.Add(Tuple.Create(p.Name, to));
                 }

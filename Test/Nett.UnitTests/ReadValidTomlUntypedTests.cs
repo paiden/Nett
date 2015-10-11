@@ -621,6 +621,7 @@ namespace Nett.UnitTests
             t.Rows.Count.Should().Be(2);
             t.Get<string>("first").Should().Be("Tom");
             t.Get<string>("last").Should().Be("Preston-Werner");
+            t.TableType.Should().Be(TomlTable.TableTypes.Inline);
         }
     }
 }

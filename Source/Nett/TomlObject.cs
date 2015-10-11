@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Nett
 {
@@ -17,7 +18,7 @@ namespace Nett
         public object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
         public abstract object Get(Type t, TomlConfig config);
 
-        internal static TomlObject From(object val, TomlConfig config)
+        internal static TomlObject From(object val, PropertyInfo pi, TomlConfig config)
         {
             var t = val.GetType();
             var converter = config.GetToTomlConverter(t);
@@ -36,7 +37,8 @@ namespace Nett
             }
             else
             {
-                return TomlTable.From(val, config);
+                var tableType = config.GetTableType(pi);
+                return TomlTable.From(val, config, tableType);
             }
         }
 

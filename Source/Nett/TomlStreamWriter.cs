@@ -13,6 +13,7 @@ namespace Nett
         private readonly Stack<string> rowKeys = new Stack<string>();
         private bool writeValueKey = true;
         private bool writeTableKey = true;
+        private int writeInlineTableInvocationsRunning = 0;
 
         public TomlStreamWriter(StreamWriter streamWriter, TomlConfig config)
         {
@@ -50,6 +51,46 @@ namespace Nett
 
         private void WriteTomlTable(TomlTable table)
         {
+            switch (table.TableType)
+            {
+                case TomlTable.TableTypes.Default: this.WriteNormalTomlTable(table); break;
+                case TomlTable.TableTypes.Inline: this.WriteTomlInlineTable(table); break;
+            }
+        }
+
+        private void WriteTomlInlineTable(TomlTable table)
+        {
+            this.writeInlineTableInvocationsRunning++;
+            this.WritePrependComments(table);
+
+            this.sw.Write(this.CurrentRowKey);
+            this.sw.Write(" = {");
+
+            var rows = table.Rows.ToArray();
+
+            for (int i = 0; i < rows.Length - 1; i++)
+            {
+                this.WriteTableRow(rows[i]);
+                this.sw.Write(", ");
+            }
+
+            if (rows.Length > 0)
+            {
+                this.WriteTableRow(rows[rows.Length - 1]);
+            }
+
+            this.sw.Write("}");
+            this.WriteApppendComments(table);
+            this.writeInlineTableInvocationsRunning--;
+        }
+
+        private void WriteNormalTomlTable(TomlTable table)
+        {
+            if (this.writeInlineTableInvocationsRunning > 0)
+            {
+                throw new InvalidOperationException("Cannot write normal table inside inline table.");
+            }
+
             this.WritePrependComments(table);
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
@@ -60,11 +101,16 @@ namespace Nett
 
             foreach (var r in table.Rows)
             {
-                this.rowKeys.Push(r.Key);
-                r.Value.Visit(this);
+                this.WriteTableRow(r);
                 this.sw.WriteLine();
                 this.rowKeys.Pop();
             }
+        }
+
+        private void WriteTableRow(KeyValuePair<string, TomlObject> row)
+        {
+            this.rowKeys.Push(row.Key);
+            row.Value.Visit(this);
         }
 
         private void WriteTomlArray(TomlArray array)

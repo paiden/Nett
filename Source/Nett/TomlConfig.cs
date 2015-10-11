@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace Nett
 {
@@ -62,7 +62,7 @@ namespace Nett
         public object GetActivatedInstance(Type t)
         {
             Func<object> a;
-            if(this.activators.TryGetValue(t, out a))
+            if (this.activators.TryGetValue(t, out a))
             {
                 return a();
             }
@@ -72,16 +72,19 @@ namespace Nett
                 {
                     return Activator.CreateInstance(t);
                 }
-                catch(MissingMethodException exc)
+                catch (MissingMethodException exc)
                 {
                     throw new Exception(string.Format("{0} Failed to create type '{1}'.", exc.Message, t.FullName));
                 }
             }
         }
 
+        internal TomlTable.TableTypes GetTableType(PropertyInfo pi) =>
+            pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute)) ? TomlTable.TableTypes.Inline : TomlTable.TableTypes.Default;
+
         internal TomlCommentLocation GetCommentLocation(TomlComment c)
         {
-            switch(c.Location)
+            switch (c.Location)
             {
                 case CommentLocation.Append: return TomlCommentLocation.Append;
                 case CommentLocation.Prepend: return TomlCommentLocation.Prepend;

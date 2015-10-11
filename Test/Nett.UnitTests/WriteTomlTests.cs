@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
@@ -118,6 +119,30 @@ TheBool = false
             s.Should().StartWith("Property");
         }
 
+        [Fact]
+        public void Write_WithInlineTableAsAttribute_WritesInlineTableCorrect()
+        {
+            var s = Toml.WriteString(new WithInlineTable());
+
+            s.Should().Be("Table = {Ival = 1, Sval = \"x\"}\r\n");
+        }
+
+        [Fact]
+        public void Write_WithInvalidInlineTable_ThrowsInvalidOp()
+        {
+            Action a = () => Toml.WriteString(new WithDisallowedInlineTable());
+
+            a.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void Write_WithMultipleInlineTables_WritesInlineTablesCorrect()
+        {
+            var s = Toml.WriteString(new MultipleInline());
+
+            s.Should().Be("Inline = {SubInline = {Ival = 1, Sval = \"x\"}}\r\n");
+        }
+
         private class TestClassA
         {
             public string StringProp { get; set; }
@@ -204,6 +229,73 @@ TheBool = false
         public class ArrayClassProp
         {
             public int V { get; set; }
+        }
+
+        public class WithInlineTable
+        {
+            [TomlInlineTable]
+            public InlineTable Table { get; set; }
+
+            public WithInlineTable()
+            {
+                this.Table = new InlineTable();
+            }
+        }
+
+        public class InlineTable
+        {
+            public int Ival { get; set; }
+            public string Sval { get; set; }
+
+            public InlineTable()
+            {
+                this.Ival = 1;
+                this.Sval = "x";
+            }
+        }
+
+        private class MultipleInline
+        {
+            [TomlInlineTable]
+            public InlineTableWithInlineTable Inline { get; set; }
+
+            public MultipleInline()
+            {
+                this.Inline = new InlineTableWithInlineTable();
+            }
+        }
+
+        public class InlineTableWithInlineTable
+        {
+            [TomlInlineTable]
+            public InlineTable SubInline { get; set; }
+
+            public InlineTableWithInlineTable()
+            {
+                this.SubInline = new InlineTable();
+            }
+        }
+
+        private class WithDisallowedInlineTable
+        {
+            [TomlInlineTable]
+            public InlineTableWithDisallowedNormalTable InvalidInlineTable { get; set; }
+
+            public WithDisallowedInlineTable()
+            {
+                this.InvalidInlineTable = new InlineTableWithDisallowedNormalTable();
+            }
+
+        }
+        private class InlineTableWithDisallowedNormalTable
+        {
+            public ClassProperty Disallowed { get; set; }
+
+
+            public InlineTableWithDisallowedNormalTable()
+            {
+                this.Disallowed = new ClassProperty();
+            }
         }
     }
 }
