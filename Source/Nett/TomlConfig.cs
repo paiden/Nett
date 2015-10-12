@@ -13,37 +13,20 @@ namespace Nett
 
     public sealed partial class TomlConfig
     {
-        internal static readonly TomlConfig DefaultInstance = Default();
+        internal static readonly TomlConfig DefaultInstance = Create();
+
         private readonly Dictionary<Type, ITomlConverter> fromTomlConverters = new Dictionary<Type, ITomlConverter>();
         private readonly Dictionary<Type, ITomlConverter> toTomlConverters = new Dictionary<Type, ITomlConverter>();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
+        private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
+
         private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
         {
 
         }
 
-        public static TomlConfig Default() => new TomlConfig();
-
-        public TomlConfig AddConverter(ITomlConverter converter)
-        {
-            if (typeof(TomlObject).IsAssignableFrom(converter.ToType))
-            {
-                this.toTomlConverters.Add(converter.FromType, converter);
-            }
-            else
-            {
-                this.fromTomlConverters.Add(converter.ToType, converter);
-            }
-
-            return this;
-        }
-
-        public TomlConfig AddActivator<T>(Func<object> activator)
-        {
-            this.activators.Add(typeof(T), activator);
-            return this;
-        }
+        public static TomlConfig Create() => new TomlConfig();
 
         internal ITomlConverter GetFromTomlConverter(Type toType)
         {
@@ -59,7 +42,7 @@ namespace Nett
             return conv;
         }
 
-        public object GetActivatedInstance(Type t)
+        internal object GetActivatedInstance(Type t)
         {
             Func<object> a;
             if (this.activators.TryGetValue(t, out a))
@@ -80,6 +63,7 @@ namespace Nett
         }
 
         internal TomlTable.TableTypes GetTableType(PropertyInfo pi) =>
+            this.inlineTableTypes.Contains(pi.PropertyType) ||
             pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute)) ? TomlTable.TableTypes.Inline : TomlTable.TableTypes.Default;
 
         internal TomlCommentLocation GetCommentLocation(TomlComment c)
@@ -91,5 +75,7 @@ namespace Nett
                 default: return DefaultCommentLocation;
             }
         }
+
+
     }
 }

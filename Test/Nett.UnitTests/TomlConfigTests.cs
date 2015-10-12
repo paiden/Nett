@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Nett.UnitTests
 {
@@ -15,7 +10,10 @@ namespace Nett.UnitTests
         public void WhenConfigHasActivator_ActivatorGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Default().AddActivator<IFoo>(() => new Foo());
+            var config = TomlConfig.Create()
+                .ConfigureType<IFoo>()
+                    .As.CreateWith(() => new Foo())
+                    .Apply();
             string toml = @"[Foo]";
 
             // Act

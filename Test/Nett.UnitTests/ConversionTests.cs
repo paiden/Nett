@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Nett.UnitTests
@@ -13,9 +10,11 @@ namespace Nett.UnitTests
         public void ReadToml_WhenConfigHasConverter_ConverterGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Default()
-                .AddConversion().From<int>().To<TestStruct>().As((i) => new TestStruct() { Value = i })
-                .AddConversion().From<TestStruct>().To<TomlValue>().As((s) => new TomlInt(s.Value));
+            var config = TomlConfig.Create()
+                .ConfigureType<TestStruct>()
+                    .As.ConvertFrom<TomlInt>().As(ti => new TestStruct() { Value = (int)ti.Value })
+                    .And.ConvertTo<TomlInt>().As(ts => new TomlInt(ts.Value))
+                    .Apply();
 
             string toml = @"S = 10";
 
@@ -30,9 +29,13 @@ namespace Nett.UnitTests
         public void WriteToml_WhenConfigHasConverter_ConverterGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Default()
-                .AddConversion().From<int>().To<TestStruct>().As((i) => new TestStruct() { Value = i })
-                .AddConversion().From<TestStruct>().To<TomlValue>().As((s) => new TomlInt(s.Value));
+            var config = TomlConfig.Create()
+                .ConfigureType<TestStruct>().As
+                    .ConvertFrom<TomlInt>().As(ti => new TestStruct() { Value = (int)ti.Value })
+                    .And.ConvertTo<TomlInt>().As(ts => new TomlInt(ts.Value))
+                    .And.CreateWith(() => new TestStruct())
+                    .And.TreatAsInlineTable()
+                    .Apply();
             var obj = new ConfigObject() { S = new TestStruct() { Value = 222 } };
 
             // Act
@@ -46,9 +49,13 @@ namespace Nett.UnitTests
         public void RadToml_WithGenricConverters_CanFindCorrectConverter()
         {
             // Arrange
-            var config = TomlConfig.Default()
-                .AddConversion().From<string>().To<IGeneric<int>>().As((s) => new GenericImpl<int>(int.Parse(s)))
-                .AddConversion().From<string>().To<IGeneric<string>>().As((s) => new GenericImpl<string>(s));
+            var config = TomlConfig.Create()
+                .ConfigureType<IGeneric<string>>()
+                    .As.ConvertFrom<TomlString>().As((ts) => new GenericImpl<string>(ts.Value))
+                    .Apply()
+                .ConfigureType<IGeneric<int>>()
+                    .As.ConvertFrom<TomlString>().As((ts) => new GenericImpl<int>(int.Parse(ts.Value)))
+                    .Apply();
 
             string toml = @"
 Foo = ""Hello""
@@ -70,10 +77,13 @@ Foo3 = [""A""]";
         public void WriteToml_ConverterIsUsedAndConvertedPropertiesAreNotEvaluated()
         {
             // Arrange
-            var config = TomlConfig.Default()
-                .AddConversion().From<ClassWithTrowingProp>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used, and property not accessed"));
+            var config = TomlConfig.Create()
+                .ConfigureType<ClassWithTrowingProp>()
+                    .As.ConvertTo<TomlValue>().As((_) => new TomlString("Yeah converter was used, and property not accessed"))
+                    .Apply();
+
             var toWrite = new Foo();
-            
+
             // Act
             var written = Toml.WriteString(toWrite, config);
 
@@ -85,8 +95,10 @@ Foo3 = [""A""]";
         public void WriteToml_WithListItemConverter_UsesConverter()
         {
             // Arrange
-            var config = TomlConfig.Default()
-                .AddConversion().From<GenProp<GenType>>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used."));
+            var config = TomlConfig.Create()
+                .ConfigureType<GenProp<GenType>>()
+                    .As.ConvertTo<TomlValue>().As((_) => new TomlString("Yeah converter was used."))
+                    .Apply();
             var toWrite = new GenHost();
 
             // Act
@@ -100,8 +112,10 @@ Foo3 = [""A""]";
         public void WriteToml_WithListItemConverterAndPropertyUsesInterface_UsesConverter()
         {
             // Arrange
-            var config = TomlConfig.Default()
-                .AddConversion().From<IGenProp<GenType>>().To<TomlValue>().As((_) => new TomlString("Yeah converter was used."));
+            var config = TomlConfig.Create()
+                .ConfigureType<IGenProp<GenType>>()
+                    .As.ConvertTo<TomlValue>().As((_) => new TomlString("Yeah converter was used."))
+                    .Apply();
             var toWrite = new GenInterfaceHost();
 
             // Act
@@ -131,7 +145,7 @@ Foo3 = [""A""]";
 
         private interface IGeneric<T>
         {
-            T Value { get; set;}
+            T Value { get; set; }
         }
 
         private class GenericImpl<T> : IGeneric<T>

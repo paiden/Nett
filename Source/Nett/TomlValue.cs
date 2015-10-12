@@ -93,7 +93,7 @@ namespace Nett
             if (this.GetType() == t) { return this; }
 
             var userConverter = config.GetFromTomlConverter(t);
-            return userConverter != null ? userConverter.Convert(this.Value) : Converter.Convert(t, this.value);
+            return userConverter != null ? userConverter.Convert(this) : Converter.Convert(t, this.value);
         }
     }
 }

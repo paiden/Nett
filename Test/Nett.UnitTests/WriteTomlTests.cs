@@ -78,7 +78,10 @@ namespace Nett.UnitTests
                 Acp = new List<ArrayClassProp>() { new ArrayClassProp() { V = 666 } },
             };
 
-            var cfg = TomlConfig.Default().AddConversion().From<ConvProp>().To<TomlString>().As((cp) => new TomlString(cp.Prop));
+            var cfg = TomlConfig.Create()
+                .ConfigureType<ConvProp>()
+                    .As.ConvertTo<TomlString>().As((cp) => new TomlString(cp.Prop))
+                    .Apply();
 
             // Act
             var exp = @"IntProp = 10
@@ -141,6 +144,17 @@ TheBool = false
             var s = Toml.WriteString(new MultipleInline());
 
             s.Should().Be("Inline = {SubInline = {Ival = 1, Sval = \"x\"}}\r\n");
+        }
+
+        [Fact]
+        public void Write_WhenMarkedAsInlineTableInConfig_WritesTableAsInlineTable()
+        {
+            var cfg = TomlConfig.Create()
+                .ConfigureType<TestClassA>().As.TreatAsInlineTable().Apply();
+
+            var s = Toml.WriteString(new TestClassA(), cfg);
+
+            s.Should().Be("IntProp = 0\r\n");
         }
 
         private class TestClassA
