@@ -121,15 +121,15 @@ namespace Nett
                 this.WritePrependComments(array);
                 this.sw.Write($"{this.CurrentRowKey} = [");
 
-                for (int i = 0; i < array.Items.Count - 1; i++)
+                for (int i = 0; i < array.Items.Length - 1; i++)
                 {
                     array.Items[i].Visit(this);
                     this.sw.Write(", ");
                 }
 
-                if (array.Items.Count > 0)
+                if (array.Items.Length > 0)
                 {
-                    array.Items[array.Items.Count - 1].Visit(this);
+                    array.Items[array.Items.Length - 1].Visit(this);
                 }
 
                 this.sw.Write("]");

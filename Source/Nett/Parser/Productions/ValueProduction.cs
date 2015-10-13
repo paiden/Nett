@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Nett.Parser.Productions
             return value;
         }
 
-        private static TomlObject ParseTomlValue(TokenBuffer tokens)
+        private static TomlValue ParseTomlValue(TokenBuffer tokens)
         {
             if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(tokens); }
             else if (tokens.TryExpect(TokenType.Float)) { return ParseTomlFloat(tokens); }
@@ -40,7 +41,6 @@ namespace Nett.Parser.Productions
             else if (tokens.TryExpect(TokenType.MultilineLiteralString)) { return ParseMultilineLiteralString(tokens); }
             else if (tokens.TryExpect(TokenType.Bool)) { return new TomlBool(bool.Parse(tokens.Consume().value)); }
             else if (tokens.TryExpect(TokenType.LBrac)) { return ParseTomlArray(tokens); }
-            else if (tokens.TryExpect(TokenType.LCurly)) { return InlineTableProduction.Apply(tokens); }
 
             return null;
         }
@@ -131,31 +131,34 @@ namespace Nett.Parser.Productions
 
         private static TomlArray ParseTomlArray(TokenBuffer tokens)
         {
-            TomlArray a = new TomlArray();
+            TomlArray a;
 
             tokens.ExpectAndConsume(TokenType.LBrac);
 
             if (tokens.TryExpect(TokenType.RBrac))
             {
                 tokens.Consume();
-                return a;
+                return TomlArray.Empty;
             }
             else
             {
+                List<TomlValue> values = new List<TomlValue>();
                 var v = ParseTomlValue(tokens);
-                a.Add(v);
+                values.Add(v);
 
                 while (!tokens.TryExpect(TokenType.RBrac))
                 {
                     tokens.ExpectAndConsume(TokenType.Comma);
-                    a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                    values.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
                     if (!tokens.TryExpect(TokenType.RBrac))
                     {
                         v = ParseTomlValue(tokens);
-                        a.Add(v);
+                        values.Add(v);
                     }
                 }
+
+                a = new TomlArray(values.ToArray());
             }
 
             a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));

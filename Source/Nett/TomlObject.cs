@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Nett
@@ -54,7 +55,7 @@ namespace Nett
                     if (typeof(TomlValue).IsAssignableFrom(conv.ToType))
                     {
                         var values = e.Select((o) => (TomlValue)conv.Convert(o));
-                        return new TomlArray(values);
+                        return new TomlArray(values.ToArray());
                     }
                     else if (typeof(TomlTable).IsAssignableFrom(conv.ToType))
                     {
@@ -68,7 +69,7 @@ namespace Nett
                 else if (TomlValue.CanCreateFrom(et))
                 {
                     var values = e.Select((o) => TomlValue.ValueFrom(o));
-                    return new TomlArray(values);
+                    return new TomlArray(values.ToArray());
                 }
                 else
                 {
@@ -78,7 +79,7 @@ namespace Nett
             else
             {
                 var values = e.Select((o) => TomlValue.ValueFrom(o));
-                return new TomlArray(values);
+                return new TomlArray(values.ToArray());
             }
         }
 

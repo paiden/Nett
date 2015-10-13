@@ -27,9 +27,9 @@ namespace Nett.UnitTests
             Assert.Equal(1, read.Rows.Count);
             Assert.Equal(typeof(TomlArray), read.Rows["thevoid"].GetType());
             var rootArray = read.Rows["thevoid"].Get<TomlArray>();
-            Assert.Equal(1, rootArray.Count);
+            Assert.Equal(1, rootArray.Length);
             var subArray = rootArray.Get<TomlArray>(0);
-            Assert.Equal(0, subArray.Count);
+            Assert.Equal(0, subArray.Length);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Nett.UnitTests
             // Assert
             var a = read.Get<TomlArray>("mixed");
             Assert.NotNull(a);
-            Assert.Equal(3, a.Count);
+            Assert.Equal(3, a.Length);
 
             var intArray = a.Get<TomlArray>(0);
             Assert.Equal(1, intArray.Get<int>(0));
@@ -86,7 +86,7 @@ namespace Nett.UnitTests
 
             var a = t.Get<TomlArray>("a");
 
-            a.Count.Should().Be(expected.Length);
+            a.Length.Should().Be(expected.Length);
             for (int i = 0; i < expected.Length; i++)
             {
                 ((TomlInt)a[i]).Value.Should().Be((int)expected[i]);
@@ -105,7 +105,7 @@ namespace Nett.UnitTests
 
             var a = t.Get<TomlArray>("a");
 
-            a.Count.Should().Be(expected.Length);
+            a.Length.Should().Be(expected.Length);
             for (int i = 0; i < expected.Length; i++)
             {
                 ((TomlFloat)a[i]).Value.Should().Be((double)expected[i]);
@@ -123,7 +123,7 @@ namespace Nett.UnitTests
 
             var a = t.Get<TomlArray>("a");
 
-            a.Count.Should().Be(expected.Length);
+            a.Length.Should().Be(expected.Length);
             for (int i = 0; i < expected.Length; i++)
             {
                 ((TomlString)a[i]).Value.Should().Be((string)expected[i]);
@@ -138,8 +138,8 @@ namespace Nett.UnitTests
             var a = tml.Get<TomlArray>("a");
             var aa = a.Get<TomlArray>(0);
 
-            a.Count.Should().Be(1);
-            aa.Count.Should().Be(1);
+            a.Length.Should().Be(1);
+            aa.Length.Should().Be(1);
             aa.Get<int>(0).Should().Be(1);
         }
 
@@ -152,11 +152,11 @@ namespace Nett.UnitTests
             var aa = a.Get<TomlArray>(0);
             var aaa = a.Get<TomlArray>(1);
 
-            a.Count.Should().Be(2);
-            aa.Count.Should().Be(1);
+            a.Length.Should().Be(2);
+            aa.Length.Should().Be(1);
             aa.Get<int>(0).Should().Be(1);
 
-            aaa.Count.Should().Be(2);
+            aaa.Length.Should().Be(2);
             aaa.Get<int>(0).Should().Be(2);
             aaa.Get<int>(1).Should().Be(3);
         }
@@ -187,10 +187,10 @@ namespace Nett.UnitTests
             var read = Toml.Read(toml);
 
             // Assert
-            Assert.Equal(3, read.Get<TomlArray>("ints").Get<TomlArray>().Count);
-            Assert.Equal(3, read.Get<TomlArray>("floats").Get<TomlArray>().Count);
-            Assert.Equal(3, read.Get<TomlArray>("strings").Get<TomlArray>().Count);
-            Assert.Equal(3, read.Get<TomlArray>("dates").Get<TomlArray>().Count);
+            Assert.Equal(3, read.Get<TomlArray>("ints").Get<TomlArray>().Length);
+            Assert.Equal(3, read.Get<TomlArray>("floats").Get<TomlArray>().Length);
+            Assert.Equal(3, read.Get<TomlArray>("strings").Get<TomlArray>().Length);
+            Assert.Equal(3, read.Get<TomlArray>("dates").Get<TomlArray>().Length);
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace Nett.UnitTests
             var tt = (TomlTable)read["numtheory"];
             Assert.Equal(false, tt.Get<bool>("boring"));
             var ta = (TomlArray)tt["perfection"];
-            Assert.Equal(3, ta.Count);
+            Assert.Equal(3, ta.Length);
             Assert.Equal(6, ta.Get<int>(0));
             Assert.Equal(28, ta.Get<char>(1));
             Assert.Equal(496, ta.Get<ushort>(2));

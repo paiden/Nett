@@ -2,6 +2,8 @@
 {
     internal static class InlineTableProduction
     {
+        public static TomlTable TryApply(TokenBuffer tokens) => tokens.TryExpect(TokenType.LCurly) ? Apply(tokens) : null;
+
         public static TomlTable Apply(TokenBuffer tokens)
         {
             TomlTable inlineTable = new TomlTable(TomlTable.TableTypes.Inline);

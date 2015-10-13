@@ -223,7 +223,7 @@ trimmed in raw strings.
 
             var a = (TomlArray)parsed["a"];
 
-            Assert.Equal(3, a.Count);
+            Assert.Equal(3, a.Length);
             Assert.Equal(1, a.Get<int>(0));
             Assert.Equal(2, a.Get<int>(1));
             Assert.Equal(3, a.Get<int>(2));
@@ -236,7 +236,7 @@ trimmed in raw strings.
 
             var a = (TomlArray)parsed["a"];
 
-            Assert.Equal(3, a.Count);
+            Assert.Equal(3, a.Length);
             Assert.Equal("red", a.Get<string>(0));
             Assert.Equal("yellow", a.Get<string>(1));
             Assert.Equal("green", a.Get<string>(2));
@@ -248,14 +248,14 @@ trimmed in raw strings.
             var parsed = Toml.Read("a = [ [1, 2], [3, 4, 5] ]");
 
             var a = (TomlArray)parsed["a"];
-            Assert.Equal(2, a.Count);
+            Assert.Equal(2, a.Length);
             var a1 = a.Get<TomlArray>(0);
-            Assert.Equal(2, a1.Count);
+            Assert.Equal(2, a1.Length);
             Assert.Equal(1, a1[0].Get<long>());
             Assert.Equal(2, a1.Get<int>(1));
 
             var a2 = (TomlArray)a[1];
-            Assert.Equal(3, a2.Count);
+            Assert.Equal(3, a2.Length);
             Assert.Equal(3, a2.Get<int>(0));
             Assert.Equal(4, a2.Get<int>(1));
             Assert.Equal(5, a2.Get<int>(2));
@@ -268,7 +268,7 @@ trimmed in raw strings.
 
             var a = (TomlArray)parsed["a"];
 
-            Assert.Equal(4, a.Count);
+            Assert.Equal(4, a.Length);
             Assert.Equal("all", a[0].Get<string>());
             Assert.Equal("strings", a[1].Get<string>());
             Assert.Equal("are the same", a[2].Get<string>());
@@ -296,9 +296,9 @@ trimmed in raw strings.
 
             var a = (TomlArray)parsed["a"];
 
-            Assert.Equal(2, a.Count);
+            Assert.Equal(2, a.Length);
             var a1 = (TomlArray)a[0];
-            Assert.Equal(2, a1.Count);
+            Assert.Equal(2, a1.Length);
             Assert.Equal(1, a1.Get<int>(0));
             Assert.Equal(2, a1.Get<int>(1));
 
