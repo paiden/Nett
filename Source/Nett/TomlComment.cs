@@ -7,12 +7,12 @@ namespace Nett
 {
     internal class TomlComment
     {
-        public string CommentText { get; }
+        public string Text { get; }
         public CommentLocation Location { get; }
 
         public TomlComment(string commentText, CommentLocation location)
         {
-            this.CommentText = commentText;
+            this.Text = commentText;
             this.Location = location;
         }
     }

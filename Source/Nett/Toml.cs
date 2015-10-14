@@ -7,6 +7,15 @@ namespace Nett
 {
     public static class Toml
     {
+        public enum MergeCommentsMode
+        {
+            Overwrite,
+            KeepNonEmpty,
+            KeepAll,
+        }
+
+        private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
+
         public static string WriteString<T>(T obj) => WriteString(obj, TomlConfig.DefaultInstance);
 
         public static string WriteString<T>(T obj, TomlConfig config)
@@ -22,6 +31,38 @@ namespace Nett
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);
                 return sr.ReadToEnd();
+            }
+        }
+
+        public static void WriteFile<T>(T obj, string filePath)
+        {
+            WriteFile(obj, filePath, DefaultMergeCommentsMode, TomlConfig.DefaultInstance);
+        }
+
+        public static void WriteFile<T>(T obj, string filePath, MergeCommentsMode cm)
+        {
+            WriteFile(obj, filePath, cm, TomlConfig.DefaultInstance);
+        }
+
+        public static void WriteFile<T>(T obj, string filePath, TomlConfig config)
+        {
+            WriteFile(obj, filePath, DefaultMergeCommentsMode, config);
+        }
+
+        public static void WriteFile<T>(T obj, string filePath, MergeCommentsMode cm, TomlConfig config)
+        {
+            var table = TomlTable.From(obj, config);
+
+            if (cm == MergeCommentsMode.KeepNonEmpty || cm == MergeCommentsMode.KeepAll && File.Exists(filePath))
+            {
+                var existing = ReadFile(filePath, config);
+                table.OverwriteCommentsWithCommentsFrom(existing, cm == MergeCommentsMode.KeepAll);
+            }
+
+            using (var fs = new FileStream(filePath, FileMode.Create))
+            using (var sw = new StreamWriter(fs))
+            {
+                var writer = new TomlStreamWriter(sw, config);
             }
         }
 

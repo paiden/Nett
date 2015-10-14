@@ -118,6 +118,25 @@ namespace Nett
             return tt;
         }
 
+        internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
+        {
+            base.OverwriteCommentsWithCommentsFrom(src, overwriteWithEmpty);
+
+            var srcTable = src as TomlTable;
+
+            if (srcTable != null)
+            {
+                foreach (var r in this.Rows)
+                {
+                    TomlObject sourceVal;
+                    if (srcTable.Rows.TryGetValue(r.Key, out sourceVal))
+                    {
+                        r.Value.OverwriteCommentsWithCommentsFrom(sourceVal, overwriteWithEmpty);
+                    }
+                }
+            }
+        }
+
         internal object Merge(TomlTable tt)
         {
             throw new NotImplementedException();

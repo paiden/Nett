@@ -13,7 +13,7 @@ namespace Nett
 
         public abstract string ReadableTypeName { get; }
 
-        internal List<TomlComment> Comments { get; set; }
+        internal List<TomlComment> Comments { get; private set; }
         public T Get<T>() => (T)this.Get(typeof(T), TomlConfig.DefaultInstance);
         public T Get<T>(TomlConfig config) => (T)this.Get(typeof(T), config);
         public object Get(Type t) => this.Get(t, TomlConfig.DefaultInstance);
@@ -88,6 +88,14 @@ namespace Nett
         public TomlObject()
         {
             this.Comments = new List<TomlComment>();
+        }
+
+        internal virtual void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
+        {
+            if (src.Comments.Count > 0 || overwriteWithEmpty)
+            {
+                this.Comments = new List<TomlComment>(src.Comments);
+            }
         }
     }
 }

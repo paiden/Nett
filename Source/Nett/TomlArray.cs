@@ -15,7 +15,7 @@ namespace Nett
 
         public override string ReadableTypeName => "array";
 
-        public TomlArray(TomlValue[] values) : base(values)
+        public TomlArray(params TomlValue[] values) : base(values)
         {
         }
 

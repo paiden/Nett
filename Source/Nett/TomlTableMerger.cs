@@ -1,41 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Nett
 {
-    internal static class TomlTableMerger
+    internal static class TomlTableTests
     {
         internal static TomlTable ValuesOverwrittenFromTo(TomlTable mergeFrom, TomlTable mergeTo)
         {
             Debug.Assert(mergeFrom != null);
             Debug.Assert(mergeTo != null);
 
-            TomlTable merged = new TomlTable(mergeFrom.TableType);
+            var merged = (TomlTable)mergeTo.Clone(TomlObject.CloneModes.CloneValue);
 
             foreach (var r in mergeFrom.Rows)
             {
-                TomlObject toRowValue;
-                if (mergeTo.Rows.TryGetValue(r.Key, out toRowValue))
+                TomlObject existing;
+                if (merged.Rows.TryGetValue(r.Key, out existing))
                 {
-                    var ttTo = toRowValue as TomlTable;
-                    var ttFrom = r.Value as TomlTable;
-                    if (ttTo != null && ttFrom != null)
-                    {
-                        merged.Add(r.Key, ValuesOverwrittenFromTo(ttFrom, ttTo));
-                    }
-                    else
-                    {
-                        var copy = toRowValue.Clone(TomlObject.CloneModes.CloneValue);
-                        copy.Comments = new List<TomlComment>(mergeFrom.Comments);
-                        merged.Add(r.Key, copy);
-                    }
+                    var mergedValue = existing.Clone(TomlObject.CloneModes.CloneValue);
+                    mergedValue.Comments.AddRange(existing.Comments);
+                    merged[r.Key] = mergedValue;
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    merged[r.Key] = r.Value;
                 }
             }
+
+            return merged;
         }
     }
 }

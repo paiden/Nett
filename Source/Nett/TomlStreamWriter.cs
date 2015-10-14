@@ -158,7 +158,7 @@ namespace Nett
             var prepend = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
             foreach (var p in prepend)
             {
-                this.sw.WriteLine($"#{FixMultilineComment(p.CommentText)}");
+                this.sw.WriteLine($"#{FixMultilineComment(p.Text)}");
             }
         }
 
@@ -167,7 +167,7 @@ namespace Nett
             var append = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Append);
             foreach (var a in append)
             {
-                this.sw.Write($" #{FixMultilineComment(a.CommentText)}");
+                this.sw.Write($" #{FixMultilineComment(a.Text)}");
             }
         }
 
