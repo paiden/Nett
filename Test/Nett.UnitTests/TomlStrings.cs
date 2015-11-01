@@ -46,7 +46,7 @@ f = false
 ";
 
             /// <summary>
-            /// For now I will not use this string for testing but a slightly simplified version. The reason is, that the ABNF create by the TOML initiator
+            /// For now I will not use this string for testing but a slightly simplified version. The reason is, that the ABNF created by the TOML initiator
             /// says that this case is not allowed https://github.com/toml-lang/toml/blob/abnf/toml.abnf, at least when I didn't misinterpret it.
             /// For now I will stick to the ABNF that says that comments are only allowed 'after' there was an array value. This case is in the CommentsEverywhereABNFCompatible member.
             /// </summary>
