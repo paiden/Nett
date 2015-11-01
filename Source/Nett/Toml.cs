@@ -62,6 +62,7 @@ namespace Nett
             using (var sw = new StreamWriter(fs))
             {
                 var writer = new TomlStreamWriter(sw, config);
+                writer.WriteToml(table);
             }
         }
 
