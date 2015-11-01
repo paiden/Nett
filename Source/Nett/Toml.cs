@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Nett.Util;
@@ -28,6 +29,8 @@ namespace Nett
 
         public static TomlTable ReadFile(string filePath, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 return StreamTomlSerializer.Deserialize(fs);
@@ -38,13 +41,16 @@ namespace Nett
 
         public static T ReadFile<T>(FileStream stream, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             var tt = StreamTomlSerializer.Deserialize(stream);
             return tt.Get<T>(config);
         }
 
         public static TomlTable ReadFile(FileStream stream) => ReadFile(stream, TomlConfig.DefaultInstance);
 
-        public static TomlTable ReadFile(FileStream stream, TomlConfig config)
+        // Make public when config will get used for something in this case in the future.
+        private static TomlTable ReadFile(FileStream stream, TomlConfig config)
         {
             return StreamTomlSerializer.Deserialize(stream);
         }
@@ -53,6 +59,8 @@ namespace Nett
 
         public static T ReadStream<T>(Stream stream, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             var tt = StreamTomlSerializer.Deserialize(stream);
             return tt.Get<T>(config);
         }
@@ -67,16 +75,19 @@ namespace Nett
 
         public static T ReadString<T>(string toRead) => ReadString<T>(toRead, TomlConfig.DefaultInstance);
 
-        public static T ReadString<T>(string toRead, TomlConfig tomlConfig)
+        public static T ReadString<T>(string toRead, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             TomlTable tt = ReadString(toRead);
-            T result = tt.Get<T>(tomlConfig);
+            T result = tt.Get<T>(config);
             return result;
         }
 
         public static TomlTable ReadString(string toRead) => ReadString(toRead, TomlConfig.DefaultInstance);
 
-        public static TomlTable ReadString(string toRead, TomlConfig config)
+        // Make public when untyped reading used config in the future
+        private static TomlTable ReadString(string toRead, TomlConfig config)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(toRead);
             using (var ms = new MemoryStream())
@@ -106,6 +117,9 @@ namespace Nett
 
         public static void WriteFile<T>(T obj, string filePath, MergeCommentsMode cm, TomlConfig config)
         {
+            if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             var table = TomlTable.From(obj, config);
 
             if ((cm == MergeCommentsMode.KeepNonEmpty || cm == MergeCommentsMode.KeepAll) && File.Exists(filePath))
@@ -124,19 +138,26 @@ namespace Nett
 
         public static void WriteStream<T>(Stream output, T obj) => WriteStream(output, obj, TomlConfig.DefaultInstance);
 
-        public static void WriteStream<T>(Stream output, T obj, TomlConfig config)
+        public static void WriteStream<T>(Stream outStream, T obj, TomlConfig config)
         {
-            var sw = new FormattingStreamWriter(output, CultureInfo.InvariantCulture);
+            if (outStream == null) { throw new ArgumentNullException(nameof(outStream)); }
+            if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
+            var sw = new FormattingStreamWriter(outStream, CultureInfo.InvariantCulture);
             var tt = TomlTable.From(obj, config);
             var tw = new TomlStreamWriter(sw, config);
             tw.WriteToml(tt);
-            output.Position = 0;
+            outStream.Position = 0;
         }
 
         public static string WriteString<T>(T obj) => WriteString(obj, TomlConfig.DefaultInstance);
 
         public static string WriteString<T>(T obj, TomlConfig config)
         {
+            if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             TomlTable tt = TomlTable.From(obj, config);
 
             using (var ms = new MemoryStream(1024))

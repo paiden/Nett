@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using Xunit;
@@ -8,9 +9,22 @@ namespace Nett.UnitTests
     [ExcludeFromCodeCoverage]
     public class TomlTests
     {
+        [Fact]
+        public void ReadFileT_WhenFileNameArgIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.ReadFile((string)null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
 
         [Fact]
-        public void ReadFileOfT_WhenArgIsFileStreamAndNoConfigGiven_ReadsFileCorrectly()
+        public void ReadFileT_WhenConfigIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.ReadFile<SimpleToml>("SimpleToml.tml", null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void ReadFileT_WhenArgIsFileStreamAndNoConfigGiven_ReadsFileCorrectly()
         {
             using (var s = GetStream())
             {
@@ -29,14 +43,36 @@ namespace Nett.UnitTests
             }
         }
 
+
         [Fact]
-        public void ReadStreamOfT_WhenArgIsFileStreamAndNoConfigGiven_ReadsFileCorrectly()
+        public void ReadFile_WhenFileStreamArgIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.ReadFile((FileStream)null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void ReadFileT_WithStreamWhenConfigIsNull_ThrowsArgNull()
         {
             using (var s = GetStream())
             {
-                var tml = Toml.ReadStream<SimpleToml>(GetStream());
-                tml.X.Should().Be(1);
+                Action a = () => Toml.ReadFile<SimpleToml>(s, null);
+                a.ShouldThrow<ArgumentNullException>();
             }
+        }
+
+        [Fact]
+        public void ReadStringT_WhenStringIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.ReadString(null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void ReadStringT_WhenConfigIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.ReadString<SimpleToml>("", null);
+            a.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -50,6 +86,60 @@ namespace Nett.UnitTests
         }
 
         [Fact]
+        public void ReadStreamOfT_WhenNoConfigGiven_ReadsFileCorrectly()
+        {
+            using (var s = GetStream())
+            {
+                var tml = Toml.ReadStream<SimpleToml>(GetStream());
+                tml.X.Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public void ReadStreamOfT_WhenConfigIsNull_ThrowsArgNull()
+        {
+            using (var s = GetStream())
+            {
+                Action a = () => Toml.ReadStream<SimpleToml>(GetStream(), null);
+                a.ShouldThrow<ArgumentNullException>();
+            }
+        }
+
+        [Fact]
+        public void WriteFileT_WhenObjIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteFile((SimpleToml)null, RndFilePath);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteFileT_WhenConfigIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteFile(new SimpleToml(), RndFilePath, null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteFileT_WhenFilePathIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteFile(new SimpleToml(), null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteStringT_WhenObjIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteString((SimpleToml)null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+        [Fact]
+        public void WriteStringT_WhenConfigIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteString(new SimpleToml(), null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
         public void WriteStream_WithoutConfig_WritesToStream()
         {
             using (var s = new MemoryStream())
@@ -59,6 +149,27 @@ namespace Nett.UnitTests
 
                 read.X.Should().Be(1);
             }
+        }
+
+        [Fact]
+        public void WriteStream_WhenStreamIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteStream((Stream)null, new SimpleToml());
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteStream_WhenObjIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteStream(new MemoryStream(), (SimpleToml)null);
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteStream_WhenConfigIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteStream(new MemoryStream(), new SimpleToml(), null);
+            a.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -103,5 +214,7 @@ namespace Nett.UnitTests
         {
             public int X { get; set; }
         }
+
+        private static string RndFilePath = Guid.NewGuid() + ".tml";
     }
 }
