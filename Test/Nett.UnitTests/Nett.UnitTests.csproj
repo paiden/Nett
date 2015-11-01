@@ -82,6 +82,7 @@
     <Compile Include="TomlStrings.cs" />
     <Compile Include="TomlTableTests.cs" />
     <Compile Include="TomlValueTests.cs" />
+    <Compile Include="WriteTomlFileTests.cs" />
     <Compile Include="WriteTomlTests.cs" />
     <Compile Include="WriteTomlTypesTests.cs" />
   </ItemGroup>

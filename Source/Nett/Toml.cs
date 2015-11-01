@@ -26,8 +26,7 @@ namespace Nett
             {
                 var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
                 var writer = new TomlStreamWriter(sw, config);
-                tt.Visit(writer);
-                sw.Flush();
+                writer.WriteToml(tt);
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);
                 return sr.ReadToEnd();
@@ -53,7 +52,7 @@ namespace Nett
         {
             var table = TomlTable.From(obj, config);
 
-            if (cm == MergeCommentsMode.KeepNonEmpty || cm == MergeCommentsMode.KeepAll && File.Exists(filePath))
+            if ((cm == MergeCommentsMode.KeepNonEmpty || cm == MergeCommentsMode.KeepAll) && File.Exists(filePath))
             {
                 var existing = ReadFile(filePath, config);
                 table.OverwriteCommentsWithCommentsFrom(existing, cm == MergeCommentsMode.KeepAll);

@@ -34,6 +34,14 @@ namespace Nett
             this.VisitTableArray = (ta) => this.WriteTomlTableArray(ta);
         }
 
+        internal void WriteToml(TomlTable table)
+        {
+            Debug.Assert(table != null);
+
+            table.Visit(this);
+            this.sw.Flush();
+        }
+
         private string CurrentRowKey { get { return this.rowKeys.Count > 0 ? this.rowKeys.Peek() : null; } }
 
         private void WriteKeyedValue(TomlObject obj, Action writeValue)
