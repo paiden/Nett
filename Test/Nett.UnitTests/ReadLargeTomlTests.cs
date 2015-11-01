@@ -47,7 +47,7 @@ PublishLocation = ""\\server001\\TestData\\results""
 
 ";
 
-            var read = Toml.Read<Root>(toml);
+            var read = Toml.ReadString<Root>(toml);
 
             Assert.NotNull(read);
             Assert.NotNull(read.Resources);

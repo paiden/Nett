@@ -8,19 +8,21 @@ namespace Nett
 {
     internal sealed class TomlStreamWriter : TomlObjectVisitor
     {
-        private readonly StreamWriter sw;
+        private readonly TextWriter sw;
         private readonly TomlConfig config;
         private readonly Stack<string> rowKeys = new Stack<string>();
         private bool writeValueKey = true;
         private bool writeTableKey = true;
         private int writeInlineTableInvocationsRunning = 0;
 
-        public TomlStreamWriter(StreamWriter streamWriter, TomlConfig config)
+        public TomlStreamWriter(TextWriter writer, TomlConfig config)
         {
-            if (streamWriter == null) { throw new ArgumentNullException(nameof(StreamWriter)); }
-            this.config = config ?? TomlConfig.DefaultInstance;
+            Debug.Assert(writer != null);
+            Debug.Assert(config != null);
 
-            this.sw = streamWriter;
+            this.config = config;
+
+            this.sw = writer;
 
             this.VisitBool = (b) => this.WriteKeyedValue(b, () => this.sw.Write(b.Value.ToString().ToLower()));
             this.VisitFloat = (f) => this.WriteKeyedValue(f, () => this.sw.Write(f.Value));

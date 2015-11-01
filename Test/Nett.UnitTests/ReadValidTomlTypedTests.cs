@@ -22,7 +22,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArrayEmpty;
 
             // Act
-            var read = Toml.Read<EmptyArray>(toml);
+            var read = Toml.ReadString<EmptyArray>(toml);
 
             // Assert
             Assert.NotNull(read);
@@ -38,7 +38,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArrayNoSpaces;
 
             // Act
-            var read = Toml.Read<ArrayNoSpaces>(toml);
+            var read = Toml.ReadString<ArrayNoSpaces>(toml);
 
             // Assert
             Assert.Equal(3, read.ints.Length);
@@ -54,7 +54,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArraysNested;
 
             // Act
-            var read = Toml.Read<ArraysNested>(toml);
+            var read = Toml.ReadString<ArraysNested>(toml);
 
             // Assert
             Assert.Equal(2, read.nest.Count);
@@ -69,7 +69,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.TableArrayNested;
 
             // Act
-            var read = Toml.Read<AlbumsRoot>(toml);
+            var read = Toml.ReadString<AlbumsRoot>(toml);
 
             // Assert
             Assert.NotNull(read);

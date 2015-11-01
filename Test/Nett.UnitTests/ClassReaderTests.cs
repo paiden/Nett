@@ -21,7 +21,7 @@ ArrayProperty = [10, 20, 30]
 ";
 
             // Act
-            var sc = Toml.Read<SingleClass>(toml);
+            var sc = Toml.ReadString<SingleClass>(toml);
 
             // Assert
             Assert.Equal("Hello world", sc.StringProperty);

@@ -20,7 +20,7 @@ namespace Nett.UnitTests
 
             // Act
             var written = Toml.WriteString(toSerialize);
-            var read = Toml.Read<SystemConfig>(written);
+            var read = Toml.ReadString<SystemConfig>(written);
 
             // Assert
             Assert.Equal(toSerialize, read);

@@ -17,7 +17,7 @@ namespace Nett.UnitTests
             string toml = @"[Foo]";
 
             // Act
-            var co = Toml.Read<ConfigOjectWithInterface>(toml, config);
+            var co = Toml.ReadString<ConfigOjectWithInterface>(toml, config);
 
             // Assert
             Assert.IsType<Foo>(co.Foo);

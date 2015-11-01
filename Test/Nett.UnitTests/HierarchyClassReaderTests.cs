@@ -19,7 +19,7 @@ OuterProp = ""Hello World""
     InnerProp = 200";
 
             // Act
-            var parsed = Toml.Read<Outer>(toml);
+            var parsed = Toml.ReadString<Outer>(toml);
 
             // Assert
             Assert.Equal("Hello World", parsed.OuterProp);
@@ -40,7 +40,7 @@ OuterProp = ""Hello World""
 ";
 
             // Act
-            var parsed = Toml.Read<Outer>(toml);
+            var parsed = Toml.ReadString<Outer>(toml);
 
             // Assert
             Assert.NotNull(parsed.A);

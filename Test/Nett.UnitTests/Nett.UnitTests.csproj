@@ -70,6 +70,7 @@
     <Compile Include="Parser\TokenizerTests.cs" />
     <Compile Include="ReadAdvancedTomlTests.cs" />
     <Compile Include="ReadLargeTomlTests.cs" />
+    <Compile Include="TomlTests.cs" />
     <Compile Include="ReadTomlWithCommentsTests.cs" />
     <Compile Include="ReadValidTomlTypedTests.cs" />
     <Compile Include="ReadValidTomlUntypedTests.cs" />
@@ -88,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="SimpleToml.tml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TomlWithSpecialCharacters.tml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

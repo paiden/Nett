@@ -16,20 +16,76 @@ namespace Nett
 
         private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
 
-        public static string WriteString<T>(T obj) => WriteString(obj, TomlConfig.DefaultInstance);
+        public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);
 
-        public static string WriteString<T>(T obj, TomlConfig config)
+        public static T ReadFile<T>(string filePath, TomlConfig config)
         {
-            TomlTable tt = TomlTable.From(obj, config);
+            var tt = ReadFile(filePath, config);
+            return tt.Get<T>(config);
+        }
 
-            using (var ms = new MemoryStream(1024))
+        public static TomlTable ReadFile(string filePath) => ReadFile(filePath, TomlConfig.DefaultInstance);
+
+        public static TomlTable ReadFile(string filePath, TomlConfig config)
+        {
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
-                var writer = new TomlStreamWriter(sw, config);
-                writer.WriteToml(tt);
+                return StreamTomlSerializer.Deserialize(fs);
+            }
+        }
+
+        public static T ReadFile<T>(FileStream stream) => ReadFile<T>(stream, TomlConfig.DefaultInstance);
+
+        public static T ReadFile<T>(FileStream stream, TomlConfig config)
+        {
+            var tt = StreamTomlSerializer.Deserialize(stream);
+            return tt.Get<T>(config);
+        }
+
+        public static TomlTable ReadFile(FileStream stream) => ReadFile(stream, TomlConfig.DefaultInstance);
+
+        public static TomlTable ReadFile(FileStream stream, TomlConfig config)
+        {
+            return StreamTomlSerializer.Deserialize(stream);
+        }
+
+        public static T ReadStream<T>(Stream stream) => ReadStream<T>(stream, TomlConfig.DefaultInstance);
+
+        public static T ReadStream<T>(Stream stream, TomlConfig config)
+        {
+            var tt = StreamTomlSerializer.Deserialize(stream);
+            return tt.Get<T>(config);
+        }
+
+        public static TomlTable ReadStream(Stream stream) => ReadStream(stream, TomlConfig.DefaultInstance);
+
+        // Keep private as long as the config parameter isn't used in the method body
+        private static TomlTable ReadStream(Stream stream, TomlConfig config)
+        {
+            return StreamTomlSerializer.Deserialize(stream);
+        }
+
+        public static T ReadString<T>(string toRead) => ReadString<T>(toRead, TomlConfig.DefaultInstance);
+
+        public static T ReadString<T>(string toRead, TomlConfig tomlConfig)
+        {
+            TomlTable tt = ReadString(toRead);
+            T result = tt.Get<T>(tomlConfig);
+            return result;
+        }
+
+        public static TomlTable ReadString(string toRead) => ReadString(toRead, TomlConfig.DefaultInstance);
+
+        public static TomlTable ReadString(string toRead, TomlConfig config)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(toRead);
+            using (var ms = new MemoryStream())
+            {
+                StreamWriter writer = new StreamWriter(ms);
+                writer.Write(toRead);
+                writer.Flush();
                 ms.Position = 0;
-                StreamReader sr = new StreamReader(ms);
-                return sr.ReadToEnd();
+                return StreamTomlSerializer.Deserialize(ms);
             }
         }
 
@@ -66,43 +122,31 @@ namespace Nett
             }
         }
 
-        public static T Read<T>(string toRead) => Read<T>(toRead, TomlConfig.DefaultInstance);
+        public static void WriteStream<T>(Stream output, T obj) => WriteStream(output, obj, TomlConfig.DefaultInstance);
 
-        public static T Read<T>(string toRead, TomlConfig tomlConfig)
+        public static void WriteStream<T>(Stream output, T obj, TomlConfig config)
         {
-            TomlTable tt = Read(toRead);
-            T result = tt.Get<T>(tomlConfig);
-            return result;
+            var sw = new FormattingStreamWriter(output, CultureInfo.InvariantCulture);
+            var tt = TomlTable.From(obj, config);
+            var tw = new TomlStreamWriter(sw, config);
+            tw.WriteToml(tt);
+            output.Position = 0;
         }
 
-        public static TomlTable Read(string toRead)
+        public static string WriteString<T>(T obj) => WriteString(obj, TomlConfig.DefaultInstance);
+
+        public static string WriteString<T>(T obj, TomlConfig config)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(toRead);
-            using (var ms = new MemoryStream())
+            TomlTable tt = TomlTable.From(obj, config);
+
+            using (var ms = new MemoryStream(1024))
             {
-                StreamWriter writer = new StreamWriter(ms);
-                writer.Write(toRead);
-                writer.Flush();
+                var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
+                var writer = new TomlStreamWriter(sw, config);
+                writer.WriteToml(tt);
                 ms.Position = 0;
-                return StreamTomlSerializer.Deserialize(ms);
-            }
-        }
-
-        public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);
-
-        public static T ReadFile<T>(string filePath, TomlConfig config)
-        {
-            var tt = ReadFile(filePath, config);
-            return tt.Get<T>(config);
-        }
-
-        public static TomlTable ReadFile(string filePath) => ReadFile(filePath, TomlConfig.DefaultInstance);
-
-        public static TomlTable ReadFile(string filePath, TomlConfig config)
-        {
-            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return StreamTomlSerializer.Deserialize(fs);
+                StreamReader sr = new StreamReader(ms);
+                return sr.ReadToEnd();
             }
         }
     }

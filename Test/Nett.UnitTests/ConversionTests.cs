@@ -19,7 +19,7 @@ namespace Nett.UnitTests
             string toml = @"S = 10";
 
             // Act
-            var co = Toml.Read<ConfigObject>(toml, config);
+            var co = Toml.ReadString<ConfigObject>(toml, config);
 
             // Assert
             Assert.Equal(10, co.S.Value);
@@ -63,7 +63,7 @@ Foo2 = ""10""
 Foo3 = [""A""]";
 
             // Act
-            var co = Toml.Read<GenericHost>(toml, config);
+            var co = Toml.ReadString<GenericHost>(toml, config);
 
             // Assert
             Assert.NotNull(co);

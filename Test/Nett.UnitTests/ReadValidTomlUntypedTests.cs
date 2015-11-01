@@ -20,7 +20,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArrayEmpty;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.NotNull(read);
@@ -39,7 +39,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArrayNoSpaces;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Get<TomlArray>("ints").Get<int>(0));
@@ -54,7 +54,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArrayHeterogenous;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             var a = read.Get<TomlArray>("mixed");
@@ -82,7 +82,7 @@ namespace Nett.UnitTests
         [InlineData("a = [0, 1,  ]", new object[] { 0, 1 })]
         public void ReadValidTomlIntArray(string toml, object[] expected)
         {
-            var t = Toml.Read(toml);
+            var t = Toml.ReadString(toml);
 
             var a = t.Get<TomlArray>("a");
 
@@ -101,7 +101,7 @@ namespace Nett.UnitTests
         [InlineData("a = [0.0,  1.0,  ]", new object[] { 0.0, 1.0 })]
         public void ReadValidTomlDoubleArray(string toml, object[] expected)
         {
-            var t = Toml.Read(toml);
+            var t = Toml.ReadString(toml);
 
             var a = t.Get<TomlArray>("a");
 
@@ -119,7 +119,7 @@ namespace Nett.UnitTests
         [InlineData("a = ['''s''']", new object[] { "s" })]
         public void ReadValidTomlStringArray(string toml, object[] expected)
         {
-            var t = Toml.Read(toml);
+            var t = Toml.ReadString(toml);
 
             var a = t.Get<TomlArray>("a");
 
@@ -133,7 +133,7 @@ namespace Nett.UnitTests
         [Fact]
         public void ReadValidTomlArrayOfIntArray()
         {
-            var tml = Toml.Read("a = [[1]]");
+            var tml = Toml.ReadString("a = [[1]]");
 
             var a = tml.Get<TomlArray>("a");
             var aa = a.Get<TomlArray>(0);
@@ -146,7 +146,7 @@ namespace Nett.UnitTests
         [Fact]
         public void ReadValidTomlArrayOfIntArrays()
         {
-            var tml = Toml.Read("a = [[1], [2, 3], ]");
+            var tml = Toml.ReadString("a = [[1], [2, 3], ]");
 
             var a = tml.Get<TomlArray>("a");
             var aa = a.Get<TomlArray>(0);
@@ -169,7 +169,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ArraysNested;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             var a = read.Get<TomlArray>("nest");
@@ -184,7 +184,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.Arrays;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(3, read.Get<TomlArray>("ints").Get<TomlArray>().Length);
@@ -200,7 +200,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.TableArrayNested;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -225,7 +225,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.Boolean;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(true, read.Get<bool>("t"));
@@ -239,7 +239,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.CommentsEverywhereABNFCompatible;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(42, read.Get<TomlTable>("group").Get<int>("answer"));
@@ -255,7 +255,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.DateTime;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTimeOffset>("bestdayever"));
@@ -268,7 +268,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.Empty;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(0, read.Rows.Count);
@@ -281,7 +281,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.Example;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
@@ -302,7 +302,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.Floats;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(3.14, read.Get<float>("pi"), 2);
@@ -316,7 +316,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ImplicitAndExplicitAfter;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<int>("answer"));
@@ -330,7 +330,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ImplicitAndExplicitBefore;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<int>("answer"));
@@ -344,7 +344,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.ImplicitGroups;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -358,7 +358,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.Integer;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
@@ -373,7 +373,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.KeyEqualsNoSpace;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -387,7 +387,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.KeyEqualsSpace;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -401,7 +401,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.KeySpecialChars;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -416,7 +416,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.LongFloats;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
@@ -431,7 +431,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.LongInts;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
@@ -447,7 +447,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.MultiLineStrings;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(7, read.Rows.Count);
@@ -467,7 +467,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.RawMultilineStrings;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(3, read.Rows.Count);
@@ -483,7 +483,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.RawStrings;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(7, read.Rows.Count);
@@ -503,7 +503,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.StringEmpty;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -517,7 +517,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.StringEscapes;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(11, read.Rows.Count);
@@ -541,7 +541,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.StringWithPound;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
@@ -556,7 +556,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.TableArrayImplicit;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -570,7 +570,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.NestedArrayOfTables;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             read.Get<TomlTableArray>("fruits").Count.Should().Be(2);
@@ -585,7 +585,7 @@ namespace Nett.UnitTests
             var toml = TomlStrings.Valid.TableArrayMany;
 
             // Act
-            var read = Toml.Read(toml);
+            var read = Toml.ReadString(toml);
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
@@ -613,7 +613,7 @@ namespace Nett.UnitTests
         public void ReadTom_WithInlineTable_ReadsItCorrect()
         {
             // Act
-            var tml = Toml.Read("name = { first = \"Tom\", last = \"Preston-Werner\" }");
+            var tml = Toml.ReadString("name = { first = \"Tom\", last = \"Preston-Werner\" }");
 
             // Assert
             tml.TryGet<TomlTable>("name").Should().NotBeNull();

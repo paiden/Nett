@@ -20,7 +20,7 @@ StringList = [""A"", ""B"", ""C""]
 IntList = [1, 2, 3]";
 
             // Act
-            var read = Toml.Read<WithArray>(toml);
+            var read = Toml.ReadString<WithArray>(toml);
 
             // Assert
             Assert.NotNull(read);
@@ -57,7 +57,7 @@ X = 0
         B = [ ""SA"", ""SB"" ]
 ";
 
-            var read = Toml.Read<Root>(toParse);
+            var read = Toml.ReadString<Root>(toParse);
 
             Assert.NotNull(read);
             Assert.NotNull(read.Tbl);
@@ -82,7 +82,7 @@ server = ""192.168.1.1""
 ports = [8001, 8001, 8002]
 ";
 
-            var read = Toml.Read<DbConfig>(toParse);
+            var read = Toml.ReadString<DbConfig>(toParse);
 
         }
 

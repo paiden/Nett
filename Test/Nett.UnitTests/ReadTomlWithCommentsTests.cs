@@ -13,7 +13,7 @@ namespace Nett.UnitTests
 
 #nlc ";
 
-            var tt = Toml.Read(TML);
+            var tt = Toml.ReadString(TML);
 
             tt.Comments.Count.Should().Be(3);
             tt.Comments[0].Text.Should().Be(" fc");
@@ -28,7 +28,7 @@ namespace Nett.UnitTests
             const string TML = @"
 x = 0 # AC";
             // Act
-            var tt = Toml.Read(TML);
+            var tt = Toml.ReadString(TML);
 
             // Assert
             tt["x"].Comments.Count.Should().Be(1);
@@ -45,7 +45,7 @@ x = 0 # AC";
 x = 0";
 
             // Act
-            var tt = Toml.Read(TML);
+            var tt = Toml.ReadString(TML);
 
             // Assert
             tt["x"].Comments.Count.Should().Be(1);
