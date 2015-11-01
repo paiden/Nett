@@ -90,12 +90,8 @@ namespace Nett
         private static TomlTable ReadString(string toRead, TomlConfig config)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(toRead);
-            using (var ms = new MemoryStream())
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(toRead)))
             {
-                StreamWriter writer = new StreamWriter(ms);
-                writer.Write(toRead);
-                writer.Flush();
-                ms.Position = 0;
                 return StreamTomlSerializer.Deserialize(ms);
             }
         }
