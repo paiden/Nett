@@ -92,8 +92,11 @@ namespace Nett
             return o as T;
         }
 
-        public static TomlTable From<T>(T obj, TomlConfig config, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
+        public static TomlTable From<T>(T obj, TomlConfig config, TableTypes tableType = TomlTable.TableTypes.Default)
         {
+            if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             TomlTable tt = new TomlTable(tableType);
 
             var t = obj.GetType();

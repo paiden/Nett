@@ -106,6 +106,42 @@ namespace Nett.UnitTests
         }
 
         [Fact]
+        public void WriteFile_WhenTableIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteFile((TomlTable)null, RndFilePath);
+
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteFile_WritesTaleCorrectly()
+        {
+            var fn = RndFilePath;
+            const int expected = 1;
+            Toml.WriteFile(CreateSimpleTomlAsTable(expected), fn);
+
+            var read = Toml.ReadFile<SimpleToml>(fn);
+
+            read.X.Should().Be(expected);
+        }
+
+        [Fact]
+        public void WriteFile_WhenTomlConfigIsNull_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteFile(CreateSimpleTomlAsTable(1), RndFilePath, null);
+
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void WriteFile_WhenTomlConfigIsNullAndMergeMode_ThrowsArgNull()
+        {
+            Action a = () => Toml.WriteFile(CreateSimpleTomlAsTable(1), RndFilePath, Toml.MergeCommentsMode.Overwrite, null);
+
+            a.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
         public void WriteFileT_WhenObjIsNull_ThrowsArgNull()
         {
             Action a = () => Toml.WriteFile((SimpleToml)null, RndFilePath);
@@ -126,6 +162,24 @@ namespace Nett.UnitTests
             a.ShouldThrow<ArgumentNullException>();
         }
 
+        [Theory]
+        [InlineData(Toml.MergeCommentsMode.KeepAll)]
+        [InlineData(Toml.MergeCommentsMode.KeepNonEmpty)]
+        [InlineData(Toml.MergeCommentsMode.Overwrite)]
+        public void WriteFileT_WithCommentMergeMode_WritesCorrectly(Toml.MergeCommentsMode mode)
+        {
+            // Arrange
+            string fn = RndFilePath;
+            const int expected = 1;
+
+            // Act
+            Toml.WriteFile(CreateSimpleTomlAsTable(expected), fn, mode);
+
+            // Assert
+            var read = Toml.ReadFile<SimpleToml>(fn);
+            read.X.Should().Be(expected);
+        }
+
         [Fact]
         public void WriteStringT_WhenObjIsNull_ThrowsArgNull()
         {
@@ -144,7 +198,7 @@ namespace Nett.UnitTests
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(s, CreateFoo());
+                Toml.WriteStream(CreateFoo(), s);
                 var read = Toml.ReadStream<Foo>(s);
 
                 read.X.Should().Be(1);
@@ -154,21 +208,21 @@ namespace Nett.UnitTests
         [Fact]
         public void WriteStream_WhenStreamIsNull_ThrowsArgNull()
         {
-            Action a = () => Toml.WriteStream((Stream)null, new SimpleToml());
+            Action a = () => Toml.WriteStream(new SimpleToml(), (Stream)null);
             a.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
         public void WriteStream_WhenObjIsNull_ThrowsArgNull()
         {
-            Action a = () => Toml.WriteStream(new MemoryStream(), (SimpleToml)null);
+            Action a = () => Toml.WriteStream((SimpleToml)null, new MemoryStream());
             a.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
         public void WriteStream_WhenConfigIsNull_ThrowsArgNull()
         {
-            Action a = () => Toml.WriteStream(new MemoryStream(), new SimpleToml(), null);
+            Action a = () => Toml.WriteStream(new SimpleToml(), new MemoryStream(), null);
             a.ShouldThrow<ArgumentNullException>();
         }
 
@@ -177,7 +231,7 @@ namespace Nett.UnitTests
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(s, CreateFoo(), TomlConfig.DefaultInstance);
+                Toml.WriteStream(CreateFoo(), s, TomlConfig.DefaultInstance);
 
                 s.Position.Should().Be(0);
             }
@@ -188,7 +242,7 @@ namespace Nett.UnitTests
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(s, CreateFoo(), TomlConfig.DefaultInstance);
+                Toml.WriteStream(CreateFoo(), s, TomlConfig.DefaultInstance);
                 var read = Toml.ReadStream<Foo>(s);
 
                 read.X.Should().Be(1);
@@ -203,6 +257,14 @@ namespace Nett.UnitTests
         private static Foo CreateFoo()
         {
             return new Foo() { X = 1 };
+        }
+
+        private static TomlTable CreateSimpleTomlAsTable(int x)
+        {
+            var tt = new TomlTable();
+            tt.Add("X", new TomlInt(1));
+
+            return tt;
         }
 
         private class SimpleToml
