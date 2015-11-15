@@ -31,6 +31,11 @@ namespace Nett.UnitTests
         public string ServerAddress { get; set; }
     }
 
+    public class TypeNotSupportedByToml
+    {
+        public Guid SomeGuid { get; set; }
+    }
+
     public class DocumentationExamples
     {
         private string exp = @"EnableDebug = true
@@ -128,6 +133,21 @@ ServerAddress = ""http://127.0.0.1:8080""
             config.EnableDebug.Should().Be(true);
             config.Client.ServerAddress.Should().Be("http://127.0.0.1:8080");
             config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
+        }
+
+        [Fact]
+        public void WriteGuidToml()
+        {
+            var obj = new TypeNotSupportedByToml() { SomeGuid = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606") };
+
+            var myconfig = TomlConfig.Create();
+                //.ConfigureType<Guid>()
+                //    .As.ConvertTo<TomlString>().As((g) => new TomlString(g.ToString()))
+                //    .And.ConvertFrom<TomlString>().As((s) => new Guid(s.Value))
+                //.Apply();
+
+            Toml.WriteFile(obj, "test.tml", myconfig);
+            var read = Toml.ReadFile<TypeNotSupportedByToml>("test.tml", myconfig);
         }
     }
 }

@@ -77,7 +77,5 @@ namespace Nett
                 default: return DefaultCommentLocation;
             }
         }
-
-
     }
 }

@@ -99,7 +99,8 @@ This will create a copy of the default configuration, and you can configure this
 via builder methods that will be described in more detail in the next topics.
 
 ## Deserializing types without default constructor
-If your type doesn't have a default constructor Nett will not be able to deserialize
+If your type doesn't have a default constructor or is not constructable (interface or abstract
+class) Nett will not be able to deserialize
 into that type without some help.
 
 Assume we have the following type, that extends the configuration class from the basic
@@ -128,7 +129,7 @@ specialized creator can be created. Make sure the type has a parameterless const
 configuration with an corresponding creator is provided.`
 
 To make this work, we need to pass a custom configuration to the read method that tells Nett, how
-the type can be activated. This is done the by:
+the type can be created. This is done the by:
 
 ```C#
 var myConfig = TomlConfig.Create()
@@ -138,6 +139,35 @@ var myConfig = TomlConfig.Create()
 
 var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml", myConfig);
 ```
+
+## Reading & writing non TOML types
+TOML has a very limited set of supported types. So how can non supported types e.g.
+System.Guid be used in a object that has to be written to, or read from TOML?
+
+To support such scenarios you can register custom type converters for a type that
+tell Nett how a type can be converted from some arbitrary type to TOML vice versa.
+The following example shows how you register type converters for both reading and
+writing a GUID as TOML (you only need to register a converter for the operation you
+use):
+
+```C#
+var obj = new TypeNotSupportedByToml() { SomeGuid = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606") };
+
+var myconfig = TomlConfig.Create()
+    .ConfigureType<Guid>()
+        .As.ConvertTo<TomlString>().As((g) => new TomlString(g.ToString()))
+        .And.ConvertFrom<TomlString>().As((s) => new Guid(s.Value))
+    .Apply();
+
+Toml.WriteFile(obj, "test.tml", myconfig);
+var read = Toml.ReadFile<TypeNotSupportedByToml>("test.tml", myconfig);
+```
+
+Note: If you execute the above code without type converters the code will not throw any exception.
+Instead you will get an empty Guid. This behavior is caused by the fact, that during writes every
+unknown type is treated as a TOML table and during read a TOML table is handled as a type that
+can be converted to any other type.
+Hopefully this somewhat strange behavior will improve in a future version of Nett.
 
 # Changelog
 [TBD] v1.0.0 (compatible with TOML 0.4.0) Initial Release
