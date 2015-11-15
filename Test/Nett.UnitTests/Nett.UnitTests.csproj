@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="ClassReaderTests.cs" />
     <Compile Include="ConversionTests.cs" />
+    <Compile Include="DocumentationExamples.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="MasterTests.cs" />
     <Compile Include="Parser\LaBufferTests.cs" />
