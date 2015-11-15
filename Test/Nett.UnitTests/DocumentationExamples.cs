@@ -13,6 +13,14 @@ namespace Nett.UnitTests
         public Client Client { get; set; }
     }
 
+    public class ConfigurationWithDepdendency : Configuration
+    {
+        public ConfigurationWithDepdendency(object dependency)
+        {
+
+        }
+    }
+
     public class Server
     {
         public TimeSpan Timeout { get; set; }
@@ -85,6 +93,41 @@ ServerAddress = ""http://127.0.0.1:8080""
 
             // Not in documentation
             timeout.Should().Be(TimeSpan.FromMinutes(1));
+        }
+
+        [Fact]
+        public void ReadNoDefaultConstructor_WhenNoActivatorRegistered_ThrowsInvalidOp()
+        {
+            this.WriteTomlFile();
+
+            //In Documentation
+            Action a = () =>
+            {
+                var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml");
+            };
+
+            // Not in documentation
+            a.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void ReadNoDefaultConstructor_WhenActivatorRegistered_ThrowsInvalidOp()
+        {
+            this.WriteTomlFile();
+
+            //In Documentation
+            var myConfig = TomlConfig.Create()
+                .ConfigureType<ConfigurationWithDepdendency>()
+                    .As.CreateWith(() => new ConfigurationWithDepdendency(new object()))
+                .Apply();
+
+            var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml", myConfig);
+
+            // Not in documentation
+
+            config.EnableDebug.Should().Be(true);
+            config.Client.ServerAddress.Should().Be("http://127.0.0.1:8080");
+            config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
     }
 }

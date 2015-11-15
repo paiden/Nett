@@ -57,7 +57,9 @@ namespace Nett
                 }
                 catch (MissingMethodException exc)
                 {
-                    throw new Exception(string.Format("{0} Failed to create type '{1}'.", exc.Message, t.FullName));
+                    throw new InvalidOperationException(string.Format("Failed to create type '{1}'. Only types with a " +
+                        "parameterless constructor or an specialized creator can be created. Make sure the type has " +
+                        "a parameterless constructor or a configuration with an corresponding creator is provided.", exc.Message, t.FullName));
                 }
             }
         }
