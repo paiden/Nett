@@ -87,7 +87,7 @@ var timeout = table.Get<TomlTable>("Server").Get<TimeSpan>("Timeout");
 
 # Advanced Topics
 All advanced concepts of the TOML serialization and deserialization process can be controlled
-via C# attributes or providing a custom TomlConfiguration instance when invoking threa Read/Write
+via C# attributes or providing a custom TomlConfiguration instance when invoking the Read/Write
 methods.
 
 To create a new configuration do the following:
@@ -95,7 +95,7 @@ To create a new configuration do the following:
 var myConfig = TomlConfig.Create();
 ```
 
-This will creat a copy of the default configuration, and you can configure this new copy
+This will create a copy of the default configuration, and you can configure this new copy
 via builder methods that will be described in more detail in the next topics.
 
 ## Deserializing types without default constructor
