@@ -83,7 +83,7 @@ namespace Nett.Parser.Productions
                 throw new ArgumentException($"String '{t.value}' is invalid because it contains newlines.");
             }
 
-            var s = t.value.TrimNChars(1).Unescape();
+            var s = t.value.TrimNChars(1).Unescape(t);
 
             return new TomlString(s, TomlString.TypeOfString.Normal);
         }

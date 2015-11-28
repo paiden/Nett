@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nett.Parser;
 
 namespace Nett
 {
@@ -8,7 +10,7 @@ namespace Nett
     {
         private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
 
-        public static string Unescape(this string src)
+        public static string Unescape(this string src, Token tkn)
         {
             bool hasUnicodeSequences = false;
             if (string.IsNullOrEmpty(src)) { return src; }
@@ -30,6 +32,8 @@ namespace Nett
                         case 'r': sb.Append("\r"); break;
                         case 'u': goto case 'U';
                         case 'U': hasUnicodeSequences = true; sb.Append(src[i]); sb.Append(src[i + 1]); break;
+                        default:
+                            throw new Exception(tkn.PrefixWithTokenPostion($"String '{src}' contains the invalid escape sequence '\\{src[i = 1]}'."));
                     }
 
                     i++;

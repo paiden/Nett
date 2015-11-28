@@ -16,7 +16,7 @@ namespace Nett.UnitTests
         public void Unescape(string src, string expected)
         {
             // Act
-            var s = src.Unescape();
+            var s = src.Unescape(new Nett.Parser.Token());
 
             // Assert
             Assert.Equal(expected, s);
