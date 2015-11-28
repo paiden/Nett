@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace Nett.TestDecoder
 {
@@ -9,25 +8,27 @@ namespace Nett.TestDecoder
     {
         static int Main(string[] args)
         {
+
             TextReader reader = Console.In;
             TextWriter writer = Console.Out;
-            string line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.ReadLine()) != null)
-            {
-                sb.Append(line);
-            }
+            var content = reader.ReadToEnd();
 
             try
             {
-                var t = Toml.ReadString(sb.ToString());
+                //Debugger.Launch();
+                var t = Toml.ReadString(content);
                 var dict = t.ToDictionary();
-                var json = JsonConvert.SerializeObject(dict);
+                var conv = new ToJsonConverter();
+                var json = conv.Convert(t);
                 writer.Write(json);
+
+                Console.WriteLine(json);
+
                 return 0;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
+                Console.WriteLine(exc.ToString());
                 return 1;
             }
         }

@@ -45,5 +45,21 @@ name = ""Born in the USA""
             a.ShouldThrow<Exception>();
         }
 
+        //        a
+        //= 1
+
+        [Fact(DisplayName = "Reading a key with a newline before the = should cause parse exception")]
+        public void ReadToml_WhenThereIsANewlineBetweenKeyAndEquals_ThrowsExc()
+        {
+            string toml = @"a
+= 1
+";
+
+            // Act
+            Action a = () => Toml.ReadString(toml);
+
+            // Assert
+            a.ShouldThrow<Exception>();
+        }
     }
 }

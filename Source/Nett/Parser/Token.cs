@@ -5,6 +5,7 @@ namespace Nett.Parser
     enum TokenType
     {
         Unknown,
+        NewLine,
         Eof,
 
         BareKey,

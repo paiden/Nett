@@ -35,7 +35,7 @@ namespace Nett.Parser
             var t = this.Peek();
             if (t.type != tt)
             {
-                throw new Exception($"Expected token of '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
+                throw new Exception($"Expected token of type '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
             }
             else
             {

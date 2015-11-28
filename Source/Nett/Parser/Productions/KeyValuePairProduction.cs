@@ -7,6 +7,7 @@ namespace Nett.Parser.Productions
         public static Tuple<string, TomlObject> Apply(TokenBuffer tokens)
         {
             var key = KeyProduction.Apply(tokens);
+
             tokens.ExpectAndConsume(TokenType.Assign);
 
             var inlineTable = InlineTableProduction.TryApply(tokens);

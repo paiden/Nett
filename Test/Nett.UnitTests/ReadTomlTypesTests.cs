@@ -177,7 +177,7 @@ trimmed in raw strings.
         {
             var parsed = Toml.ReadString(src);
 
-            Assert.Equal(expected, parsed.Get<double>("d"), 8);
+            Assert.Equal(expected, parsed.Get<double>("d"), 8); // Note double in C# can provide precision to 14th decimal. Don't know why TOML would like to have 15 digit precision.
         }
 
         [Theory]

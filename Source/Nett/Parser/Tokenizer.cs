@@ -34,9 +34,15 @@ namespace Nett.Parser
                 return null;
             }
 
+            bool hadNewLine = false;
             while (!this.characters.End && this.characters.TryExpectWhitespace())
             {
-                this.characters.Consume();
+                var c = this.characters.Consume();
+
+                if (c == '\n')
+                {
+                    hadNewLine = true;
+                }
             }
 
             if (this.characters.End)
@@ -57,6 +63,14 @@ namespace Nett.Parser
 
             if (token != null)
             {
+                // TOML defines that no newline is allowed after key. As this parser generally doesn't care about newlines and throws them away
+                // I have to do it in a some kind wacky way, by replacing the assignment token by a specialized newline token, that later will
+                // cause the key value production to fail, because it doesn't encounter the expected '=' token.
+                if (hadNewLine && token.Value.type == TokenType.Assign)
+                {
+                    return new Token(TokenType.NewLine, "<NewLine>");
+                }
+
                 return new Token(token.Value.type, token.Value.value) { line = line, col = column };
             }
             else
@@ -64,8 +78,6 @@ namespace Nett.Parser
                 return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd()) { line = line, col = column };
             }
         }
-
-
 
         private Token ConsumeStringToken(StringBuilder sb)
         {
