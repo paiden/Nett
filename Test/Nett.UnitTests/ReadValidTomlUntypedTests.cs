@@ -560,7 +560,7 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(1, read.Rows.Count);
-            Assert.Equal("Glory Days", ((read.Get<TomlTableArray>("albums")[0]).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
+            Assert.Equal("Glory Days", ((read.Get<TomlTable>("albums")).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
         }
 
         [Fact]

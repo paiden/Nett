@@ -27,5 +27,23 @@ namespace Nett.UnitTests
             // Assert
             a.ShouldThrow<Exception>();
         }
+
+        [Fact(DisplayName = "Reading invalid implicit table array should cause parse exception")]
+        public void ReadToml_WithInvalidImplicitTableArray_ThrowsExc()
+        {
+            string toml = @"
+[[albums.songs]]
+name = ""Glory Days""
+
+[[albums]]
+name = ""Born in the USA""
+";
+            // Act
+            Action a = () => Toml.ReadString(toml);
+
+            // Assert
+            a.ShouldThrow<Exception>();
+        }
+
     }
 }

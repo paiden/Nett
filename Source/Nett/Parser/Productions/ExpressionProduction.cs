@@ -19,8 +19,8 @@ namespace Nett.Parser.Productions
             var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
             if (arrayKeyChain != null)
             {
-                var addTo = GetTargetTable(root, arrayKeyChain, CreateImplicitelyType.ArrayOfTables);
-                var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last());
+                var addTo = GetTargetTable(root, arrayKeyChain, CreateImplicitelyType.Table);
+                var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last(), errorPosition: expressionToken);
 
                 arr.Comments.AddRange(preComments);
                 arr.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
@@ -139,7 +139,7 @@ namespace Nett.Parser.Productions
             return tbl ?? arr?.Last();
         }
 
-        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name)
+        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name, Token errorPosition)
         {
             TomlObject existing = null;
             target.Rows.TryGetValue(name, out existing);
@@ -148,7 +148,8 @@ namespace Nett.Parser.Productions
 
             if (existing != null && typed == null)
             {
-                throw new InvalidOperationException($"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'.");
+                throw new InvalidOperationException(errorPosition.PrefixWithTokenPostion(
+                    $"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'."));
             }
             else if (typed != null)
             {
