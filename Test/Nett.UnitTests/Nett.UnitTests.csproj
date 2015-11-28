@@ -70,6 +70,7 @@
     <Compile Include="Parser\LaBufferTests.cs" />
     <Compile Include="Parser\TokenizerTests.cs" />
     <Compile Include="ReadAdvancedTomlTests.cs" />
+    <Compile Include="ReadInvalidTomlTests.cs" />
     <Compile Include="ReadLargeTomlTests.cs" />
     <Compile Include="ToDictionaryTests.cs" />
     <Compile Include="TomlTests.cs" />
