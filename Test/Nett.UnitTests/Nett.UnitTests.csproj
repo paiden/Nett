@@ -71,6 +71,7 @@
     <Compile Include="Parser\TokenizerTests.cs" />
     <Compile Include="ReadAdvancedTomlTests.cs" />
     <Compile Include="ReadLargeTomlTests.cs" />
+    <Compile Include="ToDictionaryTests.cs" />
     <Compile Include="TomlTests.cs" />
     <Compile Include="ReadTomlWithCommentsTests.cs" />
     <Compile Include="ReadValidTomlTypedTests.cs" />

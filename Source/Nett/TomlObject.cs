@@ -83,7 +83,7 @@ namespace Nett
             }
         }
 
-        public abstract void Visit(TomlObjectVisitor visitor);
+        public abstract void Visit(ITomlObjectVisitor visitor);
 
         public TomlObject()
         {

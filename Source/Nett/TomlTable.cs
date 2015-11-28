@@ -52,7 +52,7 @@ namespace Nett
             this.Rows.Add(key, value);
         }
 
-        public override void Visit(TomlObjectVisitor visitor)
+        public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);
         }
@@ -83,6 +83,14 @@ namespace Nett
             }
 
             return result;
+        }
+
+        public Dictionary<string, object> ToDictionary()
+        {
+            var dict = new Dictionary<string, object>();
+            var visitor = new TomlTableToDictionaryConverter(dict);
+            visitor.Convert(this);
+            return dict;
         }
 
         public T TryGet<T>(string key) where T : TomlObject
