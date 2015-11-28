@@ -47,5 +47,7 @@ namespace Nett.Parser
             this.line = 0;
             this.col = 0;
         }
+
+        public string PrefixWithTokenPostion(string message) => $"Line {this.line} at column {this.col}: {message}";
     }
 }

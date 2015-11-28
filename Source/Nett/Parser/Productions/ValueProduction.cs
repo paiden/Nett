@@ -153,7 +153,14 @@ namespace Nett.Parser.Productions
 
                     if (!tokens.TryExpect(TokenType.RBrac))
                     {
+                        var et = tokens.Peek();
                         v = ParseTomlValue(tokens);
+
+                        if (v.GetType() != values[0].GetType())
+                        {
+                            throw new Exception(et.PrefixWithTokenPostion($"Expected array item of type '{values[0].ReadableTypeName}' but item of type '{v.ReadableTypeName}' was found."));
+                        }
+
                         values.Add(v);
                     }
                 }
