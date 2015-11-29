@@ -20,7 +20,7 @@ All common TOML operations are performed via the static class 'Nett.Toml'. Altho
 types available from the library in general using that single type should be sufficient
 for most standard scenarios.
 
-The following example shows how you can write and read some complex object to and from a
+The following example shows how you can write and read some complex object to/from a
 TOML file. The object that gets serialized and deserialized is defined as follows:
 
 ```C#
@@ -58,7 +58,7 @@ Toml.WriteFile(config, "test.tml");
 This will write the following content to your hard disk:
 
 ```
-EnableDebug = false
+EnableDebug = true
 
 [Server]
 Timeout = 00:01:00
