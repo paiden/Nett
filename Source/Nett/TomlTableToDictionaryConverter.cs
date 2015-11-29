@@ -5,23 +5,29 @@ namespace Nett
 {
     internal sealed class TomlTableToDictionaryConverter : ITomlObjectVisitor
     {
-        private readonly Dictionary<string, object> table;
+#if DEBUG
+        private bool InvokedConvert;
+#endif
+        private readonly Dictionary<string, object> table = new Dictionary<string, object>();
         private string currentKey;
 
-        public TomlTableToDictionaryConverter(Dictionary<string, object> current)
+        public TomlTableToDictionaryConverter()
         {
-            Debug.Assert(current != null);
-
-            this.table = current;
         }
 
-        public void Convert(TomlTable table)
+        public Dictionary<string, object> Convert(TomlTable table)
         {
+#if DEBUG
+            Debug.Assert(!this.InvokedConvert, "Do not reuse the TomlTable Converter. The converter can only be used once. Create a new converter instead.");
+            this.InvokedConvert = true;
+#endif
             foreach (var r in table.Rows)
             {
                 this.currentKey = r.Key;
                 r.Value.Visit(this);
             }
+
+            return this.table;
         }
 
         void ITomlObjectVisitor.Visit(TomlInt i) => this.table[this.currentKey] = i.Value;
@@ -55,11 +61,8 @@ namespace Nett
 
             for (int i = 0; i < tableArray.Count; i++)
             {
-                var t = tableArray[i];
-                var tbl = new Dictionary<string, object>();
-                var conv = new TomlTableToDictionaryConverter(tbl);
-                t.Visit(conv);
-                arr[i] = tbl;
+                var conv = new TomlTableToDictionaryConverter();
+                arr[i] = conv.Convert(tableArray[i]);
             }
 
             this.table[this.currentKey] = arr;
@@ -67,10 +70,8 @@ namespace Nett
 
         void ITomlObjectVisitor.Visit(TomlTable table)
         {
-            var clrTable = new Dictionary<string, object>();
-            var conv = new TomlTableToDictionaryConverter(clrTable);
-            conv.Convert(table);
-            this.table[this.currentKey] = clrTable;
+            var conv = new TomlTableToDictionaryConverter();
+            this.table[this.currentKey] = conv.Convert(table); ;
         }
 
         private class ExtractItemValue : ITomlObjectVisitor

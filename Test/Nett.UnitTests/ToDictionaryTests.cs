@@ -59,5 +59,18 @@ hosts = [
             var owner = (Dictionary<string, object>)dict["owner"];
             owner["name"].Should().Be("Tom Preston-Werner");
         }
+
+        [Fact(DisplayName = "To Dictionary with implicitly created table array should produce correct plain CLR objects result")]
+        [Description("Only very simple test so that I can do faster debugging later, the real testing of this will be done by incorporating the GO TOML test suite.")]
+        public void ToDictionary_WhenTomlWasConstructedFromImplicitTableArray_ProducesCorrectResult()
+        {
+            // Arrange
+            var tml = Toml.ReadString(TomlStrings.Valid.TableArrayImplicit);
+
+            // Act
+            var dict = tml.ToDictionary();
+
+            // Assert
+        }
     }
 }

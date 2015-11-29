@@ -87,10 +87,8 @@ namespace Nett
 
         public Dictionary<string, object> ToDictionary()
         {
-            var dict = new Dictionary<string, object>();
-            var visitor = new TomlTableToDictionaryConverter(dict);
-            visitor.Convert(this);
-            return dict;
+            var converter = new TomlTableToDictionaryConverter();
+            return converter.Convert(this);
         }
 
         public T TryGet<T>(string key) where T : TomlObject
