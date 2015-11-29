@@ -48,9 +48,19 @@ namespace Nett.TestDecoder
         void ITomlObjectVisitor.Visit(TomlFloat f) =>
             sb.Append("{").Append("\"type\":\"float\", \"value\":\"").Append(f.Value.ToString(CultureInfo.InvariantCulture)).Append("\"}");
 
-        void ITomlObjectVisitor.Visit(TomlTableArray tableArray)
+        void ITomlObjectVisitor.Visit(TomlTableArray a)
         {
-            throw new NotImplementedException();
+            sb.Append("[");
+
+            for (int i = 0; i < a.Count - 1; i++)
+            {
+                a[i].Visit(this);
+                this.sb.Append(",");
+            }
+
+            if (a.Count > 0) { a[a.Count - 1].Visit(this); }
+
+            this.sb.Append("]");
         }
 
         void ITomlObjectVisitor.Visit(TomlTable table)
