@@ -8,7 +8,7 @@ namespace Nett
 {
     internal static class StringExtensions
     {
-        private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
+        private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4,8})", RegexOptions.Compiled);
 
         public static string Unescape(this string src, Token tkn)
         {

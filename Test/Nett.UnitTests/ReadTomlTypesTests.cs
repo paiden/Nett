@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests
@@ -87,12 +88,15 @@ namespace Nett.UnitTests
             Assert.Equal(expected, parsed.Get<string>("X"));
         }
 
-        [Fact]
-        public void Deserilize_StringWithUTF32Char_DeserializesCorrectly()
+        [Theory]
+        [InlineData(@"str = ""\u0000004D""", "\u0000004D")]
+        [InlineData(@"str = ""\u03B4""", "\u03B4")]
+        [InlineData(@"str = ""\U000003B4""", "\U000003B4")]
+        public void Deserilize_StringWithEscapedChar_DeserializesCorrectly(string input, string expected)
         {
-            var parsed = Toml.ReadString(@"str = ""\u0000004D""");
+            var parsed = Toml.ReadString(input);
 
-            Assert.Equal("\u0000004D", parsed.Get<string>("str"));
+            parsed.Get<string>("str").Should().Be(expected);
         }
 
         [Theory]

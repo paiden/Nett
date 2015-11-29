@@ -1,5 +1,8 @@
-﻿namespace Nett
+﻿using System.Diagnostics;
+
+namespace Nett
 {
+    [DebuggerDisplay("{Value}")]
     public sealed class TomlString : TomlValue<string>
     {
         public override string ReadableTypeName => "string";
