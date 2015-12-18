@@ -177,6 +177,6 @@ can be converted to any other type.
 Hopefully this somewhat strange behavior will improve in a future version of Nett.
 
 # Changelog
-[TBD] v1.0.0 (compatible with TOML 0.4.0) Initial Release
+2015-12-18: v0.4.0 (compatible with TOML 0.4.0) First public preview release
 
 
