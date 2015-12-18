@@ -6,14 +6,13 @@
     <owners>paiden@outlook.com</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library for reading and writing TOML files</description>
-    <tags>TOML API Reading Writing Parsing Serialization Configuration</tags>
+    <tags>TOML Serialization Configuration</tags>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/paiden/Nett</projectUrl>
-    <tags>TOML Serialization Configuration</tags>
   </metadata>
   <files>
-    <file src="Source\Nett\bin\$configuration$$SNE$\Nett.dll" target="lib\" />
-    <file src="Source\Nett\bin\$configuration$\Nett.pdb" target="lib\" />
+    <file src="Source\Nett\bin\$configuration$$SNE$\Nett.dll" target="lib\Net40" />
+    <file src="Source\Nett\bin\$configuration$\Nett.pdb" target="lib\Net40" />
     <file src="Source\Nett\**\*.cs" target="src\" />
   </files>
 </package>
