@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Nett.UnitTests
 {
@@ -12,7 +7,7 @@ namespace Nett.UnitTests
         [Theory]
         [InlineData(@"C:\\test.txt", @"C:\test.txt")]
         [InlineData(@"\u4000", "\u4000")]
-        [InlineData(@"\uAAAAAAAA", "\uAAAAAAAA")]
+        [InlineData(@"\U0010FFFF", "\U0010FFFF")]
         public void Unescape(string src, string expected)
         {
             // Act
@@ -24,7 +19,7 @@ namespace Nett.UnitTests
 
         [Theory]
         [InlineData("", "")]
-        [InlineData(@"C:\Windows\System32\BestPractices\v1.0\Models\Microsoft\Windows\Hyper-V\en-US\test.txt", @"C:\\Windows\\System32\\BestPractices\\v1.0\\Models\\Microsoft\\Windows\\Hyper-V\\en-US\\test.txt" )]
+        [InlineData(@"C:\Windows\System32\BestPractices\v1.0\Models\Microsoft\Windows\Hyper-V\en-US\test.txt", @"C:\\Windows\\System32\\BestPractices\\v1.0\\Models\\Microsoft\\Windows\\Hyper-V\\en-US\\test.txt")]
         public void Escape(string src, string expected)
         {
             // Act

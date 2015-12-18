@@ -8,7 +8,9 @@ namespace Nett
 {
     internal static class StringExtensions
     {
-        private static readonly Regex RegexUtf8Short = new Regex(@"\\[uU]([0-9A-Fa-f]{4,8})", RegexOptions.Compiled);
+        private static readonly int RegexOffset = @"\u".Length;
+        private static readonly Regex RegexUtf8Short = new Regex(@"\\u([0-9A-Fa-f]{4})", RegexOptions.Compiled);
+        private static readonly Regex RegexUtf8Long = new Regex(@"\\U([0-9A-Fa-f]{8})", RegexOptions.Compiled);
 
         public static string Unescape(this string src, Token tkn)
         {
@@ -47,7 +49,8 @@ namespace Nett
             string result = sb.ToString();
             if (hasUnicodeSequences)
             {
-                result = RegexUtf8Short.Replace(result, (m) => ((char)int.Parse(m.Value.Substring(2), NumberStyles.HexNumber)).ToString());
+                result = RegexUtf8Long.Replace(result, (m) => char.ConvertFromUtf32(int.Parse(m.Value.Substring(RegexOffset), NumberStyles.HexNumber)));
+                result = RegexUtf8Short.Replace(result, (m) => ((char)int.Parse(m.Value.Substring(RegexOffset), NumberStyles.HexNumber)).ToString());
             }
 
             return result;
