@@ -7,6 +7,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library for reading and writing TOML files</description>
     <tags>TOML API Reading Writing Parsing Serialization Configuration</tags>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/paiden/Nett</projectUrl>
+    <tags>TOML Serialization Configuration</tags>
   </metadata>
   <files>
     <file src="Source\Nett\bin\$configuration$$SNE$\Nett.dll" target="lib\" />
