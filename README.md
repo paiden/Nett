@@ -16,6 +16,13 @@ TOML spec. The following TimeSpan formats are supported:
 
 # Getting Started
 
+Install it via NuGet:
+
+|Package | Latest Version |
+|--------|------|
+|[Nett](https://www.nuget.org/packages/Nett/)| ![#](https://img.shields.io/nuget/v/Nett.svg)|
+|[Nett Strong Named](https://www.nuget.org/packages/Nett.StrongNamed/)| ![#](https://img.shields.io/nuget/v/Nett.StrongNamed.svg)|
+
 All common TOML operations are performed via the static class 'Nett.Toml'. Although there are other
 types available from the library in general using that single type should be sufficient
 for most standard scenarios.
