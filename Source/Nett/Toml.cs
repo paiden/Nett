@@ -140,7 +140,7 @@ namespace Nett
             }
 
             using (var fs = new FileStream(filePath, FileMode.Create))
-            using (var sw = new StreamWriter(fs))
+            using (var sw = new FormattingStreamWriter(fs, CultureInfo.InvariantCulture))
             {
                 var writer = new TomlStreamWriter(sw, config);
                 writer.WriteToml(table);

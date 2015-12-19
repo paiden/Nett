@@ -69,6 +69,7 @@
     <Compile Include="MasterTests.cs" />
     <Compile Include="Parser\LaBufferTests.cs" />
     <Compile Include="Parser\TokenizerTests.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="ReadAdvancedTomlTests.cs" />
     <Compile Include="ReadInvalidTomlTests.cs" />
     <Compile Include="ReadLargeTomlTests.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Nett.Util;
 
 namespace Nett
 {
@@ -15,7 +16,7 @@ namespace Nett
         private bool writeTableKey = true;
         private int writeInlineTableInvocationsRunning = 0;
 
-        public TomlStreamWriter(TextWriter writer, TomlConfig config)
+        public TomlStreamWriter(FormattingStreamWriter writer, TomlConfig config)
         {
             Debug.Assert(writer != null);
             Debug.Assert(config != null);

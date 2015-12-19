@@ -5,14 +5,30 @@ using Xunit;
 
 namespace Nett.UnitTests
 {
-    public class WriteTomlFileTests
+    public class WriteTomlFileTests : IDisposable
     {
-        [Fact]
+        private string fn;
+        public WriteTomlFileTests()
+        {
+            fn = Guid.NewGuid().ToString() + ".toml";
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                File.Delete(this.fn);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc);
+            }
+        }
+
         public void WriteFile_WithDefaultMergecommentsMode_CanWriteFileWhenTargetFileDoesntExistYet()
         {
             // Arrange
-            string fn = Guid.NewGuid() + ".tml";
-            Action a = () => Toml.WriteFile(new Foo(), fn);
+            Action a = () => Toml.WriteFile(new Foo(), this.fn);
 
             // Act + Assert
             a.ShouldNotThrow();
@@ -25,12 +41,27 @@ namespace Nett.UnitTests
             var foo = new Foo() { X = 1 };
 
             // Act
-            Toml.WriteFile(foo, "test.tml");
+            Toml.WriteFile(foo, fn);
 
             // Assert
-            File.Exists("test.tml").Should().Be(true);
-            var read = Toml.ReadFile<Foo>("test.tml");
+            File.Exists(this.fn).Should().Be(true);
+            var read = Toml.ReadFile<Foo>(this.fn);
             read.X.Should().Be(1);
+        }
+
+        [Fact(DisplayName = "Ensure writing floats works culture invariant (file)")]
+        public void WriteFile_WithFloat_WritesCultureInvariant()
+        {
+            // Arrange
+            var tt = new TomlTable();
+            tt.Add("TheFloat", new TomlFloat(1.2));
+
+            // Act
+            Toml.WriteFile(tt, this.fn);
+
+            // Assert
+            var s = File.ReadAllText(this.fn);
+            s.Should().Be("TheFloat = 1.2\r\n");
         }
 
         private class Foo

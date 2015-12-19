@@ -7,6 +7,21 @@ namespace Nett.UnitTests
 {
     public class WriteTomlTests
     {
+        [Fact(DisplayName = "Ensure writing floats works culture invariant")]
+        public void Write_WithFloat_WritesCultureInvariant()
+        {
+            // Arrange
+            var tt = new TomlTable();
+            tt.Add("TheFloat", new TomlFloat(1.2));
+
+            // Act
+            var s = Toml.WriteString(tt);
+            Toml.WriteFile(tt, "test123.toml");
+
+            // Assert
+            s.Should().Be("TheFloat = 1.2\r\n");
+        }
+
         [Fact]
         public void Write_WithArray_WritesObjectCorrectly()
         {
