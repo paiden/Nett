@@ -42,6 +42,19 @@ namespace Nett.UnitTests
             written.Should().Be($"Ts = {expected}\r\n");
         }
 
+        [Fact(DisplayName = "Test that DateTime gets written in RFC3339 spec", Skip = "Testing this parse / tostring equivalence is somewhat hard.... :-(")]
+        public void WriteDateTime_WritesDatetimeInRFC339Spec()
+        {
+            // Arrange
+            var o = new DateTimeType();
+
+            // Act
+            var written = Toml.WriteString(o);
+
+            // Assert
+            written.Should().Be($"DT = {DateTimeType.Default}\r\n");
+        }
+
         public class TimespanType
         {
             public TimeSpan Ts { get; set; }
@@ -50,6 +63,12 @@ namespace Nett.UnitTests
         public class StringType
         {
             public string S { get; set; }
+        }
+
+        public class DateTimeType
+        {
+            public const string Default = "1979-05-27T00:32:00.999999-07:00";
+            public DateTime DT { get; set; } = DateTime.Parse(Default);
         }
     }
 }

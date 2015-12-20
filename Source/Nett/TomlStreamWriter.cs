@@ -28,7 +28,7 @@ namespace Nett
             this.VisitBool = (b) => this.WriteKeyedValue(b, () => this.sw.Write(b.Value.ToString().ToLower()));
             this.VisitFloat = (f) => this.WriteKeyedValue(f, () => this.sw.Write(f.Value));
             this.VisitInt = (i) => this.WriteKeyedValue(i, () => this.sw.Write(i.Value));
-            this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.Value));
+            this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.ToString()));
             this.VisitTimespan = (ts) => this.WriteKeyedValue(ts, () => this.sw.Write(ts.Value));
             this.VisitString = (s) => this.WriteKeyedValue(s, () => this.sw.Write(string.Format("\"{0}\"", s.Value.Escape() ?? "")));
 
