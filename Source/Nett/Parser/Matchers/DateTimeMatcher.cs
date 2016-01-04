@@ -17,7 +17,7 @@ namespace Nett.Parser.Matchers
             if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
-            if (cs.TryExpect('T')) { sb.Append(cs.Consume()); } else { return null; }
+            if (cs.TryExpect('T')) { sb.Append(cs.Consume()); } else { return FinishDatetimeToken(sb); }
             if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
             if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
@@ -66,7 +66,7 @@ namespace Nett.Parser.Matchers
                     sb.Append(cs.Consume());
                 }
 
-                if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return null; }
+                if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return FinishDatetimeToken(sb); }
                 if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
                 if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
                 if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
@@ -84,7 +84,7 @@ namespace Nett.Parser.Matchers
             }
             else
             {
-                return null;
+                return FinishDatetimeToken(sb);
             }
         }
 
