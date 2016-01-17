@@ -97,7 +97,7 @@ if($NuGetPackage) {
     $src = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration\Nett.dll")"
     $dst = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration.StrongNamed\Nett.dll")"
     $sne=""
-    
+
     if($strongName) {
         $sne = '.StrongNamed'
         New-Item -ItemType File -Path $dst -Force
@@ -112,6 +112,7 @@ if($NuGetPackage) {
     $props = "`"$configuration;SNE=$sne`""
     if($configuration -eq "Debug") { $v += '-debug' }
 
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspec -Version $v -Properties configuration=$props }
+    New-Item -ItemType Directory -Path ngp -Force
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspec -Version $v -Properties configuration=$props -OutputDirectory ngp}
 }
 
