@@ -23,7 +23,34 @@ namespace Nett
         private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
         {
+            // TomlInt
+            this.AddFromTomlConverter(new TomlConverter<TomlInt, char>(t => (char)t.Value));
+            this.AddFromTomlConverter(new TomlConverter<TomlInt, byte>(t => (byte)t.Value));
+            this.AddFromTomlConverter(new TomlConverter<TomlInt, int>(t => (int)t.Value));
+            this.AddFromTomlConverter(new TomlConverter<TomlInt, short>(t => (short)t.Value));
+            this.AddFromTomlConverter(new TomlConverter<TomlInt, long>(t => (long)t.Value));
 
+            // TomlFloat
+            this.AddFromTomlConverter(new TomlConverter<TomlFloat, double>(t => t.Value));
+            this.AddFromTomlConverter(new TomlConverter<TomlFloat, float>(t => (float)t.Value));
+
+            // TomlString
+            this.AddFromTomlConverter(new TomlConverter<TomlString, string>(t => t.Value));
+
+            // TomlDateTime
+            this.AddFromTomlConverter(new TomlConverter<TomlDateTime, DateTime>(t => t.Value.UtcDateTime));
+            this.AddFromTomlConverter(new TomlConverter<TomlDateTime, DateTimeOffset>(t => t.Value));
+
+            // TomlTimeSpan
+            this.AddFromTomlConverter(new TomlConverter<TomlTimeSpan, TimeSpan>(t => t.Value));
+
+            // TomlBool
+            this.AddFromTomlConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
+        }
+
+        private void AddFromTomlConverter(ITomlConverter converter)
+        {
+            this.fromTomlConverters[converter.ToType] = converter;
         }
 
         public static TomlConfig Create() => new TomlConfig();

@@ -92,8 +92,15 @@ namespace Nett
         {
             if (this.GetType() == t) { return this; }
 
-            var userConverter = config.GetFromTomlConverter(t);
-            return userConverter != null ? userConverter.Convert(this) : Converter.Convert(t, this.value);
+            var converter = config.GetFromTomlConverter(t);
+            if (converter != null)
+            {
+                return converter.Convert(this);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Cannot convert from type '{this.ReadableTypeName}' to '{t.Name}'.");
+            }
         }
     }
 }

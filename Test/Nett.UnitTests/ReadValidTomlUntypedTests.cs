@@ -292,7 +292,7 @@ namespace Nett.UnitTests
             Assert.Equal(3, ta.Length);
             Assert.Equal(6, ta.Get<int>(0));
             Assert.Equal(28, ta.Get<char>(1));
-            Assert.Equal(496, ta.Get<ushort>(2));
+            Assert.Equal(496, ta.Get<int>(2));
         }
 
         [Fact]
@@ -362,7 +362,7 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.Equal(2, read.Rows.Count);
-            Assert.Equal((uint)42, read.Get<uint>("answer"));
+            Assert.Equal(42, read.Get<int>("answer"));
             Assert.Equal(-42, read.Get<short>("neganswer"));
         }
 
