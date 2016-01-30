@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Nett.UnitTests.TestUtil
 {
@@ -13,5 +14,8 @@ namespace Nett.UnitTests.TestUtil
             ms.Position = 0;
             return ms;
         }
+
+        public static string StripWhitespace(this string s) =>
+            s.Replace(" ", "").Replace("\t", "").Replace(Environment.NewLine, "");
     }
 }

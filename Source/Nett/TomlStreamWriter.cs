@@ -110,11 +110,14 @@ namespace Nett
                 this.WriteApppendComments(table);
             }
 
-            foreach (var r in table.Rows)
+            using (new EnableWriteTableKeyContext(this))
             {
-                this.WriteTableRow(r);
-                this.sw.WriteLine();
-                this.rowKeys.Pop();
+                foreach (var r in table.Rows)
+                {
+                    this.WriteTableRow(r);
+                    this.sw.WriteLine();
+                    this.rowKeys.Pop();
+                }
             }
         }
 
@@ -203,19 +206,39 @@ namespace Nett
             }
         }
 
-        private class DisableWriteTableKeyContext : IDisposable
+        private abstract class SetWriteTableKeyContext : IDisposable
         {
             private readonly TomlStreamWriter tomlWriter;
-            public DisableWriteTableKeyContext(TomlStreamWriter tw)
+            private readonly bool restoreOnExit;
+
+            public SetWriteTableKeyContext(TomlStreamWriter tw, bool contextState)
             {
                 Debug.Assert(tw != null);
 
+                this.restoreOnExit = tw.writeTableKey;
                 this.tomlWriter = tw;
-                this.tomlWriter.writeTableKey = false;
+                this.tomlWriter.writeTableKey = contextState;
             }
+
             public void Dispose()
             {
-                this.tomlWriter.writeTableKey = true;
+                this.tomlWriter.writeTableKey = this.restoreOnExit;
+            }
+        }
+
+        private sealed class DisableWriteTableKeyContext : SetWriteTableKeyContext
+        {
+            public DisableWriteTableKeyContext(TomlStreamWriter sw)
+                : base(sw, contextState: false)
+            {
+            }
+        }
+
+        private sealed class EnableWriteTableKeyContext : SetWriteTableKeyContext
+        {
+            public EnableWriteTableKeyContext(TomlStreamWriter sw)
+                : base(sw, contextState: true)
+            {
             }
         }
     }
