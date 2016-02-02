@@ -65,8 +65,10 @@
     <Compile Include="ClassReaderTests.cs" />
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
+    <Compile Include="TestUtil\AssertionExtensions.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="MasterTests.cs" />
+    <Compile Include="NestedTablesTests.cs" />
     <Compile Include="Parser\LaBufferTests.cs" />
     <Compile Include="Parser\TokenizerTests.cs" />
     <Compile Include="PerformanceTests.cs" />

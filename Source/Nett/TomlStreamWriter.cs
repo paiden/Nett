@@ -4,11 +4,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Nett.Util;
+using static System.Diagnostics.Debug;
 
 namespace Nett
 {
     internal sealed class TomlStreamWriter : TomlObjectVisitor
     {
+        private readonly Stack<ParentKeyContext> parentKeyContexts = new Stack<ParentKeyContext>();
+        private static readonly IDisposable NotAvailable = new DummyContext();
+
         private readonly TextWriter sw;
         private readonly TomlConfig config;
         private readonly Stack<string> rowKeys = new Stack<string>();
@@ -18,8 +22,8 @@ namespace Nett
 
         public TomlStreamWriter(FormattingStreamWriter writer, TomlConfig config)
         {
-            Debug.Assert(writer != null);
-            Debug.Assert(config != null);
+            Assert(writer != null);
+            Assert(config != null);
 
             this.config = config;
 
@@ -39,7 +43,7 @@ namespace Nett
 
         internal void WriteToml(TomlTable table)
         {
-            Debug.Assert(table != null);
+            Assert(table != null);
 
             table.Visit(this);
             this.sw.Flush();
@@ -47,12 +51,16 @@ namespace Nett
 
         private string CurrentRowKey { get { return this.rowKeys.Count > 0 ? this.rowKeys.Peek() : null; } }
 
+        private string GetKey(string current) => this.parentKeyContexts.Count > 0 ? this.parentKeyContexts.Peek().GetKey(current) : current;
+        private IDisposable NewParentKeyContext() =>
+            this.CurrentRowKey != null ? new ParentKeyContext(this.CurrentRowKey, this.parentKeyContexts) : NotAvailable;
+
         private void WriteKeyedValue(TomlObject obj, Action writeValue)
         {
             this.WritePrependComments(obj);
             if (writeValueKey)
             {
-                Debug.Assert(this.CurrentRowKey != null);
+                Assert(this.CurrentRowKey != null);
                 this.sw.Write($"{this.CurrentRowKey} = ");
             }
 
@@ -106,10 +114,11 @@ namespace Nett
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
                 sw.WriteLine();
-                this.sw.WriteLine("[{0}]", this.CurrentRowKey);
+                this.sw.WriteLine("[{0}]", this.GetKey(this.CurrentRowKey));
                 this.WriteApppendComments(table);
             }
 
+            using (this.NewParentKeyContext())
             using (new EnableWriteTableKeyContext(this))
             {
                 foreach (var r in table.Rows)
@@ -131,7 +140,7 @@ namespace Nett
         {
             using (new DisableWriteValueKeyContext(this))
             {
-                Debug.Assert(this.CurrentRowKey != null);
+                Assert(this.CurrentRowKey != null);
                 this.WritePrependComments(array);
                 this.sw.Write($"{this.CurrentRowKey} = [");
 
@@ -154,11 +163,13 @@ namespace Nett
         private void WriteTomlTableArray(TomlTableArray tableArray)
         {
             this.WritePrependComments(tableArray);
+
+            using (this.NewParentKeyContext())
             using (new DisableWriteTableKeyContext(this))
             {
                 foreach (var t in tableArray.Items)
                 {
-                    Debug.Assert(this.CurrentRowKey != null);
+                    Assert(this.CurrentRowKey != null);
                     this.sw.WriteLine($"[[{this.CurrentRowKey}]]");
                     this.WriteApppendComments(tableArray);
                     t.Visit(this);
@@ -213,7 +224,7 @@ namespace Nett
 
             public SetWriteTableKeyContext(TomlStreamWriter tw, bool contextState)
             {
-                Debug.Assert(tw != null);
+                Assert(tw != null);
 
                 this.restoreOnExit = tw.writeTableKey;
                 this.tomlWriter = tw;
@@ -223,6 +234,31 @@ namespace Nett
             public void Dispose()
             {
                 this.tomlWriter.writeTableKey = this.restoreOnExit;
+            }
+        }
+
+        [DebuggerDisplay("[{parentKeyChain}]")]
+        private class ParentKeyContext : IDisposable
+        {
+            private readonly Stack<ParentKeyContext> parentKeyContexts;
+            private readonly string parentKeyChain;
+
+            public ParentKeyContext(string key, Stack<ParentKeyContext> parentKeyContexts)
+            {
+                Assert(parentKeyContexts != null);
+                Assert(!string.IsNullOrWhiteSpace(key));
+
+                this.parentKeyChain = parentKeyContexts.Count <= 0 ? key : parentKeyContexts.Peek().parentKeyChain + $".{key}";
+                this.parentKeyContexts = parentKeyContexts;
+                this.parentKeyContexts.Push(this);
+            }
+
+            public string GetKey(string current) => this.parentKeyChain + $".{current}";
+
+            public void Dispose()
+            {
+                Assert(this.parentKeyContexts.Peek() == this);
+                this.parentKeyContexts.Pop();
             }
         }
 
@@ -238,6 +274,13 @@ namespace Nett
         {
             public EnableWriteTableKeyContext(TomlStreamWriter sw)
                 : base(sw, contextState: true)
+            {
+            }
+        }
+
+        private sealed class DummyContext : IDisposable
+        {
+            public void Dispose()
             {
             }
         }
