@@ -49,7 +49,9 @@ ServerAddress = ""http://127.0.0.1:8080""
 
 ";
 
-        private void WriteTomlFile()
+        private string NewFileName() => Guid.NewGuid() + ".toml";
+
+        private void WriteTomlFile(string fileName)
         {
             var config = new Configuration()
             {
@@ -58,29 +60,31 @@ ServerAddress = ""http://127.0.0.1:8080""
                 Client = new Client() { ServerAddress = "http://127.0.0.1:8080" },
             };
 
-            Toml.WriteFile(config, "test.tml");
+            Toml.WriteFile(config, fileName);
         }
 
         [Fact]
         public void WriteTomlFileTest()
         {
-            this.WriteTomlFile();
+            string fn = this.NewFileName();
+            this.WriteTomlFile(fn);
 
             // Not in documentation
-            using (var s = File.Open("test.tml", FileMode.Open, FileAccess.Read))
+            using (var s = File.Open(fn, FileMode.Open, FileAccess.Read))
             using (var sr = new StreamReader(s))
             {
                 var sc = sr.ReadToEnd();
-                sc.Should().Be(exp);
+                sc.ShouldBeSemanticallyEquivalentTo(exp);
             }
         }
 
         //[Fact]
         public void ReadTomlFileTest()
         {
-            this.WriteTomlFile();
+            string fn = this.NewFileName();
+            this.WriteTomlFile(fn);
 
-            var config = Toml.ReadFile<Configuration>("test.tml");
+            var config = Toml.ReadFile<Configuration>(fn);
 
             config.EnableDebug.Should().Be(true);
             config.Client.ServerAddress.Should().Be("http://127.0.0.1:8080");
@@ -90,10 +94,11 @@ ServerAddress = ""http://127.0.0.1:8080""
         //[Fact]
         public void ReadFileUntyped()
         {
-            this.WriteTomlFile();
+            string fn = this.NewFileName();
+            this.WriteTomlFile(fn);
 
             // In Documentation
-            TomlTable table = Toml.ReadFile("test.tml");
+            TomlTable table = Toml.ReadFile(fn);
             var timeout = table.Get<TomlTable>("Server").Get<TimeSpan>("Timeout");
 
             // Not in documentation
@@ -103,12 +108,13 @@ ServerAddress = ""http://127.0.0.1:8080""
         //[Fact]
         public void ReadNoDefaultConstructor_WhenNoActivatorRegistered_ThrowsInvalidOp()
         {
-            this.WriteTomlFile();
+            string fn = this.NewFileName();
+            this.WriteTomlFile(fn);
 
             //In Documentation
             Action a = () =>
             {
-                var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml");
+                var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn);
             };
 
             // Not in documentation
@@ -118,7 +124,8 @@ ServerAddress = ""http://127.0.0.1:8080""
         //[Fact]
         public void ReadNoDefaultConstructor_WhenActivatorRegistered_ThrowsInvalidOp()
         {
-            this.WriteTomlFile();
+            string fn = this.NewFileName();
+            this.WriteTomlFile(fn);
 
             //In Documentation
             var myConfig = TomlConfig.Create()
@@ -126,7 +133,7 @@ ServerAddress = ""http://127.0.0.1:8080""
                     .As.CreateWith(() => new ConfigurationWithDepdendency(new object()))
                 .Apply();
 
-            var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml", myConfig);
+            var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn, myConfig);
 
             // Not in documentation
 

@@ -16,6 +16,6 @@ namespace Nett.UnitTests.TestUtil
         }
 
         public static string StripWhitespace(this string s) =>
-            s.Replace(" ", "").Replace("\t", "").Replace(Environment.NewLine, "");
+            s.Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
     }
 }

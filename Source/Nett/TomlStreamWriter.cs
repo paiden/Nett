@@ -164,7 +164,6 @@ namespace Nett
         {
             this.WritePrependComments(tableArray);
 
-            using (this.NewParentKeyContext())
             using (new DisableWriteTableKeyContext(this))
             {
                 foreach (var t in tableArray.Items)
@@ -237,6 +236,13 @@ namespace Nett
             }
         }
 
+        /// <summary>
+        /// Helper to provide keys for nested elements.
+        /// </summary>
+        /// <remarks>
+        /// Only tables can have nested elements with a key. So only tables are allowed to create a
+        /// new parent key context. No other element should establish a new key context.
+        /// </remarks>
         [DebuggerDisplay("[{parentKeyChain}]")]
         private class ParentKeyContext : IDisposable
         {
@@ -262,6 +268,14 @@ namespace Nett
             }
         }
 
+        /// <summary>
+        /// Needed in table arrays as in such cases the table array writes the key for it's child elements
+        /// </summary>
+        /// <remarks>
+        /// Not quite happy with the context solution but don't see much better solution for now as the table
+        /// itself simply doesn't know if it gets written inside a table array or not. So the array has to pass
+        /// some information via this context to the next write table invocation (if there is any).
+        /// </remarks>
         private sealed class DisableWriteTableKeyContext : SetWriteTableKeyContext
         {
             public DisableWriteTableKeyContext(TomlStreamWriter sw)
@@ -270,6 +284,13 @@ namespace Nett
             }
         }
 
+        /// <summary>
+        /// Used inside tables after write key to re-enable key writing for sub tables
+        /// </summary>
+        /// <remarks>
+        /// Only affect serialization if the current table gets serialized inside a table
+        /// array.
+        /// </remarks>
         private sealed class EnableWriteTableKeyContext : SetWriteTableKeyContext
         {
             public EnableWriteTableKeyContext(TomlStreamWriter sw)
