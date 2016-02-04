@@ -1,6 +1,7 @@
 #File Types
 *.cache
 *.coverage
+*.html
 *.log
 *.nupkg
 *.old
