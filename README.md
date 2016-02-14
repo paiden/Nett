@@ -177,6 +177,12 @@ can be converted to any other type.
 Hopefully this somewhat strange behavior will improve in a future version of Nett.
 
 # Changelog
+2016-02-14: v0.4.1 (compatible with TOML 0.4.0)
+
++ Add: Support for short date time formats
++ Fix: Writing files is culture invariant
++ Fix: Table encoding/decoding when they are used inside table arrays
+
 2015-12-18: v0.4.0 (compatible with TOML 0.4.0) First public preview release
 
 
