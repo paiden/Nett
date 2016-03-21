@@ -496,6 +496,17 @@ namespace Nett.UnitTests
             Assert.Equal("This string has a \\\\ backslash character.", read.Get<string>("backslash"));
         }
 
+        [Theory(DisplayName = "Verify all valid TOML key types are supported")]
+        [InlineData(@"1234 = ""foo""", "1234", "foo")]
+        public void ReadValidTomls_SupportsAllKeyTypes(string toml, string key, object expected)
+        {
+            // Act
+            var read = Toml.ReadString(toml);
+
+            // Assert
+            read[key].Get<string>().As<object>().Should().Be(expected);
+        }
+
         [Fact]
         public void ReadValidStringsUntyped_StringEmpty()
         {

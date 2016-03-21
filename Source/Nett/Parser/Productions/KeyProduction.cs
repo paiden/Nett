@@ -7,7 +7,7 @@
 
         private static string ApplyInternal(TokenBuffer tokens, bool required)
         {
-            if (tokens.TryExpect(TokenType.BareKey)) { return tokens.Consume().value; }
+            if (tokens.TryExpect(TokenType.BareKey) || tokens.TryExpect(TokenType.Integer)) { return tokens.Consume().value; }
             else if (tokens.TryExpect(TokenType.String)) { return tokens.Consume().value.Replace("\"", ""); }
             else if (required)
             {
