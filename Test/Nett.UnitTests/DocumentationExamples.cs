@@ -130,8 +130,8 @@ ServerAddress = ""http://127.0.0.1:8080""
             //In Documentation
             var myConfig = TomlConfig.Create()
                 .ConfigureType<ConfigurationWithDepdendency>()
-                    .As.CreateWith(() => new ConfigurationWithDepdendency(new object()))
-                .Apply();
+                    .CreateInstanceAs(() => new ConfigurationWithDepdendency(new object()))
+                .Configure();
 
             var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn, myConfig);
 

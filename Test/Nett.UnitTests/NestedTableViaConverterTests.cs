@@ -28,7 +28,7 @@ CustomKey1 = ""CustomValue1""
 CustomKey2 = ""CustomValue2""";
 
         private readonly TomlConfig config = TomlConfig.Create()
-            .ConfigureType<CustomDictionary>().As.ConvertTo<TomlTable>().As(
+            .ConfigureType<CustomDictionary>().WithConversionFor<TomlTable>().ConvertToAs(
                 collection =>
                 {
                     var table = new TomlTable();
@@ -37,7 +37,8 @@ CustomKey2 = ""CustomValue2""";
                         table.Add(kvp.Key, new TomlString(kvp.Value));
                     }
                     return table;
-                }).And.ConvertFrom<TomlTable>().As(table =>
+                })
+            .ConvertFromAs(table =>
                 {
                     var collection = new CustomDictionary();
                     foreach (var kvp in table.ToDictionary())
@@ -45,10 +46,10 @@ CustomKey2 = ""CustomValue2""";
                         collection.Add(kvp.Key, kvp.Value as string);
                     }
                     return collection;
-                }).Apply()
-            .ConfigureType<IBar>().As
-                .CreateWith(() => new Bar())
-                .Apply();
+                }).Configure()
+            .ConfigureType<IBar>()
+                .CreateInstanceAs(() => new Bar())
+                .Configure();
 
         [Fact(DisplayName = "Writing complex structure with a custom dictionary converter should write that dictionary as a sub table; tests issue #2")]
         public void Write_WithConverterThatTransformsDictToTable_ProducesValidTomlContent()

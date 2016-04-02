@@ -12,8 +12,8 @@ namespace Nett.UnitTests
             // Arrange
             var config = TomlConfig.Create()
                 .ConfigureType<IFoo>()
-                    .As.CreateWith(() => new Foo())
-                    .Apply();
+                    .CreateInstanceAs(() => new Foo())
+                    .Configure();
             string toml = @"[Foo]";
 
             // Act

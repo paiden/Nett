@@ -12,9 +12,10 @@ namespace Nett.UnitTests
             // Arrange
             var config = TomlConfig.Create()
                 .ConfigureType<TestStruct>()
-                    .As.ConvertFrom<TomlInt>().As(ti => new TestStruct() { Value = (int)ti.Value })
-                    .And.ConvertTo<TomlInt>().As(ts => new TomlInt(ts.Value))
-                    .Apply();
+                    .WithConversionFor<TomlInt>()
+                        .ConvertFromAs(ti => new TestStruct() { Value = (int)ti.Value })
+                        .ConvertToAs(ts => new TomlInt(ts.Value))
+                        .Configure();
 
             string toml = @"S = 10";
 
@@ -30,12 +31,14 @@ namespace Nett.UnitTests
         {
             // Arrange
             var config = TomlConfig.Create()
-                .ConfigureType<TestStruct>().As
-                    .ConvertFrom<TomlInt>().As(ti => new TestStruct() { Value = (int)ti.Value })
-                    .And.ConvertTo<TomlInt>().As(ts => new TomlInt(ts.Value))
-                    .And.CreateWith(() => new TestStruct())
-                    .And.TreatAsInlineTable()
-                    .Apply();
+                .ConfigureType<TestStruct>()
+                    .WithConversionFor<TomlInt>()
+                        .ConvertFromAs(ti => new TestStruct() { Value = (int)ti.Value })
+                        .ConvertToAs(ts => new TomlInt(ts.Value))
+                        .Apply()
+                    .CreateInstanceAs(() => new TestStruct())
+                    .TreatAsInlineTable()
+                    .Configure();
             var obj = new ConfigObject() { S = new TestStruct() { Value = 222 } };
 
             // Act
@@ -51,11 +54,13 @@ namespace Nett.UnitTests
             // Arrange
             var config = TomlConfig.Create()
                 .ConfigureType<IGeneric<string>>()
-                    .As.ConvertFrom<TomlString>().As((ts) => new GenericImpl<string>(ts.Value))
-                    .Apply()
+                    .WithConversionFor<TomlString>()
+                        .ConvertFromAs((ts) => new GenericImpl<string>(ts.Value))
+                        .Configure()
                 .ConfigureType<IGeneric<int>>()
-                    .As.ConvertFrom<TomlString>().As((ts) => new GenericImpl<int>(int.Parse(ts.Value)))
-                    .Apply();
+                    .WithConversionFor<TomlString>()
+                        .ConvertFromAs((ts) => new GenericImpl<int>(int.Parse(ts.Value)))
+                .Configure();
 
             string toml = @"
 Foo = ""Hello""
@@ -79,8 +84,9 @@ Foo3 = [""A""]";
             // Arrange
             var config = TomlConfig.Create()
                 .ConfigureType<ClassWithTrowingProp>()
-                    .As.ConvertTo<TomlValue>().As((_) => new TomlString("Yeah converter was used, and property not accessed"))
-                    .Apply();
+                    .WithConversionFor<TomlValue>()
+                        .ConvertToAs((_) => new TomlString("Yeah converter was used, and property not accessed"))
+                    .Configure();
 
             var toWrite = new Foo();
 
@@ -97,8 +103,9 @@ Foo3 = [""A""]";
             // Arrange
             var config = TomlConfig.Create()
                 .ConfigureType<GenProp<GenType>>()
-                    .As.ConvertTo<TomlValue>().As((_) => new TomlString("Yeah converter was used."))
-                    .Apply();
+                    .WithConversionFor<TomlValue>()
+                        .ConvertToAs((_) => new TomlString("Yeah converter was used."))
+                .Configure();
             var toWrite = new GenHost();
 
             // Act
@@ -114,8 +121,9 @@ Foo3 = [""A""]";
             // Arrange
             var config = TomlConfig.Create()
                 .ConfigureType<IGenProp<GenType>>()
-                    .As.ConvertTo<TomlValue>().As((_) => new TomlString("Yeah converter was used."))
-                    .Apply();
+                    .WithConversionFor<TomlValue>()
+                        .ConvertToAs((_) => new TomlString("Yeah converter was used."))
+                .Configure();
             var toWrite = new GenInterfaceHost();
 
             // Act

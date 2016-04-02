@@ -95,8 +95,9 @@ namespace Nett.UnitTests
 
             var cfg = TomlConfig.Create()
                 .ConfigureType<ConvProp>()
-                    .As.ConvertTo<TomlString>().As((cp) => new TomlString(cp.Prop))
-                    .Apply();
+                    .WithConversionFor<TomlString>()
+                        .ConvertToAs((cp) => new TomlString(cp.Prop))
+                    .Configure();
 
             // Act
             var exp = @"IntProp = 10
@@ -165,7 +166,7 @@ TheBool = false
         public void Write_WhenMarkedAsInlineTableInConfig_WritesTableAsInlineTable()
         {
             var cfg = TomlConfig.Create()
-                .ConfigureType<TestClassA>().As.TreatAsInlineTable().Apply();
+                .ConfigureType<TestClassA>().TreatAsInlineTable().Configure();
 
             var s = Toml.WriteString(new TestClassA(), cfg);
 
