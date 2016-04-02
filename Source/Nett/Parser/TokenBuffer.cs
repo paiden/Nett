@@ -30,17 +30,21 @@ namespace Nett.Parser
             return this.Peek().type == tt;
         }
 
-        public Token ExpectAndConsume(TokenType tt)
+        public Token Expect(TokenType tt)
         {
             var t = this.Peek();
             if (t.type != tt)
             {
                 throw new Exception($"Expected token of type '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
             }
-            else
-            {
-                return this.Consume();
-            }
+
+            return t;
+        }
+
+        public Token ExpectAndConsume(TokenType tt)
+        {
+            this.Expect(tt);
+            return this.Consume();
         }
     }
 }

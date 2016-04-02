@@ -10,6 +10,12 @@ namespace Nett.Parser.Productions
 
             tokens.ExpectAndConsume(TokenType.Assign);
 
+            var inlineTableArray = InlineTableArrayProduction.TryApply(tokens);
+            if (inlineTableArray != null)
+            {
+                return new Tuple<string, TomlObject>(key, inlineTableArray);
+            }
+
             var inlineTable = InlineTableProduction.TryApply(tokens);
             if (inlineTable != null)
             {

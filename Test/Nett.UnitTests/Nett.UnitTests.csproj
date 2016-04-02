@@ -65,6 +65,7 @@
     <Compile Include="ClassReaderTests.cs" />
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
+    <Compile Include="TableArrayTests.cs" />
     <Compile Include="TestUtil\AssertionExtensions.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="MasterTests.cs" />
