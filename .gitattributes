@@ -1,12 +1,14 @@
 # Enalbe auto eol handling
-* text=auto !eol
+* 			text=auto
 
 # Text Files auto handle
-*.config text
-*.cs text diff=csharp
-*.md text
-*.nuspec text
-*.ps1 text
+*.config 	text
+*.cs 		text diff=csharp
+*.md 		text
+*.nuspec 	text
+*.ps1 		text
+*.csproj	text merge=union
+
 
 # Text Files CR LF
-*.sln text eol=crlf
+*.sln 		text merge=union eol=crlf
