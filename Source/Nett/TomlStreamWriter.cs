@@ -29,8 +29,11 @@ namespace Nett
 
             this.sw = writer;
 
+            // ------------------------------------------------------------------------------------------------------
+            // Pass format strings that depend on culture to stream writer, as the writer has the correct culture !!!
+            // ------------------------------------------------------------------------------------------------------
             this.VisitBool = (b) => this.WriteKeyedValue(b, () => this.sw.Write(b.Value.ToString().ToLower()));
-            this.VisitFloat = (f) => this.WriteKeyedValue(f, () => this.sw.Write(f.Value));
+            this.VisitFloat = (f) => this.WriteKeyedValue(f, () => this.sw.Write("{0:0.0###############}", f.Value));
             this.VisitInt = (i) => this.WriteKeyedValue(i, () => this.sw.Write(i.Value));
             this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.ToString()));
             this.VisitTimespan = (ts) => this.WriteKeyedValue(ts, () => this.sw.Write(ts.Value));

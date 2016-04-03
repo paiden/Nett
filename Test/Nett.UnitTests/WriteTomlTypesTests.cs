@@ -28,6 +28,32 @@ namespace Nett.UnitTests
             Assert.Equal(expected, written.Trim());
         }
 
+        [Fact(DisplayName = "Type with float is always written with at least one decimal point")]
+        public void WriteFloatType_WritesAtLeastOneDecimalPoint()
+        {
+            // Arrange
+            var ft = new FloatType() { F = 123 };
+
+            // Act
+            var s = Toml.WriteString(ft);
+
+            // Assert
+            s.Trim().Should().Be("F = 123.0");
+        }
+
+        [Fact(DisplayName = "Type with double is always written with at least one decimal point")]
+        public void WriteDoubleType_WritesAtLeastOneDecimalPoint()
+        {
+            // Arrange
+            var ft = new DoubleType() { D = 123 };
+
+            // Act
+            var s = Toml.WriteString(ft);
+
+            // Assert
+            s.Trim().Should().Be("D = 123.0");
+        }
+
         [Theory]
         [InlineData("02:01", "02:01:00")]
         [InlineData("03:02:01", "03:02:01")]
@@ -69,6 +95,16 @@ namespace Nett.UnitTests
         {
             public const string Default = "1979-05-27T00:32:00.999999-07:00";
             public DateTime DT { get; set; } = DateTime.Parse(Default);
+        }
+
+        public class FloatType
+        {
+            public float F { get; set; }
+        }
+
+        public class DoubleType
+        {
+            public double D { get; set; }
         }
     }
 }
