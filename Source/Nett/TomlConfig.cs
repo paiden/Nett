@@ -13,6 +13,8 @@ namespace Nett
 
     public sealed partial class TomlConfig
     {
+        private static readonly Type EnumType = typeof(Enum);
+
         internal static readonly TomlConfig DefaultInstance = Create();
 
         private readonly Dictionary<Type, ITomlConverter> fromTomlConverters = new Dictionary<Type, ITomlConverter>();
@@ -46,6 +48,8 @@ namespace Nett
 
             // TomlBool
             this.AddFromTomlConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
+
+            this.toTomlConverters.Add(EnumType, new TomlConverter<Enum, TomlString>(s => new TomlString(s.ToString("G"))));
         }
 
         private void AddFromTomlConverter(ITomlConverter converter)
@@ -59,6 +63,10 @@ namespace Nett
         {
             ITomlConverter conv;
             this.fromTomlConverters.TryGetValue(toType, out conv);
+            if (conv == null && toType.BaseType == EnumType)
+            {
+                conv = new TomlConverter<TomlString, Enum>(s => (Enum)Enum.Parse(toType, s.Value, true));
+            }
             return conv;
         }
 
@@ -66,6 +74,8 @@ namespace Nett
         {
             ITomlConverter conv;
             this.toTomlConverters.TryGetValue(fromType, out conv);
+            if (conv == null && fromType.BaseType == typeof(Enum))
+                this.toTomlConverters.TryGetValue(typeof(Enum), out conv);
             return conv;
         }
 
