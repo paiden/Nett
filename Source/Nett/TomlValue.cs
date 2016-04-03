@@ -17,6 +17,7 @@ namespace Nett
         protected static readonly Type DoubleType = typeof(double);
         protected static readonly Type DateTimeType = typeof(DateTime);
         protected static readonly Type BoolType = typeof(bool);
+        protected static readonly Type EnumType = typeof(Enum);
 
         private static readonly Type[] IntTypes = new Type[]
             {
@@ -52,6 +53,10 @@ namespace Nett
             else if (BoolType == targetType)
             {
                 return new TomlBool((bool)val);
+            }
+            else if (EnumType == targetType.BaseType)
+            {
+                return new TomlString(((Enum)val).ToString("G"));
             }
 
             throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
