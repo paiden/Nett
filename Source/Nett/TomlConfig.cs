@@ -15,8 +15,7 @@ namespace Nett
     {
         internal static readonly TomlConfig DefaultInstance = Create();
 
-        private readonly Dictionary<Type, ITomlConverter> fromTomlConverters = new Dictionary<Type, ITomlConverter>();
-        private readonly Dictionary<Type, ITomlConverter> toTomlConverters = new Dictionary<Type, ITomlConverter>();
+        private readonly ConverterCollection converters = new ConverterCollection();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
 
@@ -24,50 +23,40 @@ namespace Nett
         private TomlConfig()
         {
             // TomlInt
-            this.AddFromTomlConverter(new TomlConverter<TomlInt, char>(t => (char)t.Value));
-            this.AddFromTomlConverter(new TomlConverter<TomlInt, byte>(t => (byte)t.Value));
-            this.AddFromTomlConverter(new TomlConverter<TomlInt, int>(t => (int)t.Value));
-            this.AddFromTomlConverter(new TomlConverter<TomlInt, short>(t => (short)t.Value));
-            this.AddFromTomlConverter(new TomlConverter<TomlInt, long>(t => (long)t.Value));
+            this.AddConverter(new TomlConverter<TomlInt, char>(t => (char)t.Value));
+            this.AddConverter(new TomlConverter<TomlInt, byte>(t => (byte)t.Value));
+            this.AddConverter(new TomlConverter<TomlInt, int>(t => (int)t.Value));
+            this.AddConverter(new TomlConverter<TomlInt, short>(t => (short)t.Value));
+            this.AddConverter(new TomlConverter<TomlInt, long>(t => (long)t.Value));
 
             // TomlFloat
-            this.AddFromTomlConverter(new TomlConverter<TomlFloat, double>(t => t.Value));
-            this.AddFromTomlConverter(new TomlConverter<TomlFloat, float>(t => (float)t.Value));
+            this.AddConverter(new TomlConverter<TomlFloat, double>(t => t.Value));
+            this.AddConverter(new TomlConverter<TomlFloat, float>(t => (float)t.Value));
 
             // TomlString
-            this.AddFromTomlConverter(new TomlConverter<TomlString, string>(t => t.Value));
+            this.AddConverter(new TomlConverter<TomlString, string>(t => t.Value));
 
             // TomlDateTime
-            this.AddFromTomlConverter(new TomlConverter<TomlDateTime, DateTime>(t => t.Value.UtcDateTime));
-            this.AddFromTomlConverter(new TomlConverter<TomlDateTime, DateTimeOffset>(t => t.Value));
+            this.AddConverter(new TomlConverter<TomlDateTime, DateTime>(t => t.Value.UtcDateTime));
+            this.AddConverter(new TomlConverter<TomlDateTime, DateTimeOffset>(t => t.Value));
 
             // TomlTimeSpan
-            this.AddFromTomlConverter(new TomlConverter<TomlTimeSpan, TimeSpan>(t => t.Value));
+            this.AddConverter(new TomlConverter<TomlTimeSpan, TimeSpan>(t => t.Value));
 
             // TomlBool
-            this.AddFromTomlConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
+            this.AddConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
         }
 
-        private void AddFromTomlConverter(ITomlConverter converter)
-        {
-            this.fromTomlConverters[converter.ToType] = converter;
-        }
+        private void AddConverter(ITomlConverter converter) =>
+            this.converters.Add(converter);
 
         public static TomlConfig Create() => new TomlConfig();
 
-        internal ITomlConverter GetFromTomlConverter(Type toType)
-        {
-            ITomlConverter conv;
-            this.fromTomlConverters.TryGetValue(toType, out conv);
-            return conv;
-        }
+        internal ITomlConverter TryGetConverter(Type from, Type to) =>
+            this.converters.TryGetConverter(from, to);
 
-        internal ITomlConverter GetToTomlConverter(Type fromType)
-        {
-            ITomlConverter conv;
-            this.toTomlConverters.TryGetValue(fromType, out conv);
-            return conv;
-        }
+        internal ITomlConverter TryGetToTomlConverter(Type fromType) =>
+            this.converters.TryGetLatestToTomlConverter(fromType);
 
         internal object GetActivatedInstance(Type t)
         {
@@ -102,6 +91,60 @@ namespace Nett
                 case CommentLocation.Append: return TomlCommentLocation.Append;
                 case CommentLocation.Prepend: return TomlCommentLocation.Prepend;
                 default: return DefaultCommentLocation;
+            }
+        }
+
+        private class ConverterCollection
+        {
+            private readonly Dictionary<Type, Dictionary<Type, ITomlConverter>> convertFromTypeToTypeMapping = new Dictionary<Type, Dictionary<Type, ITomlConverter>>();
+            private readonly Dictionary<Type, List<ITomlConverter>> convertFromToTomlConverters = new Dictionary<Type, List<ITomlConverter>>();
+
+            public void Add(ITomlConverter converter)
+            {
+                Dictionary<Type, ITomlConverter> val;
+                if (!convertFromTypeToTypeMapping.TryGetValue(converter.FromType, out val))
+                {
+                    val = convertFromTypeToTypeMapping[converter.FromType] = new Dictionary<Type, ITomlConverter>();
+                }
+
+                val[converter.ToType] = converter;
+
+                if (typeof(TomlObject).IsAssignableFrom(converter.ToType))
+                {
+                    List<ITomlConverter> tmlConverters;
+                    if (!this.convertFromToTomlConverters.TryGetValue(converter.FromType, out tmlConverters))
+                    {
+                        tmlConverters = this.convertFromToTomlConverters[converter.FromType] = new List<ITomlConverter>();
+                    }
+
+                    tmlConverters.Add(converter);
+                }
+            }
+
+            public ITomlConverter TryGetConverter(Type from, Type to)
+            {
+                Dictionary<Type, ITomlConverter> toConverters;
+                if (this.convertFromTypeToTypeMapping.TryGetValue(from, out toConverters))
+                {
+                    ITomlConverter conv;
+                    if (toConverters.TryGetValue(to, out conv))
+                    {
+                        return conv;
+                    }
+                }
+
+                return null;
+            }
+
+            public ITomlConverter TryGetLatestToTomlConverter(Type from)
+            {
+                List<ITomlConverter> converters;
+                if (this.convertFromToTomlConverters.TryGetValue(from, out converters))
+                {
+                    return converters.Last();
+                }
+
+                return null;
             }
         }
     }

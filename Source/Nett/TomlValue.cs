@@ -92,7 +92,7 @@ namespace Nett
         {
             if (this.GetType() == t) { return this; }
 
-            var converter = config.GetFromTomlConverter(t);
+            var converter = config.TryGetConverter(this.GetType(), t);
             if (converter != null)
             {
                 return converter.Convert(this);

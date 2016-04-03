@@ -22,7 +22,7 @@ namespace Nett
         internal static TomlObject From(object val, PropertyInfo pi, TomlConfig config)
         {
             var t = val.GetType();
-            var converter = config.GetToTomlConverter(t);
+            var converter = config.TryGetToTomlConverter(t);
             IEnumerable enumerable;
             if (converter != null)
             {
@@ -49,7 +49,7 @@ namespace Nett
 
             if (et != null)
             {
-                var conv = config.GetToTomlConverter(et);
+                var conv = config.TryGetToTomlConverter(et);
                 if (conv != null)
                 {
                     if (typeof(TomlValue).IsAssignableFrom(conv.ToType))

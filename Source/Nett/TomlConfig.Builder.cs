@@ -140,7 +140,7 @@ namespace Nett
             public IConfigureTypeCombiner<T> As(Func<TFrom, TTo> cast)
             {
                 var conv = new TomlConverter<TFrom, TTo>(cast);
-                config.toTomlConverters.Add(conv.FromType, conv);
+                config.AddConverter(conv);
                 return this.typeConfig;
             }
         }
@@ -155,7 +155,7 @@ namespace Nett
             public IConfigureTypeCombiner<T> As(Func<TFrom, TTo> cast)
             {
                 var conv = new TomlConverter<TFrom, TTo>(cast);
-                config.fromTomlConverters.Add(conv.ToType, conv);
+                config.AddConverter(conv);
                 return this.typeConfig;
             }
         }

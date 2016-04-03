@@ -68,7 +68,7 @@ namespace Nett
                 var targetProperty = result.GetType().GetProperty(p.Key);
                 if (targetProperty != null)
                 {
-                    var converter = config.GetFromTomlConverter(targetProperty.PropertyType);
+                    var converter = config.TryGetConverter(p.Value.GetType(), targetProperty.PropertyType);
                     if (converter != null)
                     {
                         var src = p.Value.Get(converter.FromType, config);
