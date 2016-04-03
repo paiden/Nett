@@ -166,7 +166,7 @@ TheBool = false
         public void Write_WhenMarkedAsInlineTableInConfig_WritesTableAsInlineTable()
         {
             var cfg = TomlConfig.Create()
-                .ConfigureType<TestClassA>().TreatAsInlineTable().Configure();
+                .ConfigureType<TestClassA>().TreatAsInlineTable().GetConfig();
 
             var s = Toml.WriteString(new TestClassA(), cfg);
 

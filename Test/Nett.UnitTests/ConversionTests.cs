@@ -38,7 +38,7 @@ namespace Nett.UnitTests
                         .Apply()
                     .CreateInstanceAs(() => new TestStruct())
                     .TreatAsInlineTable()
-                    .Configure();
+                    .GetConfig();
             var obj = new ConfigObject() { S = new TestStruct() { Value = 222 } };
 
             // Act

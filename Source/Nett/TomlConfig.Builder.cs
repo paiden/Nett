@@ -9,7 +9,7 @@ namespace Nett
         {
             IConfigureConversion<TCustom, TToml> WithConversionFor<TToml>() where TToml : TomlObject;
             IConfigureType<TCustom> CreateInstanceAs(Func<TCustom> func);
-            TomlConfig Configure();
+            TomlConfig GetConfig();
             IConfigureType<TCustom> TreatAsInlineTable();
         }
 
@@ -36,7 +36,7 @@ namespace Nett
 
             public TomlConfig Apply() => this.config;
 
-            public TomlConfig Configure() => this.config;
+            public TomlConfig GetConfig() => this.config;
 
             public IConfigureType<TCustom> CreateInstanceAs(Func<TCustom> activator)
             {

@@ -49,7 +49,7 @@ CustomKey2 = ""CustomValue2""";
                 }).Configure()
             .ConfigureType<IBar>()
                 .CreateInstanceAs(() => new Bar())
-                .Configure();
+                .GetConfig();
 
         [Fact(DisplayName = "Writing complex structure with a custom dictionary converter should write that dictionary as a sub table; tests issue #2")]
         public void Write_WithConverterThatTransformsDictToTable_ProducesValidTomlContent()
