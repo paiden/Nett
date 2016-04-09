@@ -23,7 +23,7 @@ namespace Nett.UnitTests
         }
 
         [Fact(DisplayName = "External configuration batch code is executed when configuration is done")]
-        public void WhenConfigShouldRunExtenralConfig_ThisConfigGetsExecuted()
+        public void WhenConfigShouldRunExternalConfig_ThisConfigGetsExecuted()
         {
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
