@@ -93,11 +93,13 @@ namespace Nett.UnitTests
                 Acp = new List<ArrayClassProp>() { new ArrayClassProp() { V = 666 } },
             };
 
-            var cfg = TomlConfig.Create()
-                .ConfigureType<ConvProp>()
-                    .WithConversionFor<TomlString>()
-                        .ConvertToAs((cp) => new TomlString(cp.Prop))
-                    .Configure();
+            var cfg = TomlConfig.Create(config => config
+                .ConfigureType<ConvProp>(ct => ct
+                    .WithConversionFor<TomlString>(conv => conv
+                        .ToToml(cp => new TomlString(cp.Prop))
+                    )
+                )
+            );
 
             // Act
             var exp = @"IntProp = 10
@@ -165,8 +167,11 @@ TheBool = false
         [Fact]
         public void Write_WhenMarkedAsInlineTableInConfig_WritesTableAsInlineTable()
         {
-            var cfg = TomlConfig.Create()
-                .ConfigureType<TestClassA>().TreatAsInlineTable().GetConfig();
+            var cfg = TomlConfig.Create(config => config
+                .ConfigureType<TestClassA>(ct =>
+                    ct.TreatAsInlineTable()
+                )
+            );
 
             var s = Toml.WriteString(new TestClassA(), cfg);
 

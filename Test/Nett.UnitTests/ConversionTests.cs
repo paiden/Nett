@@ -10,12 +10,14 @@ namespace Nett.UnitTests
         public void ReadToml_WhenConfigHasConverter_ConverterGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<TestStruct>()
-                    .WithConversionFor<TomlInt>()
-                        .ConvertFromAs(ti => new TestStruct() { Value = (int)ti.Value })
-                        .ConvertToAs(ts => new TomlInt(ts.Value))
-                        .Configure();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<TestStruct>(ct => ct
+                    .WithConversionFor<TomlInt>(conv => conv
+                        .FromToml(ti => new TestStruct() { Value = (int)ti.Value })
+                        .ToToml(ts => new TomlInt(ts.Value))
+                    )
+                )
+            );
 
             string toml = @"S = 10";
 
@@ -30,15 +32,16 @@ namespace Nett.UnitTests
         public void WriteToml_WhenConfigHasConverter_ConverterGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<TestStruct>()
-                    .WithConversionFor<TomlInt>()
-                        .ConvertFromAs(ti => new TestStruct() { Value = (int)ti.Value })
-                        .ConvertToAs(ts => new TomlInt(ts.Value))
-                        .Apply()
-                    .CreateInstanceAs(() => new TestStruct())
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<TestStruct>(ct => ct
+                    .WithConversionFor<TomlInt>(conv => conv
+                        .FromToml(ti => new TestStruct() { Value = (int)ti.Value })
+                        .ToToml(ts => new TomlInt(ts.Value))
+                    )
+                    .CreateInstance(() => new TestStruct())
                     .TreatAsInlineTable()
-                    .GetConfig();
+                )
+            );
             var obj = new ConfigObject() { S = new TestStruct() { Value = 222 } };
 
             // Act
@@ -52,15 +55,18 @@ namespace Nett.UnitTests
         public void RadToml_WithGenricConverters_CanFindCorrectConverter()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<IGeneric<string>>()
-                    .WithConversionFor<TomlString>()
-                        .ConvertFromAs((ts) => new GenericImpl<string>(ts.Value))
-                        .Configure()
-                .ConfigureType<IGeneric<int>>()
-                    .WithConversionFor<TomlString>()
-                        .ConvertFromAs((ts) => new GenericImpl<int>(int.Parse(ts.Value)))
-                .Configure();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<IGeneric<string>>(ct => ct
+                    .WithConversionFor<TomlString>(conv => conv
+                        .FromToml((ts) => new GenericImpl<string>(ts.Value))
+                    )
+                )
+                .ConfigureType<IGeneric<int>>(ct => ct
+                    .WithConversionFor<TomlString>(conv => conv
+                        .FromToml((ts) => new GenericImpl<int>(int.Parse(ts.Value)))
+                    )
+                )
+            );
 
             string toml = @"
 Foo = ""Hello""
@@ -82,11 +88,13 @@ Foo3 = [""A""]";
         public void WriteToml_ConverterIsUsedAndConvertedPropertiesAreNotEvaluated()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<ClassWithTrowingProp>()
-                    .WithConversionFor<TomlValue>()
-                        .ConvertToAs((_) => new TomlString("Yeah converter was used, and property not accessed"))
-                    .Configure();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<ClassWithTrowingProp>(ct => ct
+                    .WithConversionFor<TomlValue>(conv => conv
+                        .ToToml((_) => new TomlString("Yeah converter was used, and property not accessed"))
+                    )
+                )
+            );
 
             var toWrite = new Foo();
 
@@ -101,11 +109,13 @@ Foo3 = [""A""]";
         public void WriteToml_WithListItemConverter_UsesConverter()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<GenProp<GenType>>()
-                    .WithConversionFor<TomlValue>()
-                        .ConvertToAs((_) => new TomlString("Yeah converter was used."))
-                .Configure();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<GenProp<GenType>>(ct => ct
+                    .WithConversionFor<TomlValue>(conv => conv
+                        .ToToml((_) => new TomlString("Yeah converter was used."))
+                    )
+                )
+            );
             var toWrite = new GenHost();
 
             // Act
@@ -119,11 +129,13 @@ Foo3 = [""A""]";
         public void WriteToml_WithListItemConverterAndPropertyUsesInterface_UsesConverter()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<IGenProp<GenType>>()
-                    .WithConversionFor<TomlValue>()
-                        .ConvertToAs((_) => new TomlString("Yeah converter was used."))
-                .Configure();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<IGenProp<GenType>>(ct => ct
+                    .WithConversionFor<TomlValue>(conv => conv
+                        .ToToml((_) => new TomlString("Yeah converter was used."))
+                    )
+                )
+            );
             var toWrite = new GenInterfaceHost();
 
             // Act

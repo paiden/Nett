@@ -4,16 +4,15 @@ namespace Nett.UnitTests
 {
     public class TomlConfigTests
     {
-
-
         [Fact]
         public void WhenConfigHasActivator_ActivatorGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Create()
-                .ConfigureType<IFoo>()
-                    .CreateInstanceAs(() => new Foo())
-                    .GetConfig();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<IFoo>(ct => ct
+                    .CreateInstance(() => new Foo())
+                )
+            );
             string toml = @"[Foo]";
 
             // Act

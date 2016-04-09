@@ -128,10 +128,11 @@ ServerAddress = ""http://127.0.0.1:8080""
             this.WriteTomlFile(fn);
 
             //In Documentation
-            var myConfig = TomlConfig.Create()
-                .ConfigureType<ConfigurationWithDepdendency>()
-                    .CreateInstanceAs(() => new ConfigurationWithDepdendency(new object()))
-                .GetConfig();
+            var myConfig = TomlConfig.Create(cfg => cfg
+                .ConfigureType<ConfigurationWithDepdendency>(ct => ct
+                    .CreateInstance(() => new ConfigurationWithDepdendency(new object()))
+                )
+            );
 
             var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn, myConfig);
 
@@ -147,14 +148,13 @@ ServerAddress = ""http://127.0.0.1:8080""
         {
             var obj = new TypeNotSupportedByToml() { SomeGuid = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606") };
 
-            var myconfig = TomlConfig.Create();
             //.ConfigureType<Guid>()
             //    .As.ConvertTo<TomlString>().As((g) => new TomlString(g.ToString()))
             //    .And.ConvertFrom<TomlString>().As((s) => new Guid(s.Value))
             //.Apply();
 
-            Toml.WriteFile(obj, "test.tml", myconfig);
-            var read = Toml.ReadFile<TypeNotSupportedByToml>("test.tml", myconfig);
+            Toml.WriteFile(obj, "test.tml");
+            var read = Toml.ReadFile<TypeNotSupportedByToml>("test.tml");
         }
     }
 }
