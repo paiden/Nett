@@ -52,12 +52,12 @@ namespace Nett
                 var conv = config.TryGetToTomlConverter(et);
                 if (conv != null)
                 {
-                    if (typeof(TomlValue).IsAssignableFrom(conv.ToType))
+                    if (conv.CanConvertTo(typeof(TomlValue)))
                     {
                         var values = e.Select((o) => (TomlValue)conv.Convert(o));
                         return new TomlArray(values.ToArray());
                     }
-                    else if (typeof(TomlTable).IsAssignableFrom(conv.ToType))
+                    else if (conv.CanConvertTo(typeof(TomlTable)))
                     {
                         return new TomlTableArray(e.Select((o) => (TomlTable)conv.Convert(o)));
                     }

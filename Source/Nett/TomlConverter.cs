@@ -7,7 +7,7 @@ using System.Text;
 namespace Nett
 {
     [DebuggerDisplay("{FromType} -> {ToType}")]
-    public sealed class TomlConverter<TFrom, TTo> : TomlConverterBase<TFrom, TTo>
+    internal sealed class TomlConverter<TFrom, TTo> : TomlConverterBase<TFrom, TTo>
     {
         private readonly Func<TFrom, TTo> convert;
 

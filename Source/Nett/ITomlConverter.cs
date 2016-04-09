@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Nett
 {
-    public interface ITomlConverter
+    internal interface ITomlConverter
     {
-        Type FromType { get; }
-        Type ToType { get; }
+        bool CanConvertFrom(Type t);
+        bool CanConvertTo(Type t);
+        bool CanConvertToToml();
 
+        Type FromType { get; }
         object Convert(object value);
     }
 
-    public interface ITomlConverter<TFrom, TTo> : ITomlConverter
+    internal interface ITomlConverter<TFrom, TTo> : ITomlConverter
     {
         TTo Convert(TFrom src);
     }
