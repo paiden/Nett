@@ -8,6 +8,7 @@ namespace Nett
         public interface ITomlConfigBuilder
         {
             ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct);
+            ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch);
         }
 
         public interface IConfigureTypeBuilder<TCustom>
@@ -36,11 +37,18 @@ namespace Nett
                 this.config = config;
             }
 
+            public ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch)
+            {
+                batch(this);
+                return this;
+            }
+
             public ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct)
             {
                 ct(new TypeConfigurationBuilder<T>(this.config));
                 return this;
             }
+
         }
 
         internal sealed class TypeConfigurationBuilder<TCustom> : IConfigureTypeBuilder<TCustom>
