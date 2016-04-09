@@ -95,7 +95,7 @@ namespace Nett
             var converter = config.TryGetConverter(this.GetType(), t);
             if (converter != null)
             {
-                return converter.Convert(this);
+                return converter.Convert(this, t);
             }
             else
             {

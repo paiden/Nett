@@ -26,7 +26,7 @@ namespace Nett
             IEnumerable enumerable;
             if (converter != null)
             {
-                return (TomlObject)converter.Convert(val);
+                return (TomlObject)converter.Convert(val, Types.TomlObjectType);
             }
             else if (t != StringType && (enumerable = val as IEnumerable) != null)
             {
@@ -54,12 +54,12 @@ namespace Nett
                 {
                     if (conv.CanConvertTo(typeof(TomlValue)))
                     {
-                        var values = e.Select((o) => (TomlValue)conv.Convert(o));
+                        var values = e.Select((o) => (TomlValue)conv.Convert(o, Types.TomlValueType));
                         return new TomlArray(values.ToArray());
                     }
                     else if (conv.CanConvertTo(typeof(TomlTable)))
                     {
-                        return new TomlTableArray(e.Select((o) => (TomlTable)conv.Convert(o)));
+                        return new TomlTableArray(e.Select((o) => (TomlTable)conv.Convert(o, Types.TomlTableType)));
                     }
                     else
                     {

@@ -45,6 +45,10 @@ namespace Nett
 
             // TomlBool
             this.AddConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
+
+            // Enums
+            this.AddConverter(new TomlToEnumConverter());
+            this.AddConverter(new EnumToTomlConverter());
         }
 
         private void AddConverter(ITomlConverter converter) =>

@@ -16,7 +16,7 @@ namespace Nett
 
         public bool CanConvertToToml() => CanConvertToTomlType;
 
-        public object Convert(object o) => this.Convert((TFrom)o);
-        public abstract TTo Convert(TFrom from);
+        public object Convert(object o, Type targetType) => this.Convert((TFrom)o, targetType);
+        public abstract TTo Convert(TFrom from, Type targetType);
     }
 }

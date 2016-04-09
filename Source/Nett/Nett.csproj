@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="EnumConverter.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="ITomlObjectVisitor.cs" />

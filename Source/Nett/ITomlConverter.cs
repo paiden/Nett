@@ -9,11 +9,11 @@ namespace Nett
         bool CanConvertToToml();
 
         Type FromType { get; }
-        object Convert(object value);
+        object Convert(object value, Type targetType);
     }
 
     internal interface ITomlConverter<TFrom, TTo> : ITomlConverter
     {
-        TTo Convert(TFrom src);
+        TTo Convert(TFrom src, Type targetType);
     }
 }
