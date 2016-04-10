@@ -40,6 +40,7 @@ namespace Nett
         public TableTypes TableType { get; }
 
         public T Get<T>(string key) => this[key].Get<T>(TomlConfig.DefaultInstance);
+        public T Get<T>(string key, TomlConfig config) => this[key].Get<T>(config);
         public TomlObject Get(string key) => this[key];
 
         public TomlTable(TableTypes tableType = TableTypes.Default)

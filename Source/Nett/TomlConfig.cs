@@ -13,7 +13,7 @@ namespace Nett
 
     public sealed partial class TomlConfig
     {
-        internal static readonly TomlConfig DefaultInstance = Create();
+        internal static TomlConfig DefaultInstance = Create();
 
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
@@ -22,44 +22,28 @@ namespace Nett
         private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
         {
-            // TomlInt
-            this.AddConverter(new TomlConverter<TomlInt, char>(t => (char)t.Value));
-            this.AddConverter(new TomlConverter<TomlInt, byte>(t => (byte)t.Value));
-            this.AddConverter(new TomlConverter<TomlInt, int>(t => (int)t.Value));
-            this.AddConverter(new TomlConverter<TomlInt, short>(t => (short)t.Value));
-            this.AddConverter(new TomlConverter<TomlInt, long>(t => (long)t.Value));
-
-            // TomlFloat
-            this.AddConverter(new TomlConverter<TomlFloat, double>(t => t.Value));
-            this.AddConverter(new TomlConverter<TomlFloat, float>(t => (float)t.Value));
-
-            // TomlString
-            this.AddConverter(new TomlConverter<TomlString, string>(t => t.Value));
-
-            // TomlDateTime
-            this.AddConverter(new TomlConverter<TomlDateTime, DateTime>(t => t.Value.UtcDateTime));
-            this.AddConverter(new TomlConverter<TomlDateTime, DateTimeOffset>(t => t.Value));
-
-            // TomlTimeSpan
-            this.AddConverter(new TomlConverter<TomlTimeSpan, TimeSpan>(t => t.Value));
-
-            // TomlBool
-            this.AddConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
-
-            // Enums
-            this.AddConverter(new TomlToEnumConverter());
-            this.AddConverter(new EnumToTomlConverter());
         }
 
         private void AddConverter(ITomlConverter converter) =>
             this.converters.Add(converter);
 
-        public static TomlConfig Create() => new TomlConfig();
+        public static TomlConfig Create() => Create(_ => { });
+
+        public static IDisposable UseNewDefaultConfig(TomlConfig config)
+        {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
+            var scope = new ConfigScope(DefaultInstance);
+            DefaultInstance = config;
+            return scope;
+        }
 
         public static TomlConfig Create(Action<ITomlConfigBuilder> cfg)
         {
             var config = new TomlConfig();
-            cfg(new TomlConfigBuilder(config));
+            var builder = new TomlConfigBuilder(config);
+            cfg(builder);
+            builder.ApplyConversionSettings(); //Apply last, so that default converters get registered last and  only once
             return config;
         }
 
@@ -110,12 +94,12 @@ namespace Nett
             private readonly List<ITomlConverter> converters = new List<ITomlConverter>();
 
             public void Add(ITomlConverter converter) => this.converters.Insert(0, converter);
+            public void AddRange(IEnumerable<ITomlConverter> converters) => this.converters.InsertRange(0, converters);
 
             public ITomlConverter TryGetConverter(Type from, Type to) => this.converters.FirstOrDefault(c => c.CanConvertFrom(from) && c.CanConvertTo(to));
 
             public ITomlConverter TryGetLatestToTomlConverter(Type from) =>
                 this.converters.FirstOrDefault(c => c.CanConvertFrom(from) && c.CanConvertToToml());
-
         }
     }
 }

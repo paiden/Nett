@@ -86,8 +86,7 @@ namespace Nett
 
         public static TomlTable ReadString(string toRead) => ReadString(toRead, TomlConfig.DefaultInstance);
 
-        // Make public when untyped reading used config in the future
-        private static TomlTable ReadString(string toRead, TomlConfig config)
+        public static TomlTable ReadString(string toRead, TomlConfig config)
         {
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(toRead)))
             {
