@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Nett
 {
-    [DebuggerDisplay("{FromType} -> {ToType}")]
     internal sealed class TomlConverter<TFrom, TTo> : TomlConverterBase<TFrom, TTo>
     {
         private readonly Func<TFrom, TTo> convert;
