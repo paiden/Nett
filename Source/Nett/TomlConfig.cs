@@ -52,6 +52,13 @@ namespace Nett
 
         public static TomlConfig Create() => new TomlConfig();
 
+        public static TomlConfig Create(Action<ITomlConfigBuilder> cfg)
+        {
+            var config = new TomlConfig();
+            cfg(new TomlConfigBuilder(config));
+            return config;
+        }
+
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);
 

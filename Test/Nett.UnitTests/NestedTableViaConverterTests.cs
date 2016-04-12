@@ -27,28 +27,33 @@ Buzz = ""foofoo""
 CustomKey1 = ""CustomValue1""
 CustomKey2 = ""CustomValue2""";
 
-        private readonly TomlConfig config = TomlConfig.Create()
-            .ConfigureType<CustomDictionary>().As.ConvertTo<TomlTable>().As(
-                collection =>
-                {
-                    var table = new TomlTable();
-                    foreach (var kvp in collection.OrderBy(kvp => kvp.Key))
+        private readonly TomlConfig config = TomlConfig.Create(cfg => cfg
+            .ConfigureType<CustomDictionary>(ct => ct
+                .WithConversionFor<TomlTable>(conv => conv
+                    .ToToml(collection =>
                     {
-                        table.Add(kvp.Key, new TomlString(kvp.Value));
-                    }
-                    return table;
-                }).And.ConvertFrom<TomlTable>().As(table =>
-                {
-                    var collection = new CustomDictionary();
-                    foreach (var kvp in table.ToDictionary())
+                        var table = new TomlTable();
+                        foreach (var kvp in collection.OrderBy(kvp => kvp.Key))
+                        {
+                            table.Add(kvp.Key, new TomlString(kvp.Value));
+                        }
+                        return table;
+                    })
+                    .FromToml(table =>
                     {
-                        collection.Add(kvp.Key, kvp.Value as string);
-                    }
-                    return collection;
-                }).Apply()
-            .ConfigureType<IBar>().As
-                .CreateWith(() => new Bar())
-                .Apply();
+                        var collection = new CustomDictionary();
+                        foreach (var kvp in table.ToDictionary())
+                        {
+                            collection.Add(kvp.Key, kvp.Value as string);
+                        }
+                        return collection;
+                    })
+                )
+            )
+            .ConfigureType<IBar>(ct => ct
+                .CreateInstance(() => new Bar())
+            )
+        );
 
         [Fact(DisplayName = "Writing complex structure with a custom dictionary converter should write that dictionary as a sub table; tests issue #2")]
         public void Write_WithConverterThatTransformsDictToTable_ProducesValidTomlContent()

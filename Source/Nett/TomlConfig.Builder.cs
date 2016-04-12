@@ -1,162 +1,107 @@
 ﻿using System;
-using System.Diagnostics;
+using static System.Diagnostics.Debug;
 
 namespace Nett
 {
     public sealed partial class TomlConfig
     {
-        //public IFrom AddConversion() => new From(this);
-
-        //private class From : IFrom
-        //{
-        //    private readonly TomlConfig config;
-        //    public From(TomlConfig config)
-        //    {
-        //        Debug.Assert(config != null);
-        //        this.config = config;
-        //    }
-
-        //    public Type FromType { get; }
-
-        //    ITo<T> IFrom.From<T>() => new To<T>(this.config);
-        //}
-
-        //private sealed class To<TFrom> : ITo<TFrom>
-        //{
-        //    private readonly TomlConfig config;
-
-        //    public To(TomlConfig config)
-        //    {
-        //        Debug.Assert(config != null);
-        //        this.config = config;
-        //    }
-        //    IAs<TFrom, T> ITo<TFrom>.To<T>() => new As<TFrom, T>(this.config);
-        //}
-
-        //internal sealed class As<TFrom, TTo> : IAs<TFrom, TTo>
-        //{
-        //    private readonly TomlConfig config;
-
-        //    public As(TomlConfig config)
-        //    {
-        //        Debug.Assert(config != null);
-        //        this.config = config;
-        //    }
-
-        //    TomlConfig IAs<TFrom, TTo>.As(Func<TFrom, TTo> convert)
-        //    {
-        //        var conv = new TomlConverter<TFrom, TTo>(convert);
-        //        this.config.AddConverter(conv);
-        //        return this.config;
-        //    }
-        //}
-
-        public IConfigureTypeStart<T> ConfigureType<T>() => new TypeConfigurator<T>(this);
-
-        public interface IConfigureTypeStart<T>
+        public interface ITomlConfigBuilder
         {
-            IConfigureType<T> As { get; }
+            ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct);
+            ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch);
         }
 
-        public interface IConfigureTypeCombiner<T>
+        public interface IConfigureTypeBuilder<TCustom>
         {
-            IConfigureType<T> And { get; }
-
-            TomlConfig Apply();
+            IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv) where TToml : TomlObject;
+            IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> func);
+            IConfigureTypeBuilder<TCustom> TreatAsInlineTable();
         }
 
-        public interface IConfigureType<T>
+        public interface IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
         {
-            IConfigureTypeCombiner<T> CreateWith(Func<T> activator);
-
-            IConfigureCast<T, TFrom, T> ConvertFrom<TFrom>() where TFrom : TomlObject;
-            IConfigureCast<T, T, TTo> ConvertTo<TTo>() where TTo : TomlObject;
-
-            IConfigureTypeCombiner<T> TreatAsInlineTable();
+            IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
+            IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<TCustom, TToml> convert);
         }
 
-        public interface IConfigureCast<T, TFrom, TTo>
+        public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
+
+        internal sealed class TomlConfigBuilder : ITomlConfigBuilder
         {
-            IConfigureTypeCombiner<T> As(Func<TFrom, TTo> cast);
+            private readonly TomlConfig config = new TomlConfig();
+
+            public TomlConfigBuilder(TomlConfig config)
+            {
+                Assert(config != null);
+
+                this.config = config;
+            }
+
+            public ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch)
+            {
+                batch(this);
+                return this;
+            }
+
+            public ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct)
+            {
+                ct(new TypeConfigurationBuilder<T>(this.config));
+                return this;
+            }
+
         }
 
-        public class TypeConfigurator<T> : IConfigureType<T>, IConfigureTypeCombiner<T>, IConfigureTypeStart<T>
+        internal sealed class TypeConfigurationBuilder<TCustom> : IConfigureTypeBuilder<TCustom>
         {
             private readonly TomlConfig config;
 
-            public TypeConfigurator(TomlConfig config)
+            public TypeConfigurationBuilder(TomlConfig config)
             {
-                Debug.Assert(config != null);
+                Assert(config != null);
 
                 this.config = config;
             }
 
-            public IConfigureType<T> And => this;
-
-            public IConfigureType<T> As => this;
-
-            public IConfigureTypeCombiner<T> CreateWith(Func<T> activator)
+            public IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> activator)
             {
-                if (activator == null) { throw new ArgumentNullException("activator"); }
-                this.config.activators.Add(typeof(T), () => activator());
+                this.config.activators.Add(typeof(TCustom), () => activator());
                 return this;
             }
 
-            public IConfigureCast<T, TFrom, T> ConvertFrom<TFrom>() where TFrom : TomlObject => new FromTomlCastConfigurator<T, TFrom, T>(this.config, this);
-
-            public IConfigureCast<T, T, TTo> ConvertTo<TTo>() where TTo : TomlObject => new ToTomlCastConfigurator<T, T, TTo>(this.config, this);
-
-            public IConfigureTypeCombiner<T> TreatAsInlineTable()
+            public IConfigureTypeBuilder<TCustom> TreatAsInlineTable()
             {
-                config.inlineTableTypes.Add(typeof(T));
+                this.config.inlineTableTypes.Add(typeof(TCustom));
                 return this;
             }
 
-            public TomlConfig Apply() => this.config;
+            public IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv) where TToml : TomlObject
+            {
+                conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.config));
+                return this;
+            }
         }
 
-        private abstract class CastConfigurator<T>
+        internal sealed class ConversionConfigurationBuilder<TCustom, TToml> : IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
         {
-            protected readonly TomlConfig config;
-            protected readonly TypeConfigurator<T> typeConfig;
+            private readonly TomlConfig config;
 
-            public CastConfigurator(TomlConfig config, TypeConfigurator<T> typeConfig)
+            public ConversionConfigurationBuilder(TomlConfig config)
             {
-                Debug.Assert(config != null);
-                Debug.Assert(typeConfig != null);
+                Assert(config != null);
 
                 this.config = config;
-                this.typeConfig = typeConfig;
-            }
-        }
-
-        private class ToTomlCastConfigurator<T, TFrom, TTo> : CastConfigurator<T>, IConfigureCast<T, TFrom, TTo>
-        {
-            public ToTomlCastConfigurator(TomlConfig config, TypeConfigurator<T> typeConfig) :
-                base(config, typeConfig)
-            {
             }
 
-            public IConfigureTypeCombiner<T> As(Func<TFrom, TTo> cast)
+            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
             {
-                var conv = new TomlConverter<TFrom, TTo>(cast);
-                config.AddConverter(conv);
-                return this.typeConfig;
-            }
-        }
-
-        private class FromTomlCastConfigurator<T, TFrom, TTo> : CastConfigurator<T>, IConfigureCast<T, TFrom, TTo>
-        {
-            public FromTomlCastConfigurator(TomlConfig config, TypeConfigurator<T> typeConfig)
-                : base(config, typeConfig)
-            {
+                this.config.AddConverter(new TomlConverter<TToml, TCustom>(convert));
+                return this;
             }
 
-            public IConfigureTypeCombiner<T> As(Func<TFrom, TTo> cast)
+            public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<TCustom, TToml> convert)
             {
-                var conv = new TomlConverter<TFrom, TTo>(cast);
-                config.AddConverter(conv);
-                return this.typeConfig;
+                this.config.AddConverter(new TomlConverter<TCustom, TToml>(convert));
+                return this;
             }
         }
     }
