@@ -45,6 +45,10 @@ namespace Nett
 
             // TomlBool
             this.AddConverter(new TomlConverter<TomlBool, bool>(t => t.Value));
+
+            // Enums
+            this.AddConverter(new TomlToEnumConverter());
+            this.AddConverter(new EnumToTomlConverter());
         }
 
         private void AddConverter(ITomlConverter converter) =>
@@ -103,56 +107,15 @@ namespace Nett
 
         private class ConverterCollection
         {
-            private readonly Dictionary<Type, Dictionary<Type, ITomlConverter>> convertFromTypeToTypeMapping = new Dictionary<Type, Dictionary<Type, ITomlConverter>>();
-            private readonly Dictionary<Type, List<ITomlConverter>> convertFromToTomlConverters = new Dictionary<Type, List<ITomlConverter>>();
+            private readonly List<ITomlConverter> converters = new List<ITomlConverter>();
 
-            public void Add(ITomlConverter converter)
-            {
-                Dictionary<Type, ITomlConverter> val;
-                if (!convertFromTypeToTypeMapping.TryGetValue(converter.FromType, out val))
-                {
-                    val = convertFromTypeToTypeMapping[converter.FromType] = new Dictionary<Type, ITomlConverter>();
-                }
+            public void Add(ITomlConverter converter) => this.converters.Insert(0, converter);
 
-                val[converter.ToType] = converter;
+            public ITomlConverter TryGetConverter(Type from, Type to) => this.converters.FirstOrDefault(c => c.CanConvertFrom(from) && c.CanConvertTo(to));
 
-                if (typeof(TomlObject).IsAssignableFrom(converter.ToType))
-                {
-                    List<ITomlConverter> tmlConverters;
-                    if (!this.convertFromToTomlConverters.TryGetValue(converter.FromType, out tmlConverters))
-                    {
-                        tmlConverters = this.convertFromToTomlConverters[converter.FromType] = new List<ITomlConverter>();
-                    }
+            public ITomlConverter TryGetLatestToTomlConverter(Type from) =>
+                this.converters.FirstOrDefault(c => c.CanConvertFrom(from) && c.CanConvertToToml());
 
-                    tmlConverters.Add(converter);
-                }
-            }
-
-            public ITomlConverter TryGetConverter(Type from, Type to)
-            {
-                Dictionary<Type, ITomlConverter> toConverters;
-                if (this.convertFromTypeToTypeMapping.TryGetValue(from, out toConverters))
-                {
-                    ITomlConverter conv;
-                    if (toConverters.TryGetValue(to, out conv))
-                    {
-                        return conv;
-                    }
-                }
-
-                return null;
-            }
-
-            public ITomlConverter TryGetLatestToTomlConverter(Type from)
-            {
-                List<ITomlConverter> converters;
-                if (this.convertFromToTomlConverters.TryGetValue(from, out converters))
-                {
-                    return converters.Last();
-                }
-
-                return null;
-            }
         }
     }
 }

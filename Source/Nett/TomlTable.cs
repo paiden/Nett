@@ -72,7 +72,7 @@ namespace Nett
                     if (converter != null)
                     {
                         var src = p.Value.Get(converter.FromType, config);
-                        var val = converter.Convert(src);
+                        var val = converter.Convert(src, targetProperty.PropertyType);
                         targetProperty.SetValue(result, val, null);
                     }
                     else
