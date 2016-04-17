@@ -107,7 +107,7 @@ namespace Nett
                 this.WriteTableRow(rows[rows.Length - 1]);
             }
 
-            this.sw.Write("}");
+            this.sw.Write('}');
             this.WriteAppendComments(table);
             this.writeInlineTableInvocationsRunning--;
         }
@@ -122,11 +122,11 @@ namespace Nett
             this.WritePrependComments(table);
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
-                sw.WriteLine();
+                this.sw.WriteLine();
                 this.sw.Write('[');
                 this.sw.Write(this.GetKey(this.CurrentRowKey));
                 this.sw.Write(']');
-                this.sw.Write(sw.NewLine);
+                this.sw.Write(this.sw.NewLine);
                 this.WriteAppendComments(table);
             }
 
@@ -168,7 +168,7 @@ namespace Nett
                     array.Items[array.Items.Length - 1].Visit(this);
                 }
 
-                this.sw.Write("]");
+                this.sw.Write(']');
                 this.WriteAppendComments(array);
             }
         }
@@ -182,7 +182,10 @@ namespace Nett
                 foreach (var t in tableArray.Items)
                 {
                     Assert(this.CurrentRowKey != null);
-                    this.sw.WriteLine($"[[{this.CurrentRowKey}]]");
+                    this.sw.Write("[[");
+                    this.sw.Write(this.CurrentRowKey);
+                    this.sw.Write("]]");
+                    this.sw.Write(this.sw.NewLine);
                     this.WriteAppendComments(tableArray);
                     t.Visit(this);
                     this.sw.WriteLine();
