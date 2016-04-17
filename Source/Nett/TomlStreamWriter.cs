@@ -116,7 +116,6 @@ namespace Nett
             this.WritePrependComments(table);
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
-                sw.WriteLine();
                 this.sw.WriteLine("[{0}]", this.GetKey(this.CurrentRowKey));
                 this.WriteApppendComments(table);
             }
