@@ -37,7 +37,12 @@ namespace Nett
             this.VisitInt = (i) => this.WriteKeyedValue(i, () => this.sw.Write(i.Value));
             this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.ToString()));
             this.VisitTimespan = (ts) => this.WriteKeyedValue(ts, () => this.sw.Write(ts.Value));
-            this.VisitString = (s) => this.WriteKeyedValue(s, () => this.sw.Write(string.Format("\"{0}\"", s.Value.Escape() ?? "")));
+            this.VisitString = (s) => this.WriteKeyedValue(s, () =>
+            {
+                this.sw.Write('\"');
+                this.sw.Write(s.Value.Escape() ?? "");
+                this.sw.Write('\"');
+            });
 
             this.VisitArray = (a) => this.WriteTomlArray(a);
             this.VisitTable = (t) => this.WriteTomlTable(t);
@@ -64,11 +69,12 @@ namespace Nett
             if (writeValueKey)
             {
                 Assert(this.CurrentRowKey != null);
-                this.sw.Write($"{this.CurrentRowKey} = ");
+                this.sw.Write(this.CurrentRowKey);
+                this.sw.Write(" = ");
             }
 
             writeValue();
-            this.WriteApppendComments(obj);
+            this.WriteAppendComments(obj);
         }
 
         private void WriteTomlTable(TomlTable table)
@@ -102,7 +108,7 @@ namespace Nett
             }
 
             this.sw.Write("}");
-            this.WriteApppendComments(table);
+            this.WriteAppendComments(table);
             this.writeInlineTableInvocationsRunning--;
         }
 
@@ -117,8 +123,11 @@ namespace Nett
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
                 sw.WriteLine();
-                this.sw.WriteLine("[{0}]", this.GetKey(this.CurrentRowKey));
-                this.WriteApppendComments(table);
+                this.sw.Write('[');
+                this.sw.Write(this.GetKey(this.CurrentRowKey));
+                this.sw.Write(']');
+                this.sw.Write(sw.NewLine);
+                this.WriteAppendComments(table);
             }
 
             using (this.NewParentKeyContext())
@@ -145,7 +154,8 @@ namespace Nett
             {
                 Assert(this.CurrentRowKey != null);
                 this.WritePrependComments(array);
-                this.sw.Write($"{this.CurrentRowKey} = [");
+                this.sw.Write(this.CurrentRowKey);
+                this.sw.Write(" = [");
 
                 for (int i = 0; i < array.Items.Length - 1; i++)
                 {
@@ -159,7 +169,7 @@ namespace Nett
                 }
 
                 this.sw.Write("]");
-                this.WriteApppendComments(array);
+                this.WriteAppendComments(array);
             }
         }
 
@@ -173,7 +183,7 @@ namespace Nett
                 {
                     Assert(this.CurrentRowKey != null);
                     this.sw.WriteLine($"[[{this.CurrentRowKey}]]");
-                    this.WriteApppendComments(tableArray);
+                    this.WriteAppendComments(tableArray);
                     t.Visit(this);
                     this.sw.WriteLine();
                 }
@@ -185,16 +195,19 @@ namespace Nett
             var prepend = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
             foreach (var p in prepend)
             {
-                this.sw.WriteLine($"#{FixMultilineComment(p.Text)}");
+                this.sw.Write('#');
+                this.sw.Write(FixMultilineComment(p.Text));
+                this.sw.Write(this.sw.NewLine);
             }
         }
 
-        private void WriteApppendComments(TomlObject obj)
+        private void WriteAppendComments(TomlObject obj)
         {
             var append = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Append);
             foreach (var a in append)
             {
-                this.sw.Write($" #{FixMultilineComment(a.Text)}");
+                this.sw.Write(" #");
+                this.sw.Write(FixMultilineComment(a.Text));
             }
         }
 
