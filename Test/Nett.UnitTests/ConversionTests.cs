@@ -148,15 +148,14 @@ Foo3 = [""A""]";
 
 
 
-        private static Tuple<TomlTable, IDisposable> SetupConversionSetTest(TomlConfig.ConversionLevel set, string tomlInput)
+        private static TomlTable SetupConversionSetTest(TomlConfig.ConversionLevel set, string tomlInput)
         {
             var config = TomlConfig.Create(cfg => cfg
                 .AllowImplicitConversions(set)
             );
-            var scope = TomlConfig.UseNewDefaultConfig(config);
 
-            TomlTable table = Toml.ReadString(tomlInput);
-            return Tuple.Create(table, scope);
+            TomlTable table = Toml.ReadString(tomlInput, config);
+            return table;
         }
 
         public static IEnumerable<object[]> EquivalentConversionTestData
@@ -194,22 +193,18 @@ Foo3 = [""A""]";
         public void ReadToml_Equivalent_AllowsConversionFromTomlIntToFloat(string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var items = SetupConversionSetTest(TomlConfig.ConversionLevel.Strict, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.Strict, s);
 
-            using (items.Item2)
+            Action a = () => read(tbl);
+
+            // Assert
+            if (shouldWork)
             {
-                // Act
-                Action a = () => read(items.Item1);
-
-                // Assert
-                if (shouldWork)
-                {
-                    a.ShouldNotThrow();
-                }
-                else
-                {
-                    a.ShouldThrow<Exception>();
-                }
+                a.ShouldNotThrow();
+            }
+            else
+            {
+                a.ShouldThrow<Exception>();
             }
         }
 
@@ -249,22 +244,19 @@ Foo3 = [""A""]";
         public void ReadToml_Exact_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var items = SetupConversionSetTest(TomlConfig.ConversionLevel.SameNumericCategory, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.SameNumericCategory, s);
 
-            using (items.Item2)
+            // Act
+            Action a = () => read(tbl);
+
+            // Assert
+            if (shouldWork)
             {
-                // Act
-                Action a = () => read(items.Item1);
-
-                // Assert
-                if (shouldWork)
-                {
-                    a.ShouldNotThrow();
-                }
-                else
-                {
-                    a.ShouldThrow<Exception>();
-                }
+                a.ShouldNotThrow();
+            }
+            else
+            {
+                a.ShouldThrow<Exception>();
             }
         }
 
@@ -303,22 +295,19 @@ Foo3 = [""A""]";
         public void ReadToml_Precise_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var items = SetupConversionSetTest(TomlConfig.ConversionLevel.DotNetImplicit, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.DotNetImplicit, s);
 
-            using (items.Item2)
+            // Act
+            Action a = () => read(tbl);
+
+            // Assert
+            if (shouldWork)
             {
-                // Act
-                Action a = () => read(items.Item1);
-
-                // Assert
-                if (shouldWork)
-                {
-                    a.ShouldNotThrow();
-                }
-                else
-                {
-                    a.ShouldThrow<Exception>();
-                }
+                a.ShouldNotThrow();
+            }
+            else
+            {
+                a.ShouldThrow<Exception>();
             }
         }
 
@@ -366,22 +355,19 @@ Foo3 = [""A""]";
         public void ReadToml_ExplicitDotNetImplicit_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var items = SetupConversionSetTest(TomlConfig.ConversionLevel.DotNetExplicit, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.DotNetExplicit, s);
 
-            using (items.Item2)
+            // Act
+            Action a = () => read(tbl);
+
+            // Assert
+            if (shouldWork)
             {
-                // Act
-                Action a = () => read(items.Item1);
-
-                // Assert
-                if (shouldWork)
-                {
-                    a.ShouldNotThrow();
-                }
-                else
-                {
-                    a.ShouldThrow<Exception>();
-                }
+                a.ShouldNotThrow();
+            }
+            else
+            {
+                a.ShouldThrow<Exception>();
             }
         }
 

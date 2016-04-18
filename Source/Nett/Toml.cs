@@ -33,7 +33,7 @@ namespace Nett
 
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                return StreamTomlSerializer.Deserialize(fs);
+                return StreamTomlSerializer.Deserialize(fs, config);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Nett
         {
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
-            var tt = StreamTomlSerializer.Deserialize(stream);
+            var tt = StreamTomlSerializer.Deserialize(stream, config);
             return tt.Get<T>(config);
         }
 
@@ -52,7 +52,7 @@ namespace Nett
         // Make public when config will get used for something in this case in the future.
         private static TomlTable ReadFile(FileStream stream, TomlConfig config)
         {
-            return StreamTomlSerializer.Deserialize(stream);
+            return StreamTomlSerializer.Deserialize(stream, config);
         }
 
         public static T ReadStream<T>(Stream stream) => ReadStream<T>(stream, TomlConfig.DefaultInstance);
@@ -61,7 +61,7 @@ namespace Nett
         {
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
-            var tt = StreamTomlSerializer.Deserialize(stream);
+            var tt = StreamTomlSerializer.Deserialize(stream, config);
             return tt.Get<T>(config);
         }
 
@@ -70,7 +70,7 @@ namespace Nett
         // Keep private as long as the config parameter isn't used in the method body
         private static TomlTable ReadStream(Stream stream, TomlConfig config)
         {
-            return StreamTomlSerializer.Deserialize(stream);
+            return StreamTomlSerializer.Deserialize(stream, config);
         }
 
         public static T ReadString<T>(string toRead) => ReadString<T>(toRead, TomlConfig.DefaultInstance);
@@ -90,7 +90,7 @@ namespace Nett
         {
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(toRead)))
             {
-                return StreamTomlSerializer.Deserialize(ms);
+                return StreamTomlSerializer.Deserialize(ms, config);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Nett.Parser.Productions;
+using static System.Diagnostics.Debug;
 
 namespace Nett.Parser
 {
@@ -8,12 +9,14 @@ namespace Nett.Parser
     {
         private readonly Tokenizer tokenizer;
         private TokenBuffer Tokens => this.tokenizer.Tokens;
+        private readonly TomlConfig config;
 
-
-
-        public Parser(Stream s)
+        public Parser(Stream s, TomlConfig config)
         {
+            Assert(config != null);
+
             this.tokenizer = new Tokenizer(s);
+            this.config = config;
         }
 
         public TomlTable Parse()
@@ -23,7 +26,7 @@ namespace Nett.Parser
 
         private TomlTable Toml()
         {
-            TomlTable root = new TomlTable() { IsDefined = true };
+            TomlTable root = new TomlTable(this.config) { IsDefined = true };
             TomlTable current = root;
 
             while (!Tokens.End)

@@ -13,7 +13,7 @@ namespace Nett
 
     public sealed partial class TomlConfig
     {
-        internal static TomlConfig DefaultInstance = Create();
+        internal static readonly TomlConfig DefaultInstance = Create();
 
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
@@ -28,15 +28,6 @@ namespace Nett
             this.converters.Add(converter);
 
         public static TomlConfig Create() => Create(_ => { });
-
-        public static IDisposable UseNewDefaultConfig(TomlConfig config)
-        {
-            if (config == null) { throw new ArgumentNullException(nameof(config)); }
-
-            var scope = new ConfigScope(DefaultInstance);
-            DefaultInstance = config;
-            return scope;
-        }
 
         public static TomlConfig Create(Action<ITomlConfigBuilder> cfg)
         {

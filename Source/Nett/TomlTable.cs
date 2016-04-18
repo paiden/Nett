@@ -17,6 +17,9 @@ namespace Nett
         private static readonly Type EnumerableType = typeof(IEnumerable);
         private static readonly Type StringType = typeof(string);
         private static readonly Type TomlTableType = typeof(TomlTable);
+
+        private readonly TomlConfig readConfig;
+
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
         internal bool IsDefined { get; set; }
@@ -39,13 +42,19 @@ namespace Nett
 
         public TableTypes TableType { get; }
 
-        public T Get<T>(string key) => this[key].Get<T>(TomlConfig.DefaultInstance);
+        public T Get<T>(string key) => this[key].Get<T>(this.readConfig);
         public T Get<T>(string key, TomlConfig config) => this[key].Get<T>(config);
         public TomlObject Get(string key) => this[key];
 
         public TomlTable(TableTypes tableType = TableTypes.Default)
+            : this(TomlConfig.DefaultInstance, tableType)
+        {
+        }
+
+        internal TomlTable(TomlConfig config, TableTypes tableType = TableTypes.Default)
         {
             this.TableType = tableType;
+            this.readConfig = config;
         }
 
         public void Add(string key, TomlObject value)
