@@ -18,6 +18,9 @@ namespace Nett
         private readonly Stack<string> rowKeys = new Stack<string>();
         private bool writeValueKey = true;
         private bool writeTableKey = true;
+        private bool writingGlobalTable = false;
+        private bool globalTableHasWrites = false;
+        private bool globalTableWritten = false;
         private int writeInlineTableInvocationsRunning = 0;
 
         public TomlStreamWriter(FormattingStreamWriter writer, TomlConfig config)
@@ -113,11 +116,21 @@ namespace Nett
                 throw new InvalidOperationException("Cannot write normal table inside inline table.");
             }
 
+            if (!globalTableWritten && writingGlobalTable && globalTableHasWrites)
+            {
+                writingGlobalTable = false;
+                globalTableWritten = true;
+                this.sw.WriteLine();
+            }
             this.WritePrependComments(table);
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
                 this.sw.WriteLine("[{0}]", this.GetKey(this.CurrentRowKey));
                 this.WriteApppendComments(table);
+            }
+            else
+            {
+                writingGlobalTable = true;
             }
 
             using (this.NewParentKeyContext())
@@ -128,6 +141,8 @@ namespace Nett
                     this.WriteTableRow(r);
                     this.sw.WriteLine();
                     this.rowKeys.Pop();
+                    if (writingGlobalTable && globalTableHasWrites == false)
+                        globalTableHasWrites = true;
                 }
             }
         }
