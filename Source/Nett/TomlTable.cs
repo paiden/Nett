@@ -57,7 +57,7 @@ namespace Nett
             this.readConfig = config;
         }
 
-        public void Add(string key, TomlObject value)
+        internal void Add(string key, TomlObject value)
         {
             this.Rows.Add(key, value);
         }
