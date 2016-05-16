@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassReaderTests.cs" />
+    <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
     <Compile Include="EnumConversionTests.cs" />
     <Compile Include="TableArrayTests.cs" />

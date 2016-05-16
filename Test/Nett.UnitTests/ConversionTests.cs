@@ -15,7 +15,7 @@ namespace Nett.UnitTests
                 .ConfigureType<TestStruct>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .FromToml(ti => new TestStruct() { Value = (int)ti.Value })
-                        .ToToml(ts => new TomlInt(ts.Value))
+                        .ToToml(ts => ts.Value)
                     )
                 )
             );
@@ -37,7 +37,7 @@ namespace Nett.UnitTests
                 .ConfigureType<TestStruct>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .FromToml(ti => new TestStruct() { Value = (int)ti.Value })
-                        .ToToml(ts => new TomlInt(ts.Value))
+                        .ToToml(ts => ts.Value)
                     )
                     .CreateInstance(() => new TestStruct())
                     .TreatAsInlineTable()
@@ -91,8 +91,8 @@ Foo3 = [""A""]";
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<ClassWithTrowingProp>(ct => ct
-                    .WithConversionFor<TomlValue>(conv => conv
-                        .ToToml((_) => new TomlString("Yeah converter was used, and property not accessed"))
+                    .WithConversionFor<TomlString>(conv => conv
+                        .ToToml(_ => "Yeah converter was used, and property not accessed")
                     )
                 )
             );
@@ -112,8 +112,8 @@ Foo3 = [""A""]";
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<GenProp<GenType>>(ct => ct
-                    .WithConversionFor<TomlValue>(conv => conv
-                        .ToToml((_) => new TomlString("Yeah converter was used."))
+                    .WithConversionFor<TomlString>(conv => conv
+                        .ToToml(_ => "Yeah converter was used.")
                     )
                 )
             );
@@ -132,8 +132,8 @@ Foo3 = [""A""]";
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<IGenProp<GenType>>(ct => ct
-                    .WithConversionFor<TomlValue>(conv => conv
-                        .ToToml((_) => new TomlString("Yeah converter was used."))
+                    .WithConversionFor<TomlString>(conv => conv
+                        .ToToml(_ => "Yeah converter was used.")
                     )
                 )
             );
@@ -411,6 +411,27 @@ Foo3 = [""A""]";
             val.Should().Be(1.0);
         }
 
+        // This test doesn't test anything, it just checks that the conversion specialization extension methods
+        // exist for all TOML primitives => compile error, something broke
+        public void AllTypeConversionSupportedByConverterApi()
+        {
+            // Arrange
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<ConvertToAnyType>(ct => ct
+                    .WithConversionFor<TomlInt>(conv => conv
+                        .ToToml(a => 1))
+                    .WithConversionFor<TomlString>(conv => conv
+                        .ToToml(a => "It worked"))
+                    .WithConversionFor<TomlBool>(conv => conv
+                        .ToToml(a => true))
+                    .WithConversionFor<TomlFloat>(conv => conv
+                        .ToToml(a => 1.0))
+                    .WithConversionFor<TomlDateTime>(conv => conv
+                        .ToToml(a => DateTimeOffset.MaxValue))
+                    .WithConversionFor<TomlTimeSpan>(conv => conv
+                        .ToToml(a => TimeSpan.MaxValue))));
+        }
+
         private class ConfigObject
         {
             public TestStruct S { get; set; }
@@ -492,6 +513,11 @@ Foo3 = [""A""]";
                     new GenProp<GenType>() { Value = new GenType() },
                 };
             }
+        }
+
+        private class ConvertToAnyType
+        {
+
         }
 
         private interface IGenProp<T>

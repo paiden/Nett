@@ -12,7 +12,7 @@ namespace Nett
 
         public bool CanConvertFrom(Type t) => StaticFromType == t;
 
-        public bool CanConvertTo(Type t) => StaticToType == t;
+        public bool CanConvertTo(Type t) => StaticToType == t || t.IsAssignableFrom(StaticToType);
 
         public bool CanConvertToToml() => CanConvertToTomlType;
 

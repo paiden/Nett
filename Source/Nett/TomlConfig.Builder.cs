@@ -89,12 +89,6 @@ namespace Nett
             IConfigureTypeBuilder<TCustom> TreatAsInlineTable();
         }
 
-        public interface IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
-        {
-            IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
-            IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<TCustom, TToml> convert);
-        }
-
         public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
 
         internal sealed class TomlConfigBuilder : ITomlConfigBuilder
@@ -199,6 +193,8 @@ namespace Nett
 
                 this.config = config;
             }
+
+            internal void AddConverter(ITomlConverter converter) => this.config.AddConverter(converter);
 
             public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
             {
