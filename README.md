@@ -177,6 +177,12 @@ can be converted to any other type.
 Hopefully this somewhat strange behavior will improve in a future version of Nett.
 
 # Changelog
+2016-04-10: v0.4.2 (TOML 0.4.0)
+ 
++ Fix: Float was written as TomlInt when it had no decimal places [#8](https://github.com/paiden/Nett/issues/8)
++ Fix: Inline tables read as arrays [#7](https://github.com/paiden/Nett/issues/7)
++ Fix: Integer bare keys not working [#6](https://github.com/paiden/Nett/issues/6)
+
 2016-02-14: v0.4.1 (compatible with TOML 0.4.0)
 
 + Add: Support for short date time formats

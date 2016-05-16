@@ -18,6 +18,9 @@ namespace Nett
         private readonly Stack<string> rowKeys = new Stack<string>();
         private bool writeValueKey = true;
         private bool writeTableKey = true;
+        private bool writingGlobalTable = false;
+        private bool globalTableHasWrites = false;
+        private bool globalTableWritten = false;
         private int writeInlineTableInvocationsRunning = 0;
 
         public TomlStreamWriter(FormattingStreamWriter writer, TomlConfig config)
@@ -37,7 +40,12 @@ namespace Nett
             this.VisitInt = (i) => this.WriteKeyedValue(i, () => this.sw.Write(i.Value));
             this.VisitDateTime = (dt) => this.WriteKeyedValue(dt, () => this.sw.Write(dt.ToString()));
             this.VisitTimespan = (ts) => this.WriteKeyedValue(ts, () => this.sw.Write(ts.Value));
-            this.VisitString = (s) => this.WriteKeyedValue(s, () => this.sw.Write(string.Format("\"{0}\"", s.Value.Escape() ?? "")));
+            this.VisitString = (s) => this.WriteKeyedValue(s, () =>
+            {
+                this.sw.Write('\"');
+                this.sw.Write(s.Value.Escape() ?? "");
+                this.sw.Write('\"');
+            });
 
             this.VisitArray = (a) => this.WriteTomlArray(a);
             this.VisitTable = (t) => this.WriteTomlTable(t);
@@ -64,11 +72,12 @@ namespace Nett
             if (writeValueKey)
             {
                 Assert(this.CurrentRowKey != null);
-                this.sw.Write($"{this.CurrentRowKey} = ");
+                this.sw.Write(this.CurrentRowKey);
+                this.sw.Write(" = ");
             }
 
             writeValue();
-            this.WriteApppendComments(obj);
+            this.WriteAppendComments(obj);
         }
 
         private void WriteTomlTable(TomlTable table)
@@ -101,8 +110,8 @@ namespace Nett
                 this.WriteTableRow(rows[rows.Length - 1]);
             }
 
-            this.sw.Write("}");
-            this.WriteApppendComments(table);
+            this.sw.Write('}');
+            this.WriteAppendComments(table);
             this.writeInlineTableInvocationsRunning--;
         }
 
@@ -113,12 +122,24 @@ namespace Nett
                 throw new InvalidOperationException("Cannot write normal table inside inline table.");
             }
 
+            if (!globalTableWritten && writingGlobalTable && globalTableHasWrites)
+            {
+                writingGlobalTable = false;
+                globalTableWritten = true;
+                this.sw.WriteLine();
+            }
             this.WritePrependComments(table);
             if (this.writeTableKey && !string.IsNullOrEmpty(this.CurrentRowKey))
             {
-                sw.WriteLine();
-                this.sw.WriteLine("[{0}]", this.GetKey(this.CurrentRowKey));
-                this.WriteApppendComments(table);
+                this.sw.Write('[');
+                this.sw.Write(this.GetKey(this.CurrentRowKey));
+                this.sw.Write(']');
+                this.sw.Write(this.sw.NewLine);
+                this.WriteAppendComments(table);
+            }
+            else
+            {
+                writingGlobalTable = true;
             }
 
             using (this.NewParentKeyContext())
@@ -129,6 +150,8 @@ namespace Nett
                     this.WriteTableRow(r);
                     this.sw.WriteLine();
                     this.rowKeys.Pop();
+                    if (writingGlobalTable && globalTableHasWrites == false)
+                        globalTableHasWrites = true;
                 }
             }
         }
@@ -145,7 +168,8 @@ namespace Nett
             {
                 Assert(this.CurrentRowKey != null);
                 this.WritePrependComments(array);
-                this.sw.Write($"{this.CurrentRowKey} = [");
+                this.sw.Write(this.CurrentRowKey);
+                this.sw.Write(" = [");
 
                 for (int i = 0; i < array.Items.Length - 1; i++)
                 {
@@ -158,8 +182,8 @@ namespace Nett
                     array.Items[array.Items.Length - 1].Visit(this);
                 }
 
-                this.sw.Write("]");
-                this.WriteApppendComments(array);
+                this.sw.Write(']');
+                this.WriteAppendComments(array);
             }
         }
 
@@ -172,8 +196,11 @@ namespace Nett
                 foreach (var t in tableArray.Items)
                 {
                     Assert(this.CurrentRowKey != null);
-                    this.sw.WriteLine($"[[{this.CurrentRowKey}]]");
-                    this.WriteApppendComments(tableArray);
+                    this.sw.Write("[[");
+                    this.sw.Write(this.CurrentRowKey);
+                    this.sw.Write("]]");
+                    this.sw.Write(this.sw.NewLine);
+                    this.WriteAppendComments(tableArray);
                     t.Visit(this);
                     this.sw.WriteLine();
                 }
@@ -185,16 +212,19 @@ namespace Nett
             var prepend = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
             foreach (var p in prepend)
             {
-                this.sw.WriteLine($"#{FixMultilineComment(p.Text)}");
+                this.sw.Write('#');
+                this.sw.Write(FixMultilineComment(p.Text));
+                this.sw.Write(this.sw.NewLine);
             }
         }
 
-        private void WriteApppendComments(TomlObject obj)
+        private void WriteAppendComments(TomlObject obj)
         {
             var append = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Append);
             foreach (var a in append)
             {
-                this.sw.Write($" #{FixMultilineComment(a.Text)}");
+                this.sw.Write(" #");
+                this.sw.Write(FixMultilineComment(a.Text));
             }
         }
 
