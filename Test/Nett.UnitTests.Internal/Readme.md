@@ -1,0 +1,1 @@
+﻿Test that need to access Nett internal stuff to work correctly.

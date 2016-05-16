@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Nett.UnitTests.Util;
 using Xunit;
 
 namespace Nett.UnitTests

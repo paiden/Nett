@@ -2,7 +2,7 @@
 using System.Text;
 using FluentAssertions;
 using Nett.Parser;
-using Nett.UnitTests.TestUtil;
+using Nett.UnitTests.Util;
 using Xunit;
 
 namespace Nett.UnitTests.Parser

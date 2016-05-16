@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace Nett.UnitTests
+namespace Nett.UnitTests.Internal
 {
     public class ReadTomlWithCommentsTests
     {

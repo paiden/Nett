@@ -4,8 +4,9 @@ using System.IO;
 using FluentAssertions;
 using Xunit;
 
-namespace Nett.UnitTests
+namespace Nett.UnitTests.Internal
 {
+    //TODO: Move to API test once API is adapted
     [ExcludeFromCodeCoverage]
     public class TomlTests
     {
@@ -231,7 +232,7 @@ namespace Nett.UnitTests
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(CreateFoo(), s, TomlConfig.DefaultInstance);
+                Toml.WriteStream(CreateFoo(), s, TomlConfig.Create());
 
                 s.Position.Should().Be(0);
             }
@@ -242,7 +243,7 @@ namespace Nett.UnitTests
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(CreateFoo(), s, TomlConfig.DefaultInstance);
+                Toml.WriteStream(CreateFoo(), s, TomlConfig.Create());
                 var read = Toml.ReadStream<Foo>(s);
 
                 read.X.Should().Be(1);
@@ -262,7 +263,7 @@ namespace Nett.UnitTests
         private static TomlTable CreateSimpleTomlAsTable(int x)
         {
             var tt = new TomlTable();
-            tt.Add("X", new TomlInt(1));
+            tt.Add("X", 1);
 
             return tt;
         }

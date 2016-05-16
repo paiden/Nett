@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Nett.UnitTests.TestUtil;
+using Nett.UnitTests.Util;
 
-namespace Nett.UnitTests
+namespace Nett.UnitTests.Util
 {
     public static class AssertionExtensions
     {

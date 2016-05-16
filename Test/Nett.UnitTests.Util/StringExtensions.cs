@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace Nett.UnitTests.TestUtil
+namespace Nett.UnitTests.Util
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         public static Stream ToStream(this string s)
         {

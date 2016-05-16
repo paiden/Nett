@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using FluentAssertions;
+using Nett.UnitTests.Util;
 using Xunit;
 
 namespace Nett.UnitTests

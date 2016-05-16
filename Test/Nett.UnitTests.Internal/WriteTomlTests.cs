@@ -5,6 +5,7 @@ using Xunit;
 
 namespace Nett.UnitTests
 {
+    //TODO: Move to API tests once API is adapted
     public class WriteTomlTests
     {
         [Fact(DisplayName = "Ensure writing floats works culture invariant")]

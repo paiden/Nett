@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Nett.UnitTests.Util;
 using Xunit;
 
-namespace Nett.UnitTests
+namespace Nett.UnitTests.Internal
 {
+    //TODO: Move to public API test as soon as API is adapted for new config mechanism
     public class NestedTableViaConverterTests
     {
         private const string SerializedTomlForDictconverter = @"

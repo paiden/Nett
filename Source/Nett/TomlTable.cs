@@ -57,6 +57,9 @@ namespace Nett
             this.readConfig = config;
         }
 
+        public void Add(string key, long @int) => this.Add(key, new TomlInt(@int));
+        public void Add(string key, double @float) => this.Add(key, new TomlFloat(@float));
+
         internal void Add(string key, TomlObject value)
         {
             this.Rows.Add(key, value);

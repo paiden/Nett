@@ -1,10 +1,10 @@
-﻿namespace Nett.UnitTests
+﻿namespace Nett.UnitTests.Util.TestData
 {
     /// <summary>
     /// Contains all test cases from: https://github.com/BurntSushi/toml-test/tree/master/tests, except the completely trivial
     /// ones that area already handled by other cases.
     /// </summary>
-    internal static class TomlStrings
+    public static class TomlStrings
     {
         public static class Valid
         {

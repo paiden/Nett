@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using FluentAssertions;
+using Nett.UnitTests.Util.TestData;
 using Xunit;
 
 namespace Nett.UnitTests

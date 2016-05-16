@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Nett.Parser;
-using Nett.UnitTests.TestUtil;
+using Nett.UnitTests.Util;
+using Nett.UnitTests.Util.TestData;
 using Xunit;
 
-namespace Nett.UnitTests.Parser
+namespace Nett.UnitTests.Internal.Parser
 {
     public class TokenizerTests
     {

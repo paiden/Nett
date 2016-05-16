@@ -1,0 +1,1 @@
+﻿These tests validate that the public API wasn't broken accidentally.
