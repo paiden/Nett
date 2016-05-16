@@ -12,7 +12,7 @@ namespace Nett
         };
         public override string ReadableTypeName => "date time";
 
-        public TomlDateTime(DateTimeOffset value)
+        internal TomlDateTime(DateTimeOffset value)
             : base(value)
         {
         }

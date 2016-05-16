@@ -18,7 +18,7 @@ namespace Nett
 
         private TypeOfString type = TypeOfString.Default;
 
-        public TomlString(string value, TypeOfString type = TypeOfString.Default)
+        internal TomlString(string value, TypeOfString type = TypeOfString.Default)
             : base(value)
         {
             this.type = type;

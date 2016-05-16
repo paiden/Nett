@@ -15,7 +15,7 @@ namespace Nett
 
         public override string ReadableTypeName => "array of tables";
 
-        public TomlTableArray()
+        internal TomlTableArray()
             : this(null)
         {
         }

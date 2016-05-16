@@ -4,7 +4,7 @@
     {
         public override string ReadableTypeName => "float";
 
-        public TomlFloat(double value)
+        internal TomlFloat(double value)
             : base(value)
         {
 

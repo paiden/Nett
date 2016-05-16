@@ -4,7 +4,7 @@
     {
         public override string ReadableTypeName => "int";
 
-        public TomlInt(long value)
+        internal TomlInt(long value)
             : base(value)
         {
 

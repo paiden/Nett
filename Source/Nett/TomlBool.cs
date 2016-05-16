@@ -4,7 +4,7 @@
     {
         public override string ReadableTypeName => "bool";
 
-        public TomlBool(bool value)
+        internal TomlBool(bool value)
             : base(value)
         {
 
@@ -16,3 +16,4 @@
         }
     }
 }
+
