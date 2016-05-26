@@ -2,21 +2,21 @@
 {
     internal static class InlineTableArrayProduction
     {
-        public static TomlTableArray TryApply(TokenBuffer tokens)
+        public static TomlTableArray TryApply(IMetaDataStore metaData, TokenBuffer tokens)
         {
             if (!tokens.TryExpectAt(0, TokenType.LBrac)) { return null; }
             if (!tokens.TryExpectAt(1, TokenType.LCurly)) { return null; }
 
-            return Apply(tokens);
+            return Apply(metaData, tokens);
         }
 
-        private static TomlTableArray Apply(TokenBuffer tokens)
+        private static TomlTableArray Apply(IMetaDataStore metaData, TokenBuffer tokens)
         {
             tokens.ExpectAndConsume(TokenType.LBrac);
 
-            var arr = new TomlTableArray();
+            var arr = new TomlTableArray(metaData);
             TomlTable tbl = null;
-            while ((tbl = InlineTableProduction.TryApply(tokens)) != null)
+            while ((tbl = InlineTableProduction.TryApply(metaData, tokens)) != null)
             {
                 arr.Add(tbl);
 

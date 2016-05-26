@@ -26,7 +26,7 @@ namespace Nett.Parser
 
         private TomlTable Toml()
         {
-            TomlTable root = new TomlTable(this.config) { IsDefined = true };
+            var root = new TomlTable.RootTable(this.config) { IsDefined = true };
             TomlTable current = root;
 
             while (!Tokens.End)

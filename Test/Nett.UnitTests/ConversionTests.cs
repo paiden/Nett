@@ -14,7 +14,7 @@ namespace Nett.UnitTests
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<TestStruct>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
-                        .FromToml(ti => new TestStruct() { Value = (int)ti.Value })
+                        .FromToml((m, ti) => new TestStruct() { Value = (int)ti.Value })
                         .ToToml(ts => ts.Value)
                     )
                 )
@@ -36,7 +36,7 @@ namespace Nett.UnitTests
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<TestStruct>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
-                        .FromToml(ti => new TestStruct() { Value = (int)ti.Value })
+                        .FromToml((m, ti) => new TestStruct() { Value = (int)ti.Value })
                         .ToToml(ts => ts.Value)
                     )
                     .CreateInstance(() => new TestStruct())
@@ -59,12 +59,12 @@ namespace Nett.UnitTests
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<IGeneric<string>>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
-                        .FromToml((ts) => new GenericImpl<string>(ts.Value))
+                        .FromToml((m, ts) => new GenericImpl<string>(ts.Value))
                     )
                 )
                 .ConfigureType<IGeneric<int>>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
-                        .FromToml((ts) => new GenericImpl<int>(int.Parse(ts.Value)))
+                        .FromToml((m, ts) => new GenericImpl<int>(int.Parse(ts.Value)))
                     )
                 )
             );
@@ -387,7 +387,7 @@ Foo3 = [""A""]";
             TomlTable table = Toml.ReadString(abc, config);
 
             // Act
-            var val = table.Get<TomlFloat>("SomeFloat", config);
+            var val = table.Get<TomlFloat>("SomeFloat");
 
             // Assert
             val.Value.Should().Be(1.0f);
@@ -405,7 +405,7 @@ Foo3 = [""A""]";
             TomlTable table = Toml.ReadString(abc, config);
 
             // Act
-            var val = table.Get<double>("SomeFloat", config);
+            var val = table.Get<double>("SomeFloat");
 
             // Assert
             val.Should().Be(1.0);

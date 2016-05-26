@@ -7,15 +7,14 @@ namespace Nett
 {
     public sealed class TomlArray : TomlValue<TomlValue[]>
     {
-        public static readonly TomlArray Empty = new TomlArray(new TomlValue[0]);
-
         private static readonly Type TomlArrayType = typeof(TomlArray);
         private static readonly Type ListType = typeof(IList);
         private static readonly Type ObjectType = typeof(object);
 
         public override string ReadableTypeName => "array";
 
-        internal TomlArray(params TomlValue[] values) : base(values)
+        internal TomlArray(IMetaDataStore metaData, params TomlValue[] values)
+            : base(metaData, values)
         {
         }
 
@@ -27,9 +26,9 @@ namespace Nett
 
         public T Get<T>(int index) => this.Value[index].Get<T>();
 
-        public override object Get(Type t, TomlConfig config)
+        public override object Get(Type t)
         {
-            if (t == TomlArrayType) { return this; }
+            if (t== TomlArrayType) { return this; }
 
             if (t.IsArray)
             {
@@ -38,7 +37,7 @@ namespace Nett
                 int cnt = 0;
                 foreach (var i in this.Value)
                 {
-                    a.SetValue(i.Get(et, config), cnt++);
+                    a.SetValue(i.Get(et), cnt++);
                 }
 
                 return a;
@@ -59,7 +58,7 @@ namespace Nett
 
             foreach (var i in this.Value)
             {
-                collection.Add(i.Get(itemType, config));
+                collection.Add(i.Get(itemType));
             }
 
             return collection;
@@ -68,7 +67,7 @@ namespace Nett
         public TomlObject Last() => this.Value[this.Value.Length - 1];
 
         public IEnumerable<T> To<T>() => this.To<T>(TomlConfig.DefaultInstance);
-        public IEnumerable<T> To<T>(TomlConfig config) => this.Value.Select((to) => to.Get<T>(config));
+        public IEnumerable<T> To<T>(TomlConfig config) => this.Value.Select((to) => to.Get<T>());
 
         public override void Visit(ITomlObjectVisitor visitor)
         {

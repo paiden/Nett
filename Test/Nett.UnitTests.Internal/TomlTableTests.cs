@@ -70,33 +70,32 @@ namespace Nett.UnitTests
 
         private TomlTable CreateEmpty()
         {
-            return new TomlTable();
+            return Toml.Create();
         }
 
         private TomlTable CreateSingleProp()
         {
-            var tt = new TomlTable();
-            tt.Add("r1", new TomlInt(1));
+            var tt = Toml.Create();
+            tt.Add("r1", 1);
             return tt;
         }
 
         private TomlTable CreateSingleProp(string comment)
         {
-            var tt = new TomlTable();
-            var i = new TomlInt(1);
+            var tt = Toml.Create();
+            var i = tt.Add("r1", 1);
             i.Comments.Add(new TomlComment(comment, CommentLocation.Prepend));
-            tt.Add("r1", i);
             return tt;
         }
 
         private TomlTable CreateComplex()
         {
-            var t = new TomlTable();
-            var tt = new TomlTable();
-            t.Add("I", new TomlInt(1));
-            t.Add("F", new TomlFloat(1.0));
+            var t = Toml.Create();
+            var tt = Toml.Create();
+            t.Add("I", 1);
+            t.Add("F", 1.0);
 
-            tt.Add("A", new TomlArray(new TomlInt(1), new TomlInt(2), new TomlInt(3)));
+            tt.Add("A", 1, 2, 3);
 
             t.Add("SubTable", tt);
             return t;

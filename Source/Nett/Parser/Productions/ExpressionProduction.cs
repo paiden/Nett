@@ -11,7 +11,7 @@ namespace Nett.Parser.Productions
             Table,
             ArrayOfTables,
         }
-        public static TomlTable TryApply(TomlTable current, TomlTable root, TokenBuffer tokens)
+        public static TomlTable TryApply(TomlTable current, TomlTable.RootTable root, TokenBuffer tokens)
         {
             var preComments = CommentProduction.TryParsePreExpressionCommenst(tokens);
             var expressionToken = tokens.Peek();
@@ -25,7 +25,7 @@ namespace Nett.Parser.Productions
                 arr.Comments.AddRange(preComments);
                 arr.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
-                var newArrayEntry = new TomlTable();
+                var newArrayEntry = new TomlTable(root);
                 arr.Add(newArrayEntry);
                 return newArrayEntry;
             }
@@ -33,7 +33,7 @@ namespace Nett.Parser.Productions
             var tableKeyChain = TomlTableProduction.TryApply(tokens);
             if (tableKeyChain != null)
             {
-                var newTable = new TomlTable() { IsDefined = true };
+                var newTable = new TomlTable(root) { IsDefined = true };
                 newTable.Comments.AddRange(preComments);
                 newTable.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
@@ -64,7 +64,7 @@ namespace Nett.Parser.Productions
 
             if (!tokens.End)
             {
-                var kvp = KeyValuePairProduction.Apply(tokens);
+                var kvp = KeyValuePairProduction.Apply(root, tokens);
                 if (kvp != null)
                 {
                     kvp.Item2.Comments.AddRange(preComments);
@@ -97,7 +97,7 @@ namespace Nett.Parser.Productions
         {
             Func<TomlTable, TomlTable> createNew = (e) =>
                 {
-                    var newTable = new TomlTable();
+                    var newTable = new TomlTable(tbl.MetaData);
                     tbl.Add(key, newTable);
                     return newTable;
                 };
@@ -109,8 +109,8 @@ namespace Nett.Parser.Productions
         {
             Func<TomlTable, TomlTable> createNew = (e) =>
             {
-                var array = new TomlTableArray();
-                var newTable = new TomlTable();
+                var array = new TomlTableArray(tbl.MetaData);
+                var newTable = new TomlTable(tbl.MetaData);
                 array.Add(newTable);
                 tbl.Add(key, array);
                 return newTable;
@@ -156,7 +156,7 @@ namespace Nett.Parser.Productions
                 return typed;
             }
 
-            var newTableArray = new TomlTableArray();
+            var newTableArray = new TomlTableArray(target.MetaData);
             target.Add(name, newTableArray);
 
             return newTableArray;

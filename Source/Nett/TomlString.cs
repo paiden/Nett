@@ -18,8 +18,8 @@ namespace Nett
 
         private TypeOfString type = TypeOfString.Default;
 
-        internal TomlString(string value, TypeOfString type = TypeOfString.Default)
-            : base(value)
+        internal TomlString(IMetaDataStore metaData, string value, TypeOfString type = TypeOfString.Default)
+            : base(metaData, value)
         {
             this.type = type;
         }

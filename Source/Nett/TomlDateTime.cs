@@ -12,16 +12,16 @@ namespace Nett
         };
         public override string ReadableTypeName => "date time";
 
-        internal TomlDateTime(DateTimeOffset value)
-            : base(value)
+        internal TomlDateTime(IMetaDataStore metaData, DateTimeOffset value)
+            : base(metaData, value)
         {
         }
 
-        internal static TomlDateTime Parse(string s)
+        internal static TomlDateTime Parse(IMetaDataStore metaData, string s)
         {
             Debug.Assert(s != null);
             var value = DateTimeOffset.ParseExact(s, ParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
-            return new TomlDateTime(value);
+            return new TomlDateTime(metaData, value);
         }
 
         public override void Visit(ITomlObjectVisitor visitor)

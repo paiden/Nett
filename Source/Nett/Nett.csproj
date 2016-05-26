@@ -46,6 +46,7 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="ITomlObjectVisitor.cs" />
+    <Compile Include="IMetaDataStore.cs" />
     <Compile Include="Parser\Matchers\BareKeyMatcher.cs" />
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
     <Compile Include="Parser\CharBuffer.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="TomlConfig.Builder.Conversion.cs">
       <DependentUpon>TomlConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="TomlTable.RootTable.cs" />
     <Compile Include="TomlTableToDictionaryConverter.cs" />
     <Compile Include="Toml.cs" />
     <Compile Include="TomlArray.cs" />

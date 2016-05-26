@@ -25,40 +25,46 @@ namespace Nett
                 UInt16Type, UInt32Type,
             };
 
-        public static TomlValue ValueFrom(object val)
+        public TomlValue(IMetaDataStore metaData)
+            : base(metaData)
+        {
+
+        }
+
+        public static TomlValue ValueFrom(IMetaDataStore metaData, object val)
         {
             var targetType = val.GetType();
 
             if (StringType == targetType)
             {
-                return new TomlString((string)val);
+                return new TomlString(metaData, (string)val);
             }
             else if (TimespanType == targetType)
             {
-                return new TomlTimeSpan((TimeSpan)val);
+                return new TomlTimeSpan(metaData, (TimeSpan)val);
             }
             else if (IsFloatType(targetType))
             {
-                return new TomlFloat((double)Convert.ChangeType(val, DoubleType));
+                return new TomlFloat(metaData, (double)Convert.ChangeType(val, DoubleType));
             }
             else if (IsIntegerType(targetType))
             {
-                return new TomlInt((long)Convert.ChangeType(val, Int64Type));
+                return new TomlInt(metaData, (long)Convert.ChangeType(val, Int64Type));
             }
             else if (DateTimeType == targetType)
             {
-                return new TomlDateTime((DateTime)val);
+                return new TomlDateTime(metaData, (DateTime)val);
             }
             else if (BoolType == targetType)
             {
-                return new TomlBool((bool)val);
+                return new TomlBool(metaData, (bool)val);
             }
 
             throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
         }
 
         internal static bool CanCreateFrom(Type t) =>
-            t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType || t == BoolType;
+            t== StringType || t== TimespanType || IsFloatType(t) || IsIntegerType(t) || t== DateTimeType || t== BoolType;
 
         private static bool IsIntegerType(Type t)
         {
@@ -73,7 +79,7 @@ namespace Nett
             return false;
         }
 
-        private static bool IsFloatType(Type t) => t == DoubleType || t == FloatType;
+        private static bool IsFloatType(Type t) => t== DoubleType || t== FloatType;
     }
 
     [DebuggerDisplay("{value}:{typeof(T).FullName}")]
@@ -83,19 +89,20 @@ namespace Nett
         private readonly T value;
         public T Value => this.value;
 
-        public TomlValue(T value)
+        public TomlValue(IMetaDataStore metaData, T value)
+            : base(metaData)
         {
             this.value = value;
         }
 
-        public override object Get(Type t, TomlConfig config)
+        public override object Get(Type t)
         {
             if (this.GetType() == t) { return this; }
 
-            var converter = config.TryGetConverter(this.GetType(), t);
+            var converter = this.MetaData.Config.TryGetConverter(this.GetType(), t);
             if (converter != null)
             {
-                return converter.Convert(this, t);
+                return converter.Convert(this.MetaData, this, t);
             }
             else
             {

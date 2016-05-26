@@ -6,8 +6,8 @@ namespace Nett
     {
         public override string ReadableTypeName => "timespan";
 
-        internal TomlTimeSpan(TimeSpan value)
-            : base(value)
+        internal TomlTimeSpan(IMetaDataStore metaData, TimeSpan value)
+            : base(metaData, value)
         {
         }
 

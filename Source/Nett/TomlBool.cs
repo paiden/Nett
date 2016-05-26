@@ -4,8 +4,8 @@
     {
         public override string ReadableTypeName => "bool";
 
-        internal TomlBool(bool value)
-            : base(value)
+        internal TomlBool(IMetaDataStore metaData, bool value)
+            : base(metaData, value)
         {
 
         }

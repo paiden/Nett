@@ -53,7 +53,7 @@ namespace Nett.UnitTests
         public void WriteFile_WithFloat_WritesCultureInvariant()
         {
             // Arrange
-            var tt = new TomlTable();
+            var tt = Toml.Create();
             tt.Add("TheFloat", 1.2);
 
             // Act

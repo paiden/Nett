@@ -305,8 +305,8 @@ namespace Nett
         /// Needed in table arrays as in such cases the table array writes the key for it's child elements
         /// </summary>
         /// <remarks>
-        /// Not quite happy with the context solution but don't see much better solution for now as the table
-        /// itself simply doesn't know if it gets written inside a table array or not. So the array has to pass
+        /// Not quite happy with the context solution but don'tsee much better solution for now as the table
+        /// itself simply doesn'tknow if it gets written inside a table array or not. So the array has to pass
         /// some information via this context to the next write table invocation (if there is any).
         /// </remarks>
         private sealed class DisableWriteTableKeyContext : SetWriteTableKeyContext

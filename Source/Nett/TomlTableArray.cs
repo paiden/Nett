@@ -15,12 +15,13 @@ namespace Nett
 
         public override string ReadableTypeName => "array of tables";
 
-        internal TomlTableArray()
-            : this(null)
+        internal TomlTableArray(IMetaDataStore metaData)
+            : this(metaData, null)
         {
         }
 
-        public TomlTableArray(IEnumerable<TomlTable> enumerable)
+        public TomlTableArray(IMetaDataStore metaData, IEnumerable<TomlTable> enumerable)
+            : base(metaData)
         {
             if (enumerable != null)
             {
@@ -45,9 +46,9 @@ namespace Nett
 
         public TomlTable this[int index] => this.items[index];
 
-        public override object Get(Type t, TomlConfig config)
+        public override object Get(Type t)
         {
-            if (t == TableArrayType) { return this; }
+            if (t== TableArrayType) { return this; }
 
             if (t.IsArray)
             {
@@ -56,7 +57,7 @@ namespace Nett
                 int cnt = 0;
                 foreach (var i in this.items)
                 {
-                    a.SetValue(i.Get(et, config), cnt++);
+                    a.SetValue(i.Get(et), cnt++);
                 }
 
                 return a;
@@ -77,7 +78,7 @@ namespace Nett
 
             foreach (var i in this.items)
             {
-                collection.Add(i.Get(itemType, config));
+                collection.Add(i.Get(itemType));
             }
 
             return collection;

@@ -12,8 +12,8 @@ namespace Nett.UnitTests
         public void Write_WithFloat_WritesCultureInvariant()
         {
             // Arrange
-            var tt = new TomlTable();
-            tt.Add("TheFloat", new TomlFloat(1.2));
+            var tt = Toml.Create();
+            tt.Add("TheFloat", 1.2);
 
             // Act
             var s = Toml.WriteString(tt);
@@ -97,10 +97,7 @@ namespace Nett.UnitTests
             var cfg = TomlConfig.Create(config => config
                 .ConfigureType<ConvProp>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
-                        .ToToml(cp => new TomlString(cp.Prop))
-                    )
-                )
-            );
+                        .ToToml(cp => cp.Prop))));
 
             // Act
             var exp = @"IntProp = 10

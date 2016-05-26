@@ -32,16 +32,14 @@ CustomKey2 = ""CustomValue2""";
         private readonly TomlConfig config = TomlConfig.Create(cfg => cfg
             .ConfigureType<CustomDictionary>(ct => ct
                 .WithConversionFor<TomlTable>(conv => conv
-                    .ToToml(collection =>
+                    .ToToml((CustomDictionary collection, TomlTable targetTable) =>
                     {
-                        var table = new TomlTable();
                         foreach (var kvp in collection.OrderBy(kvp => kvp.Key))
                         {
-                            table.Add(kvp.Key, new TomlString(kvp.Value));
+                            targetTable.Add(kvp.Key, kvp.Value);
                         }
-                        return table;
                     })
-                    .FromToml(table =>
+                    .FromToml((metaData, table) =>
                     {
                         var collection = new CustomDictionary();
                         foreach (var kvp in table.ToDictionary())

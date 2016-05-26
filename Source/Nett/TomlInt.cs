@@ -4,8 +4,8 @@
     {
         public override string ReadableTypeName => "int";
 
-        internal TomlInt(long value)
-            : base(value)
+        internal TomlInt(IMetaDataStore metaData, long value)
+            : base(metaData, value)
         {
 
         }

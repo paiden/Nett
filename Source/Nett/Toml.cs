@@ -17,12 +17,14 @@ namespace Nett
 
         private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
 
+        public static TomlTable Create() => new TomlTable.RootTable(TomlConfig.DefaultInstance);
+
         public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);
 
         public static T ReadFile<T>(string filePath, TomlConfig config)
         {
             var tt = ReadFile(filePath, config);
-            return tt.Get<T>(config);
+            return tt.Get<T>();
         }
 
         public static TomlTable ReadFile(string filePath) => ReadFile(filePath, TomlConfig.DefaultInstance);
@@ -44,7 +46,7 @@ namespace Nett
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
             var tt = StreamTomlSerializer.Deserialize(stream, config);
-            return tt.Get<T>(config);
+            return tt.Get<T>();
         }
 
         public static TomlTable ReadFile(FileStream stream) => ReadFile(stream, TomlConfig.DefaultInstance);
@@ -62,12 +64,12 @@ namespace Nett
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
             var tt = StreamTomlSerializer.Deserialize(stream, config);
-            return tt.Get<T>(config);
+            return tt.Get<T>();
         }
 
         public static TomlTable ReadStream(Stream stream) => ReadStream(stream, TomlConfig.DefaultInstance);
 
-        // Keep private as long as the config parameter isn't used in the method body
+        // Keep private as long as the config parameter isn'tused in the method body
         private static TomlTable ReadStream(Stream stream, TomlConfig config)
         {
             return StreamTomlSerializer.Deserialize(stream, config);
@@ -79,8 +81,8 @@ namespace Nett
         {
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
-            TomlTable tt = ReadString(toRead);
-            T result = tt.Get<T>(config);
+            TomlTable tt = ReadString(toRead, config);
+            T result = tt.Get<T>();
             return result;
         }
 
@@ -108,7 +110,7 @@ namespace Nett
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
-            var table = TomlTable.From(obj, config);
+            var table = TomlTable.RootTable.From(config, obj);
 
             WriteFileInternal(table, filePath, cm, config);
         }
@@ -147,47 +149,37 @@ namespace Nett
         }
 
         public static void WriteStream<T>(T obj, Stream output) =>
-            WriteStreamInternal(TomlTable.From(obj, TomlConfig.DefaultInstance), output, TomlConfig.DefaultInstance);
+            WriteStreamInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj), output);
 
         public static void WriteStream<T>(T obj, Stream outStream, TomlConfig config) =>
-            WriteStreamInternal(TomlTable.From(obj, config), outStream, config);
+            WriteStreamInternal(TomlTable.RootTable.From(config, obj), outStream);
 
         public static void WriteStream(TomlTable table, Stream outStream) =>
-            WriteStreamInternal(table, outStream, TomlConfig.DefaultInstance);
+            WriteStreamInternal(table, outStream);
 
-        public static void WriteStream(TomlTable table, Stream outStream, TomlConfig config) =>
-            WriteStreamInternal(table, outStream, config);
-
-        private static void WriteStreamInternal(TomlTable table, Stream outStream, TomlConfig config)
+        private static void WriteStreamInternal(TomlTable table, Stream outStream)
         {
             if (table == null) { throw new ArgumentNullException(nameof(table)); }
             if (outStream == null) { throw new ArgumentNullException(nameof(outStream)); }
-            if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
             var sw = new FormattingStreamWriter(outStream, CultureInfo.InvariantCulture);
-            var tw = new TomlStreamWriter(sw, config);
+            var tw = new TomlStreamWriter(sw, table.MetaData.Config);
             tw.WriteToml(table);
             outStream.Position = 0;
         }
 
         public static string WriteString<T>(T obj) =>
-            WriteStringInternal(TomlTable.From(obj, TomlConfig.DefaultInstance), TomlConfig.DefaultInstance);
+            WriteStringInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj));
 
         public static string WriteString<T>(T obj, TomlConfig config) =>
-            WriteStringInternal(TomlTable.From(obj, config), config);
+            WriteStringInternal(TomlTable.RootTable.From(config, obj));
 
-        public static string WriteString(TomlTable table) =>
-            WriteStringInternal(table, TomlConfig.DefaultInstance);
-
-        public static string WriteString(TomlTable table, TomlConfig config) =>
-            WriteStringInternal(table, config);
-
-        private static string WriteStringInternal(TomlTable table, TomlConfig config)
+        private static string WriteStringInternal(TomlTable table)
         {
             using (var ms = new MemoryStream(1024))
             {
                 var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
-                var writer = new TomlStreamWriter(sw, config);
+                var writer = new TomlStreamWriter(sw, table.MetaData.Config);
                 writer.WriteToml(table);
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);

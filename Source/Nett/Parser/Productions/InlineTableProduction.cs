@@ -2,23 +2,26 @@
 {
     internal static class InlineTableProduction
     {
-        public static TomlTable TryApply(TokenBuffer tokens) => tokens.TryExpect(TokenType.LCurly) ? Apply(tokens) : null;
+        public static TomlTable TryApply(IMetaDataStore metaData, TokenBuffer tokens) =>
+            tokens.TryExpect(TokenType.LCurly)
+                ? Apply(metaData, tokens)
+                : null;
 
-        public static TomlTable Apply(TokenBuffer tokens)
+        public static TomlTable Apply(IMetaDataStore metaData, TokenBuffer tokens)
         {
-            TomlTable inlineTable = new TomlTable(TomlTable.TableTypes.Inline);
+            TomlTable inlineTable = new TomlTable(metaData, TomlTable.TableTypes.Inline);
 
             tokens.ExpectAndConsume(TokenType.LCurly);
 
             if (!tokens.TryExpect(TokenType.RBrac))
             {
-                var kvp = KeyValuePairProduction.Apply(tokens);
+                var kvp = KeyValuePairProduction.Apply(metaData, tokens);
                 inlineTable.Add(kvp.Item1, kvp.Item2);
 
                 while (tokens.TryExpect(TokenType.Comma))
                 {
                     tokens.Consume();
-                    kvp = KeyValuePairProduction.Apply(tokens);
+                    kvp = KeyValuePairProduction.Apply(metaData, tokens);
                     inlineTable.Add(kvp.Item1, kvp.Item2);
                 }
             }

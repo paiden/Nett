@@ -4,8 +4,8 @@
     {
         public override string ReadableTypeName => "float";
 
-        internal TomlFloat(double value)
-            : base(value)
+        internal TomlFloat(IMetaDataStore metaData, double value)
+            : base(metaData, value)
         {
 
         }

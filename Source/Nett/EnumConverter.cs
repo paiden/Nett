@@ -6,13 +6,13 @@ namespace Nett
     {
         public Type FromType => Types.TomlStringType;
 
-        public bool CanConvertFrom(Type t) => t == this.FromType;
+        public bool CanConvertFrom(Type t) => t== this.FromType;
 
         public bool CanConvertTo(Type t) => t.BaseType == Types.EnumType;
 
         public bool CanConvertToToml() => false;
 
-        public object Convert(object value, Type targetType) => Enum.Parse(targetType, ((TomlString)value).Value);
+        public object Convert(IMetaDataStore metaData, object value, Type targetType) => Enum.Parse(targetType, ((TomlString)value).Value);
     }
 
     internal sealed class EnumToTomlConverter : ITomlConverter
@@ -25,6 +25,6 @@ namespace Nett
 
         public bool CanConvertToToml() => true;
 
-        public object Convert(object value, Type targetType) => new TomlString(value.ToString());
+        public object Convert(IMetaDataStore metaData, object value, Type targetType) => new TomlString(metaData, value.ToString());
     }
 }

@@ -8,27 +8,27 @@ namespace Nett
     {
         private static readonly List<ITomlConverter> EquivalentConverters = new List<ITomlConverter>()
         {
-            new TomlConverter<TomlInt, long>(t => (long)t.Value),
-            new TomlConverter<TomlFloat, double>(t => t.Value),
-            new TomlConverter<TomlString, string>(t => t.Value),
-            new TomlConverter<TomlDateTime, DateTimeOffset>(t => t.Value),
-            new TomlConverter<TomlTimeSpan, TimeSpan>(t => t.Value),
-            new TomlConverter<TomlBool, bool>(t => t.Value)
+            new TomlConverter<TomlInt, long>((m, t) => (long)t.Value),
+            new TomlConverter<TomlFloat, double>((m, t) => t.Value),
+            new TomlConverter<TomlString, string>((m, t) => t.Value),
+            new TomlConverter<TomlDateTime, DateTimeOffset>((m, t) => t.Value),
+            new TomlConverter<TomlTimeSpan, TimeSpan>((m, t) => t.Value),
+            new TomlConverter<TomlBool, bool>((m, t) => t.Value)
         };
 
         private static readonly List<ITomlConverter> SameNumericalTypeConverters = new List<ITomlConverter>()
         {
             // TomlInt to integer types
-            new TomlConverter<TomlInt, char>(t => (char)t.Value),
-            new TomlConverter<TomlInt, byte>(t => (byte)t.Value),
-            new TomlConverter<TomlInt, int>(t => (int)t.Value),
-            new TomlConverter<TomlInt, short>(t => (short)t.Value),
+            new TomlConverter<TomlInt, char>((m, t) => (char)t.Value),
+            new TomlConverter<TomlInt, byte>((m, t) => (byte)t.Value),
+            new TomlConverter<TomlInt, int>((m, t) => (int)t.Value),
+            new TomlConverter<TomlInt, short>((m, t) => (short)t.Value),
 
             // TomlFloat to floating point types
-            new TomlConverter<TomlFloat, float>(t => (float)t.Value),
+            new TomlConverter<TomlFloat, float>((m, t) => (float)t.Value),
 
             // TomlDateTime to 'simpler' datetime
-            new TomlConverter<TomlDateTime, DateTime>(t => t.Value.UtcDateTime),
+            new TomlConverter<TomlDateTime, DateTime>((m, t) => t.Value.UtcDateTime),
 
             // TomlStrings <-> enums
             new TomlToEnumConverter(),
@@ -38,19 +38,19 @@ namespace Nett
         private static readonly List<ITomlConverter> DotNetImplicitConverters = new List<ITomlConverter>()
         {
             // Int to float
-            new TomlConverter<TomlInt, float>(i => i.Value),
-            new TomlConverter<TomlInt, double>(i => i.Value),
-            new TomlConverter<TomlInt, TomlFloat>(i => new TomlFloat(i.Value)),
+            new TomlConverter<TomlInt, float>((m, i) => i.Value),
+            new TomlConverter<TomlInt, double>((m, i) => i.Value),
+            new TomlConverter<TomlInt, TomlFloat>((m, i) => new TomlFloat(m, i.Value)),
         };
 
         private static readonly List<ITomlConverter> DotNetExplicitConverters = new List<ITomlConverter>()
         {
             // TomlFloat to *
-            new TomlConverter<TomlFloat, TomlInt>(f => new TomlInt((int)f.Value)),
-            new TomlConverter<TomlFloat, long>(f => (long)f.Value),
-            new TomlConverter<TomlFloat, int>(f => (int)f.Value),
-            new TomlConverter<TomlFloat, short>(f => (short)f.Value),
-            new TomlConverter<TomlFloat, char>(f => (char)f.Value),
+            new TomlConverter<TomlFloat, TomlInt>((m, f) => new TomlInt(m, (int)f.Value)),
+            new TomlConverter<TomlFloat, long>((m, f) => (long)f.Value),
+            new TomlConverter<TomlFloat, int>((m, f) => (int)f.Value),
+            new TomlConverter<TomlFloat, short>((m, f) => (short)f.Value),
+            new TomlConverter<TomlFloat, char>((m, f) => (char)f.Value),
 
             // TomlInt to *
         };
@@ -196,13 +196,13 @@ namespace Nett
 
             internal void AddConverter(ITomlConverter converter) => this.config.AddConverter(converter);
 
-            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
+            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert)
             {
                 this.config.AddConverter(new TomlConverter<TToml, TCustom>(convert));
                 return this;
             }
 
-            public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<TCustom, TToml> convert)
+            public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<IMetaDataStore, TCustom, TToml> convert)
             {
                 this.config.AddConverter(new TomlConverter<TCustom, TToml>(convert));
                 return this;

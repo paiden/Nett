@@ -6,7 +6,38 @@ using System.Reflection;
 
 namespace Nett
 {
-    public sealed class TomlTable : TomlObject
+    public static class TomlTableExtensions
+    {
+        public static TomlInt Add(this TomlTable table, string key, int value)
+        {
+            var i = new TomlInt(table.MetaData, value);
+            table.Add(key, i);
+            return i;
+        }
+
+        public static TomlFloat Add(this TomlTable table, string key, double value)
+        {
+            var f = new TomlFloat(table.MetaData, value);
+            table.Add(key, f);
+            return f;
+        }
+
+        public static TomlString Add(this TomlTable table, string key, string value)
+        {
+            var s = new TomlString(table.MetaData, value);
+            table.Add(key, s);
+            return s;
+        }
+
+        public static TomlArray Add(this TomlTable table, string key, params long[] values)
+        {
+            var a = new TomlArray(table.MetaData, values.Select(v => new TomlInt(table.MetaData, v)).ToArray());
+            table.Add(key, a);
+            return a;
+        }
+    }
+
+    public partial class TomlTable : TomlObject
     {
         public enum TableTypes
         {
@@ -17,8 +48,6 @@ namespace Nett
         private static readonly Type EnumerableType = typeof(IEnumerable);
         private static readonly Type StringType = typeof(string);
         private static readonly Type TomlTableType = typeof(TomlTable);
-
-        private readonly TomlConfig readConfig;
 
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
@@ -42,23 +71,17 @@ namespace Nett
 
         public TableTypes TableType { get; }
 
-        public T Get<T>(string key) => this[key].Get<T>(this.readConfig);
-        public T Get<T>(string key, TomlConfig config) => this[key].Get<T>(config);
+        public T Get<T>(string key) => this[key].Get<T>();
         public TomlObject Get(string key) => this[key];
 
-        public TomlTable(TableTypes tableType = TableTypes.Default)
-            : this(TomlConfig.DefaultInstance, tableType)
-        {
-        }
-
-        internal TomlTable(TomlConfig config, TableTypes tableType = TableTypes.Default)
+        internal TomlTable(IMetaDataStore metaData, TableTypes tableType = TableTypes.Default)
+            : base(metaData)
         {
             this.TableType = tableType;
-            this.readConfig = config;
         }
 
-        public void Add(string key, long @int) => this.Add(key, new TomlInt(@int));
-        public void Add(string key, double @float) => this.Add(key, new TomlFloat(@float));
+        /*public void Add(string key, double @float) => this.Add(key, new TomlFloat(this.MetaData, @float));
+        public void Add(string key, string @string) => this.Add(key, new TomlString(this.MetaData, @string));*/
 
         internal void Add(string key, TomlObject value)
         {
@@ -70,27 +93,27 @@ namespace Nett
             visitor.Visit(this);
         }
 
-        public override object Get(Type t, TomlConfig config)
+        public override object Get(Type t)
         {
             if (t == TomlTableType) { return this; }
 
-            var result = config.GetActivatedInstance(t);
+            var result = this.MetaData.Config.GetActivatedInstance(t);
 
             foreach (var p in this.Rows)
             {
                 var targetProperty = result.GetType().GetProperty(p.Key);
                 if (targetProperty != null)
                 {
-                    var converter = config.TryGetConverter(p.Value.GetType(), targetProperty.PropertyType);
+                    var converter = this.MetaData.Config.TryGetConverter(p.Value.GetType(), targetProperty.PropertyType);
                     if (converter != null)
                     {
-                        var src = p.Value.Get(converter.FromType, config);
-                        var val = converter.Convert(src, targetProperty.PropertyType);
+                        var src = p.Value.Get(converter.FromType);
+                        var val = converter.Convert(this.MetaData, src, targetProperty.PropertyType);
                         targetProperty.SetValue(result, val, null);
                     }
                     else
                     {
-                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType, config), null);
+                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
                     }
                 }
             }
@@ -111,12 +134,13 @@ namespace Nett
             return o as T;
         }
 
-        public static TomlTable From<T>(T obj, TomlConfig config, TableTypes tableType = TomlTable.TableTypes.Default)
+        public static TomlTable From<T>(IMetaDataStore metaData, T obj, TableTypes tableType = TomlTable.TableTypes.Default)
         {
+            if (metaData == null) { throw new ArgumentNullException(nameof(metaData)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
-            if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
-            TomlTable tt = new TomlTable(tableType);
+
+            TomlTable tt = new TomlTable(metaData, tableType);
 
             var t = obj.GetType();
             var props = t.GetProperties();
@@ -128,7 +152,7 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = TomlObject.From(val, p, config);
+                    TomlObject to = TomlObject.From(metaData, val, p);
                     AddComments(to, p);
                     allObjects.Add(Tuple.Create(p.Name, to));
                 }

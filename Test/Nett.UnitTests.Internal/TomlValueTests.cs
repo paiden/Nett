@@ -8,7 +8,7 @@ namespace Nett.UnitTests.Internal
         [Fact]
         public void Get_WhenTargetTypeIsItsOwnType_CanAlwaysConvert()
         {
-            var val = new TomlString("SomeString");
+            var val = new TomlString(new TomlTable.RootTable(TomlConfig.DefaultInstance), "SomeString");
 
             var conv = val.Get<TomlString>();
 
