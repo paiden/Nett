@@ -90,6 +90,7 @@
     <Compile Include="TomlConfigTests.cs" />
     <Compile Include="VerifyIssuesTests.cs" />
     <Compile Include="WriteTomlFileTests.cs" />
+    <Compile Include="WriteTomlTests.cs" />
     <Compile Include="WriteTomlTypesTests.cs" />
   </ItemGroup>
   <ItemGroup>

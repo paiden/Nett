@@ -74,7 +74,6 @@
     <Compile Include="StringExtensionTests.cs" />
     <Compile Include="TomlTableTests.cs" />
     <Compile Include="TomlValueTests.cs" />
-    <Compile Include="WriteTomlTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
