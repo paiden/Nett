@@ -17,12 +17,21 @@ namespace Nett
 
         private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
 
-        public static TomlTable Create() => new TomlTable.RootTable(TomlConfig.DefaultInstance);
+        public static TomlTable Create() => Create(TomlConfig.DefaultInstance);
+
+        public static TomlTable Create(TomlConfig config)
+        {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
+            return new TomlTable.RootTable(config);
+        }
 
         public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);
 
         public static T ReadFile<T>(string filePath, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             var tt = ReadFile(filePath, config);
             return tt.Get<T>();
         }
@@ -51,9 +60,10 @@ namespace Nett
 
         public static TomlTable ReadFile(FileStream stream) => ReadFile(stream, TomlConfig.DefaultInstance);
 
-        // Make public when config will get used for something in this case in the future.
-        private static TomlTable ReadFile(FileStream stream, TomlConfig config)
+        public static TomlTable ReadFile(FileStream stream, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             return StreamTomlSerializer.Deserialize(stream, config);
         }
 
@@ -69,9 +79,10 @@ namespace Nett
 
         public static TomlTable ReadStream(Stream stream) => ReadStream(stream, TomlConfig.DefaultInstance);
 
-        // Keep private as long as the config parameter isn'tused in the method body
-        private static TomlTable ReadStream(Stream stream, TomlConfig config)
+        public static TomlTable ReadStream(Stream stream, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             return StreamTomlSerializer.Deserialize(stream, config);
         }
 
@@ -90,6 +101,8 @@ namespace Nett
 
         public static TomlTable ReadString(string toRead, TomlConfig config)
         {
+            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(toRead)))
             {
                 return StreamTomlSerializer.Deserialize(ms, config);

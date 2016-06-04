@@ -4,17 +4,16 @@ namespace Nett
 {
     public interface IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
     {
-        IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<IMetaDataStore, TCustom, TToml> convert);
         IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert);
+        IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
     }
-
 
     /// <summary>
     /// This class provides generic specializations for IConfigureConversionBuilder.
     /// </summary>
     /// <remarks>
     /// These specializations are used, so that the user supplying the conversion
-    /// doesn'tneed to invoke the TOML object constructor directly which he cannot
+    /// doesn't need to invoke the TOML object constructor directly which he cannot
     /// as it is internal.
     /// </remarks>
     public static class ConversionBuilderExtensions

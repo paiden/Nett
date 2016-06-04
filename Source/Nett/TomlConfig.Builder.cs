@@ -202,6 +202,12 @@ namespace Nett
                 return this;
             }
 
+            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
+            {
+                this.config.AddConverter(new TomlConverter<TToml, TCustom>((_, tToml) => convert(tToml)));
+                return this;
+            }
+
             public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<IMetaDataStore, TCustom, TToml> convert)
             {
                 this.config.AddConverter(new TomlConverter<TCustom, TToml>(convert));

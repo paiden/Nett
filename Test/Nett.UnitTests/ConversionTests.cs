@@ -311,6 +311,25 @@ Foo3 = [""A""]";
             }
         }
 
+        [Fact(DisplayName = "Using converters allows strings in TOML file to be read as char array from generic TOML table")]
+        public void ConverterAllowsStringInTomlFileToBeReadAsCharArray()
+        {
+            // Arrange
+            const string key = "x";
+            const string value = "value";
+            string tmlSrc = $"{key} = '{value}'";
+            var cfg = TomlConfig.Create(c => c
+                .ConfigureType<char[]>(ct => ct
+                    .WithConversionFor<TomlString>(conv => conv
+                       .FromToml(s => s.Value.ToCharArray()))));
+
+            // Act
+            var tml = Toml.ReadString(tmlSrc, cfg);
+
+            // Assert
+            tml.Get<char[]>(key).Should().BeEquivalentTo(value.ToCharArray());
+        }
+
         public static IEnumerable<object[]> DotNetExplicitImplicitConversionsTestData
         {
             get
