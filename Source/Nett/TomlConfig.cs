@@ -66,9 +66,14 @@ namespace Nett
             }
         }
 
-        internal TomlTable.TableTypes GetTableType(PropertyInfo pi) =>
-            this.inlineTableTypes.Contains(pi.PropertyType) ||
-            pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute)) ? TomlTable.TableTypes.Inline : TomlTable.TableTypes.Default;
+        internal TomlTable.TableTypes GetTableType(PropertyInfo pi)
+        {
+            if (pi == null) { return TomlTable.TableTypes.Default; }
+
+            return this.inlineTableTypes.Contains(pi.PropertyType) || pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute))
+                ? TomlTable.TableTypes.Inline
+                : TomlTable.TableTypes.Default;
+        }
 
         internal TomlCommentLocation GetCommentLocation(TomlComment c)
         {

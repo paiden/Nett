@@ -39,7 +39,7 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = TomlObject.From(tt, val, p);
+                    TomlObject to = TomlObject.CreateFrom(tt, val, p);
                     AddComments(to, p);
                     allObjects.Add(Tuple.Create(p.Name, to));
                 }

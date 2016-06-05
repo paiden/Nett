@@ -29,18 +29,22 @@ namespace Nett
             this.Comments = new List<TomlComment>();
         }
 
-        internal static TomlObject From(IMetaDataStore metaData, object val, PropertyInfo pi)
+        internal static TomlObject CreateFrom(IMetaDataStore metaData, object val, PropertyInfo pi)
         {
-            var t =val.GetType();
+            var t = val.GetType();
             var converter = metaData.Config.TryGetToTomlConverter(t);
-            IEnumerable enumerable;
+
             if (converter != null)
             {
                 return (TomlObject)converter.Convert(metaData, val, Types.TomlObjectType);
             }
-            else if (t!= StringType && (enumerable = val as IEnumerable) != null)
+            else if (val as IDictionary != null)
             {
-                return CreateArrayType(metaData, enumerable);
+                return TomlTable.CreateFromDictionary(metaData, (IDictionary)val, metaData.Config.GetTableType(pi));
+            }
+            else if (t != StringType && (val as IEnumerable) != null)
+            {
+                return CreateArrayType(metaData, (IEnumerable)val);
             }
             else if (TomlValue.CanCreateFrom(t))
             {
@@ -49,7 +53,7 @@ namespace Nett
             else
             {
                 var tableType = metaData.Config.GetTableType(pi);
-                return TomlTable.From(metaData, val, tableType);
+                return TomlTable.CreateFromClass(metaData, val, tableType);
             }
         }
 
@@ -83,7 +87,7 @@ namespace Nett
                 }
                 else
                 {
-                    return new TomlTableArray(metaData, e.Select((o) => TomlTable.From(metaData, o)));
+                    return new TomlTableArray(metaData, e.Select((o) => TomlTable.CreateFromClass(metaData, o)));
                 }
             }
             else

@@ -72,6 +72,10 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
     <Compile Include="EnumConversionTests.cs" />
+    <Compile Include="Plugins\MainConfig.cs" />
+    <Compile Include="Plugins\PluginAConfig.cs" />
+    <Compile Include="Plugins\PluginBConfig.cs" />
+    <Compile Include="Plugins\PluginAConfigRegisteredTests.cs" />
     <Compile Include="TableArrayTests.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="MasterTests.cs" />
@@ -95,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Plugins\Plugins.md" />
     <None Include="Readme.md" />
     <None Include="SimpleToml.tml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

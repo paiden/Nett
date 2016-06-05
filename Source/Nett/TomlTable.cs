@@ -134,17 +134,15 @@ namespace Nett
             return o as T;
         }
 
-        public static TomlTable From<T>(IMetaDataStore metaData, T obj, TableTypes tableType = TomlTable.TableTypes.Default)
+        internal static TomlTable CreateFromClass<T>(IMetaDataStore metaData, T obj, TableTypes tableType = TableTypes.Default)
+            where T : class
         {
             if (metaData == null) { throw new ArgumentNullException(nameof(metaData)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
 
-
             TomlTable tt = new TomlTable(metaData, tableType);
 
-            var t = obj.GetType();
-            var props = t.GetProperties();
-
+            var props = obj.GetType().GetProperties();
             var allObjects = new List<Tuple<string, TomlObject>>();
 
             foreach (var p in props)
@@ -152,7 +150,7 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = TomlObject.From(metaData, val, p);
+                    TomlObject to = TomlObject.CreateFrom(metaData, val, p);
                     AddComments(to, p);
                     allObjects.Add(Tuple.Create(p.Name, to));
                 }
@@ -162,6 +160,22 @@ namespace Nett
             tt.AddComplex(allObjects);
 
             return tt;
+        }
+
+        internal static TomlTable CreateFromDictionary(IMetaDataStore metaData, IDictionary dict, TableTypes tableType = TableTypes.Default)
+        {
+            if (metaData == null) { throw new ArgumentNullException(nameof(metaData)); }
+            if (dict == null) { throw new ArgumentNullException(nameof(dict)); }
+
+            var tomlTable = new TomlTable(metaData, tableType);
+
+            foreach (DictionaryEntry r in dict)
+            {
+                var obj = TomlObject.CreateFrom(metaData, r.Value, null);
+                tomlTable.Add((string)r.Key, obj);
+            }
+
+            return tomlTable;
         }
 
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
