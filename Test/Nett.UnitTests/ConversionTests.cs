@@ -244,7 +244,7 @@ Foo3 = [""A""]";
         public void ReadToml_Exact_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.SameNumericCategory, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.Matching, s);
 
             // Act
             Action a = () => read(tbl);

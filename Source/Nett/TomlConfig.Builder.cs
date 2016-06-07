@@ -16,7 +16,7 @@ namespace Nett
             new TomlConverter<TomlBool, bool>((m, t) => t.Value)
         };
 
-        private static readonly List<ITomlConverter> SameNumericalTypeConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> MatchingConverters = new List<ITomlConverter>()
         {
             // TomlInt to integer types
             new TomlConverter<TomlInt, char>((m, t) => (char)t.Value),
@@ -33,6 +33,9 @@ namespace Nett
             // TomlStrings <-> enums
             new TomlToEnumConverter(),
             new EnumToTomlConverter(),
+
+            // Dict <-> TomlTable
+            new TomlTableToDictionaryConverter(),
         };
 
         private static readonly List<ITomlConverter> DotNetImplicitConverters = new List<ITomlConverter>()
@@ -59,7 +62,7 @@ namespace Nett
         public enum ConversionSets
         {
             Equivalent = 1 << 0,
-            SameNumericCategory = 1 << 1,
+            Matching = 1 << 1,
             DotNetImplicit = 1 << 2,
             DotNetExplicit = 1 << 3,
             Parse = 1 << 4,
@@ -68,8 +71,8 @@ namespace Nett
         public enum ConversionLevel
         {
             Strict = ConversionSets.Equivalent,
-            SameNumericCategory = Strict | ConversionSets.SameNumericCategory,
-            DotNetImplicit = SameNumericCategory | ConversionSets.DotNetImplicit,
+            Matching = Strict | ConversionSets.Matching,
+            DotNetImplicit = Matching | ConversionSets.DotNetImplicit,
             DotNetExplicit = DotNetImplicit | ConversionSets.DotNetExplicit,
             Parse = DotNetExplicit | ConversionSets.Parse,
         }
@@ -102,7 +105,7 @@ namespace Nett
                 Assert(config != null);
 
                 this.config = config;
-                const ConversionLevel DefaultConversionSettings = ConversionLevel.SameNumericCategory;
+                const ConversionLevel DefaultConversionSettings = ConversionLevel.Matching;
                 this.AllowImplicitConversions(DefaultConversionSettings);
             }
 
@@ -138,9 +141,9 @@ namespace Nett
                 {
                     this.config.converters.AddRange(EquivalentConverters);
                 }
-                if (this.allowedConversions.HasFlag(ConversionSets.SameNumericCategory))
+                if (this.allowedConversions.HasFlag(ConversionSets.Matching))
                 {
-                    this.config.converters.AddRange(SameNumericalTypeConverters);
+                    this.config.converters.AddRange(MatchingConverters);
                 }
                 if (this.allowedConversions.HasFlag(ConversionSets.DotNetImplicit))
                 {

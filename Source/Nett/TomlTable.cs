@@ -123,7 +123,7 @@ namespace Nett
 
         public Dictionary<string, object> ToDictionary()
         {
-            var converter = new TomlTableToDictionaryConverter();
+            var converter = new ConvertTomlTableToDictionaryConversionVisitor();
             return converter.Convert(this);
         }
 
