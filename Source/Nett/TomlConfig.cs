@@ -39,7 +39,18 @@ namespace Nett
             return config;
         }
 
-        internal bool TryGetMappedType(string key, out Type mapped) => this.tableKeyToTypeMappings.TryGetValue(key, out mapped);
+        internal Type TryGetMappedType(string key, PropertyInfo target)
+        {
+            Type mapped;
+            bool noTypeInfoAvailable = target == null;
+            bool targetCanHoldMappedTable = noTypeInfoAvailable || target.PropertyType == Types.ObjectType;
+            if (targetCanHoldMappedTable && this.tableKeyToTypeMappings.TryGetValue(key, out mapped))
+            {
+                return mapped;
+            }
+
+            return null;
+        }
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);

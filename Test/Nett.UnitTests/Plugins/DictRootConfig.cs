@@ -2,6 +2,9 @@
 
 namespace Nett.UnitTests.Plugins
 {
+    /// <summary>
+    /// Root config that maps its sections into a dictionary
+    /// </summary>
     public class DictRootConfig
     {
         public string Setting { get; set; } = "";

@@ -99,22 +99,12 @@ namespace Nett
 
             var result = this.MetaData.Config.GetActivatedInstance(t);
 
-            foreach (var p in this.Rows)
+            foreach (var r in this.Rows)
             {
-                var targetProperty = result.GetType().GetProperty(p.Key);
+                var targetProperty = result.GetType().GetProperty(r.Key);
                 if (targetProperty != null)
                 {
-                    var converter = this.MetaData.Config.TryGetConverter(p.Value.GetType(), targetProperty.PropertyType);
-                    if (converter != null)
-                    {
-                        var src = p.Value.Get(converter.FromType);
-                        var val = converter.Convert(this.MetaData, src, targetProperty.PropertyType);
-                        targetProperty.SetValue(result, val, null);
-                    }
-                    else
-                    {
-                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
-                    }
+                    MapTableRowToProperty(result, targetProperty, r, this.MetaData);
                 }
             }
 
@@ -208,6 +198,24 @@ namespace Nett
             foreach (var c in comments)
             {
                 obj.Comments.Add(new TomlComment(c.Comment, c.Location));
+            }
+        }
+
+        private static void MapTableRowToProperty(
+            object target, PropertyInfo property, KeyValuePair<string, TomlObject> tableRow, IMetaDataStore metaData)
+        {
+            Type keyMapingTargetType = metaData.Config.TryGetMappedType(tableRow.Key, property);
+
+            var converter = metaData.Config.TryGetConverter(tableRow.Value.GetType(), property.PropertyType);
+            if (converter != null && keyMapingTargetType == null)
+            {
+                var src = tableRow.Value.Get(converter.FromType);
+                var val = converter.Convert(metaData, src, property.PropertyType);
+                property.SetValue(target, val, null);
+            }
+            else
+            {
+                property.SetValue(target, tableRow.Value.Get(keyMapingTargetType ?? property.PropertyType), null);
             }
         }
 

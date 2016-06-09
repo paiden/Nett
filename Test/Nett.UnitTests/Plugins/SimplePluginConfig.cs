@@ -14,6 +14,8 @@ namespace Nett.UnitTests.Plugins
 
         public int Setting { get; set; } = SettingDefaultValue;
 
+        public static SimplePluginConfig CreateDefault() => new SimplePluginConfig();
+
         public Dictionary<string, object> ToDictionary()
         {
             return new Dictionary<string, object>()

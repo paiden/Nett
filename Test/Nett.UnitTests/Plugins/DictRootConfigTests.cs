@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Nett.UnitTests.Plugins
 {
-    public sealed class SimplePluginConfigTests
+    public sealed class DictRootConfigTests
     {
         private const string ExpectedConfigWrittenWhenARegistered = @"
 Setting = """"
@@ -19,7 +19,7 @@ Setting = 1
 
         private static SimplePluginConfig simplePluginConfig;
 
-        public SimplePluginConfigTests()
+        public DictRootConfigTests()
         {
             simplePluginConfig = new SimplePluginConfig();
         }

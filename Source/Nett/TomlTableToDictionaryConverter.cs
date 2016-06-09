@@ -92,7 +92,7 @@ namespace Nett
         {
             Type tableToTypeMappingTargetType;
 
-            if (table.MetaData.Config.TryGetMappedType(this.currentKey, out tableToTypeMappingTargetType))
+            if ((tableToTypeMappingTargetType = table.MetaData.Config.TryGetMappedType(this.currentKey, null)) != null)
             {
                 this.table[this.currentKey] = table.Get(tableToTypeMappingTargetType);
             }
