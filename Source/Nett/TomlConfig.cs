@@ -18,6 +18,7 @@ namespace Nett
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
+        private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
 
         private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
@@ -37,6 +38,8 @@ namespace Nett
             builder.ApplyConversionSettings(); //Apply last, so that default converters get registered last and  only once
             return config;
         }
+
+        internal bool TryGetMappedType(string key, out Type mapped) => this.tableKeyToTypeMappings.TryGetValue(key, out mapped);
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);

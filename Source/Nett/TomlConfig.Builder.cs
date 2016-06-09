@@ -83,6 +83,7 @@ namespace Nett
             ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch);
             ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets);
             ITomlConfigBuilder AllowImplicitConversions(ConversionLevel level);
+            ITableKeyMappingBuilder MapTableKey(string key);
         }
 
         public interface IConfigureTypeBuilder<TCustom>
@@ -90,6 +91,11 @@ namespace Nett
             IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv) where TToml : TomlObject;
             IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> func);
             IConfigureTypeBuilder<TCustom> TreatAsInlineTable();
+        }
+
+        public interface ITableKeyMappingBuilder
+        {
+            ITomlConfigBuilder To<T>();
         }
 
         public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
@@ -154,6 +160,9 @@ namespace Nett
                     this.config.converters.AddRange(DotNetExplicitConverters);
                 }
             }
+
+            public ITableKeyMappingBuilder MapTableKey(string key) =>
+                new TableKeyMappingBuilder(this.config, this, key);
         }
 
         internal sealed class TypeConfigurationBuilder<TCustom> : IConfigureTypeBuilder<TCustom>
@@ -215,6 +224,26 @@ namespace Nett
             {
                 this.config.AddConverter(new TomlConverter<TCustom, TToml>(convert));
                 return this;
+            }
+        }
+
+        internal sealed class TableKeyMappingBuilder : ITableKeyMappingBuilder
+        {
+            private readonly TomlConfig config;
+            private readonly ITomlConfigBuilder configBuilder;
+            private readonly string key;
+
+            public TableKeyMappingBuilder(TomlConfig config, ITomlConfigBuilder configBuilder, string key)
+            {
+                this.config = config;
+                this.configBuilder = configBuilder;
+                this.key = key;
+            }
+
+            public ITomlConfigBuilder To<T>()
+            {
+                this.config.tableKeyToTypeMappings[this.key] = typeof(T);
+                return this.configBuilder;
             }
         }
     }

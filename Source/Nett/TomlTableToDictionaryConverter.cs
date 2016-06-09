@@ -90,8 +90,17 @@ namespace Nett
 
         void ITomlObjectVisitor.Visit(TomlTable table)
         {
-            var conv = new ConvertTomlTableToDictionaryConversionVisitor();
-            this.table[this.currentKey] = conv.Convert(table); ;
+            Type tableToTypeMappingTargetType;
+
+            if (table.MetaData.Config.TryGetMappedType(this.currentKey, out tableToTypeMappingTargetType))
+            {
+                this.table[this.currentKey] = table.Get(tableToTypeMappingTargetType);
+            }
+            else
+            {
+                var conv = new ConvertTomlTableToDictionaryConversionVisitor();
+                this.table[this.currentKey] = conv.Convert(table);
+            }
         }
 
         private class ExtractItemValue : ITomlObjectVisitor

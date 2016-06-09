@@ -72,10 +72,9 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
     <Compile Include="EnumConversionTests.cs" />
-    <Compile Include="Plugins\MainConfig.cs" />
-    <Compile Include="Plugins\PluginAConfig.cs" />
-    <Compile Include="Plugins\PluginBConfig.cs" />
-    <Compile Include="Plugins\PluginAConfigRegisteredTests.cs" />
+    <Compile Include="Plugins\DictRootConfig.cs" />
+    <Compile Include="Plugins\SimplePluginConfig.cs" />
+    <Compile Include="Plugins\SimplePluginConfigTests.cs" />
     <Compile Include="TableArrayTests.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="MasterTests.cs" />

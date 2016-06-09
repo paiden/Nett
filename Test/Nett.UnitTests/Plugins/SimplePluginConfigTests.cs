@@ -6,15 +6,23 @@ using Xunit;
 
 namespace Nett.UnitTests.Plugins
 {
-    public sealed class PluginAConfigRegisteredTests
+    public sealed class SimplePluginConfigTests
     {
         private const string ExpectedConfigWrittenWhenARegistered = @"
 Setting = """"
 
 [PluginConfigs]
-[PluginConfigs.PluginAConfig]
-Setting = 0
+[PluginConfigs.SimplePluginConfig]
+Setting = 1
 ";
+        private const string TomlWhenARegistered = ExpectedConfigWrittenWhenARegistered;
+
+        private static SimplePluginConfig simplePluginConfig;
+
+        public SimplePluginConfigTests()
+        {
+            simplePluginConfig = new SimplePluginConfig();
+        }
 
         [Fact(DisplayName = "When plugin is registered as a object, that plugin config gets written correctly.")]
         public void WhenPluginConfigRegisteredAsObjectItGetsWritten()
@@ -65,29 +73,45 @@ Setting = 0
         public void WhenPluginAInTomlFileThatSectionIsReadCorrectlyIntoDataStructure()
         {
             // Act
-            var c = Toml.ReadString<MainConfig>(ExpectedConfigWrittenWhenARegistered);
+            var c = Toml.ReadString<DictRootConfig>(ExpectedConfigWrittenWhenARegistered);
 
             // Assert
-            c.PluginConfigs.Keys.Single().Should().Be(PluginAConfig.Key);
-            c.PluginConfigs[PluginAConfig.Key].GetType().Should().Be(typeof(Dictionary<string, object>));
-            ((long)((Dictionary<string, object>)c.PluginConfigs[PluginAConfig.Key])[PluginAConfig.SettingKey]).Should().Be(0);
+            c.PluginConfigs.Keys.Single().Should().Be(SimplePluginConfig.Key);
+            c.PluginConfigs[SimplePluginConfig.Key].GetType().Should().Be(typeof(Dictionary<string, object>));
+            ((long)((Dictionary<string, object>)c.PluginConfigs[SimplePluginConfig.Key])[SimplePluginConfig.SettingKey])
+                .Should().Be(SimplePluginConfig.SettingDefaultValue);
 
         }
 
-        private static MainConfig ConfigWithNoPluginRegisteredCreated() => new MainConfig();
-
-        private MainConfig ConfigWithPluginARegisteredAsObject()
+        [Fact(DisplayName = "When mapping from table key to .Net type exists, that .Net type gets read instead of a generic dictionary")]
+        public void WhenTableKeyToClrMappingExistsThisTypeInsteadOfGenericStructureGetsRead()
         {
-            var cfg = ConfigWithNoPluginRegisteredCreated();
-            cfg.PluginConfigs[PluginAConfig.Key] = new PluginAConfig();
+            // Arrange
+            var config = TomlConfig.Create(cfg => cfg
+                .MapTableKey(SimplePluginConfig.Key).To<SimplePluginConfig>());
+
+            // Act
+            var c = Toml.ReadString<DictRootConfig>(TomlWhenARegistered, config);
+
+            // Assert
+            c.PluginConfigs.Keys.Single().Should().Be(SimplePluginConfig.Key);
+            c.PluginConfigs[SimplePluginConfig.Key].GetType().Should().Be<SimplePluginConfig>();
+            c.PluginConfigs[SimplePluginConfig.Key].Should().Be(simplePluginConfig);
+        }
+
+        private static DictRootConfig CreateMainConfig() => new DictRootConfig();
+
+        private DictRootConfig ConfigWithPluginARegisteredAsObject()
+        {
+            var cfg = CreateMainConfig();
+            cfg.PluginConfigs[SimplePluginConfig.Key] = new SimplePluginConfig();
             return cfg;
         }
 
-
-        private MainConfig ConfigWithPluginARegisteredAsDict()
+        private DictRootConfig ConfigWithPluginARegisteredAsDict()
         {
-            var cfg = ConfigWithNoPluginRegisteredCreated();
-            cfg.PluginConfigs[PluginAConfig.Key] = (new PluginAConfig()).ToDictionary();
+            var cfg = CreateMainConfig();
+            cfg.PluginConfigs[SimplePluginConfig.Key] = (new SimplePluginConfig()).ToDictionary();
             return cfg;
         }
     }
