@@ -99,6 +99,29 @@ Setting = 1
             c.PluginConfigs[SimplePluginConfig.Key].Should().Be(simplePluginConfig);
         }
 
+        [Fact(DisplayName = "When registered plugin contains dictionary and is registered in DictRootCofnig, that dictionary is read correctly")]
+        public void ReadReadsPuginDictionaryCorrectly()
+        {
+            // Arrange
+            const string SrcToml = @"
+Setting = """"
+
+[PluginConfigs]
+[PluginConfigs.PluginConfigWithIntDict]
+[PluginConfigs.PluginConfigWithIntDict.Ports]
+PortA = 1
+PortB = 2";
+            var config = TomlConfig.Create(cfg => cfg
+                .MapTableKey(PluginConfigWithIntDict.Key)
+                .To<PluginConfigWithIntDict>());
+
+            // Act
+            var c = Toml.ReadString<DictRootConfig>(SrcToml, config);
+
+            // Assert
+            c.PluginConfigs[PluginConfigWithIntDict.Key].Should().Be(new PluginConfigWithIntDict());
+        }
+
         private static DictRootConfig CreateMainConfig() => new DictRootConfig();
 
         private DictRootConfig ConfigWithPluginARegisteredAsObject()

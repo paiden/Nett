@@ -74,6 +74,7 @@
     <Compile Include="EnumConversionTests.cs" />
     <Compile Include="Plugins\DictRootConfig.cs" />
     <Compile Include="Plugins\ObjRootConfig.cs" />
+    <Compile Include="Plugins\PluginConfigWithIntDict.cs" />
     <Compile Include="Plugins\SimplePluginConfig.cs" />
     <Compile Include="Plugins\ObjRootConfigTests.cs" />
     <Compile Include="Plugins\DictRootConfigTests.cs" />

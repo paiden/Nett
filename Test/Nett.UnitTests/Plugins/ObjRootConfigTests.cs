@@ -18,5 +18,27 @@ namespace Nett.UnitTests.Plugins
             // Assert
             c.PluginConfig.Should().Be(SimplePluginConfig.CreateDefault());
         }
+
+        [Fact(DisplayName = "When registered plugin contains dictionary, that dictionary is read correctly")]
+        public void ReadReadsPuginDictionaryCorrectly()
+        {
+            // Arrange
+            const string SrcToml = @"
+RootSetting = 1
+
+[PluginConfig]
+[PluginConfig.Ports]
+PortA = 1
+PortB = 2";
+            var config = TomlConfig.Create(cfg => cfg
+                .MapTableKey(ObjRootConfig.PluginConfigKey)
+                .To<PluginConfigWithIntDict>());
+
+            // Act
+            var c = Toml.ReadString<ObjRootConfig>(ObjRootConfig.DefaultSimpleToml, config);
+
+            // Assert
+            c.PluginConfig.Should().Be(new PluginConfigWithIntDict());
+        }
     }
 }
