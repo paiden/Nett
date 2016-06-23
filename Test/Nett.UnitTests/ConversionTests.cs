@@ -7,6 +7,49 @@ namespace Nett.UnitTests
 {
     public class ConversionTests
     {
+        [Fact(DisplayName = "Custom converter is preferred over default converter (because latest registration wins).")]
+        public void CustomConverterIsPrefferedOverDefaultConverters()
+        {
+            // Arrange
+            const int value = 10;
+            const int expected = value * 2;
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<int>(ct => ct
+                    .WithConversionFor<TomlInt>(conv => conv
+                        .FromToml(ts => (int)ts.Value * 2))));
+
+            string toml = @"i = 10";
+
+            // Act
+            var tbl = Toml.ReadString(toml, config);
+
+            // Assert
+            tbl["i"].Get<int>().Should().Be(expected);
+        }
+
+        [Fact(DisplayName = "When multiple custom converter apply, the latest custom converter wins.")]
+        public void LatestCustomConverterWins()
+        {
+            // Arrange
+            const int value = 10;
+            const int expected = value * 4;
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<int>(ct => ct
+                    .WithConversionFor<TomlInt>(conv => conv
+                        .FromToml(ts => (int)ts.Value * 2)))
+                .ConfigureType<int>(ct => ct
+                    .WithConversionFor<TomlInt>(conv => conv
+                        .FromToml(ts => (int)ts.Value * 4))));
+
+            string toml = @"i = 10";
+
+            // Act
+            var tbl = Toml.ReadString(toml, config);
+
+            // Assert
+            tbl["i"].Get<int>().Should().Be(expected);
+        }
+
         [Fact]
         public void ReadToml_WhenConfigHasConverter_ConverterGetsUsed()
         {

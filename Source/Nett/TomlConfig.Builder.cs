@@ -98,11 +98,12 @@ namespace Nett
             ITomlConfigBuilder To<T>();
         }
 
-        public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
+        //public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
 
         internal sealed class TomlConfigBuilder : ITomlConfigBuilder
         {
             private readonly TomlConfig config = new TomlConfig();
+            private readonly List<ITomlConverter> UserConverters = new List<ITomlConverter>();
 
             private ConversionSets allowedConversions;
 
@@ -123,7 +124,7 @@ namespace Nett
 
             public ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct)
             {
-                ct(new TypeConfigurationBuilder<T>(this.config));
+                ct(new TypeConfigurationBuilder<T>(this.config, this.UserConverters));
                 return this;
             }
 
@@ -139,41 +140,55 @@ namespace Nett
                 return this;
             }
 
-            public void ApplyConversionSettings()
+            public void SetupConverters()
+            {
+                this.SetupDefaultConverters();
+                this.SetupUserConverters();
+            }
+
+            public ITableKeyMappingBuilder MapTableKey(string key) =>
+                new TableKeyMappingBuilder(this.config, this, key);
+
+            public void SetupDefaultConverters()
             {
                 Assert(this.allowedConversions != 0);
 
-                if (this.allowedConversions.HasFlag(ConversionSets.Equivalent))
+                if (this.allowedConversions.HasFlag(ConversionSets.DotNetExplicit))
                 {
-                    this.config.converters.AddRange(EquivalentConverters);
-                }
-                if (this.allowedConversions.HasFlag(ConversionSets.Matching))
-                {
-                    this.config.converters.AddRange(MatchingConverters);
+                    this.config.converters.AddRange(DotNetExplicitConverters);
                 }
                 if (this.allowedConversions.HasFlag(ConversionSets.DotNetImplicit))
                 {
                     this.config.converters.AddRange(DotNetImplicitConverters);
                 }
-                if (this.allowedConversions.HasFlag(ConversionSets.DotNetExplicit))
+                if (this.allowedConversions.HasFlag(ConversionSets.Matching))
                 {
-                    this.config.converters.AddRange(DotNetExplicitConverters);
+                    this.config.converters.AddRange(MatchingConverters);
+                }
+                if (this.allowedConversions.HasFlag(ConversionSets.Equivalent))
+                {
+                    this.config.converters.AddRange(EquivalentConverters);
                 }
             }
 
-            public ITableKeyMappingBuilder MapTableKey(string key) =>
-                new TableKeyMappingBuilder(this.config, this, key);
+            private void SetupUserConverters()
+            {
+                this.config.converters.AddRange(this.UserConverters);
+            }
         }
 
         internal sealed class TypeConfigurationBuilder<TCustom> : IConfigureTypeBuilder<TCustom>
         {
             private readonly TomlConfig config;
+            private readonly List<ITomlConverter> Converters;
 
-            public TypeConfigurationBuilder(TomlConfig config)
+            public TypeConfigurationBuilder(TomlConfig config, List<ITomlConverter> converters)
             {
                 Assert(config != null);
+                Assert(converters != null);
 
                 this.config = config;
+                this.Converters = converters;
             }
 
             public IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> activator)
@@ -190,40 +205,45 @@ namespace Nett
 
             public IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv) where TToml : TomlObject
             {
-                conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.config));
+                conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.Converters));
                 return this;
             }
         }
 
         internal sealed class ConversionConfigurationBuilder<TCustom, TToml> : IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
         {
-            private readonly TomlConfig config;
+            private readonly List<ITomlConverter> converters;
 
-            public ConversionConfigurationBuilder(TomlConfig config)
+            public ConversionConfigurationBuilder(List<ITomlConverter> converters)
             {
-                Assert(config != null);
+                Assert(converters != null);
 
-                this.config = config;
+                this.converters = converters;
             }
 
-            internal void AddConverter(ITomlConverter converter) => this.config.AddConverter(converter);
+            internal void AddConverter(ITomlConverter converter) => this.converters.Add(converter);
 
             public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert)
             {
-                this.config.AddConverter(new TomlConverter<TToml, TCustom>(convert));
+                this.AddConverter(new TomlConverter<TToml, TCustom>(convert));
                 return this;
             }
 
             public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
             {
-                this.config.AddConverter(new TomlConverter<TToml, TCustom>((_, tToml) => convert(tToml)));
+                this.AddConverterInternal(new TomlConverter<TToml, TCustom>((_, tToml) => convert(tToml)));
                 return this;
             }
 
             public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<IMetaDataStore, TCustom, TToml> convert)
             {
-                this.config.AddConverter(new TomlConverter<TCustom, TToml>(convert));
+                this.AddConverterInternal(new TomlConverter<TCustom, TToml>(convert));
                 return this;
+            }
+
+            private void AddConverterInternal(ITomlConverter converter)
+            {
+                this.converters.Insert(0, converter);
             }
         }
 

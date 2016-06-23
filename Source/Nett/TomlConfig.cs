@@ -35,7 +35,7 @@ namespace Nett
             var config = new TomlConfig();
             var builder = new TomlConfigBuilder(config);
             cfg(builder);
-            builder.ApplyConversionSettings(); //Apply last, so that default converters get registered last and  only once
+            builder.SetupConverters();
             return config;
         }
 
