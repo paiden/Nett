@@ -99,7 +99,7 @@ Setting = 1
             c.PluginConfigs[SimplePluginConfig.Key].Should().Be(simplePluginConfig);
         }
 
-        [Fact(DisplayName = "When registered plugin contains dictionary and is registered in DictRootCofnig, that dictionary is read correctly")]
+        [Fact(DisplayName = "When registered plugin contains dictionary and is registered in DictRootConfig, that dictionary is read correctly")]
         public void ReadReadsPuginDictionaryCorrectly()
         {
             // Arrange

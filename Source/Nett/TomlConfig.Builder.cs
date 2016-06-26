@@ -36,6 +36,7 @@ namespace Nett
 
             // Dict <-> TomlTable
             new TomlTableToDictionaryConverter(),
+            new TomlTableToTypedDictionaryConverter(),
         };
 
         private static readonly List<ITomlConverter> DotNetImplicitConverters = new List<ITomlConverter>()
