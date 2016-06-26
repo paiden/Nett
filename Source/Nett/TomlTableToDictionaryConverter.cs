@@ -1,9 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Nett
 {
-    internal sealed class TomlTableToDictionaryConverter : ITomlObjectVisitor
+    internal sealed class TomlTableToDictionaryConverter : ITomlConverter
+    {
+        private static readonly Type DictType = typeof(Dictionary<string, object>);
+
+        public Type FromType => Types.TomlTableType;
+
+        public bool CanConvertFrom(Type t) => t == Types.TomlTableType;
+
+        public bool CanConvertTo(Type t) => DictType.IsAssignableFrom(t);
+
+        public bool CanConvertToToml() => false;
+
+        public object Convert(IMetaDataStore metaData, object value, Type targetType)
+        {
+            var converter = new ConvertTomlTableToDictionaryConversionVisitor();
+            return converter.Convert((TomlTable)value);
+        }
+    }
+
+    internal sealed class ConvertTomlTableToDictionaryConversionVisitor : ITomlObjectVisitor
     {
 #if DEBUG
         private bool InvokedConvert;
@@ -11,7 +31,7 @@ namespace Nett
         private readonly Dictionary<string, object> table = new Dictionary<string, object>();
         private string currentKey;
 
-        public TomlTableToDictionaryConverter()
+        public ConvertTomlTableToDictionaryConversionVisitor()
         {
         }
 
@@ -61,7 +81,7 @@ namespace Nett
 
             for (int i = 0; i < tableArray.Count; i++)
             {
-                var conv = new TomlTableToDictionaryConverter();
+                var conv = new ConvertTomlTableToDictionaryConversionVisitor();
                 arr[i] = conv.Convert(tableArray[i]);
             }
 
@@ -70,8 +90,17 @@ namespace Nett
 
         void ITomlObjectVisitor.Visit(TomlTable table)
         {
-            var conv = new TomlTableToDictionaryConverter();
-            this.table[this.currentKey] = conv.Convert(table); ;
+            Type tableToTypeMappingTargetType;
+
+            if ((tableToTypeMappingTargetType = table.MetaData.Config.TryGetMappedType(this.currentKey, null)) != null)
+            {
+                this.table[this.currentKey] = table.Get(tableToTypeMappingTargetType);
+            }
+            else
+            {
+                var conv = new ConvertTomlTableToDictionaryConversionVisitor();
+                this.table[this.currentKey] = conv.Convert(table);
+            }
         }
 
         private class ExtractItemValue : ITomlObjectVisitor

@@ -72,6 +72,12 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
     <Compile Include="EnumConversionTests.cs" />
+    <Compile Include="Plugins\DictRootConfig.cs" />
+    <Compile Include="Plugins\ObjRootConfig.cs" />
+    <Compile Include="Plugins\PluginConfigWithIntDict.cs" />
+    <Compile Include="Plugins\SimplePluginConfig.cs" />
+    <Compile Include="Plugins\ObjRootConfigTests.cs" />
+    <Compile Include="Plugins\DictRootConfigTests.cs" />
     <Compile Include="TableArrayTests.cs" />
     <Compile Include="HierarchyClassReaderTests.cs" />
     <Compile Include="MasterTests.cs" />
@@ -95,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Plugins\Plugins.md" />
     <None Include="Readme.md" />
     <None Include="SimpleToml.tml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

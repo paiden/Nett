@@ -18,6 +18,7 @@ namespace Nett
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
+        private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
 
         private TomlCommentLocation DefaultCommentLocation = TomlCommentLocation.Prepend;
         private TomlConfig()
@@ -34,8 +35,21 @@ namespace Nett
             var config = new TomlConfig();
             var builder = new TomlConfigBuilder(config);
             cfg(builder);
-            builder.ApplyConversionSettings(); //Apply last, so that default converters get registered last and  only once
+            builder.SetupConverters();
             return config;
+        }
+
+        internal Type TryGetMappedType(string key, PropertyInfo target)
+        {
+            Type mapped;
+            bool noTypeInfoAvailable = target == null;
+            bool targetCanHoldMappedTable = noTypeInfoAvailable || target.PropertyType == Types.ObjectType;
+            if (targetCanHoldMappedTable && this.tableKeyToTypeMappings.TryGetValue(key, out mapped))
+            {
+                return mapped;
+            }
+
+            return null;
         }
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
@@ -66,9 +80,14 @@ namespace Nett
             }
         }
 
-        internal TomlTable.TableTypes GetTableType(PropertyInfo pi) =>
-            this.inlineTableTypes.Contains(pi.PropertyType) ||
-            pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute)) ? TomlTable.TableTypes.Inline : TomlTable.TableTypes.Default;
+        internal TomlTable.TableTypes GetTableType(PropertyInfo pi)
+        {
+            if (pi == null) { return TomlTable.TableTypes.Default; }
+
+            return this.inlineTableTypes.Contains(pi.PropertyType) || pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute))
+                ? TomlTable.TableTypes.Inline
+                : TomlTable.TableTypes.Default;
+        }
 
         internal TomlCommentLocation GetCommentLocation(TomlComment c)
         {

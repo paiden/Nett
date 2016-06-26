@@ -105,6 +105,7 @@
     <Compile Include="TomlString.cs" />
     <Compile Include="TomlTable.cs" />
     <Compile Include="TomlTableArray.cs" />
+    <Compile Include="TomlTableToTypedDictionaryConverter.cs" />
     <Compile Include="TomlTimeSpan.cs" />
     <Compile Include="TomlValue.cs" />
     <Compile Include="TomlStreamWriter.cs" />

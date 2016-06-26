@@ -99,22 +99,12 @@ namespace Nett
 
             var result = this.MetaData.Config.GetActivatedInstance(t);
 
-            foreach (var p in this.Rows)
+            foreach (var r in this.Rows)
             {
-                var targetProperty = result.GetType().GetProperty(p.Key);
+                var targetProperty = result.GetType().GetProperty(r.Key);
                 if (targetProperty != null)
                 {
-                    var converter = this.MetaData.Config.TryGetConverter(p.Value.GetType(), targetProperty.PropertyType);
-                    if (converter != null)
-                    {
-                        var src = p.Value.Get(converter.FromType);
-                        var val = converter.Convert(this.MetaData, src, targetProperty.PropertyType);
-                        targetProperty.SetValue(result, val, null);
-                    }
-                    else
-                    {
-                        targetProperty.SetValue(result, p.Value.Get(targetProperty.PropertyType), null);
-                    }
+                    MapTableRowToProperty(result, targetProperty, r, this.MetaData);
                 }
             }
 
@@ -123,7 +113,7 @@ namespace Nett
 
         public Dictionary<string, object> ToDictionary()
         {
-            var converter = new TomlTableToDictionaryConverter();
+            var converter = new ConvertTomlTableToDictionaryConversionVisitor();
             return converter.Convert(this);
         }
 
@@ -134,17 +124,15 @@ namespace Nett
             return o as T;
         }
 
-        public static TomlTable From<T>(IMetaDataStore metaData, T obj, TableTypes tableType = TomlTable.TableTypes.Default)
+        internal static TomlTable CreateFromClass<T>(IMetaDataStore metaData, T obj, TableTypes tableType = TableTypes.Default)
+            where T : class
         {
             if (metaData == null) { throw new ArgumentNullException(nameof(metaData)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
 
-
             TomlTable tt = new TomlTable(metaData, tableType);
 
-            var t = obj.GetType();
-            var props = t.GetProperties();
-
+            var props = obj.GetType().GetProperties();
             var allObjects = new List<Tuple<string, TomlObject>>();
 
             foreach (var p in props)
@@ -152,7 +140,7 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = TomlObject.From(metaData, val, p);
+                    TomlObject to = TomlObject.CreateFrom(metaData, val, p);
                     AddComments(to, p);
                     allObjects.Add(Tuple.Create(p.Name, to));
                 }
@@ -162,6 +150,22 @@ namespace Nett
             tt.AddComplex(allObjects);
 
             return tt;
+        }
+
+        internal static TomlTable CreateFromDictionary(IMetaDataStore metaData, IDictionary dict, TableTypes tableType = TableTypes.Default)
+        {
+            if (metaData == null) { throw new ArgumentNullException(nameof(metaData)); }
+            if (dict == null) { throw new ArgumentNullException(nameof(dict)); }
+
+            var tomlTable = new TomlTable(metaData, tableType);
+
+            foreach (DictionaryEntry r in dict)
+            {
+                var obj = TomlObject.CreateFrom(metaData, r.Value, null);
+                tomlTable.Add((string)r.Key, obj);
+            }
+
+            return tomlTable;
         }
 
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
@@ -194,6 +198,24 @@ namespace Nett
             foreach (var c in comments)
             {
                 obj.Comments.Add(new TomlComment(c.Comment, c.Location));
+            }
+        }
+
+        private static void MapTableRowToProperty(
+            object target, PropertyInfo property, KeyValuePair<string, TomlObject> tableRow, IMetaDataStore metaData)
+        {
+            Type keyMapingTargetType = metaData.Config.TryGetMappedType(tableRow.Key, property);
+
+            var converter = metaData.Config.TryGetConverter(tableRow.Value.GetType(), property.PropertyType);
+            if (converter != null && keyMapingTargetType == null)
+            {
+                var src = tableRow.Value.Get(converter.FromType);
+                var val = converter.Convert(metaData, src, property.PropertyType);
+                property.SetValue(target, val, null);
+            }
+            else
+            {
+                property.SetValue(target, tableRow.Value.Get(keyMapingTargetType ?? property.PropertyType), null);
             }
         }
 

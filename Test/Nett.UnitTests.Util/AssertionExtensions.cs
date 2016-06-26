@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Nett.UnitTests.Util;
 
 namespace Nett.UnitTests.Util
 {
@@ -11,7 +10,7 @@ namespace Nett.UnitTests.Util
         /// <remarks>
         /// Should only be used for complex tests where it is very hard to produce test data and expected data with correct white spaces.
         /// There should be dedicated tests to check white space formatting, for the other test, only the unformatted content of the
-        /// serialized stuff should be of relevance
+        /// serialized stuff should be of relevance. Also it would be nice if this method would at least consider the line breaks.
         /// </remarks>
         public static void ShouldBeSemanticallyEquivalentTo(this string sx, string sy)
         {

@@ -16,7 +16,7 @@ namespace Nett
             new TomlConverter<TomlBool, bool>((m, t) => t.Value)
         };
 
-        private static readonly List<ITomlConverter> SameNumericalTypeConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> MatchingConverters = new List<ITomlConverter>()
         {
             // TomlInt to integer types
             new TomlConverter<TomlInt, char>((m, t) => (char)t.Value),
@@ -33,6 +33,10 @@ namespace Nett
             // TomlStrings <-> enums
             new TomlToEnumConverter(),
             new EnumToTomlConverter(),
+
+            // Dict <-> TomlTable
+            new TomlTableToDictionaryConverter(),
+            new TomlTableToTypedDictionaryConverter(),
         };
 
         private static readonly List<ITomlConverter> DotNetImplicitConverters = new List<ITomlConverter>()
@@ -59,7 +63,7 @@ namespace Nett
         public enum ConversionSets
         {
             Equivalent = 1 << 0,
-            SameNumericCategory = 1 << 1,
+            Matching = 1 << 1,
             DotNetImplicit = 1 << 2,
             DotNetExplicit = 1 << 3,
             Parse = 1 << 4,
@@ -68,8 +72,8 @@ namespace Nett
         public enum ConversionLevel
         {
             Strict = ConversionSets.Equivalent,
-            SameNumericCategory = Strict | ConversionSets.SameNumericCategory,
-            DotNetImplicit = SameNumericCategory | ConversionSets.DotNetImplicit,
+            Matching = Strict | ConversionSets.Matching,
+            DotNetImplicit = Matching | ConversionSets.DotNetImplicit,
             DotNetExplicit = DotNetImplicit | ConversionSets.DotNetExplicit,
             Parse = DotNetExplicit | ConversionSets.Parse,
         }
@@ -80,6 +84,7 @@ namespace Nett
             ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch);
             ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets);
             ITomlConfigBuilder AllowImplicitConversions(ConversionLevel level);
+            ITableKeyMappingBuilder MapTableKey(string key);
         }
 
         public interface IConfigureTypeBuilder<TCustom>
@@ -89,11 +94,17 @@ namespace Nett
             IConfigureTypeBuilder<TCustom> TreatAsInlineTable();
         }
 
-        public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
+        public interface ITableKeyMappingBuilder
+        {
+            ITomlConfigBuilder To<T>();
+        }
+
+        //public IConfigureTypeBuilder<TCustom> ConfigureType<TCustom>() => new TypeConfigurationBuilder<TCustom>(this);
 
         internal sealed class TomlConfigBuilder : ITomlConfigBuilder
         {
             private readonly TomlConfig config = new TomlConfig();
+            private readonly List<ITomlConverter> UserConverters = new List<ITomlConverter>();
 
             private ConversionSets allowedConversions;
 
@@ -102,7 +113,7 @@ namespace Nett
                 Assert(config != null);
 
                 this.config = config;
-                const ConversionLevel DefaultConversionSettings = ConversionLevel.SameNumericCategory;
+                const ConversionLevel DefaultConversionSettings = ConversionLevel.Matching;
                 this.AllowImplicitConversions(DefaultConversionSettings);
             }
 
@@ -114,7 +125,7 @@ namespace Nett
 
             public ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct)
             {
-                ct(new TypeConfigurationBuilder<T>(this.config));
+                ct(new TypeConfigurationBuilder<T>(this.config, this.UserConverters));
                 return this;
             }
 
@@ -130,38 +141,55 @@ namespace Nett
                 return this;
             }
 
-            public void ApplyConversionSettings()
+            public void SetupConverters()
+            {
+                this.SetupDefaultConverters();
+                this.SetupUserConverters();
+            }
+
+            public ITableKeyMappingBuilder MapTableKey(string key) =>
+                new TableKeyMappingBuilder(this.config, this, key);
+
+            public void SetupDefaultConverters()
             {
                 Assert(this.allowedConversions != 0);
 
-                if (this.allowedConversions.HasFlag(ConversionSets.Equivalent))
+                if (this.allowedConversions.HasFlag(ConversionSets.DotNetExplicit))
                 {
-                    this.config.converters.AddRange(EquivalentConverters);
-                }
-                if (this.allowedConversions.HasFlag(ConversionSets.SameNumericCategory))
-                {
-                    this.config.converters.AddRange(SameNumericalTypeConverters);
+                    this.config.converters.AddRange(DotNetExplicitConverters);
                 }
                 if (this.allowedConversions.HasFlag(ConversionSets.DotNetImplicit))
                 {
                     this.config.converters.AddRange(DotNetImplicitConverters);
                 }
-                if (this.allowedConversions.HasFlag(ConversionSets.DotNetExplicit))
+                if (this.allowedConversions.HasFlag(ConversionSets.Matching))
                 {
-                    this.config.converters.AddRange(DotNetExplicitConverters);
+                    this.config.converters.AddRange(MatchingConverters);
                 }
+                if (this.allowedConversions.HasFlag(ConversionSets.Equivalent))
+                {
+                    this.config.converters.AddRange(EquivalentConverters);
+                }
+            }
+
+            private void SetupUserConverters()
+            {
+                this.config.converters.AddRange(this.UserConverters);
             }
         }
 
         internal sealed class TypeConfigurationBuilder<TCustom> : IConfigureTypeBuilder<TCustom>
         {
             private readonly TomlConfig config;
+            private readonly List<ITomlConverter> Converters;
 
-            public TypeConfigurationBuilder(TomlConfig config)
+            public TypeConfigurationBuilder(TomlConfig config, List<ITomlConverter> converters)
             {
                 Assert(config != null);
+                Assert(converters != null);
 
                 this.config = config;
+                this.Converters = converters;
             }
 
             public IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> activator)
@@ -178,40 +206,65 @@ namespace Nett
 
             public IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv) where TToml : TomlObject
             {
-                conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.config));
+                conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.Converters));
                 return this;
             }
         }
 
         internal sealed class ConversionConfigurationBuilder<TCustom, TToml> : IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
         {
-            private readonly TomlConfig config;
+            private readonly List<ITomlConverter> converters;
 
-            public ConversionConfigurationBuilder(TomlConfig config)
+            public ConversionConfigurationBuilder(List<ITomlConverter> converters)
             {
-                Assert(config != null);
+                Assert(converters != null);
 
-                this.config = config;
+                this.converters = converters;
             }
 
-            internal void AddConverter(ITomlConverter converter) => this.config.AddConverter(converter);
+            internal void AddConverter(ITomlConverter converter) => this.converters.Add(converter);
 
             public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert)
             {
-                this.config.AddConverter(new TomlConverter<TToml, TCustom>(convert));
+                this.AddConverter(new TomlConverter<TToml, TCustom>(convert));
                 return this;
             }
 
             public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
             {
-                this.config.AddConverter(new TomlConverter<TToml, TCustom>((_, tToml) => convert(tToml)));
+                this.AddConverterInternal(new TomlConverter<TToml, TCustom>((_, tToml) => convert(tToml)));
                 return this;
             }
 
             public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<IMetaDataStore, TCustom, TToml> convert)
             {
-                this.config.AddConverter(new TomlConverter<TCustom, TToml>(convert));
+                this.AddConverterInternal(new TomlConverter<TCustom, TToml>(convert));
                 return this;
+            }
+
+            private void AddConverterInternal(ITomlConverter converter)
+            {
+                this.converters.Insert(0, converter);
+            }
+        }
+
+        internal sealed class TableKeyMappingBuilder : ITableKeyMappingBuilder
+        {
+            private readonly TomlConfig config;
+            private readonly ITomlConfigBuilder configBuilder;
+            private readonly string key;
+
+            public TableKeyMappingBuilder(TomlConfig config, ITomlConfigBuilder configBuilder, string key)
+            {
+                this.config = config;
+                this.configBuilder = configBuilder;
+                this.key = key;
+            }
+
+            public ITomlConfigBuilder To<T>()
+            {
+                this.config.tableKeyToTypeMappings[this.key] = typeof(T);
+                return this.configBuilder;
             }
         }
     }
