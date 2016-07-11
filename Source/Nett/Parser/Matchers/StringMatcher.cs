@@ -22,7 +22,7 @@
 
             sb.Append(cs.Consume());
 
-            while (cs.Peek() != StringTag)
+            while (!cs.End && !cs.TryExpect(StringTag))
             {
                 if (cs.TryExpect('\\'))
                 {
