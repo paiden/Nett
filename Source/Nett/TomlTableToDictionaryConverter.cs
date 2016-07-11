@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     internal sealed class TomlTableToDictionaryConverter : ITomlConverter
     {
         private static readonly Type DictType = typeof(Dictionary<string, object>);
@@ -25,10 +25,11 @@ namespace Nett
 
     internal sealed class ConvertTomlTableToDictionaryConversionVisitor : ITomlObjectVisitor
     {
-#if DEBUG
-        private bool InvokedConvert;
-#endif
         private readonly Dictionary<string, object> table = new Dictionary<string, object>();
+
+#if DEBUG
+        private bool invokedConvert;
+#endif
         private string currentKey;
 
         public ConvertTomlTableToDictionaryConversionVisitor()
@@ -38,8 +39,8 @@ namespace Nett
         public Dictionary<string, object> Convert(TomlTable table)
         {
 #if DEBUG
-            Debug.Assert(!this.InvokedConvert, "Do not reuse the TomlTable Converter. The converter can only be used once. Create a new converter instead.");
-            this.InvokedConvert = true;
+            Debug.Assert(!this.invokedConvert, "Do not reuse the TomlTable Converter. The converter can only be used once. Create a new converter instead.");
+            this.invokedConvert = true;
 #endif
             foreach (var r in table.Rows)
             {
@@ -106,6 +107,7 @@ namespace Nett
         private class ExtractItemValue : ITomlObjectVisitor
         {
             public object Item;
+
             public void Visit(TomlInt i) => this.Item = i.Value;
 
             public void Visit(TomlBool b) => this.Item = b.Value;

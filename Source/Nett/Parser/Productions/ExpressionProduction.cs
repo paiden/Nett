@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Nett.Parser.Productions
+﻿namespace Nett.Parser.Productions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal sealed class ExpressionsProduction
     {
         private enum CreateImplicitelyType
@@ -11,6 +11,7 @@ namespace Nett.Parser.Productions
             Table,
             ArrayOfTables,
         }
+
         public static TomlTable TryApply(TomlTable current, TomlTable.RootTable root, TokenBuffer tokens)
         {
             var preComments = CommentProduction.TryParsePreExpressionCommenst(tokens);
@@ -80,17 +81,27 @@ namespace Nett.Parser.Productions
             return null;
         }
 
-        private static TomlTable GetTargetTable(TomlTable root, IList<string> keyChain, CreateImplicitelyType ct)
+        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name, Token errorPosition)
         {
-            var tgt = root;
-            for (int i = 0; i < keyChain.Count - 1; i++)
+            TomlObject existing = null;
+            target.Rows.TryGetValue(name, out existing);
+
+            var typed = existing as TomlTableArray;
+
+            if (existing != null && typed == null)
             {
-                tgt = ct == CreateImplicitelyType.Table
-                    ? GetExistingOrCreateAndAddTable(tgt, keyChain[i])
-                    : GetExistingOrCreateAndAddTableArray(tgt, keyChain[i]);
+                throw new InvalidOperationException(errorPosition.PrefixWithTokenPostion(
+                    $"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'."));
+            }
+            else if (typed != null)
+            {
+                return typed;
             }
 
-            return tgt;
+            var newTableArray = new TomlTableArray(target.MetaData);
+            target.Add(name, newTableArray);
+
+            return newTableArray;
         }
 
         private static TomlTable GetExistingOrCreateAndAddTable(TomlTable tbl, string key)
@@ -130,6 +141,19 @@ namespace Nett.Parser.Productions
             return createNewItem(tbl);
         }
 
+        private static TomlTable GetTargetTable(TomlTable root, IList<string> keyChain, CreateImplicitelyType ct)
+        {
+            var tgt = root;
+            for (int i = 0; i < keyChain.Count - 1; i++)
+            {
+                tgt = ct == CreateImplicitelyType.Table
+                    ? GetExistingOrCreateAndAddTable(tgt, keyChain[i])
+                    : GetExistingOrCreateAndAddTableArray(tgt, keyChain[i]);
+            }
+
+            return tgt;
+        }
+
         private static TomlTable TryGetTableEntry(TomlObject obj)
         {
             if (obj == null) { return null; }
@@ -137,29 +161,6 @@ namespace Nett.Parser.Productions
             var arr = obj as TomlTableArray;
 
             return tbl ?? arr?.Last();
-        }
-
-        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name, Token errorPosition)
-        {
-            TomlObject existing = null;
-            target.Rows.TryGetValue(name, out existing);
-
-            var typed = existing as TomlTableArray;
-
-            if (existing != null && typed == null)
-            {
-                throw new InvalidOperationException(errorPosition.PrefixWithTokenPostion(
-                    $"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'."));
-            }
-            else if (typed != null)
-            {
-                return typed;
-            }
-
-            var newTableArray = new TomlTableArray(target.MetaData);
-            target.Add(name, newTableArray);
-
-            return newTableArray;
         }
     }
 }

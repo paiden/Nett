@@ -1,13 +1,29 @@
-﻿using System;
-
-namespace Nett.Parser
+﻿namespace Nett.Parser
 {
+    using System;
+
     internal sealed class TokenBuffer : LookaheadBuffer<Token>
     {
         public TokenBuffer(Func<Token?> read, int lookAhead)
             : base(read, lookAhead)
         {
+        }
 
+        public Token Expect(TokenType tt)
+        {
+            var t = this.Peek();
+            if (t.type != tt)
+            {
+                throw new Exception($"Expected token of type '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
+            }
+
+            return t;
+        }
+
+        public Token ExpectAndConsume(TokenType tt)
+        {
+            this.Expect(tt);
+            return this.Consume();
         }
 
         public bool TryExpect(string tokenValue)
@@ -28,23 +44,6 @@ namespace Nett.Parser
         public bool TryExpectAt(TokenType tt)
         {
             return this.Peek().type == tt;
-        }
-
-        public Token Expect(TokenType tt)
-        {
-            var t = this.Peek();
-            if (t.type != tt)
-            {
-                throw new Exception($"Expected token of type '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
-            }
-
-            return t;
-        }
-
-        public Token ExpectAndConsume(TokenType tt)
-        {
-            this.Expect(tt);
-            return this.Consume();
         }
     }
 }

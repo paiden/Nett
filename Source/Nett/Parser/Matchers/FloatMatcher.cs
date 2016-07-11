@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
+    using System;
+    using System.Text;
+
     internal static class FloatMatcher
     {
         internal static Token? TryMatch(StringBuilder beforeFraction, CharBuffer cs)
@@ -27,7 +27,7 @@ namespace Nett.Parser.Matchers
             }
             else
             {
-                throw new Exception("Failed to construct float token"); //TODO better error message.
+                throw new Exception("Failed to construct float token"); // TODO better error message.
             }
         }
     }

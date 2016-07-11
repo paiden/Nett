@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using static System.Diagnostics.Debug;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using static System.Diagnostics.Debug;
+
     public class TomlTableToTypedDictionaryConverter : ITomlConverter
     {
         private static readonly Type DictType = typeof(IDictionary);
@@ -19,7 +19,8 @@ namespace Nett
 
         public object Convert(IMetaDataStore metaData, object value, Type targetType)
         {
-            Assert(targetType != typeof(Dictionary<string, object>),
+            Assert(
+                targetType != typeof(Dictionary<string, object>),
                 $"Ensure '{nameof(TomlTableToDictionaryConverter)}' converter registered before this one.");
 
             var valueType = targetType.GetGenericArguments()[1];

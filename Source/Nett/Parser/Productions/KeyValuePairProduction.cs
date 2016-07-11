@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Nett.Parser.Productions
+﻿namespace Nett.Parser.Productions
 {
+    using System;
+
     internal static class KeyValuePairProduction
     {
         public static Tuple<string, TomlObject> Apply(IMetaDataStore metaData, TokenBuffer tokens)

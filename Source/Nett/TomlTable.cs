@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     public static class TomlTableExtensions
     {
         public static TomlInt Add(this TomlTable table, string key, int value)
@@ -39,21 +39,31 @@ namespace Nett
 
     public partial class TomlTable : TomlObject
     {
+        private static readonly Type EnumerableType = typeof(IEnumerable);
+
+        private static readonly Type StringType = typeof(string);
+
+        private static readonly Type TomlTableType = typeof(TomlTable);
+
+        internal TomlTable(IMetaDataStore metaData, TableTypes tableType = TableTypes.Default)
+            : base(metaData)
+        {
+            this.TableType = tableType;
+        }
+
         public enum TableTypes
         {
             Default,
             Inline,
         }
 
-        private static readonly Type EnumerableType = typeof(IEnumerable);
-        private static readonly Type StringType = typeof(string);
-        private static readonly Type TomlTableType = typeof(TomlTable);
+        public override string ReadableTypeName => "table";
 
         public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
 
-        internal bool IsDefined { get; set; }
+        public TableTypes TableType { get; }
 
-        public override string ReadableTypeName => "table";
+        internal bool IsDefined { get; set; }
 
         public TomlObject this[string key]
         {
@@ -69,29 +79,12 @@ namespace Nett
             }
         }
 
-        public TableTypes TableType { get; }
-
         public T Get<T>(string key) => this[key].Get<T>();
-        public TomlObject Get(string key) => this[key];
 
-        internal TomlTable(IMetaDataStore metaData, TableTypes tableType = TableTypes.Default)
-            : base(metaData)
-        {
-            this.TableType = tableType;
-        }
+        public TomlObject Get(string key) => this[key];
 
         /*public void Add(string key, double @float) => this.Add(key, new TomlFloat(this.MetaData, @float));
         public void Add(string key, string @string) => this.Add(key, new TomlString(this.MetaData, @string));*/
-
-        internal void Add(string key, TomlObject value)
-        {
-            this.Rows.Add(key, value);
-        }
-
-        public override void Visit(ITomlObjectVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
 
         public override object Get(Type t)
         {
@@ -117,11 +110,17 @@ namespace Nett
             return converter.Convert(this);
         }
 
-        public T TryGet<T>(string key) where T : TomlObject
+        public T TryGet<T>(string key)
+            where T : TomlObject
         {
             TomlObject o;
             this.Rows.TryGetValue(key, out o);
             return o as T;
+        }
+
+        public override void Visit(ITomlObjectVisitor visitor)
+        {
+            visitor.Visit(this);
         }
 
         internal static TomlTable CreateFromClass<T>(IMetaDataStore metaData, T obj, TableTypes tableType = TableTypes.Default)
@@ -168,6 +167,16 @@ namespace Nett
             return tomlTable;
         }
 
+        internal void Add(string key, TomlObject value)
+        {
+            this.Rows.Add(key, value);
+        }
+
+        internal object Merge(TomlTable tt)
+        {
+            throw new NotImplementedException();
+        }
+
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {
             base.OverwriteCommentsWithCommentsFrom(src, overwriteWithEmpty);
@@ -185,11 +194,6 @@ namespace Nett
                     }
                 }
             }
-        }
-
-        internal object Merge(TomlTable tt)
-        {
-            throw new NotImplementedException();
         }
 
         private static void AddComments(TomlObject obj, PropertyInfo pi)
@@ -219,15 +223,15 @@ namespace Nett
             }
         }
 
-        private void AddValues(List<Tuple<string, TomlObject>> allObjects)
-        {
-            var adder = new ValueAdder(this);
-            this.AddViaAdder(adder, allObjects);
-        }
-
         private void AddComplex(List<Tuple<string, TomlObject>> allObjects)
         {
             var adder = new ComplexAdder(this);
+            this.AddViaAdder(adder, allObjects);
+        }
+
+        private void AddValues(List<Tuple<string, TomlObject>> allObjects)
+        {
+            var adder = new ValueAdder(this);
             this.AddViaAdder(adder, allObjects);
         }
 
@@ -242,7 +246,16 @@ namespace Nett
 
         private abstract class Adder : TomlObjectVisitor
         {
-            public string RowKey { set; protected get; }
+            public string RowKey { protected get; set; }
+        }
+
+        private sealed class ComplexAdder : Adder
+        {
+            public ComplexAdder(TomlTable target)
+            {
+                this.VisitTableArray = (rowTblArray) => target.Add(this.RowKey, rowTblArray);
+                this.VisitTable = (rowTbl) => target.Add(this.RowKey, rowTbl);
+            }
         }
 
         private sealed class ValueAdder : Adder
@@ -259,15 +272,6 @@ namespace Nett
                 this.VisitInt = (i) => target.Add(this.RowKey, i);
                 this.VisitString = (s) => target.Add(this.RowKey, s);
                 this.VisitTimespan = (ts) => target.Add(this.RowKey, ts);
-            }
-        }
-
-        private sealed class ComplexAdder : Adder
-        {
-            public ComplexAdder(TomlTable target)
-            {
-                this.VisitTableArray = (rowTblArray) => target.Add(this.RowKey, rowTblArray);
-                this.VisitTable = (rowTbl) => target.Add(this.RowKey, rowTbl);
             }
         }
     }

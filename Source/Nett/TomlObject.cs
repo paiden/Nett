@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     public abstract class TomlObject
     {
-        private static readonly Type StringType = typeof(string);
         private static readonly Type EnumerableType = typeof(IEnumerable);
-
+        private static readonly Type StringType = typeof(string);
         private IMetaDataStore metaData;
-        internal IMetaDataStore MetaData => this.metaData;
-        internal void SetAsMetaDataRoot(TomlTable.RootTable root) => this.metaData = root;
-
-        public abstract string ReadableTypeName { get; }
-
-        internal List<TomlComment> Comments { get; private set; }
-        public T Get<T>() => (T)this.Get(typeof(T));
-        public abstract object Get(Type t);
 
         internal TomlObject(IMetaDataStore metaData)
         {
@@ -28,6 +19,18 @@ namespace Nett
             this.metaData = metaData;
             this.Comments = new List<TomlComment>();
         }
+
+        public abstract string ReadableTypeName { get; }
+
+        internal List<TomlComment> Comments { get; private set; }
+
+        internal IMetaDataStore MetaData => this.metaData;
+
+        public T Get<T>() => (T)this.Get(typeof(T));
+
+        public abstract object Get(Type t);
+
+        public abstract void Visit(ITomlObjectVisitor visitor);
 
         internal static TomlObject CreateFrom(IMetaDataStore metaData, object val, PropertyInfo pi)
         {
@@ -56,6 +59,16 @@ namespace Nett
                 return TomlTable.CreateFromClass(metaData, val, tableType);
             }
         }
+
+        internal virtual void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
+        {
+            if (src.Comments.Count > 0 || overwriteWithEmpty)
+            {
+                this.Comments = new List<TomlComment>(src.Comments);
+            }
+        }
+
+        internal void SetAsMetaDataRoot(TomlTable.RootTable root) => this.metaData = root;
 
         private static TomlObject CreateArrayType(IMetaDataStore metaData, IEnumerable e)
         {
@@ -94,16 +107,6 @@ namespace Nett
             {
                 var values = e.Select((o) => TomlValue.ValueFrom(metaData, o));
                 return new TomlArray(metaData, values.ToArray());
-            }
-        }
-
-        public abstract void Visit(ITomlObjectVisitor visitor);
-
-        internal virtual void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
-        {
-            if (src.Comments.Count > 0 || overwriteWithEmpty)
-            {
-                this.Comments = new List<TomlComment>(src.Comments);
             }
         }
     }

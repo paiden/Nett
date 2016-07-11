@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+
     internal sealed class TomlConverter<TFrom, TTo> : TomlConverterBase<TFrom, TTo>
     {
         private readonly Func<IMetaDataStore, TFrom, TTo> convert;

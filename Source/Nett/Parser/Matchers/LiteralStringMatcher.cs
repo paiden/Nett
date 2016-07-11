@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
+    using System;
+    using System.Text;
+
     internal sealed class LiteralStringMatcher
     {
         private const char StringTag = '\'';

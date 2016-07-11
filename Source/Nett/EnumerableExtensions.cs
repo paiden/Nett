@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     internal static class EnumerableExtensions
     {
         public static Type GetElementType(this IEnumerable enumerable)
         {
             var et = enumerable.GetType();
-            if(et.IsGenericType)
+            if (et.IsGenericType)
             {
                 return et.GetGenericArguments()[0];
             }
             else
             {
-                foreach(var e in enumerable)
+                foreach (var e in enumerable)
                 {
                     return e.GetType();
                 }
@@ -28,7 +26,7 @@ namespace Nett
 
         public static IEnumerable<T> Select<T>(this IEnumerable enumerable, Func<object, T> selector)
         {
-            foreach(var e in enumerable)
+            foreach (var e in enumerable)
             {
                 yield return selector(e);
             }

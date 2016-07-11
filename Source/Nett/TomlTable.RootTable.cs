@@ -1,26 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections.Generic;
+
     public partial class TomlTable
     {
-        internal sealed class RootTable : TomlTable, IMetaDataStore
-        {
-            private readonly TomlConfig config;
-
-            public RootTable(TomlConfig config)
-                : base(null)
-            {
-                if (config == null) { throw new ArgumentNullException(nameof(config)); }
-
-                this.config = config;
-                this.SetAsMetaDataRoot(this);
-            }
-
-            TomlConfig IMetaDataStore.Config => this.config;
-        }
-
         internal static RootTable From<T>(TomlConfig config, T obj)
         {
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
@@ -49,6 +33,22 @@ namespace Nett
             tt.AddComplex(allObjects);
 
             return tt;
+        }
+
+        internal sealed class RootTable : TomlTable, IMetaDataStore
+        {
+            private readonly TomlConfig config;
+
+            public RootTable(TomlConfig config)
+                : base(null)
+            {
+                if (config == null) { throw new ArgumentNullException(nameof(config)); }
+
+                this.config = config;
+                this.SetAsMetaDataRoot(this);
+            }
+
+            TomlConfig IMetaDataStore.Config => this.config;
         }
     }
 }

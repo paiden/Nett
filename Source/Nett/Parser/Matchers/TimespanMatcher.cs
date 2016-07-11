@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
+    using System;
+    using System.Text;
+
     internal static class TimespanMatcher
     {
         internal static Token? ContinueMatchFromInteger(StringBuilder matchedAlready, CharBuffer cs)

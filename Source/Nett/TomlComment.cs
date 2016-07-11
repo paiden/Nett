@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nett
+﻿namespace Nett
 {
     internal class TomlComment
     {
-        public string Text { get; }
-        public CommentLocation Location { get; }
-
         public TomlComment(string commentText, CommentLocation location)
         {
             this.Text = commentText;
             this.Location = location;
         }
+
+        public CommentLocation Location { get; }
+
+        public string Text { get; }
     }
 }

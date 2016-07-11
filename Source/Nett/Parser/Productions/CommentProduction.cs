@@ -1,20 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Nett.Parser.Productions
+﻿namespace Nett.Parser.Productions
 {
+    using System.Collections.Generic;
+
     internal static class CommentProduction
     {
-        public static IList<TomlComment> TryParsePreExpressionCommenst(TokenBuffer tokens)
-        {
-            var comments = new List<TomlComment>();
-            while (tokens.TryExpect(TokenType.Comment))
-            {
-                comments.Add(new TomlComment(tokens.Consume().value, CommentLocation.Prepend));
-            }
-
-            return comments;
-        }
-
         public static IList<TomlComment> TryParseAppendExpressionComments(Token lastExpressionToken, TokenBuffer tokens)
         {
             var comments = new List<TomlComment>();
@@ -32,6 +21,17 @@ namespace Nett.Parser.Productions
             while (tokens.TryExpect(TokenType.Comment))
             {
                 comments.Add(new TomlComment(tokens.Consume().value, location));
+            }
+
+            return comments;
+        }
+
+        public static IList<TomlComment> TryParsePreExpressionCommenst(TokenBuffer tokens)
+        {
+            var comments = new List<TomlComment>();
+            while (tokens.TryExpect(TokenType.Comment))
+            {
+                comments.Add(new TomlComment(tokens.Consume().value, CommentLocation.Prepend));
             }
 
             return comments;

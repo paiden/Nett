@@ -1,7 +1,7 @@
-﻿using System.IO;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System.IO;
+
     public static class StreamTomlSerializer
     {
         public static TomlTable Deserialize(Stream s, TomlConfig config)

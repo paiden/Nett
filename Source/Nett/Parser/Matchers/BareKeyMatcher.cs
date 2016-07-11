@@ -1,7 +1,7 @@
-﻿using System.Text;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
+    using System.Text;
+
     /// <summary>
     /// Note this doesn't match the all bare keys e.g. '1234'. So all keys are only recognized at the parser level.
     /// </summary>
@@ -26,7 +26,7 @@ namespace Nett.Parser.Matchers
                 sb.Append(cs.Consume());
             }
 
-            return sb.Length > 0 ? new Token(TokenType.BareKey, sb.ToString()) : new Token?();
+            return sb.Length > 0 ? new Token(TokenType.BareKey, sb.ToString()) : default(Token?);
         }
     }
 }

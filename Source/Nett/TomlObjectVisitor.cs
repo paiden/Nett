@@ -1,23 +1,26 @@
-﻿using System;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+
     internal abstract class TomlObjectVisitor : ITomlObjectVisitor
     {
-        protected Action<TomlInt> VisitInt { get; set; }
-        protected Action<TomlFloat> VisitFloat { get; set; }
+        protected Action<TomlArray> VisitArray { get; set; }
+
         protected Action<TomlBool> VisitBool { get; set; }
 
-        protected Action<TomlString> VisitString { get; set; }
+        protected Action<TomlDateTime> VisitDateTime { get; set; }
 
-        protected Action<TomlTimeSpan> VisitTimespan { get; set; }
+        protected Action<TomlFloat> VisitFloat { get; set; }
+
+        protected Action<TomlInt> VisitInt { get; set; }
+
+        protected Action<TomlString> VisitString { get; set; }
 
         protected Action<TomlTable> VisitTable { get; set; }
 
         protected Action<TomlTableArray> VisitTableArray { get; set; }
 
-        protected Action<TomlDateTime> VisitDateTime { get; set; }
-        protected Action<TomlArray> VisitArray { get; set; }
+        protected Action<TomlTimeSpan> VisitTimespan { get; set; }
 
         public void Visit(TomlTable table)
         {

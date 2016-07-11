@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-
-namespace Nett.Parser
+﻿namespace Nett.Parser
 {
-    enum TokenType
+    using System.Diagnostics;
+
+    internal enum TokenType
     {
         Unknown,
         NewLine,
@@ -36,10 +36,12 @@ namespace Nett.Parser
     {
         public static Token Eof = new Token(TokenType.Eof, "<End of input>");
 
+#pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
+        public int col;
+        public int line;
         public TokenType type;
         public string value;
-        public int line;
-        public int col;
+#pragma warning restore SA1307 // Accessible fields must begin with upper-case letter
 
         public Token(TokenType type, string value)
         {

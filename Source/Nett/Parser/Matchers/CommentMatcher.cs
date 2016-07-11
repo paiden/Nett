@@ -1,7 +1,7 @@
-﻿using System.Text;
-
-namespace Nett.Parser.Matchers
+﻿namespace Nett.Parser.Matchers
 {
+    using System.Text;
+
     internal static class CommentMatcher
     {
         public static Token? TryMatch(LookaheadBuffer<char> chars)

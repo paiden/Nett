@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     public sealed class TomlTableArray : TomlObject
     {
         private static readonly Type ListType = typeof(IList);
@@ -11,14 +11,6 @@ namespace Nett
         private static readonly Type TableArrayType = typeof(TomlTableArray);
 
         private readonly List<TomlTable> items = new List<TomlTable>();
-        public List<TomlTable> Items => this.items;
-
-        public override string ReadableTypeName => "array of tables";
-
-        internal TomlTableArray(IMetaDataStore metaData)
-            : this(metaData, null)
-        {
-        }
 
         public TomlTableArray(IMetaDataStore metaData, IEnumerable<TomlTable> enumerable)
             : base(metaData)
@@ -32,23 +24,27 @@ namespace Nett
             }
         }
 
-        public override void Visit(ITomlObjectVisitor visitor)
+        internal TomlTableArray(IMetaDataStore metaData)
+            : this(metaData, null)
         {
-            visitor.Visit(this);
         }
 
         public int Count => this.items.Count;
+
+        public List<TomlTable> Items => this.items;
+
+        public override string ReadableTypeName => "array of tables";
+
+        public TomlTable this[int index] => this.items[index];
 
         public void Add(TomlTable table)
         {
             this.items.Add(table);
         }
 
-        public TomlTable this[int index] => this.items[index];
-
         public override object Get(Type t)
         {
-            if (t== TableArrayType) { return this; }
+            if (t == TableArrayType) { return this; }
 
             if (t.IsArray)
             {
@@ -62,7 +58,6 @@ namespace Nett
 
                 return a;
             }
-
 
             if (!ListType.IsAssignableFrom(t))
             {
@@ -85,5 +80,10 @@ namespace Nett
         }
 
         public TomlTable Last() => this.items[this.items.Count - 1];
+
+        public override void Visit(ITomlObjectVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

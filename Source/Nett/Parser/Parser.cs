@@ -1,15 +1,14 @@
-﻿using System;
-using System.IO;
-using Nett.Parser.Productions;
-using static System.Diagnostics.Debug;
-
-namespace Nett.Parser
+﻿namespace Nett.Parser
 {
+    using System;
+    using System.IO;
+    using Nett.Parser.Productions;
+    using static System.Diagnostics.Debug;
+
     internal sealed class Parser
     {
-        private readonly Tokenizer tokenizer;
-        private TokenBuffer Tokens => this.tokenizer.Tokens;
         private readonly TomlConfig config;
+        private readonly Tokenizer tokenizer;
 
         public Parser(Stream s, TomlConfig config)
         {
@@ -18,6 +17,8 @@ namespace Nett.Parser
             this.tokenizer = new Tokenizer(s);
             this.config = config;
         }
+
+        private TokenBuffer Tokens => this.tokenizer.Tokens;
 
         public TomlTable Parse()
         {
@@ -29,12 +30,12 @@ namespace Nett.Parser
             var root = new TomlTable.RootTable(this.config) { IsDefined = true };
             TomlTable current = root;
 
-            while (!Tokens.End)
+            while (!this.Tokens.End)
             {
                 current = ExpressionsProduction.TryApply(current, root, this.Tokens);
                 if (current == null)
                 {
-                    if (!Tokens.End)
+                    if (!this.Tokens.End)
                     {
                         throw new Exception();
                     }

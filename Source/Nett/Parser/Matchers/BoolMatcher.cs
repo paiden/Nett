@@ -2,8 +2,8 @@
 {
     internal static class BoolMatcher
     {
-        private const string T = "true";
         private const string F = "false";
+        private const string T = "true";
 
         public static Token? TryMatch(CharBuffer cs)
         {

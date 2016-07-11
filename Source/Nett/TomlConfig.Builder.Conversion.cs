@@ -1,10 +1,12 @@
-﻿using System;
-
-namespace Nett
+﻿namespace Nett
 {
-    public interface IConfigureConversionBuilder<TCustom, TToml> where TToml : TomlObject
+    using System;
+
+    public interface IConfigureConversionBuilder<TCustom, TToml>
+        where TToml : TomlObject
     {
         IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert);
+
         IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
     }
 

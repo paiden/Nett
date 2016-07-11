@@ -1,14 +1,17 @@
-﻿using System;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+
     internal interface ITomlConverter
     {
+        Type FromType { get; }
+
         bool CanConvertFrom(Type t);
+
         bool CanConvertTo(Type t);
+
         bool CanConvertToToml();
 
-        Type FromType { get; }
         object Convert(IMetaDataStore metaData, object value, Type targetType);
     }
 

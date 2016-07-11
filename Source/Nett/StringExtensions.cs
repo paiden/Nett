@@ -1,16 +1,44 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
-using Nett.Parser;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Globalization;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using Nett.Parser;
+
     internal static class StringExtensions
     {
         private static readonly int RegexOffset = @"\u".Length;
-        private static readonly Regex RegexUtf8Short = new Regex(@"\\u([0-9A-Fa-f]{4})", RegexOptions.Compiled);
         private static readonly Regex RegexUtf8Long = new Regex(@"\\U([0-9A-Fa-f]{8})", RegexOptions.Compiled);
+        private static readonly Regex RegexUtf8Short = new Regex(@"\\u([0-9A-Fa-f]{4})", RegexOptions.Compiled);
+
+        public static string Escape(this string s)
+        {
+            if (string.IsNullOrEmpty(s)) { return s; }
+
+            StringBuilder sb = new StringBuilder(s.Length * 2);
+            for (int i = 0; i < s.Length; i++)
+            {
+                switch (s[i])
+                {
+                    case '\\': sb.Append(@"\\"); break;
+                    case '"': sb.Append(@"\"""); break;
+                    case '\b': sb.Append(@"\b"); break;
+                    case '\f': sb.Append(@"\f"); break;
+                    case '\t': sb.Append(@"\t"); break;
+                    case '\n': sb.Append(@"\n"); break;
+                    case '\r': sb.Append(@"\r"); break;
+                    default: sb.Append(s[i]); break;
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string TrimNChars(this string s, int n)
+        {
+            return s.Substring(0, s.Length - n).Substring(n);
+        }
 
         public static string Unescape(this string src, Token tkn)
         {
@@ -54,34 +82,6 @@ namespace Nett
             }
 
             return result;
-        }
-
-        public static string Escape(this string s)
-        {
-            if (string.IsNullOrEmpty(s)) { return s; }
-
-            StringBuilder sb = new StringBuilder(s.Length * 2);
-            for (int i = 0; i < s.Length; i++)
-            {
-                switch (s[i])
-                {
-                    case '\\': sb.Append(@"\\"); break;
-                    case '"': sb.Append(@"\"""); break;
-                    case '\b': sb.Append(@"\b"); break;
-                    case '\f': sb.Append(@"\f"); break;
-                    case '\t': sb.Append(@"\t"); break;
-                    case '\n': sb.Append(@"\n"); break;
-                    case '\r': sb.Append(@"\r"); break;
-                    default: sb.Append(s[i]); break;
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        public static string TrimNChars(this string s, int n)
-        {
-            return s.Substring(0, s.Length - n).Substring(n);
         }
     }
 }

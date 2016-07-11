@@ -1,17 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Nett.Parser.Productions
+﻿namespace Nett.Parser.Productions
 {
+    using System.Collections.Generic;
+
     internal static class TomlArrayTableProduction
     {
-        public static IList<string> TryApply(TokenBuffer tokens)
-        {
-            if (!tokens.TryExpectAt(0, TokenType.LBrac)) { return null; }
-            if (!tokens.TryExpectAt(1, TokenType.LBrac)) { return null; }
-
-            return Apply(tokens);
-        }
-
         public static IList<string> Apply(TokenBuffer tokens)
         {
             tokens.ExpectAndConsume(TokenType.LBrac);
@@ -23,6 +15,14 @@ namespace Nett.Parser.Productions
             tokens.ExpectAndConsume(TokenType.RBrac);
 
             return key;
+        }
+
+        public static IList<string> TryApply(TokenBuffer tokens)
+        {
+            if (!tokens.TryExpectAt(0, TokenType.LBrac)) { return null; }
+            if (!tokens.TryExpectAt(1, TokenType.LBrac)) { return null; }
+
+            return Apply(tokens);
         }
     }
 }

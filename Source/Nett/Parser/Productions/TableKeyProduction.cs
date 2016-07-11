@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Nett.Parser.Productions
+﻿namespace Nett.Parser.Productions
 {
+    using System.Collections.Generic;
+
     internal static class TableKeyProduction
     {
         public static IList<string> Apply(TokenBuffer tokens)

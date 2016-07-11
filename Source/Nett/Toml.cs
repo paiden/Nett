@@ -1,21 +1,21 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using Nett.Util;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+    using Nett.Util;
+
     public static class Toml
     {
+        private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
+
         public enum MergeCommentsMode
         {
             Overwrite,
             KeepNonEmpty,
             KeepAll,
         }
-
-        private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
 
         public static TomlTable Create() => Create(TomlConfig.DefaultInstance);
 
@@ -136,14 +136,30 @@ namespace Nett
 
         public static void WriteFile(TomlTable table, string filePath, MergeCommentsMode cm) =>
             WriteFileInternal(table, filePath, cm, TomlConfig.DefaultInstance);
+
         public static void WriteFile(TomlTable table, string filePath, MergeCommentsMode cm, TomlConfig config)
         {
             WriteFileInternal(table, filePath, cm, config);
         }
 
+        public static void WriteStream<T>(T obj, Stream output) =>
+            WriteStreamInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj), output);
+
+        public static void WriteStream<T>(T obj, Stream outStream, TomlConfig config) =>
+            WriteStreamInternal(TomlTable.RootTable.From(config, obj), outStream);
+
+        public static void WriteStream(TomlTable table, Stream outStream) =>
+            WriteStreamInternal(table, outStream);
+
+        public static string WriteString<T>(T obj) =>
+            WriteStringInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj));
+
+        public static string WriteString<T>(T obj, TomlConfig config) =>
+            WriteStringInternal(TomlTable.RootTable.From(config, obj));
+
         private static void WriteFileInternal(TomlTable table, string filePath, MergeCommentsMode cm, TomlConfig config)
         {
-            if (table == null) throw new ArgumentNullException(nameof(table));
+            if (table == null) { throw new ArgumentNullException(nameof(table)); }
             if (filePath == null) { throw new ArgumentNullException(nameof(filePath)); }
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
@@ -161,15 +177,6 @@ namespace Nett
             }
         }
 
-        public static void WriteStream<T>(T obj, Stream output) =>
-            WriteStreamInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj), output);
-
-        public static void WriteStream<T>(T obj, Stream outStream, TomlConfig config) =>
-            WriteStreamInternal(TomlTable.RootTable.From(config, obj), outStream);
-
-        public static void WriteStream(TomlTable table, Stream outStream) =>
-            WriteStreamInternal(table, outStream);
-
         private static void WriteStreamInternal(TomlTable table, Stream outStream)
         {
             if (table == null) { throw new ArgumentNullException(nameof(table)); }
@@ -180,12 +187,6 @@ namespace Nett
             tw.WriteToml(table);
             outStream.Position = 0;
         }
-
-        public static string WriteString<T>(T obj) =>
-            WriteStringInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj));
-
-        public static string WriteString<T>(T obj, TomlConfig config) =>
-            WriteStringInternal(TomlTable.RootTable.From(config, obj));
 
         private static string WriteStringInternal(TomlTable table)
         {

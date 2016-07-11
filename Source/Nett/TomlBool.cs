@@ -2,13 +2,12 @@
 {
     public sealed class TomlBool : TomlValue<bool>
     {
-        public override string ReadableTypeName => "bool";
-
         internal TomlBool(IMetaDataStore metaData, bool value)
             : base(metaData, value)
         {
-
         }
+
+        public override string ReadableTypeName => "bool";
 
         public override void Visit(ITomlObjectVisitor visitor)
         {
@@ -16,4 +15,3 @@
         }
     }
 }
-

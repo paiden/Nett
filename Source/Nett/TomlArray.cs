@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public sealed class TomlArray : TomlValue<TomlValue[]>
     {
-        private static readonly Type TomlArrayType = typeof(TomlArray);
         private static readonly Type ListType = typeof(IList);
         private static readonly Type ObjectType = typeof(object);
-
-        public override string ReadableTypeName => "array";
+        private static readonly Type TomlArrayType = typeof(TomlArray);
 
         internal TomlArray(IMetaDataStore metaData, params TomlValue[] values)
             : base(metaData, values)
@@ -22,13 +20,15 @@ namespace Nett
 
         public int Length => this.Value.Length;
 
+        public override string ReadableTypeName => "array";
+
         public TomlObject this[int index] => this.Value[index];
 
         public T Get<T>(int index) => this.Value[index].Get<T>();
 
         public override object Get(Type t)
         {
-            if (t== TomlArrayType) { return this; }
+            if (t == TomlArrayType) { return this; }
 
             if (t.IsArray)
             {
@@ -42,7 +42,6 @@ namespace Nett
 
                 return a;
             }
-
 
             if (!ListType.IsAssignableFrom(t))
             {
@@ -67,6 +66,7 @@ namespace Nett
         public TomlObject Last() => this.Value[this.Value.Length - 1];
 
         public IEnumerable<T> To<T>() => this.To<T>(TomlConfig.DefaultInstance);
+
         public IEnumerable<T> To<T>(TomlConfig config) => this.Value.Select((to) => to.Get<T>());
 
         public override void Visit(ITomlObjectVisitor visitor)

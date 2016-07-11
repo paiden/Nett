@@ -1,22 +1,22 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Nett
+﻿namespace Nett
 {
+    using System;
+    using System.Diagnostics;
+
     public abstract class TomlValue : TomlObject
     {
-        protected static readonly Type Int32Type = typeof(int);
-        protected static readonly Type Int16Type = typeof(short);
-        protected static readonly Type Int64Type = typeof(long);
+        protected static readonly Type BoolType = typeof(bool);
         protected static readonly Type CharType = typeof(char);
-        protected static readonly Type UInt16Type = typeof(ushort);
-        protected static readonly Type UInt32Type = typeof(uint);
+        protected static readonly Type DateTimeType = typeof(DateTime);
+        protected static readonly Type DoubleType = typeof(double);
+        protected static readonly Type FloatType = typeof(float);
+        protected static readonly Type Int16Type = typeof(short);
+        protected static readonly Type Int32Type = typeof(int);
+        protected static readonly Type Int64Type = typeof(long);
         protected static readonly Type StringType = typeof(string);
         protected static readonly Type TimespanType = typeof(TimeSpan);
-        protected static readonly Type FloatType = typeof(float);
-        protected static readonly Type DoubleType = typeof(double);
-        protected static readonly Type DateTimeType = typeof(DateTime);
-        protected static readonly Type BoolType = typeof(bool);
+        protected static readonly Type UInt16Type = typeof(ushort);
+        protected static readonly Type UInt32Type = typeof(uint);
 
         private static readonly Type[] IntTypes = new Type[]
             {
@@ -28,18 +28,17 @@ namespace Nett
         public TomlValue(IMetaDataStore metaData)
             : base(metaData)
         {
-
         }
 
         public static TomlValue ValueFrom(IMetaDataStore metaData, object val)
         {
             var targetType = val.GetType();
 
-            if (StringType == targetType)
+            if (targetType == StringType)
             {
                 return new TomlString(metaData, (string)val);
             }
-            else if (TimespanType == targetType)
+            else if (targetType == TimespanType)
             {
                 return new TomlTimeSpan(metaData, (TimeSpan)val);
             }
@@ -51,11 +50,11 @@ namespace Nett
             {
                 return new TomlInt(metaData, (long)Convert.ChangeType(val, Int64Type));
             }
-            else if (DateTimeType == targetType)
+            else if (targetType == DateTimeType)
             {
                 return new TomlDateTime(metaData, (DateTime)val);
             }
-            else if (BoolType == targetType)
+            else if (targetType == BoolType)
             {
                 return new TomlBool(metaData, (bool)val);
             }
@@ -64,7 +63,9 @@ namespace Nett
         }
 
         internal static bool CanCreateFrom(Type t) =>
-            t== StringType || t== TimespanType || IsFloatType(t) || IsIntegerType(t) || t== DateTimeType || t== BoolType;
+            t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType || t == BoolType;
+
+        private static bool IsFloatType(Type t) => t == DoubleType || t == FloatType;
 
         private static bool IsIntegerType(Type t)
         {
@@ -78,8 +79,6 @@ namespace Nett
 
             return false;
         }
-
-        private static bool IsFloatType(Type t) => t== DoubleType || t== FloatType;
     }
 
     [DebuggerDisplay("{value}:{typeof(T).FullName}")]
@@ -87,13 +86,14 @@ namespace Nett
     {
         private static readonly Type ValueType = typeof(T);
         private readonly T value;
-        public T Value => this.value;
 
         public TomlValue(IMetaDataStore metaData, T value)
             : base(metaData)
         {
             this.value = value;
         }
+
+        public T Value => this.value;
 
         public override object Get(Type t)
         {
