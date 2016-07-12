@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.UnitTests.Internal", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.UnitTests.Util", "..\..\Test\Nett.UnitTests.Util\Nett.UnitTests.Util.csproj", "{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.PerfTests", "..\..\Test\Nett.PerfTests\Nett.PerfTests.csproj", "{57E5A8B7-F789-4E16-AFFA-A78F5B460861}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,5 +65,6 @@ Global
 		{87AD5DA2-6146-4D1F-97B8-37C75F2B2BA5} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{914A6827-44CF-4E84-9A79-F6AB67FB6B20} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
+		{57E5A8B7-F789-4E16-AFFA-A78F5B460861} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 	EndGlobalSection
 EndGlobal
