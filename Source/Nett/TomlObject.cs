@@ -9,7 +9,9 @@
     public abstract class TomlObject
     {
         private static readonly Type EnumerableType = typeof(IEnumerable);
+
         private static readonly Type StringType = typeof(string);
+
         private IMetaDataStore metaData;
 
         internal TomlObject(IMetaDataStore metaData)
@@ -20,7 +22,23 @@
             this.Comments = new List<TomlComment>();
         }
 
+        [Flags]
+        public enum TomlObjectType
+        {
+            Bool,
+            Int,
+            Float,
+            String,
+            DateTime,
+            TimeSpan,
+            Array,
+            Table,
+            ArrayOfTables,
+        }
+
         public abstract string ReadableTypeName { get; }
+
+        public abstract TomlObjectType TomlType { get; }
 
         internal List<TomlComment> Comments { get; private set; }
 

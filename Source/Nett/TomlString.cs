@@ -24,6 +24,8 @@
 
         public override string ReadableTypeName => "string";
 
+        public override TomlObjectType TomlType => TomlObjectType.String;
+
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);

@@ -11,6 +11,8 @@
 
         public override string ReadableTypeName => "timespan";
 
+        public override TomlObjectType TomlType => TomlObjectType.TimeSpan;
+
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);

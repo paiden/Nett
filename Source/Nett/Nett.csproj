@@ -111,14 +111,15 @@
     <Compile Include="TomlInlineTableAttribute.cs" />
     <Compile Include="TomlInt.cs" />
     <Compile Include="TomlObject.cs" />
-    <Compile Include="TomlObjectVisitor.cs" />
     <Compile Include="TomlString.cs" />
     <Compile Include="TomlTable.cs" />
     <Compile Include="TomlTableArray.cs" />
     <Compile Include="TomlTableToTypedDictionaryConverter.cs" />
     <Compile Include="TomlTimeSpan.cs" />
     <Compile Include="TomlValue.cs" />
-    <Compile Include="TomlStreamWriter.cs" />
+    <Compile Include="Writer\TomlWriter.cs" />
+    <Compile Include="Writer\TomlInlineTableWriter.cs" />
+    <Compile Include="Writer\TomlTableWriter.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Util\FormattingStreamWriter.cs" />
   </ItemGroup>

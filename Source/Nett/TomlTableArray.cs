@@ -35,6 +35,8 @@
 
         public override string ReadableTypeName => "array of tables";
 
+        public override TomlObjectType TomlType => TomlObjectType.ArrayOfTables;
+
         public TomlTable this[int index] => this.items[index];
 
         public void Add(TomlTable table)

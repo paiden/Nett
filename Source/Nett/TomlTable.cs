@@ -63,6 +63,8 @@
 
         public TableTypes TableType { get; }
 
+        public override TomlObjectType TomlType => TomlObjectType.Table;
+
         internal bool IsDefined { get; set; }
 
         public TomlObject this[string key]
@@ -145,8 +147,7 @@
                 }
             }
 
-            tt.AddValues(allObjects);
-            tt.AddComplex(allObjects);
+            tt.AddScopeTypesLast(allObjects);
 
             return tt;
         }
@@ -223,55 +224,19 @@
             }
         }
 
-        private void AddComplex(List<Tuple<string, TomlObject>> allObjects)
-        {
-            var adder = new ComplexAdder(this);
-            this.AddViaAdder(adder, allObjects);
-        }
+        private static bool ScopeCreatingType(TomlObject obj) =>
+            obj.TomlType == TomlObjectType.Table || obj.TomlType == TomlObjectType.ArrayOfTables;
 
-        private void AddValues(List<Tuple<string, TomlObject>> allObjects)
+        private void AddScopeTypesLast(List<Tuple<string, TomlObject>> allObjects)
         {
-            var adder = new ValueAdder(this);
-            this.AddViaAdder(adder, allObjects);
-        }
-
-        private void AddViaAdder(Adder adder, List<Tuple<string, TomlObject>> allObjects)
-        {
-            foreach (var o in allObjects)
+            foreach (var a in allObjects.Where(o => !ScopeCreatingType(o.Item2)))
             {
-                adder.RowKey = o.Item1;
-                o.Item2.Visit(adder);
+                this.Add(a.Item1, a.Item2);
             }
-        }
 
-        private abstract class Adder : TomlObjectVisitor
-        {
-            public string RowKey { protected get; set; }
-        }
-
-        private sealed class ComplexAdder : Adder
-        {
-            public ComplexAdder(TomlTable target)
+            foreach (var a in allObjects.Where(o => ScopeCreatingType(o.Item2)))
             {
-                this.VisitTableArray = (rowTblArray) => target.Add(this.RowKey, rowTblArray);
-                this.VisitTable = (rowTbl) => target.Add(this.RowKey, rowTbl);
-            }
-        }
-
-        private sealed class ValueAdder : Adder
-        {
-            private readonly TomlTable target;
-
-            public ValueAdder(TomlTable target)
-            {
-                this.target = target;
-                this.VisitBool = (b) => target.Add(this.RowKey, b);
-                this.VisitArray = (a) => target.Add(this.RowKey, a);
-                this.VisitDateTime = (dt) => target.Add(this.RowKey, dt);
-                this.VisitFloat = (f) => target.Add(this.RowKey, f);
-                this.VisitInt = (i) => target.Add(this.RowKey, i);
-                this.VisitString = (s) => target.Add(this.RowKey, s);
-                this.VisitTimespan = (ts) => target.Add(this.RowKey, ts);
+                this.Add(a.Item1, a.Item2);
             }
         }
     }

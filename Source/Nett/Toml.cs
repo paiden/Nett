@@ -5,6 +5,7 @@
     using System.IO;
     using System.Text;
     using Nett.Util;
+    using Writer;
 
     public static class Toml
     {
@@ -172,7 +173,7 @@
             using (var fs = new FileStream(filePath, FileMode.Create))
             using (var sw = new FormattingStreamWriter(fs, CultureInfo.InvariantCulture))
             {
-                var writer = new TomlStreamWriter(sw, config);
+                var writer = new TomlTableWriter(sw, config);
                 writer.WriteToml(table);
             }
         }
@@ -183,7 +184,7 @@
             if (outStream == null) { throw new ArgumentNullException(nameof(outStream)); }
 
             var sw = new FormattingStreamWriter(outStream, CultureInfo.InvariantCulture);
-            var tw = new TomlStreamWriter(sw, table.MetaData.Config);
+            var tw = new TomlTableWriter(sw, table.MetaData.Config);
             tw.WriteToml(table);
             outStream.Position = 0;
         }
@@ -193,7 +194,7 @@
             using (var ms = new MemoryStream(1024))
             {
                 var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
-                var writer = new TomlStreamWriter(sw, table.MetaData.Config);
+                var writer = new TomlTableWriter(sw, table.MetaData.Config);
                 writer.WriteToml(table);
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);

@@ -9,6 +9,8 @@
 
         public override string ReadableTypeName => "float";
 
+        public override TomlObjectType TomlType => TomlObjectType.Float;
+
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);

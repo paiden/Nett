@@ -9,6 +9,8 @@
 
         public override string ReadableTypeName => "bool";
 
+        public override TomlObjectType TomlType => TomlObjectType.Bool;
+
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);

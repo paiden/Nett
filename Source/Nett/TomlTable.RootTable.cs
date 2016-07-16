@@ -29,8 +29,7 @@
                 }
             }
 
-            tt.AddValues(allObjects);
-            tt.AddComplex(allObjects);
+            tt.AddScopeTypesLast(allObjects);
 
             return tt;
         }

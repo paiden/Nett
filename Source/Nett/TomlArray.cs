@@ -22,6 +22,8 @@
 
         public override string ReadableTypeName => "array";
 
+        public override TomlObjectType TomlType => TomlObjectType.Array;
+
         public TomlObject this[int index] => this.Value[index];
 
         public T Get<T>(int index) => this.Value[index].Get<T>();

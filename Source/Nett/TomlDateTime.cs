@@ -18,6 +18,8 @@
 
         public override string ReadableTypeName => "date time";
 
+        public override TomlObjectType TomlType => TomlObjectType.DateTime;
+
         public override string ToString() => this.Value.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFK");
 
         public override void Visit(ITomlObjectVisitor visitor)

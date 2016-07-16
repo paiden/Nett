@@ -9,6 +9,8 @@
 
         public override string ReadableTypeName => "int";
 
+        public override TomlObjectType TomlType => TomlObjectType.Int;
+
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);
