@@ -64,11 +64,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReadAndMapTomlFileV1.cs" />
-    <Compile Include="ReadTomlFileV1.cs" />
+    <Compile Include="V1\ClassToTomlTablePerfTestsV1.cs" />
+    <Compile Include="V1\ReadAndMapTomlFileV1.cs" />
+    <Compile Include="V1\ReadTomlFileV1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TomlSource.cs" />
-    <Compile Include="TomlV1.cs" />
+    <Compile Include="V1\TomlV1.cs" />
+    <Compile Include="V1\WriteTomlTablePerfTestsV1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
