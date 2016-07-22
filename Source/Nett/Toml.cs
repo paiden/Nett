@@ -9,6 +9,8 @@
 
     public static class Toml
     {
+        public const string FileExtension = ".toml";
+
         private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
 
         public enum MergeCommentsMode

@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.UnitTests.Util", "..\.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.PerfTests", "..\..\Test\Nett.PerfTests\Nett.PerfTests.csproj", "{57E5A8B7-F789-4E16-AFFA-A78F5B460861}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma", "..\..\Source\Nett.Coma\Nett.Coma.csproj", "{A453AF50-8154-4766-84DD-9DB71E38BE0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma.Tests", "..\..\Test\Nett.Coma.UnitTests\Nett.Coma.Tests.csproj", "{973EB2FA-C2BA-4395-BB42-1632A602C5CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +60,14 @@ Global
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A453AF50-8154-4766-84DD-9DB71E38BE0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A453AF50-8154-4766-84DD-9DB71E38BE0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A453AF50-8154-4766-84DD-9DB71E38BE0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A453AF50-8154-4766-84DD-9DB71E38BE0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,5 +78,6 @@ Global
 		{914A6827-44CF-4E84-9A79-F6AB67FB6B20} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
+		{973EB2FA-C2BA-4395-BB42-1632A602C5CB} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 	EndGlobalSection
 EndGlobal
