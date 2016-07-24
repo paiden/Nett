@@ -216,11 +216,6 @@
             this.rows.Add(key, value);
         }
 
-        internal object Merge(TomlTable tt)
-        {
-            throw new NotImplementedException();
-        }
-
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {
             base.OverwriteCommentsWithCommentsFrom(src, overwriteWithEmpty);
