@@ -29,6 +29,10 @@
             return new TomlTable.RootTable(config);
         }
 
+        public static TomlTable Create<T>(T obj) => Create(obj, TomlConfig.DefaultInstance);
+
+        public static TomlTable Create<T>(T obj, TomlConfig config) => TomlTable.RootTable.From(config, obj);
+
         public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);
 
         public static T ReadFile<T>(string filePath, TomlConfig config)
