@@ -25,7 +25,7 @@
 
                 // Assert
                 var onDisk = Toml.ReadFile<SingleLevelConfig>(filePath);
-                beforeChangeValue.Should().NotBe(onDisk.IntValue, "otherwise the file had the same value as afater the change and we would test nothing here");
+                beforeChangeValue.Should().NotBe(onDisk.IntValue, "otherwise the file had the same value as after the change and we would test nothing here");
                 onDisk.IntValue.Should().Be(ExpectedNewValue);
             }
             finally
