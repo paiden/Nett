@@ -43,9 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComaConfig.cs" />
-    <Compile Include="FileConfig.cs" />
+    <Compile Include="FilePersistedConfig.cs" />
     <Compile Include="IPersistedConfig.cs" />
+    <Compile Include="MergedConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TomlTableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

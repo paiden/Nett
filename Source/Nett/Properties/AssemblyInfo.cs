@@ -30,5 +30,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyFileVersion("0.5.0")]
 [assembly: AssemblyInformationalVersion("0.5.0")]
 [assembly: CLSCompliant(true)]
+
 [assembly: InternalsVisibleTo("Nett.UnitTests.Internal")]
+[assembly: InternalsVisibleTo("Nett.Coma")]
 [assembly: InternalsVisibleTo("Nett.PerfTests")]

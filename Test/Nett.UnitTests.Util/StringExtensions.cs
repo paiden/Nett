@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Nett.UnitTests.Util
 {
@@ -16,5 +17,7 @@ namespace Nett.UnitTests.Util
 
         public static string StripWhitespace(this string s) =>
             s.Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
+
+        public static string TestRunUniqueName(this string s) => s + Guid.NewGuid();
     }
 }

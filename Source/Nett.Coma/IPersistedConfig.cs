@@ -1,11 +1,11 @@
 ﻿namespace Nett.Coma
 {
-    public interface IPersistedConfig<T>
+    public interface IPersistableConfig
     {
-        bool EnsureExists(T def);
+        bool EnsureExists(TomlTable content);
 
-        T Load();
+        TomlTable Load();
 
-        void Save(T cfg);
+        void Save(TomlTable content);
     }
 }

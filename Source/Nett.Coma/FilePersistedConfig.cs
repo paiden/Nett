@@ -2,7 +2,7 @@
 {
     using System.IO;
 
-    internal sealed class FileConfig<T> : IPersistedConfig<T>
+    internal sealed class FileConfig : IPersistableConfig
     {
         private readonly string filePath;
 
@@ -11,20 +11,20 @@
             this.filePath = filePath;
         }
 
-        public bool EnsureExists(T def)
+        public bool EnsureExists(TomlTable content)
         {
             if (!File.Exists(this.filePath))
             {
-                this.Save(def);
+                this.Save(content);
                 return true;
             }
 
             return false;
         }
 
-        public T Load() => Toml.ReadFile<T>(this.filePath);
+        public TomlTable Load() => Toml.ReadFile(this.filePath);
 
-        public void Save(T config)
+        public void Save(TomlTable config)
         {
             Toml.WriteFile(config, this.filePath);
         }
