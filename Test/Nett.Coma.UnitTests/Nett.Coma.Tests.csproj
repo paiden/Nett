@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsBase.cs" />
     <Compile Include="Unit\ComaConfigTests.cs" />
+    <Compile Include="Unit\TomlTableExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\Nett.Coma\Nett.Coma.csproj">
