@@ -32,18 +32,11 @@
         {
             Assert(this.configs.Count() > 0, AssertAtLeastOneConfig);
 
-            TomlTable merged = null;
+            TomlTable merged = this.configs.First().Load();
 
-            foreach (var c in this.configs)
+            foreach (var c in this.configs.Skip(1))
             {
-                if (merged == null)
-                {
-                    merged = c.Load();
-                }
-                else
-                {
-                    merged.OverwriteWithValuesFrom(c.Load());
-                }
+                merged.OverwriteWithValuesFrom(c.Load());
             }
 
             return merged;
