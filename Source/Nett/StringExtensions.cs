@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Text;
     using System.Text.RegularExpressions;
     using Nett.Parser;
@@ -11,6 +12,23 @@
         private static readonly int RegexOffset = @"\u".Length;
         private static readonly Regex RegexUtf8Long = new Regex(@"\\U([0-9A-Fa-f]{8})", RegexOptions.Compiled);
         private static readonly Regex RegexUtf8Short = new Regex(@"\\u([0-9A-Fa-f]{4})", RegexOptions.Compiled);
+
+        public static bool EnsureDirectoryExists(this string s)
+        {
+            var d = Path.GetDirectoryName(s);
+            if (string.IsNullOrWhiteSpace(d))
+            {
+                return false;
+            }
+
+            if (Directory.Exists(d))
+            {
+                return false;
+            }
+
+            Directory.CreateDirectory(d);
+            return true;
+        }
 
         public static string Escape(this string s)
         {

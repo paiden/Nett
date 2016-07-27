@@ -176,6 +176,8 @@
                 table.OverwriteCommentsWithCommentsFrom(existing, cm == MergeCommentsMode.KeepAll);
             }
 
+            filePath.EnsureDirectoryExists();
+
             using (var fs = new FileStream(filePath, FileMode.Create))
             using (var sw = new FormattingStreamWriter(fs, CultureInfo.InvariantCulture))
             {
