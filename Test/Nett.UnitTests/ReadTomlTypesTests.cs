@@ -214,6 +214,7 @@ trimmed in raw strings.
         [InlineData("d = 1979-05-27T07:32:00Z", "1979-05-27T07:32:00Z")]
         [InlineData("d = 1979-05-27T00:32:00-07:00", "1979-05-27T00:32:00-07:00")]
         [InlineData("d = 1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
+        [InlineData("d = 2000-01-01T00:00:00+01:00", "2000-01-01T00:00:00+01:00")]
         public void Deserialize_DatetTime_DeseriaizesCorrectly(string src, string expectedDate)
         {
             var date = DateTimeOffset.Parse(expectedDate);

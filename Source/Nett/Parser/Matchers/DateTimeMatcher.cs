@@ -38,7 +38,7 @@
                     return null;
                 }
             }
-            else if (cs.TryExpect('-'))
+            else if (cs.TryExpect('-') || cs.TryExpect('+'))
             {
                 sb.Append(cs.Consume());
 
