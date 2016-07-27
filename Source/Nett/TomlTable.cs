@@ -39,6 +39,15 @@
             table.Add(key, a);
             return a;
         }
+
+        public static TomlTable Add<T>(
+            this TomlTable table, string key, T obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
+            where T : class
+        {
+            var t = TomlTable.CreateFromClass(table.MetaData, obj, tableType);
+            table.Add(key, t);
+            return t;
+        }
     }
 
     public partial class TomlTable : TomlObject, ITomlTable
