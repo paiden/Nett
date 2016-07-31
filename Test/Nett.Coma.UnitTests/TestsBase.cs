@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests
 {
@@ -26,6 +27,21 @@ namespace Nett.Coma.Tests
             {
                 Debug.WriteLine("Failed to cleanup file:" + exc.ToString());
             }
+        }
+
+        protected static void CreateMergedTestAppConfig(out string mainFile, out string userFile)
+        {
+            mainFile = "initMainSettings".TestRunUniqueName(Toml.FileExtension);
+            userFile = "initUserSettings".TestRunUniqueName(Toml.FileExtension);
+
+            var main = TestData.TestAppSettings.GlobalSettings;
+            var userSettings = TestData.TestAppSettings.User1Settings;
+            var user = Toml.Create();
+            user.Add(nameof(main.User), userSettings);
+
+            // Act
+            Toml.WriteFile(main, mainFile);
+            Toml.WriteFile(user, userFile);
         }
     }
 }

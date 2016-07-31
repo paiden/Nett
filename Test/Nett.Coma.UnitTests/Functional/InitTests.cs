@@ -35,25 +35,20 @@ namespace Nett.Coma.Tests
         [FFact(FuncInitMergeConfig, "Create a file split config from a single object creates the two files and the are merged correctly")]
         public void Foo()
         {
-            string mainFile = "initMainSettings".TestRunUniqueName(Toml.FileExtension);
-            string userFile = "initUserSettings".TestRunUniqueName(Toml.FileExtension);
+            string mainFile = null;
+            string userFile = null;
 
             try
             {
                 // Arrange
-                var main = TestData.TestAppSettings.GlobalSettings;
-                var userSettings = TestData.TestAppSettings.User1Settings;
-                var user = Toml.Create();
-                user.Add(nameof(main.User), userSettings);
+                CreateMergedTestAppConfig(out mainFile, out userFile);
 
                 // Act
-                Toml.WriteFile(main, mainFile);
-                Toml.WriteFile(user, userFile);
                 var merged = ComaConfig.CreateMerged(() => new TestData.TestAppSettings(), mainFile, userFile);
 
                 // Assert
-                merged.Get(c => c.BinDir).Should().Be(main.BinDir);
-                merged.Get(c => c.User.UserName).Should().Be(userSettings.UserName);
+                merged.Get(c => c.BinDir).Should().Be(TestData.TestAppSettings.GlobalSettings.BinDir);
+                merged.Get(c => c.User.UserName).Should().Be(TestData.TestAppSettings.User1Settings.UserName);
             }
             finally
             {
