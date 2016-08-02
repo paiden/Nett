@@ -23,7 +23,7 @@ Install it via NuGet:
 |[Nett](https://www.nuget.org/packages/Nett/)| ![#](https://img.shields.io/nuget/v/Nett.svg)|
 |[Nett Strong Named](https://www.nuget.org/packages/Nett.StrongNamed/)| ![#](https://img.shields.io/nuget/v/Nett.StrongNamed.svg)|
 
-All common TOML operations are performed via the static class 'Nett.Toml'. Although there are other
+All common TOML operations are performed via the static class `Nett.Toml`. Although there are other
 types available from the library in general using that single type should be sufficient
 for most standard scenarios.
 
@@ -139,42 +139,69 @@ To make this work, we need to pass a custom configuration to the read method tha
 the type can be created. This is done the by:
 
 ```C#
-var myConfig = TomlConfig.Create()
-    .ConfigureType<ConfigurationWithDepdendency>()
-        .As.CreateWith(() => new ConfigurationWithDepdendency(new object()))
-    .Apply();
+var myConfig = TomlConfig.Create(cfg => cfg
+    .ConfigureType<ConfigurationWithDepdendency>(ct => ct
+        .CreateInstance(() => new ConfigurationWithDepdendency(new object()))));
 
-var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml", myConfig);
+var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn, myConfig);
 ```
 
 ## Reading & writing non TOML types
-TOML has a very limited set of supported types. So how can non supported types e.g.
-System.Guid be used in a object that has to be written to, or read from TOML?
-
-To support such scenarios you can register custom type converters for a type that
-tell Nett how a type can be converted from some arbitrary type to TOML vice versa.
-The following example shows how you register type converters for both reading and
-writing a GUID as TOML (you only need to register a converter for the operation you
-use):
+TOML has a very limited set of supported types. Assume you have some very simple CLR type
+used as the root table, that looks like:
 
 ```C#
-var obj = new TypeNotSupportedByToml() { SomeGuid = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606") };
-
-var myconfig = TomlConfig.Create()
-    .ConfigureType<Guid>()
-        .As.ConvertTo<TomlString>().As((g) => new TomlString(g.ToString()))
-        .And.ConvertFrom<TomlString>().As((s) => new Guid(s.Value))
-    .Apply();
-
-Toml.WriteFile(obj, "test.tml", myconfig);
-var read = Toml.ReadFile<TypeNotSupportedByToml>("test.tml", myconfig);
+public class NotSupportedRoot
+{
+    public Guid NotSupported { get; set; }
+}
 ```
 
-Note: If you execute the above code without type converters the code will not throw any exception.
-Instead you will get an empty Guid. This behavior is caused by the fact, that during writes every
-unknown type is treated as a TOML table and during read a TOML table is handled as a type that
-can be converted to any other type.
-Hopefully this somewhat strange behavior will improve in a future version of Nett.
+With the default configuration Nett would produce the following TOML content
+```
+
+[NotSupported]
+```
+
+So instead of writing the GUID as a table row for the root table, the property key will get 
+written as a new table key, but no rows will be added to the table. This is because Nett
+treats every type it cannot handle as a complex type and consequence produces a table
+from that type (this behavior should improve in future versions of Nett).
+
+But in this case this is not what we want. The expected behavior is, that the type 
+`Guid` simply gets serialized as a string and on read should be converted back to a Guid 
+automatically.
+
+This can be achieved by providing converters trough a custom TOML config for the write and
+read opertions.
+
+```C#
+var obj = new NotSupportedRoot()
+{
+    NotSupported = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606")
+};
+
+var config = TomlConfig.Create(cfg => cfg
+    .ConfigureType<Guid>(type => type
+        .WithConversionFor<TomlString>(convert => convert
+            .ToToml(custom => custom.ToString())
+            .FromToml(tmlString => Guid.Parse(tmlString.Value)))));
+
+Toml.WriteFile(obj, "test.tml", config);
+var read = Toml.ReadFile<NotSupportedRoot>("test.tml", config);
+```
+
+Using this custom configuration will produce the following TOML which is what one would expect.
+```
+NotSupported = "6836aa79-ac1c-4173-8c58-0de1791c8606"
+```
+
+Also the de-serialization will work because the conversion specified both directions. It is not
+required to specify both conversion directions. E.g. if you only write TOML files, the 'FromToml' part
+could be removed from the above code fragment.
+
+**Note:** Guids such a common type that there is simpler way to activate string conversions
+for them. See the chapter about 'conversion levels' and 'conversion sets' for more information.
 
 # Changelog
 2016-04-10: v0.4.2 (TOML 0.4.0)

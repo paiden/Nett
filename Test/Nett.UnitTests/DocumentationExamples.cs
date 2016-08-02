@@ -32,6 +32,11 @@ namespace Nett.UnitTests
         public string ServerAddress { get; set; }
     }
 
+    public class NotSupportedRoot
+    {
+        public Guid NotSupported { get; set; }
+    }
+
     public class TypeNotSupportedByToml
     {
         public Guid SomeGuid { get; set; }
@@ -131,9 +136,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             //In Documentation
             var myConfig = TomlConfig.Create(cfg => cfg
                 .ConfigureType<ConfigurationWithDepdendency>(ct => ct
-                    .CreateInstance(() => new ConfigurationWithDepdendency(new object()))
-                )
-            );
+                    .CreateInstance(() => new ConfigurationWithDepdendency(new object()))));
 
             var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn, myConfig);
 
@@ -144,18 +147,22 @@ ServerAddress = ""http://127.0.0.1:8080""
             config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        //[Fact]
+        [Fact]
         public void WriteGuidToml()
         {
-            var obj = new TypeNotSupportedByToml() { SomeGuid = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606") };
+            var obj = new NotSupportedRoot()
+            {
+                NotSupported = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606")
+            };
 
-            //.ConfigureType<Guid>()
-            //    .As.ConvertTo<TomlString>().As((g) => new TomlString(g.ToString()))
-            //    .And.ConvertFrom<TomlString>().As((s) => new Guid(s.Value))
-            //.Apply();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<Guid>(type => type
+                    .WithConversionFor<TomlString>(convert => convert
+                        .ToToml(custom => custom.ToString())
+                        .FromToml(tmlString => Guid.Parse(tmlString.Value)))));
 
-            Toml.WriteFile(obj, "test.tml");
-            var read = Toml.ReadFile<TypeNotSupportedByToml>("test.tml");
+            Toml.WriteFile(obj, "test.tml", config);
+            var read = Toml.ReadFile<NotSupportedRoot>("test.tml", config);
         }
     }
 }
