@@ -30,41 +30,6 @@
         {
         }
 
-        public static TomlValue ValueFrom(IMetaDataStore metaData, object val)
-        {
-            var targetType = val.GetType();
-
-            if (targetType == StringType)
-            {
-                return new TomlString(metaData, (string)val);
-            }
-            else if (targetType == TimespanType)
-            {
-                return new TomlTimeSpan(metaData, (TimeSpan)val);
-            }
-            else if (IsFloatType(targetType))
-            {
-                return new TomlFloat(metaData, (double)Convert.ChangeType(val, DoubleType));
-            }
-            else if (IsIntegerType(targetType))
-            {
-                return new TomlInt(metaData, (long)Convert.ChangeType(val, Int64Type));
-            }
-            else if (targetType == DateTimeType)
-            {
-                return new TomlDateTime(metaData, (DateTime)val);
-            }
-            else if (targetType == BoolType)
-            {
-                return new TomlBool(metaData, (bool)val);
-            }
-
-            throw new NotSupportedException(string.Format("Cannot create TOML value from '{0}'.", targetType.FullName));
-        }
-
-        internal static bool CanCreateFrom(Type t) =>
-            t == StringType || t == TimespanType || IsFloatType(t) || IsIntegerType(t) || t == DateTimeType || t == BoolType;
-
         private static bool IsFloatType(Type t) => t == DoubleType || t == FloatType;
 
         private static bool IsIntegerType(Type t)

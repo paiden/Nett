@@ -6,50 +6,56 @@
 
     public sealed partial class TomlConfig
     {
-        private static readonly List<ITomlConverter> DotNetExplicitConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> CastingConverters = new List<ITomlConverter>()
         {
-            // TomlFloat to *
-            new TomlConverter<TomlFloat, TomlInt>((m, f) => new TomlInt(m, (int)f.Value)),
+            // TOML -> CLR
+            // TomlFloat -> *
             new TomlConverter<TomlFloat, long>((m, f) => (long)f.Value),
+            new TomlConverter<TomlFloat, ulong>((m, f) => (ulong)f.Value),
             new TomlConverter<TomlFloat, int>((m, f) => (int)f.Value),
+            new TomlConverter<TomlFloat, uint>((m, f) => (uint)f.Value),
             new TomlConverter<TomlFloat, short>((m, f) => (short)f.Value),
+            new TomlConverter<TomlFloat, ushort>((m, f) => (ushort)f.Value),
             new TomlConverter<TomlFloat, char>((m, f) => (char)f.Value),
+            new TomlConverter<TomlFloat, byte>((m, f) => (byte)f.Value),
+            new TomlConverter<TomlFloat, float>((m, f) => (float)f.Value),
 
-            // TomlInt to *
-        };
-
-        private static readonly List<ITomlConverter> DotNetImplicitConverters = new List<ITomlConverter>()
-        {
-            // Int to float
+            // TomlInt -> *
+            new TomlConverter<TomlInt, ulong>((m, i) => (ulong)i.Value),
+            new TomlConverter<TomlInt, int>((m, i) => (int)i.Value),
+            new TomlConverter<TomlInt, uint>((m, i) => (uint)i.Value),
+            new TomlConverter<TomlInt, short>((m, i) => (short)i.Value),
+            new TomlConverter<TomlInt, ushort>((m, i) => (ushort)i.Value),
+            new TomlConverter<TomlInt, char>((m, i) => (char)i.Value),
+            new TomlConverter<TomlInt, byte>((m, i) => (byte)i.Value),
             new TomlConverter<TomlInt, float>((m, i) => i.Value),
             new TomlConverter<TomlInt, double>((m, i) => i.Value),
-            new TomlConverter<TomlInt, TomlFloat>((m, i) => new TomlFloat(m, i.Value)),
-        };
+
+            // CLR -> TOML
+            // * -> TomlInt
+            new TomlConverter<ulong, TomlInt>((m, v) => new TomlInt(m, (long)v)),
+            new TomlConverter<int, TomlInt>((m, v) => new TomlInt(m, v)),
+            new TomlConverter<short, TomlInt>((m, v) => new TomlInt(m, v)),
+            new TomlConverter<ushort, TomlInt>((m, v) => new TomlInt(m, v)),
+            new TomlConverter<char, TomlInt>((m, v) => new TomlInt(m, v)),
+            new TomlConverter<byte, TomlInt>((m, v) => new TomlInt(m, v)),
+
+            // * -> TomlFloat
+            new TomlConverter<float, TomlFloat>((m, v) => new TomlFloat(m, v)),
+        }
+            .AddBidirectionalConverter<TomlInt, TomlFloat>((m, f) => new TomlInt(m, (long)f.Value), (m, i) => new TomlFloat(m, i.Value))
+            .AddBidirectionalConverter<TomlDateTime, DateTime>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value.UtcDateTime);
 
         private static readonly List<ITomlConverter> EquivalentConverters = new List<ITomlConverter>()
+            .AddBidirectionalConverter<TomlInt, long>((m, c) => new TomlInt(m, c), (m, t) => t.Value)
+            .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)
+            .AddBidirectionalConverter<TomlString, string>((m, c) => new TomlString(m, c), (m, t) => t.Value)
+            .AddBidirectionalConverter<TomlDateTime, DateTimeOffset>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value)
+            .AddBidirectionalConverter<TomlTimeSpan, TimeSpan>((m, c) => new TomlTimeSpan(m, c), (m, t) => t.Value)
+            .AddBidirectionalConverter<TomlBool, bool>((m, c) => new TomlBool(m, c), (m, t) => t.Value);
+
+        private static readonly List<ITomlConverter> ParseConverters = new List<ITomlConverter>()
         {
-            new TomlConverter<TomlInt, long>((m, t) => (long)t.Value),
-            new TomlConverter<TomlFloat, double>((m, t) => t.Value),
-            new TomlConverter<TomlString, string>((m, t) => t.Value),
-            new TomlConverter<TomlDateTime, DateTimeOffset>((m, t) => t.Value),
-            new TomlConverter<TomlTimeSpan, TimeSpan>((m, t) => t.Value),
-            new TomlConverter<TomlBool, bool>((m, t) => t.Value)
-        };
-
-        private static readonly List<ITomlConverter> MatchingConverters = new List<ITomlConverter>()
-        {
-            // TomlInt to integer types
-            new TomlConverter<TomlInt, char>((m, t) => (char)t.Value),
-            new TomlConverter<TomlInt, byte>((m, t) => (byte)t.Value),
-            new TomlConverter<TomlInt, int>((m, t) => (int)t.Value),
-            new TomlConverter<TomlInt, short>((m, t) => (short)t.Value),
-
-            // TomlFloat to floating point types
-            new TomlConverter<TomlFloat, float>((m, t) => (float)t.Value),
-
-            // TomlDateTime to 'simpler' datetime
-            new TomlConverter<TomlDateTime, DateTime>((m, t) => t.Value.UtcDateTime),
-
             // TomlStrings <-> enums
             new TomlToEnumConverter(),
             new EnumToTomlConverter(),
@@ -57,25 +63,22 @@
             // Dict <-> TomlTable
             new TomlTableToDictionaryConverter(),
             new TomlTableToTypedDictionaryConverter(),
-        };
+        }
+        .AddBidirectionalConverter<TomlString, Guid>((m, c) => new TomlString(m, c.ToString("D")), (m, t) => Guid.Parse(t.Value));
 
         public enum ConversionLevel
         {
             Strict = ConversionSets.Equivalent,
-            Matching = Strict | ConversionSets.Matching,
-            DotNetImplicit = Matching | ConversionSets.DotNetImplicit,
-            DotNetExplicit = DotNetImplicit | ConversionSets.DotNetExplicit,
-            Parse = DotNetExplicit | ConversionSets.Parse,
+            Cast = Strict | ConversionSets.Cast,
+            Convert = Cast | ConversionSets.Convert,
         }
 
         [Flags]
         public enum ConversionSets
         {
             Equivalent = 1 << 0,
-            Matching = 1 << 1,
-            DotNetImplicit = 1 << 2,
-            DotNetExplicit = 1 << 3,
-            Parse = 1 << 4,
+            Cast = 1 << 1,
+            Convert = 1 << 2,
         }
 
         public interface IConfigureTypeBuilder<TCustom>
@@ -176,7 +179,7 @@
                 Assert(config != null);
 
                 this.config = config;
-                const ConversionLevel DefaultConversionSettings = ConversionLevel.Matching;
+                const ConversionLevel DefaultConversionSettings = ConversionLevel.Convert;
                 this.AllowImplicitConversions(DefaultConversionSettings);
             }
 
@@ -217,24 +220,16 @@
             {
                 Assert(this.allowedConversions != 0);
 
-                if (this.allowedConversions.HasFlag(ConversionSets.DotNetExplicit))
+                this.config.converters.AddRange(EquivalentConverters);
+
+                if (this.allowedConversions.HasFlag(ConversionSets.Cast))
                 {
-                    this.config.converters.AddRange(DotNetExplicitConverters);
+                    this.config.converters.AddRange(CastingConverters);
                 }
 
-                if (this.allowedConversions.HasFlag(ConversionSets.DotNetImplicit))
+                if (this.allowedConversions.HasFlag(ConversionSets.Convert))
                 {
-                    this.config.converters.AddRange(DotNetImplicitConverters);
-                }
-
-                if (this.allowedConversions.HasFlag(ConversionSets.Matching))
-                {
-                    this.config.converters.AddRange(MatchingConverters);
-                }
-
-                if (this.allowedConversions.HasFlag(ConversionSets.Equivalent))
-                {
-                    this.config.converters.AddRange(EquivalentConverters);
+                    this.config.converters.AddRange(ParseConverters);
                 }
             }
 
@@ -276,6 +271,20 @@
                 conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.converters));
                 return this;
             }
+        }
+    }
+
+    internal static class CreateBindingExtensions
+    {
+        public static List<ITomlConverter> AddBidirectionalConverter<TToml, TClr>(
+            this List<ITomlConverter> converterlist,
+            Func<IMetaDataStore, TClr, TToml> toToml,
+            Func<IMetaDataStore, TToml, TClr> toClr)
+            where TToml : TomlObject
+        {
+            converterlist.Add(new TomlConverter<TToml, TClr>(toClr));
+            converterlist.Add(new TomlConverter<TClr, TToml>(toToml));
+            return converterlist;
         }
     }
 }

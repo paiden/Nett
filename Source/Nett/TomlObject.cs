@@ -67,10 +67,6 @@
             {
                 return CreateArrayType(metaData, (IEnumerable)val);
             }
-            else if (TomlValue.CanCreateFrom(t))
-            {
-                return TomlValue.ValueFrom(metaData, val);
-            }
             else
             {
                 var tableType = metaData.Config.GetTableType(pi);
@@ -111,21 +107,13 @@
                         throw new NotSupportedException($"Cannot create array type from enumerable with element type {et.FullName}");
                     }
                 }
-                else if (TomlValue.CanCreateFrom(et))
-                {
-                    var values = e.Select((o) => TomlValue.ValueFrom(metaData, o));
-                    return new TomlArray(metaData, values.ToArray());
-                }
                 else
                 {
                     return new TomlTableArray(metaData, e.Select((o) => TomlTable.CreateFromClass(metaData, o)));
                 }
             }
-            else
-            {
-                var values = e.Select((o) => TomlValue.ValueFrom(metaData, o));
-                return new TomlArray(metaData, values.ToArray());
-            }
+
+            return new TomlArray(metaData);
         }
     }
 }

@@ -251,109 +251,6 @@ Foo3 = [""A""]";
             }
         }
 
-        public static IEnumerable<object[]> SameNumericCategoryImplicitConversionTestData
-        {
-            get
-            {
-                // TomlFloat
-                // +
-                yield return new object[] { "a0", "v=1.1", new Func<TomlTable, object>(t => t.Get<double>("v")), true };
-                yield return new object[] { "a1", "v=1.1", new Func<TomlTable, object>(t => t.Get<TomlFloat>("v")), true };
-                yield return new object[] { "b1", "v=1.1", new Func<TomlTable, object>(t => t.Get<float>("v")), true };
-                // -
-
-                yield return new object[] { "b2", "v=1.1", new Func<TomlTable, object>(t => t.Get<int>("v")), false };
-                yield return new object[] { "b3", "v=1.1", new Func<TomlTable, object>(t => t.Get<string>("v")), false };
-                yield return new object[] { "b4", "v=1.1", new Func<TomlTable, object>(t => t.Get<TomlString>("v")), false };
-
-                // TomlInt
-                yield return new object[] { "c1", "v=1", new Func<TomlTable, object>(t => t.Get<long>("v")), true };
-                yield return new object[] { "c2", "v=1", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), true };
-                yield return new object[] { "c3", "v=1", new Func<TomlTable, object>(t => t.Get<int>("v")), true };
-                yield return new object[] { "c4", "v=1", new Func<TomlTable, object>(t => t.Get<short>("v")), true };
-                yield return new object[] { "c5", "v=1", new Func<TomlTable, object>(t => t.Get<char>("v")), true };
-
-                // -
-                yield return new object[] { "c6", "v=1", new Func<TomlTable, object>(t => t.Get<TomlString>("v")), false };
-                yield return new object[] { "d0", "v=1", new Func<TomlTable, object>(t => t.Get<bool>("v")), false };
-                yield return new object[] { "d1", "v=1", new Func<TomlTable, object>(t => t.Get<TomlBool>("v")), false };
-                yield return new object[] { "d2", "v=1", new Func<TomlTable, object>(t => t.Get<float>("v")), false };
-                yield return new object[] { "d3", "v=1", new Func<TomlTable, object>(t => t.Get<TomlFloat>("v")), false };
-            }
-        }
-
-        [Theory(DisplayName = "Getting value when same numeric category implicit conversions are activated only that conversions will work others will fail")]
-        [MemberData(nameof(SameNumericCategoryImplicitConversionTestData))]
-        public void ReadToml_Exact_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
-        {
-            // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.Matching, s);
-
-            // Act
-            Action a = () => read(tbl);
-
-            // Assert
-            if (shouldWork)
-            {
-                a.ShouldNotThrow();
-            }
-            else
-            {
-                a.ShouldThrow<Exception>();
-            }
-        }
-
-        public static IEnumerable<object[]> DotNetImplicitImplicitConversionsTestData
-        {
-            get
-            {
-                // TomlFloat
-                // +
-                yield return new object[] { "a0", "v=1.1", new Func<TomlTable, object>(t => t.Get<double>("v")), true };
-                yield return new object[] { "a1", "v=1.1", new Func<TomlTable, object>(t => t.Get<TomlFloat>("v")), true };
-                yield return new object[] { "a2", "v=1.1", new Func<TomlTable, object>(t => t.Get<float>("v")), true };
-                // -
-                yield return new object[] { "b0", "v=1.1", new Func<TomlTable, object>(t => t.Get<int>("v")), false };
-                yield return new object[] { "b1", "v=1.1", new Func<TomlTable, object>(t => t.Get<string>("v")), false };
-                yield return new object[] { "b2", "v=1.1", new Func<TomlTable, object>(t => t.Get<TomlString>("v")), false };
-
-                // TomlInt
-                yield return new object[] { "c1", "v=1", new Func<TomlTable, object>(t => t.Get<long>("v")), true };
-                yield return new object[] { "c2", "v=1", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), true };
-                yield return new object[] { "c3", "v=1", new Func<TomlTable, object>(t => t.Get<int>("v")), true };
-                yield return new object[] { "c4", "v=1", new Func<TomlTable, object>(t => t.Get<short>("v")), true };
-                yield return new object[] { "c5", "v=1", new Func<TomlTable, object>(t => t.Get<char>("v")), true };
-                yield return new object[] { "c6", "v=1", new Func<TomlTable, object>(t => t.Get<float>("v")), true };
-                yield return new object[] { "c7", "v=1", new Func<TomlTable, object>(t => t.Get<double>("v")), true };
-                yield return new object[] { "c8", "v=1", new Func<TomlTable, object>(t => t.Get<TomlFloat>("v")), true };
-                // -
-                yield return new object[] { "d0", "v=1", new Func<TomlTable, object>(t => t.Get<TomlString>("v")), false };
-                yield return new object[] { "d1", "v=1", new Func<TomlTable, object>(t => t.Get<bool>("v")), false };
-                yield return new object[] { "d2", "v=1", new Func<TomlTable, object>(t => t.Get<TomlBool>("v")), false };
-            }
-        }
-
-        [Theory(DisplayName = "Getting value when precise implicit conversions are activated only that conversions will work others will fail")]
-        [MemberData(nameof(DotNetImplicitImplicitConversionsTestData))]
-        public void ReadToml_Precise_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
-        {
-            // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.DotNetImplicit, s);
-
-            // Act
-            Action a = () => read(tbl);
-
-            // Assert
-            if (shouldWork)
-            {
-                a.ShouldNotThrow();
-            }
-            else
-            {
-                a.ShouldThrow<Exception>();
-            }
-        }
-
         [Fact(DisplayName = "Using converters allows strings in TOML file to be read as char array from generic TOML table")]
         public void ConverterAllowsStringInTomlFileToBeReadAsCharArray()
         {
@@ -417,7 +314,7 @@ Foo3 = [""A""]";
         public void ReadToml_ExplicitDotNetImplicit_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.DotNetExplicit, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.Convert, s);
 
             // Act
             Action a = () => read(tbl);
@@ -442,7 +339,7 @@ Foo3 = [""A""]";
         {
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
-                .AllowImplicitConversions(TomlConfig.ConversionLevel.DotNetImplicit)
+                .AllowImplicitConversions(TomlConfig.ConversionLevel.Convert)
             );
 
             string abc = "SomeFloat = 1" + Environment.NewLine;
@@ -460,7 +357,7 @@ Foo3 = [""A""]";
         {
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
-                .AllowImplicitConversions(TomlConfig.ConversionLevel.DotNetImplicit)
+                .AllowImplicitConversions(TomlConfig.ConversionLevel.Convert)
             );
 
             string abc = "SomeFloat = 1" + Environment.NewLine;
