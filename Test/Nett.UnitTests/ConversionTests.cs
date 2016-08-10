@@ -370,6 +370,37 @@ Foo3 = [""A""]";
             val.Should().Be(1.0);
         }
 
+        [Fact(DisplayName = "Default config is able to automatically read TOML string as GUID")]
+        public void ReadToml_WhenTomlStringIsGuid_CanAutomaticallyConvertToGuid()
+        {
+            // Arrange
+            Guid g = Guid.NewGuid();
+            var read = Toml.ReadString($"g = '{g}'");
+
+            // Act
+            var rg = read.Get<Guid>("g");
+
+            // Assert
+            rg.Should().Be(g);
+        }
+
+        [Theory(DisplayName = "Config levels below 'Convert' cannot handle GUID / TOML string conversion automatically")]
+        [InlineData(TomlConfig.ConversionLevel.Strict)]
+        [InlineData(TomlConfig.ConversionLevel.Cast)]
+        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlConfig.ConversionLevel lvl)
+        {
+            // Arrange
+            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(lvl));
+            Guid g = Guid.NewGuid();
+            var read = Toml.ReadString($"g = '{g}'", cfg);
+
+            // Act
+            Action a = () => read.Get<Guid>("g");
+
+            // Assert
+            a.ShouldThrow<InvalidOperationException>();
+        }
+
         // This test doesn't test anything, it just checks that the conversion specialization extension methods
         // exist for all TOML primitives => compile error, something broke
         public void AllTypeConversionSupportedByConverterApi()
