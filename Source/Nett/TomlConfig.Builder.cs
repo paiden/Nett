@@ -25,8 +25,6 @@
         {
             ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets);
 
-            ITomlConfigBuilder AllowImplicitConversions(ConversionLevel level);
-
             ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch);
 
             ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct);
@@ -104,19 +102,12 @@
                 Assert(config != null);
 
                 this.config = config;
-                const ConversionLevel DefaultConversionSettings = ConversionLevel.Convert;
-                this.AllowImplicitConversions(DefaultConversionSettings);
+                this.AllowImplicitConversions(ConversionSets.All);
             }
 
             public ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets)
             {
                 this.allowedConversions = sets;
-                return this;
-            }
-
-            public ITomlConfigBuilder AllowImplicitConversions(ConversionLevel level)
-            {
-                this.allowedConversions = (ConversionSets)level;
                 return this;
             }
 
@@ -145,16 +136,16 @@
             {
                 Assert(this.allowedConversions != 0);
 
-                this.config.converters.AddRange(EquivalentConverters);
+                this.config.converters.AddRange(StrictConverters);
 
                 if (this.allowedConversions.HasFlag(ConversionSets.Cast))
                 {
-                    this.config.converters.AddRange(CastingConverters);
+                    this.config.converters.AddRange(CastConverters);
                 }
 
                 if (this.allowedConversions.HasFlag(ConversionSets.Convert))
                 {
-                    this.config.converters.AddRange(ParseConverters);
+                    this.config.converters.AddRange(ConvertConverters);
                 }
             }
 

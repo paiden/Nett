@@ -86,7 +86,7 @@
 
     public sealed partial class TomlConfig
     {
-        private static readonly List<ITomlConverter> CastingConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> CastConverters = new List<ITomlConverter>()
         {
             // TOML -> CLR
             // TomlFloat -> *
@@ -126,7 +126,7 @@
             .AddBidirectionalConverter<TomlInt, TomlFloat>((m, f) => new TomlInt(m, (long)f.Value), (m, i) => new TomlFloat(m, i.Value))
             .AddBidirectionalConverter<TomlDateTime, DateTime>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value.UtcDateTime);
 
-        private static readonly List<ITomlConverter> EquivalentConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> StrictConverters = new List<ITomlConverter>()
             .AddBidirectionalConverter<TomlInt, long>((m, c) => new TomlInt(m, c), (m, t) => t.Value)
             .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)
             .AddBidirectionalConverter<TomlString, string>((m, c) => new TomlString(m, c), (m, t) => t.Value)
@@ -134,7 +134,7 @@
             .AddBidirectionalConverter<TomlTimeSpan, TimeSpan>((m, c) => new TomlTimeSpan(m, c), (m, t) => t.Value)
             .AddBidirectionalConverter<TomlBool, bool>((m, c) => new TomlBool(m, c), (m, t) => t.Value);
 
-        private static readonly List<ITomlConverter> ParseConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> ConvertConverters = new List<ITomlConverter>()
         {
             // TomlStrings <-> enums
             new TomlToEnumConverter(),
@@ -146,19 +146,14 @@
         }
         .AddBidirectionalConverter<TomlString, Guid>((m, c) => new TomlString(m, c.ToString("D")), (m, t) => Guid.Parse(t.Value));
 
-        public enum ConversionLevel
-        {
-            Strict = ConversionSets.Equivalent,
-            Cast = Strict | ConversionSets.Cast,
-            Convert = Cast | ConversionSets.Convert,
-        }
-
         [Flags]
         public enum ConversionSets
         {
-            Equivalent = 1 << 0,
+            Strict = 1 << 0,
             Cast = 1 << 1,
             Convert = 1 << 2,
+
+            All = Strict | Cast | Convert,
         }
     }
 

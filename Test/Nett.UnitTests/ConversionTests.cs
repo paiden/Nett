@@ -191,7 +191,7 @@ Foo3 = [""A""]";
 
 
 
-        private static TomlTable SetupConversionSetTest(TomlConfig.ConversionLevel set, string tomlInput)
+        private static TomlTable SetupConversionSetTest(TomlConfig.ConversionSets set, string tomlInput)
         {
             var config = TomlConfig.Create(cfg => cfg
                 .AllowImplicitConversions(set)
@@ -236,7 +236,7 @@ Foo3 = [""A""]";
         public void ReadToml_Equivalent_AllowsConversionFromTomlIntToFloat(string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.Strict, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionSets.Strict, s);
 
             Action a = () => read(tbl);
 
@@ -314,7 +314,7 @@ Foo3 = [""A""]";
         public void ReadToml_ExplicitDotNetImplicit_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionLevel.Convert, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionSets.All, s);
 
             // Act
             Action a = () => read(tbl);
@@ -339,7 +339,7 @@ Foo3 = [""A""]";
         {
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
-                .AllowImplicitConversions(TomlConfig.ConversionLevel.Convert)
+                .AllowImplicitConversions(TomlConfig.ConversionSets.All)
             );
 
             string abc = "SomeFloat = 1" + Environment.NewLine;
@@ -357,7 +357,7 @@ Foo3 = [""A""]";
         {
             // Arrange
             var config = TomlConfig.Create(cfg => cfg
-                .AllowImplicitConversions(TomlConfig.ConversionLevel.Convert)
+                .AllowImplicitConversions(TomlConfig.ConversionSets.All)
             );
 
             string abc = "SomeFloat = 1" + Environment.NewLine;
@@ -385,12 +385,12 @@ Foo3 = [""A""]";
         }
 
         [Theory(DisplayName = "Config levels below 'Convert' cannot handle GUID / TOML string conversion automatically")]
-        [InlineData(TomlConfig.ConversionLevel.Strict)]
-        [InlineData(TomlConfig.ConversionLevel.Cast)]
-        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlConfig.ConversionLevel lvl)
+        [InlineData(TomlConfig.ConversionSets.Strict)]
+        [InlineData(TomlConfig.ConversionSets.Cast)]
+        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlConfig.ConversionSets set)
         {
             // Arrange
-            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(lvl));
+            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(set));
             Guid g = Guid.NewGuid();
             var read = Toml.ReadString($"g = '{g}'", cfg);
 
