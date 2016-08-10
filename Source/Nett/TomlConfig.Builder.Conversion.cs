@@ -149,11 +149,12 @@
         [Flags]
         public enum ConversionSets
         {
-            Strict = 1 << 0,
-            Cast = 1 << 1,
-            Convert = 1 << 2,
+            None = 0,
 
-            All = Strict | Cast | Convert,
+            Cast = 1 << 0,
+            Convert = 1 << 1,
+
+            All = Cast | Convert,
         }
     }
 

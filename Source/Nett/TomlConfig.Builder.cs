@@ -134,8 +134,6 @@
 
             public void SetupDefaultConverters()
             {
-                Assert(this.allowedConversions != 0);
-
                 this.config.converters.AddRange(StrictConverters);
 
                 if (this.allowedConversions.HasFlag(ConversionSets.Cast))

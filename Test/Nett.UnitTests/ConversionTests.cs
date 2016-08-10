@@ -236,7 +236,7 @@ Foo3 = [""A""]";
         public void ReadToml_Equivalent_AllowsConversionFromTomlIntToFloat(string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionSets.Strict, s);
+            var tbl = SetupConversionSetTest(TomlConfig.ConversionSets.None, s);
 
             Action a = () => read(tbl);
 
@@ -384,13 +384,11 @@ Foo3 = [""A""]";
             rg.Should().Be(g);
         }
 
-        [Theory(DisplayName = "Config levels below 'Convert' cannot handle GUID / TOML string conversion automatically")]
-        [InlineData(TomlConfig.ConversionSets.Strict)]
-        [InlineData(TomlConfig.ConversionSets.Cast)]
-        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlConfig.ConversionSets set)
+        [Theory(DisplayName = "Config set 'Cast' cannot handle GUID / TOML string conversion automatically")]
+        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically()
         {
             // Arrange
-            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(set));
+            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(TomlConfig.ConversionSets.Cast));
             Guid g = Guid.NewGuid();
             var read = Toml.ReadString($"g = '{g}'", cfg);
 
