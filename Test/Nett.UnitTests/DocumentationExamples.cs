@@ -38,8 +38,8 @@ namespace Nett.UnitTests
         public string Currency { get; set; }
         public decimal Ammount { get; set; }
 
-        public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(';')[0]), Currency = s.Split(';')[1] };
-        public override string ToString() => Invariant($"{this.Ammount};{this.Currency}");
+        public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(' ')[0]), Currency = s.Split(' ')[1] };
+        public override string ToString() => Invariant($"{this.Ammount} {this.Currency}");
     }
 
     public class TableContainingMoney
@@ -180,6 +180,27 @@ ServerAddress = ""http://127.0.0.1:8080""
             //var config = TomlConfig.Create();
             var s = Toml.WriteString(obj, config);
             var read = Toml.ReadString<TableContainingMoney>(s, config);
+        }
+
+        [Fact]
+        public void ActivateAll()
+        {
+            var config = TomlConfig.Create(cfg => cfg.AllowImplicitConversions(TomlConfig.ConversionSets.All));
+            var tbl = Toml.ReadString("f = 0.99", config);
+            var i = tbl.Get<int>("f");
+
+            i.Should().Be(0);
+        }
+
+        [Fact]
+        public void ActivateNone()
+        {
+            var config = TomlConfig.Create(cfg => cfg.AllowImplicitConversions(TomlConfig.ConversionSets.None));
+            var tbl = Toml.ReadString("i = 1", config);
+            // var i = tbl.Get<int>("i"); // Would throw InvalidOperationException as event cast from TomlInt to int is not allowed
+            var i = tbl.Get<long>("i"); // Only this will work
+
+            i.Should().Be(1);
         }
     }
 }

@@ -108,20 +108,20 @@ these methods that allow to associate a custom configuration. Once a table
 is associated with a custom configuration this association cannot be changed
 for that table instance.
 
-Also for the `Write` operation a config object can be specified. But this configuration
-will not get associated with the table. This config will only be used temporary 
-during the write operation. If not config is specified for the write operation,
-the associated config will be used to perform all write operations.
+Also for the `Write` operation a config object can be specified. But, that configuration
+will not get associated with the table. It will only be used temporary 
+during the write operation. If no config is specified for the write operation,
+the table associated config will be used to perform all write operations.
 
 To create a new configuration do the following:
 ```C#
 var myConfig = TomlConfig.Create();
 ```
 
-This will create a copy of the default configuration. The default configuration can be modified
+This will create a copy of the default configuration. The copy can be modified
 via a fluent configuration API.
 
-The following sections will show this API can be used to support various use cases.
+The following sections will show how this API can be used to support various use cases.
 
 ## Deserializing types without default constructor
 If your type doesn't have a default constructor or is not constructible (interface or abstract
@@ -161,27 +161,63 @@ var myConfig = TomlConfig.Create(cfg => cfg
     .ConfigureType<ConfigurationWithDepdendency>(ct => ct
         .CreateInstance(() => new ConfigurationWithDepdendency(new object()))));
 
-var config = Toml.ReadFile<ConfigurationWithDepdendency>(fn, myConfig);
+var config = Toml.ReadFile<ConfigurationWithDepdendency>("test.tml", myConfig);
 ```
 
 ## Allowing / disallowing implicit conversions between types
 
-The default 'TOML' configuration allows a lot of implicit type conversions. These conversion are
-provided by two distinct conversion sets that are activated by default. These sets are:
+'Nett' defines the following standard conversion sets that be activated/deactivated via a 'TOML' config.
 
-1. Cast  
-   This cast set contains converters that mimic the .Net cast behavior for various types (e.g. TomlFloat and int).
-   The casts include the implicit and explicit casts allowed in .Net.
-2. Convert
+1. NumericalSize  
+   Only conversions between floating point and integral data types are disallowed. All other conversions are 
+   allowed, also the ones where the target type could be to small to hold the source value e.g. TomlInt -> char.
+2. Serialize
    + Enum <-> TomlString
    + Guid <-> TomlString
-   + Dictionary <-> TomlTable
+3. NumericalType  
+   Also allow conversion between floating point and integral data types e.g. TomlFloat -> char.
 
-   TODO
+By **default** the *'NumericalSize'* and *'Serialize'* sets are activated. All possible conversions that Nett can do 
+can be activated by:
 
-## Reading & writing non TOML types
+```C#
+var config = TomlConfig.Create(cfg => cfg
+    .AllowImplicitConversions(TomlConfig.ConversionSets.All));
+var tbl = Toml.ReadString("f = 0.99", config);
+var i = tbl.Get<int>("f"); // i will be '0'
+```
+
+This example shows the drawbacks of activating all conversions. Here the read `int`
+will have a value of 0. The next write would write value `0` into the TOML file and
+so probably change the type of the config value. Simply explained, the more conversion are 
+enabled, the higher the risk is that subtle bugs are introduced.
+
+The opposite route is to disable all 'Nett' implicit conversion via 
+
+```C#
+var config = TomlConfig.Create(cfg => cfg
+    .AllowImplicitConversions(TomlConfig.ConversionSets.None));
+var tbl = Toml.ReadString("i = 1", config);
+// var i = tbl.Get<int>("i"); // Would throw InvalidOperationException as event cast from TomlInt to int is not allowed
+var i = tbl.Get<long>("i"); // Only long will work, no other type
+```
+
+The drawback of this approach is that your objects are only allowed to use TOML native types to work without further 
+casting or custom converters.
+
+Any set combination can be activated by logical combination of the set flags e.g.:
+
+```C#
+var config = TomlConfig.Create(cfg => cfg
+    .AllowImplicitConversions(TomlConfig.ConversionSets.NumericalType | TomlConfig.ConversionSets.Serialize));
+```
+
+Var various scenarios a logical combination of the default conversion sets with some custom converters may
+be the best choice.
+
+## Handle non TOML types via custom converters
 'TOML' has a very limited set of supported types. Assume you have some very simple CLR type
-used as the root table, that looks like:
+used for config root object called `TableContainingMoney`:
 
 ```C#
 public struct Money
@@ -189,8 +225,8 @@ public struct Money
     public string Currency { get; set; }
     public decimal Ammount { get; set; }
 
-    public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(';')[0]), Currency = s.Split(';')[1] };
-    public override string ToString() => $"{this.Ammount};{this.Currency}";
+    public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(' ')[0]), Currency = s.Split(' ')[1] };
+    public override string ToString() => $"{this.Ammount} {this.Currency}";
 }
 
 public class TableContainingMoney
@@ -219,7 +255,7 @@ as during the write.
 
 To fix this we can try to tell Nett how to handle the `decimal` type correctly.
 In this use case we decide we don't care about precision and just write is
-as a TomlFloat (double precision). 
+as a TomlFloat that has double precision. 
 
 ```C#
 var obj = new TableContainingMoney()
@@ -269,9 +305,9 @@ var s = Toml.WriteString(obj, config);
 var read = Toml.ReadString<TableContainingMoney>(s, config);
 ```
 
-Using this custom configuration will produce the following TOML which is what one would expect.
+Using this custom configuration will produce the following TOML which is more efficient and readable.
 ```
-NotSupported = "9.99;EUR"
+NotSupported = "9.99 EUR"
 ```
 
 Also the deserialization will work because the conversion specified both directions (FromlToml & ToToml). It is not
