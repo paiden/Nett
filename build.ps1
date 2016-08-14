@@ -92,8 +92,8 @@ if(-not $disableStdBuild) {
 }
 
 if($NuGetPackage) {
-
-    $snTool = "`"$(Join-Path $PSScriptRoot -ChildPath .\Solutions\nett\packages\Brutal.Dev.StrongNameSigner.1.5.1\tools\StrongNameSigner.Console.exe)`""
+    $packagesDir = Join-Path $PSScriptRoot -ChildPath .\Solutions\nett\packages
+    $snTool = (Get-ChildItem "$packagesDir\Brutal.Dev.StrongNameSigner*\**\StrongNameSigner.Console.Exe")[0].FullName
     $src = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration\Nett.dll")"
     $dst = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration.StrongNamed\Nett.dll")"
     $sne=""
