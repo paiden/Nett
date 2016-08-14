@@ -384,11 +384,13 @@ Foo3 = [""A""]";
             rg.Should().Be(g);
         }
 
-        [Theory(DisplayName = "Config set 'Cast' cannot handle GUID / TOML string conversion automatically")]
-        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically()
+        [Theory(DisplayName = "Config sets 'Numerical*' cannot handle GUID / TOML string conversion automatically")]
+        [InlineData(TomlConfig.ConversionSets.NumericalSize)]
+        [InlineData(TomlConfig.ConversionSets.NumericalType)]
+        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlConfig.ConversionSets set)
         {
             // Arrange
-            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(TomlConfig.ConversionSets.Cast));
+            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(set));
             Guid g = Guid.NewGuid();
             var read = Toml.ReadString($"g = '{g}'", cfg);
 
@@ -397,6 +399,60 @@ Foo3 = [""A""]";
 
             // Assert
             a.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact(DisplayName = "Default conversion set cannot do numeric type conversions (int -> float).")]
+        public void ReadToml_WhenDefaultConversionIsUsed_CannotConvertBetweenIntAndFloatTypes()
+        {
+            // Arrange
+            var read = Toml.ReadString($"i = 100");
+
+            // Act
+            Action a = () => read.Get<float>("i");
+
+            // Assert
+            a.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact(DisplayName = "Default conversion set cannot do numeric type conversions (float -> int).")]
+        public void ReadToml_WhenDefaultConversionIsUsed_CannotConvertBetweenFloatAndIntTypes()
+        {
+            // Arrange
+            var read = Toml.ReadString($"f = 100.0");
+
+            // Act
+            Action a = () => read.Get<int>("f");
+
+            // Assert
+            a.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact(DisplayName = "When all conversion activated, numeric type conversions are done implicitly (int -> float).")]
+        public void ReadToml_WhenAllConversionEnabled_CannotConvertBetweenIntAndFloatTypes()
+        {
+            // Arrange
+            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(TomlConfig.ConversionSets.All));
+            var read = Toml.ReadString($"i = 100", cfg);
+
+            // Act
+            var r = read.Get<float>("i");
+
+            // Assert
+            r.Should().Be(100.0f);
+        }
+
+        [Fact(DisplayName = "When all conversion activated, numeric type conversions are done implicitly (float -> int).")]
+        public void ReadToml_WhenAllConversionsEnabled_CannotConvertBetweenFloatAndIntTypes()
+        {
+            // Arrange
+            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(TomlConfig.ConversionSets.All));
+            var read = Toml.ReadString($"f = 100.0", cfg);
+
+            // Act
+            var r = read.Get<int>("f");
+
+            // Assert
+            r.Should().Be(100);
         }
 
         // This test doesn't test anything, it just checks that the conversion specialization extension methods

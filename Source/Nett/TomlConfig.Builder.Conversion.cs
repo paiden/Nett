@@ -86,7 +86,7 @@
 
     public sealed partial class TomlConfig
     {
-        private static readonly List<ITomlConverter> CastConverters = new List<ITomlConverter>()
+        private static readonly List<ITomlConverter> NumercialType = new List<ITomlConverter>()
         {
             // TOML -> CLR
             // TomlFloat -> *
@@ -98,6 +98,18 @@
             new TomlConverter<TomlFloat, ushort>((m, f) => (ushort)f.Value),
             new TomlConverter<TomlFloat, char>((m, f) => (char)f.Value),
             new TomlConverter<TomlFloat, byte>((m, f) => (byte)f.Value),
+
+            // TOML -> CLR
+            // TomlInt -> *
+            new TomlConverter<TomlInt, float>((m, i) => i.Value),
+            new TomlConverter<TomlInt, double>((m, i) => i.Value),
+        }
+        .AddBidirectionalConverter<TomlInt, TomlFloat>((m, f) => new TomlInt(m, (long)f.Value), (m, i) => new TomlFloat(m, i.Value));
+
+        private static readonly List<ITomlConverter> NumericalSize = new List<ITomlConverter>()
+        {
+            // TOML -> CLR
+            // TomlFloat -> *
             new TomlConverter<TomlFloat, float>((m, f) => (float)f.Value),
 
             // TomlInt -> *
@@ -108,8 +120,6 @@
             new TomlConverter<TomlInt, ushort>((m, i) => (ushort)i.Value),
             new TomlConverter<TomlInt, char>((m, i) => (char)i.Value),
             new TomlConverter<TomlInt, byte>((m, i) => (byte)i.Value),
-            new TomlConverter<TomlInt, float>((m, i) => i.Value),
-            new TomlConverter<TomlInt, double>((m, i) => i.Value),
 
             // CLR -> TOML
             // * -> TomlInt
@@ -123,26 +133,25 @@
             // * -> TomlFloat
             new TomlConverter<float, TomlFloat>((m, v) => new TomlFloat(m, v)),
         }
-            .AddBidirectionalConverter<TomlInt, TomlFloat>((m, f) => new TomlInt(m, (long)f.Value), (m, i) => new TomlFloat(m, i.Value))
-            .AddBidirectionalConverter<TomlDateTime, DateTime>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value.UtcDateTime);
+        .AddBidirectionalConverter<TomlDateTime, DateTime>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value.UtcDateTime);
 
-        private static readonly List<ITomlConverter> StrictConverters = new List<ITomlConverter>()
-            .AddBidirectionalConverter<TomlInt, long>((m, c) => new TomlInt(m, c), (m, t) => t.Value)
-            .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)
-            .AddBidirectionalConverter<TomlString, string>((m, c) => new TomlString(m, c), (m, t) => t.Value)
-            .AddBidirectionalConverter<TomlDateTime, DateTimeOffset>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value)
-            .AddBidirectionalConverter<TomlTimeSpan, TimeSpan>((m, c) => new TomlTimeSpan(m, c), (m, t) => t.Value)
-            .AddBidirectionalConverter<TomlBool, bool>((m, c) => new TomlBool(m, c), (m, t) => t.Value);
-
-        private static readonly List<ITomlConverter> ConvertConverters = new List<ITomlConverter>()
+        // Without these converters the library will not work correctly
+        private static readonly List<ITomlConverter> EquivalentTypeConverters = new List<ITomlConverter>()
         {
-            // TomlStrings <-> enums
-            new TomlToEnumConverter(),
-            new EnumToTomlConverter(),
-
-            // Dict <-> TomlTable
             new TomlTableToDictionaryConverter(),
             new TomlTableToTypedDictionaryConverter(),
+        }
+        .AddBidirectionalConverter<TomlInt, long>((m, c) => new TomlInt(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlString, string>((m, c) => new TomlString(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlDateTime, DateTimeOffset>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlTimeSpan, TimeSpan>((m, c) => new TomlTimeSpan(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlBool, bool>((m, c) => new TomlBool(m, c), (m, t) => t.Value);
+
+        private static readonly List<ITomlConverter> SerializeConverters = new List<ITomlConverter>()
+        {
+            new TomlToEnumConverter(),
+            new EnumToTomlConverter(),
         }
         .AddBidirectionalConverter<TomlString, Guid>((m, c) => new TomlString(m, c.ToString("D")), (m, t) => Guid.Parse(t.Value));
 
@@ -151,10 +160,12 @@
         {
             None = 0,
 
-            Cast = 1 << 0,
-            Convert = 1 << 1,
+            NumericalSize = 1 << 0,
+            Serialize = 1 << 1,
+            NumericalType = 1 << 2,
 
-            All = Cast | Convert,
+            All = NumericalSize | NumericalType | Serialize,
+            Default = NumericalSize | Serialize,
         }
     }
 

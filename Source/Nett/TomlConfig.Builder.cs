@@ -102,7 +102,7 @@
                 Assert(config != null);
 
                 this.config = config;
-                this.AllowImplicitConversions(ConversionSets.All);
+                this.AllowImplicitConversions(ConversionSets.Default);
             }
 
             public ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets)
@@ -134,16 +134,21 @@
 
             public void SetupDefaultConverters()
             {
-                this.config.converters.AddRange(StrictConverters);
+                this.config.converters.AddRange(EquivalentTypeConverters);
 
-                if (this.allowedConversions.HasFlag(ConversionSets.Cast))
+                if (this.allowedConversions.HasFlag(ConversionSets.NumericalSize))
                 {
-                    this.config.converters.AddRange(CastConverters);
+                    this.config.converters.AddRange(NumericalSize);
                 }
 
-                if (this.allowedConversions.HasFlag(ConversionSets.Convert))
+                if (this.allowedConversions.HasFlag(ConversionSets.Serialize))
                 {
-                    this.config.converters.AddRange(ConvertConverters);
+                    this.config.converters.AddRange(SerializeConverters);
+                }
+
+                if (this.allowedConversions.HasFlag(ConversionSets.NumericalType))
+                {
+                    this.config.converters.AddRange(NumercialType);
                 }
             }
 
