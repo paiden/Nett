@@ -3,6 +3,7 @@ using System.IO;
 using FluentAssertions;
 using Nett.UnitTests.Util;
 using Xunit;
+using static System.FormattableString;
 
 namespace Nett.UnitTests
 {
@@ -32,9 +33,18 @@ namespace Nett.UnitTests
         public string ServerAddress { get; set; }
     }
 
-    public class NotSupportedRoot
+    public struct Money
     {
-        public Guid NotSupported { get; set; }
+        public string Currency { get; set; }
+        public decimal Ammount { get; set; }
+
+        public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(';')[0]), Currency = s.Split(';')[1] };
+        public override string ToString() => Invariant($"{this.Ammount};{this.Currency}");
+    }
+
+    public class TableContainingMoney
+    {
+        public Money NotSupported { get; set; }
     }
 
     public class TypeNotSupportedByToml
@@ -150,19 +160,26 @@ ServerAddress = ""http://127.0.0.1:8080""
         [Fact]
         public void WriteGuidToml()
         {
-            var obj = new NotSupportedRoot()
+            var obj = new TableContainingMoney()
             {
-                NotSupported = new Guid("6836AA79-AC1C-4173-8C58-0DE1791C8606")
+                NotSupported = new Money() { Ammount = 9.99m, Currency = "EUR" }
             };
 
+            //var config = TomlConfig.Create(cfg => cfg
+            //    .ConfigureType<decimal>(type => type
+            //        .WithConversionFor<TomlFloat>(convert => convert
+            //            .ToToml(dec => (double)dec)
+            //            .FromToml(tf => (decimal)tf.Value))));
+
             var config = TomlConfig.Create(cfg => cfg
-                .ConfigureType<Guid>(type => type
+                .ConfigureType<Money>(type => type
                     .WithConversionFor<TomlString>(convert => convert
                         .ToToml(custom => custom.ToString())
-                        .FromToml(tmlString => Guid.Parse(tmlString.Value)))));
+                        .FromToml(tmlString => Money.Parse(tmlString.Value)))));
 
-            Toml.WriteFile(obj, "test.tml", config);
-            var read = Toml.ReadFile<NotSupportedRoot>("test.tml", config);
+            //var config = TomlConfig.Create();
+            var s = Toml.WriteString(obj, config);
+            var read = Toml.ReadString<TableContainingMoney>(s, config);
         }
     }
 }
