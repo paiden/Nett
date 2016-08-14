@@ -315,18 +315,25 @@ required to always specify both conversion directions. E.g. if you only write TO
 could be omitted.
 
 # Changelog
-2016-04-10: v0.4.2 (TOML 0.4.0)
+2016-08-14: **v0.5.0** *(TOML 0.4.0)*
+
++ Changed: Configuration API to have clearer syntax and behavior
++ Add: implicit cast sets; Guids and Enums are converted automatically
++ Fix: Weird formatting and new lines for nested tables
++ Fix: Invalid TOML strings produce better parser error message
+
+2016-04-10: **v0.4.2** *(TOML 0.4.0)*
  
 + Fix: Float was written as TomlInt when it had no decimal places [#8](https://github.com/paiden/Nett/issues/8)
 + Fix: Inline tables read as arrays [#7](https://github.com/paiden/Nett/issues/7)
 + Fix: Integer bare keys not working [#6](https://github.com/paiden/Nett/issues/6)
 
-2016-02-14: v0.4.1 (compatible with TOML 0.4.0)
+2016-02-14: **v0.4.1** *(TOML 0.4.0)**
 
 + Add: Support for short date time formats
 + Fix: Writing files is culture invariant
 + Fix: Table encoding/decoding when they are used inside table arrays
 
-2015-12-18: v0.4.0 (compatible with TOML 0.4.0) First public preview release
+2015-12-18: **v0.4.0** (compatible with TOML 0.4.0) First public preview release
 
 
