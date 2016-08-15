@@ -75,38 +75,6 @@
             }
         }
 
-        [FFact(FuncSaveMergedConfig, "When values defined in both sources, the values from the 'successor' source overwrite values of the predecessor source")]
-        public void LoadMergedConfig_SucessorOverwritesPredecessorValues()
-        {
-            string f1 = "config1".TestRunUniqueName() + Toml.FileExtension;
-            string f2 = "config2".TestRunUniqueName() + Toml.FileExtension;
-
-            try
-            {
-                // Arrange
-                const string Pre = @"
-IntValue = 1
-StringValue = 'pre'";
-                const string Succ = @"
-StringValue = 'succ'";
-
-                File.WriteAllText(f1, Pre);
-                File.WriteAllText(f2, Succ);
-
-                // Act
-                var c = ComaConfig.CreateMerged(() => new SingleLevelConfig(), f1, f2);
-
-                // Assert
-                c.Get(cfg => cfg.IntValue).Should().Be(1);
-                c.Get(cfg => cfg.StringValue).Should().Be("succ");
-            }
-            finally
-            {
-                TryDeleteFile(f1);
-                TryDeleteFile(f2);
-            }
-        }
-
         [FFact(FuncSaveMergedConfig, "When value in sub table is changed, that value gets saved back into the correct originator source.")]
         public void Foo()
         {
