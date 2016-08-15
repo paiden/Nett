@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     internal static class TomlTableExtensions
     {
         public static void OverwriteWithValuesForLoadFrom(this TomlTable target, TomlTable from)
