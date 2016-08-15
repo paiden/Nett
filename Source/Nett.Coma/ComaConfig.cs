@@ -2,9 +2,21 @@
 {
     using System;
     using System.Linq;
+    using Extensions;
 
-    public static class ComaConfig
+    public class ComaConfig
     {
+        private IPersistableConfig persistable;
+
+        internal ComaConfig(IPersistableConfig persistable)
+        {
+            this.persistable = persistable.CheckNotNull(nameof(persistable));
+
+            this.persistable = persistable;
+        }
+
+        internal delegate void SetAction(ref TomlTable table);
+
         public static ComaConfig<T> Create<T>(string filePath, Func<T> createDefault)
             where T : class
         {
@@ -34,35 +46,27 @@
 
             return new ComaConfig<T>(new MergedConfig(configs));
         }
-    }
 
-    public sealed class ComaConfig<T>
-        where T : class
-    {
-        private IPersistableConfig persistable;
-
-        internal ComaConfig(IPersistableConfig persistable)
+        public TRet Get<TRet>(Func<TomlTable, TRet> getter)
         {
-            if (persistable == null) { throw new ArgumentNullException(nameof(persistable)); }
+            getter.CheckNotNull(nameof(getter));
 
-            this.persistable = persistable;
-        }
-
-        public TRet Get<TRet>(Func<T, TRet> getter)
-        {
-            if (getter == null) { throw new ArgumentNullException(nameof(getter)); }
-
-            var cfg = this.persistable.Load().Get<T>();
+            var cfg = this.persistable.Load();
             return getter(cfg);
         }
 
-        public void Set(Action<T> setter)
+        public void Set(Action<TomlTable> setter)
         {
-            if (setter == null) { throw new ArgumentNullException(nameof(setter)); }
+            setter.CheckNotNull(nameof(setter));
 
-            var cfg = this.persistable.Load().Get<T>();
-            setter(cfg);
-            this.persistable.Save(Toml.Create(cfg));
+            this.SetInternal((ref TomlTable tbl) => setter(tbl));
+        }
+
+        internal void SetInternal(SetAction setter)
+        {
+            var cfg = this.persistable.Load();
+            setter(ref cfg);
+            this.persistable.Save(cfg);
         }
     }
 }
