@@ -10,6 +10,7 @@ namespace Nett.Coma.Tests.Functional
 
         const string Config1 = "IntValue = 1";
         const string Config2 = "StringValue = 'test'";
+        const string Config1A = "IntValue = 2";
 
         [FFact(FuncLoadMergedConfig, "When multiple sources used, merges those into one in process config object.")]
         public void LoadMergedConfig_MergesSourcesIntoOneInProcessConfig()
@@ -34,6 +35,26 @@ namespace Nett.Coma.Tests.Functional
             {
                 TryDeleteFile(f1);
                 TryDeleteFile(f2);
+            }
+        }
+
+        [FFact(FuncLoadMergedConfig, "When same setting in both files the 'more local' setting will overwrite the 'more global' value")]
+        public void LoadMergedConfig_LocalSettingOverwritesMoreGlobalSetting()
+        {
+            string t = nameof(LoadMergedConfig_LocalSettingOverwritesMoreGlobalSetting);
+
+            using (var global = TestFileName.Create(t, "global", Toml.FileExtension))
+            using (var local = TestFileName.Create(t, "local", Toml.FileExtension))
+            {
+                // Arrange
+                File.WriteAllText(global, Config1);
+                File.WriteAllText(local, Config1A);
+
+                // Act
+                var c = ComaConfig.CreateMerged(() => new SingleLevelConfig(), global, local);
+
+                // Assert
+                c.Get(r => r.IntValue).Equals(2);
             }
         }
     }
