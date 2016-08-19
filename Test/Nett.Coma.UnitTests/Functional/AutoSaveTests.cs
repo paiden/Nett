@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using FluentAssertions;
+    using TestData;
     using UnitTests.Util;
     using Xunit;
 
@@ -76,7 +77,7 @@
         }
 
         [FFact(FuncSaveMergedConfig, "When value in sub table is changed, that value gets saved back into the correct originator source.")]
-        public void Foo()
+        public void SaveMergedConfig_WhenValueInSubTableIsChanged_ValueGetsSavedBackToOriginatorFile()
         {
             string mainFile = null;
             string userFile = null;
@@ -101,6 +102,26 @@
             {
                 TryDeleteFile(mainFile);
                 TryDeleteFile(userFile);
+            }
+        }
+
+        [FFact(FuncSaveMergedConfig, "When saved value is help format, value gets saved back into system config file because it originates from there")]
+        public void SaveMergeConfig_WhenHelpFormatInGitScenarioIsChanged_ValueGetSavedBackToSytemWideFileBecauseItOriginateFromThere()
+        {
+            using (var scenario = GitScenario.Setup(nameof(SaveMergeConfig_WhenHelpFormatInGitScenarioIsChanged_ValueGetSavedBackToSytemWideFileBecauseItOriginateFromThere)))
+            {
+                // Arrange
+                var updated = GitScenario.GitConfig.HelpConfig.HelpFormat.Info;
+                var cfg = scenario.CreateMergedFromDefaults();
+
+                // Act
+                cfg.Set(c => c.Core.Help.Format = updated);
+
+                // Assert
+                var tbl = Toml.ReadFile(scenario.SystemFile);
+                tbl.Get<TomlTable>("Core")
+                    .Get<TomlTable>("Help")
+                    .Get<GitScenario.GitConfig.HelpConfig.HelpFormat>("Format").Should().Be(updated);
             }
         }
     }

@@ -30,5 +30,7 @@
                 tbl = Toml.Create(typedTable);
             });
         }
+
+        public T Unmanaged() => this.config.Unmanaged().Get<T>();
     }
 }

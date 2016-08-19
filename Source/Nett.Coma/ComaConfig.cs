@@ -62,6 +62,8 @@
             this.SetInternal((ref TomlTable tbl) => setter(tbl));
         }
 
+        public TomlTable Unmanaged() => this.persistable.Load();
+
         internal void SetInternal(SetAction setter)
         {
             var cfg = this.persistable.Load();

@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using FluentAssertions;
+using Nett.Coma.Tests.TestData;
 using Nett.UnitTests.Util;
+using Xunit;
 
 namespace Nett.Coma.Tests.Functional
 {
@@ -88,6 +90,21 @@ StringValue = 'succ'";
                 TryDeleteFile(f1);
                 TryDeleteFile(f2);
             }
+        }
+
+        [FFact(FuncLoadMergedConfig, "Initial Git multi file config is merged into single config object correctly")]
+        public void Merge_WhenUsingGitScenario_MergesConfigCorrectly()
+        {
+            using (var s = GitScenario.Setup(nameof(Merge_WhenUsingGitScenario_MergesConfigCorrectly)))
+            {
+                // Act
+                var cfg = ComaConfig.CreateMerged(() => new GitScenario.GitConfig(), s.SystemFile, s.UserFile, s.RepoFile);
+
+                // Assert
+                var x = cfg.Unmanaged();
+                Assert.True(cfg.Unmanaged().Equals(GitScenario.MergedDefault));
+            }
+
         }
     }
 }
