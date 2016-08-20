@@ -2,6 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using Extensions;
+    using Util;
     using static System.Diagnostics.Debug;
 
     public sealed partial class TomlConfig
@@ -9,6 +12,8 @@
         public interface IConfigureTypeBuilder<TCustom>
         {
             IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> func);
+
+            IConfigureTypeBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor);
 
             IConfigureTypeBuilder<TCustom> TreatAsInlineTable();
 
@@ -175,6 +180,14 @@
             public IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> activator)
             {
                 this.config.activators.Add(typeof(TCustom), () => activator());
+                return this;
+            }
+
+            public IConfigureTypeBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor)
+            {
+                var properties = this.config.ignoredProperties.AddIfNeeded(typeof(TCustom), def: new HashSet<string>());
+                var propertyInfo = ReflectionUtil.GetPropertyInfo(accessor);
+                properties.Add(propertyInfo.Name);
                 return this;
             }
 

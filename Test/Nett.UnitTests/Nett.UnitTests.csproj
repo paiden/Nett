@@ -72,6 +72,7 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
     <Compile Include="EnumConversionTests.cs" />
+    <Compile Include="Functional\IgnorePropertyTests.cs" />
     <Compile Include="Plugins\DictRootConfig.cs" />
     <Compile Include="Plugins\ObjRootConfig.cs" />
     <Compile Include="Plugins\PluginConfigWithIntDict.cs" />

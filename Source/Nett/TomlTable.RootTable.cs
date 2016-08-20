@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public partial class TomlTable
     {
@@ -18,7 +19,7 @@
             var props = t.GetProperties();
             var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach (var p in props)
+            foreach (var p in props.Where(check => !config.IsPropertyIgnored(t, check)))
             {
                 object val = p.GetValue(obj, null);
                 if (val != null)
