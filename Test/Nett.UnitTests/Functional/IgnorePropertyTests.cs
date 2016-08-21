@@ -18,8 +18,8 @@ namespace Nett.UnitTests.Functional
 
             // Assert
             var read = Toml.ReadString(written);
-            read.Rows.Count.Should().Be(0);
-            read.Get<int>("X").Should().Be(1);
+            read.Rows.Count.Should().Be(1);
+            read.Get<int>("Y").Should().Be(YDefault);
         }
 
         [Fact(DisplayName = "Writing object with property ignored via fluent API, will not write that property")]
@@ -37,20 +37,6 @@ namespace Nett.UnitTests.Functional
             var read = Toml.ReadString(written);
             read.Rows.Count.Should().Be(1);
             read.Get<int>("X").Should().Be(XDefault);
-        }
-
-        [Fact(DisplayName = "Writing object with sub property ignored via attribute, will ignore that property")]
-        public void WriteObject_WhenSubPropertyIgnoredViaAttribute_WillNotWriteThatProperty()
-        {
-            // Act
-            var written = Toml.WriteString(new TableAttributeIgnored());
-
-            // Assert
-            var read = Toml.ReadString(written);
-            read.Rows.Count.Should().Be(0);
-            read.Get<int>("X").Should().Be(XDefault);
-
-            throw new NotImplementedException();
         }
 
         [Fact(DisplayName = "Writing object with sub property ignored via fluent API, will not write that property")]
@@ -74,15 +60,19 @@ namespace Nett.UnitTests.Functional
         [Fact(DisplayName = "Reading object with property ignored via attribute, will ignore that property")]
         public void ReadObject_WhenPropertyIgnoredViaAttribute_WillNotReadThatProperty()
         {
+            // Arrange
+            const int FileXValue = 5;
+            const int FileYValue = 6;
+            string src = $@"
+X = {FileXValue}
+Y = {FileYValue}";
+
             // Act
-            const string src = @"
-X = 5
-Y = 6";
-            var read = Toml.ReadString(src);
+            var read = Toml.ReadString<TableAttributeIgnored>(src);
 
             // Assert
-            read.Get<int>("X").Should().Be(XDefault);
-            read.Get<int>("Y").Should().Be(6);
+            read.X.Should().Be(XDefault);
+            read.Y.Should().Be(FileYValue);
         }
 
         [Fact(DisplayName = "Reading object with property ignored via fluent API, will ignore that property")]
@@ -106,9 +96,9 @@ Y = {FileYValue}";
 
         public class TableAttributeIgnored
         {
+            [TomlIgnore]
             public int X { get; set; } = XDefault;
 
-            [TomlIgnore]
             public int Y { get; set; } = YDefault;
         }
 

@@ -90,6 +90,10 @@
             Assert(pi != null);
 
             HashSet<string> ignored;
+
+            bool contained = UserTypeMetaData.IsPropertyIgnored(ownerType, pi);
+            if (contained) { return true; }
+
             if (this.ignoredProperties.TryGetValue(ownerType, out ignored))
             {
                 return ignored.Contains(pi.Name);

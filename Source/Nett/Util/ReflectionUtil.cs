@@ -1,6 +1,8 @@
 ﻿namespace Nett.Util
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -36,5 +38,9 @@
 
             return propInfo;
         }
+
+        public static IEnumerable<PropertyInfo> GetPropertiesWithAttribute<TAttribute>(Type owner)
+            where TAttribute : Attribute
+            => owner.GetProperties().Where(a => a.IsDefined(typeof(TAttribute), false));
     }
 }
