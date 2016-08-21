@@ -97,7 +97,7 @@
             foreach (var r in this.Rows)
             {
                 var targetProperty = result.GetType().GetProperty(r.Key);
-                if (targetProperty != null)
+                if (targetProperty != null && !this.MetaData.Config.IsPropertyIgnored(result.GetType(), targetProperty))
                 {
                     MapTableRowToProperty(result, targetProperty, r, this.MetaData);
                 }

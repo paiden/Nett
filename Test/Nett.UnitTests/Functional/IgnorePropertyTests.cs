@@ -89,21 +89,20 @@ Y = 6";
         public void ReadObject_WhenPropertyIgnoredViaFluentApi_WillNotReadThatProperty()
         {
             // Act
+            const int FileXValue = 5;
+            const int FileYValue = 6;
             var config = TomlConfig.Create(cfg => cfg
                 .ConfigureType<Table>(tc => tc
                     .IgnoreProperty(i => i.X)));
-            const string src = @"
-X = 5
-Y = 6";
-            var read = Toml.ReadString(src, config);
+            string src = $@"
+X = {FileXValue}
+Y = {FileYValue}";
+            var read = Toml.ReadString<Table>(src, config);
 
             // Assert
-            read.Get<int>("X").Should().Be(5);
-            read.Get<int>("Y").Should().Be(YDefault);
+            read.X.Should().Be(XDefault);
+            read.Y.Should().Be(FileYValue);
         }
-
-
-
 
         public class TableAttributeIgnored
         {
