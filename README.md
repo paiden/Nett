@@ -314,6 +314,62 @@ Also the deserialization will work because the conversion specified both directi
 required to always specify both conversion directions. E.g. if you only write TOML files, the 'FromToml' part
 could be omitted.
 
+## Ignore CLR object properties
+
+By default TOML reads/writes all public properties of an CLR object. In some cases
+it may be required that 'Nett' doesn't do so for a property for various reasons.
+
+The following class outlines such a scenario
+
+```C#
+public sealed class Computed
+{
+    public int X { get; set; } = 1;
+    public int Y { get; set; } = 2;
+    
+    public int Z => X + Y;
+}
+```
+
+Serializing an instance of this class will produce the following TOML content
+
+```
+X = 1
+Y = 2
+Z = 3
+```
+
+The instance is serializeable but deserializing this content into a Computed Instance will
+fail with and message that will be something like `Property set method not found`, because
+the computed property only has a getter, but no setter.
+
+So the computed `Z` property needs to be ignored. This can be achieved in two ways:
+
+1. Via fluent configuration  
+  ```C#
+var c = new Computed();
+var config = TomlConfig.Create(cfg => cfg
+    .ConfigureType<Computed>(type => type
+        .IgnoreProperty(o => o.Z)));
+
+var w = Toml.WriteString(c, config);
+var r = Toml.ReadString<Computed>(w, config);  
+  ```
+2. Applying a `TomlIgnore` attribute onto the computed property  
+  ```C#
+public sealed class Computed
+{
+    public int X { get; set; } = 1;
+    public int Y { get; set; } = 2;
+
+    [TomlIgnore]
+    public int Z => X + Y;
+}
+  ```
+
+Using the fluent configuration API has the benefit, that the CLR object
+doesn't need to be modified.
+
 # Changelog
 2016-08-14: **v0.5.0** *(TOML 0.4.0)*
 
