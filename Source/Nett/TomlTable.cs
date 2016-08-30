@@ -97,7 +97,7 @@
             foreach (var r in this.Rows)
             {
                 var targetProperty = result.GetType().GetProperty(r.Key);
-                if (targetProperty != null)
+                if (targetProperty != null && !this.MetaData.Config.IsPropertyIgnored(result.GetType(), targetProperty))
                 {
                     MapTableRowToProperty(result, targetProperty, r, this.MetaData);
                 }
@@ -136,7 +136,7 @@
             var props = obj.GetType().GetProperties();
             var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach (var p in props)
+            foreach (var p in props.Where(filter => !metaData.Config.IsPropertyIgnored(obj.GetType(), filter)))
             {
                 object val = p.GetValue(obj, null);
                 if (val != null)

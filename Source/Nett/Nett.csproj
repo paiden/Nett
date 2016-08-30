@@ -52,8 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Attributes\TomlIgnore.cs" />
     <Compile Include="EnumConverter.cs" />
-    <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="ITomlObjectVisitor.cs" />
     <Compile Include="IMetaDataStore.cs" />
@@ -117,6 +119,8 @@
     <Compile Include="TomlTableToTypedDictionaryConverter.cs" />
     <Compile Include="TomlTimeSpan.cs" />
     <Compile Include="TomlValue.cs" />
+    <Compile Include="UserTypeMetaData.cs" />
+    <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Writer\TomlWriter.cs" />
     <Compile Include="Writer\TomlInlineTableWriter.cs" />
     <Compile Include="Writer\TomlTableWriter.cs" />

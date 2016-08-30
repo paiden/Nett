@@ -52,6 +52,15 @@ namespace Nett.UnitTests
         public Guid SomeGuid { get; set; }
     }
 
+    public sealed class Computed
+    {
+        public int X { get; set; } = 1;
+        public int Y { get; set; } = 2;
+
+        //[TomlIgnore]
+        public int Z => X + Y;
+    }
+
     public class DocumentationExamples
     {
         private string exp = @"EnableDebug = true
@@ -157,7 +166,20 @@ ServerAddress = ""http://127.0.0.1:8080""
             config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        [Fact]
+        // [Fact]
+        public void HandleComputedType()
+        {
+            var c = new Computed();
+            var config = TomlConfig.Create(cfg => cfg
+                .ConfigureType<Computed>(type => type
+                    .IgnoreProperty(o => o.Z)));
+
+            var w = Toml.WriteString(c, config);
+            var r = Toml.ReadString<Computed>(w, config);
+
+        }
+
+        //[Fact]
         public void WriteGuidToml()
         {
             var obj = new TableContainingMoney()

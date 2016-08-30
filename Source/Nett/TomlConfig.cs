@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Reflection;
 
+    using static System.Diagnostics.Debug;
+
     internal enum TomlCommentLocation
     {
         Prepend,
@@ -19,6 +21,7 @@
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
         private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
+        private readonly Dictionary<Type, HashSet<string>> ignoredProperties = new Dictionary<Type, HashSet<string>>();
 
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
@@ -79,6 +82,24 @@
             return this.inlineTableTypes.Contains(pi.PropertyType) || pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute))
                 ? TomlTable.TableTypes.Inline
                 : TomlTable.TableTypes.Default;
+        }
+
+        internal bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
+        {
+            Assert(ownerType != null);
+            Assert(pi != null);
+
+            HashSet<string> ignored;
+
+            bool contained = UserTypeMetaData.IsPropertyIgnored(ownerType, pi);
+            if (contained) { return true; }
+
+            if (this.ignoredProperties.TryGetValue(ownerType, out ignored))
+            {
+                return ignored.Contains(pi.Name);
+            }
+
+            return false;
         }
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
