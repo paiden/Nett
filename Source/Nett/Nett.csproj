@@ -56,7 +56,6 @@
     <Compile Include="EnumConverter.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
-    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Extensions\GenericExtensions.cs" />
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="ITomlObjectVisitor.cs" />
