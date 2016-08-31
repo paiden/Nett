@@ -2,14 +2,14 @@
 {
     using System;
 
-    public sealed class ComaConfig<T>
+    public sealed class Config<T>
         where T : class
     {
-        private readonly ComaConfig config;
+        private readonly Config config;
 
-        internal ComaConfig(IPersistableConfig persistable)
+        internal Config(IPersistableConfig persistable)
         {
-            this.config = new ComaConfig(persistable);
+            this.config = new Config(persistable);
         }
 
         public TRet Get<TRet>(Func<T, TRet> getter)

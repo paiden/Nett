@@ -45,8 +45,8 @@ IgnoreCase = true";
             this.RepoFile = TestFileName.Create(testName, "repo", GitConfig.Extension);
         }
 
-        public ComaConfig<GitConfig> CreateMergedFromDefaults() =>
-           ComaConfig.CreateMerged(() => new GitConfig(), this.SystemFile, this.UserFile, this.RepoFile);
+        public Config<GitConfig> CreateMergedFromDefaults() =>
+           Config.CreateMerged(() => new GitConfig(), this.SystemFile, this.UserFile, this.RepoFile);
 
         public static GitScenario Setup(string testName)
         {

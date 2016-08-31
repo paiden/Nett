@@ -15,7 +15,7 @@ namespace Nett.Coma.Tests
             {
                 // Arrange
                 const int ExpectedNewValue = 1;
-                var m = ComaConfig.Create(filePath, () => new SingleLevelConfig());
+                var m = Config.Create(filePath, () => new SingleLevelConfig());
                 var afterInitialLoad = m.Get(cfg => cfg.IntValue);
                 ModifyFileOnDisk(filePath, cfg => cfg.IntValue = ExpectedNewValue);
 

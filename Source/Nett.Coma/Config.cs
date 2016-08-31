@@ -4,11 +4,11 @@
     using System.Linq;
     using Extensions;
 
-    public class ComaConfig
+    public class Config
     {
         private IPersistableConfig persistable;
 
-        internal ComaConfig(IPersistableConfig persistable)
+        internal Config(IPersistableConfig persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
 
@@ -17,7 +17,7 @@
 
         internal delegate void SetAction(ref TomlTable table);
 
-        public static ComaConfig<T> Create<T>(string filePath, Func<T> createDefault)
+        public static Config<T> Create<T>(string filePath, Func<T> createDefault)
             where T : class
         {
             var cfg = createDefault();
@@ -25,10 +25,10 @@
 
             persisted.EnsureExists(Toml.Create(cfg));
 
-            return new ComaConfig<T>(persisted);
+            return new Config<T>(persisted);
         }
 
-        public static ComaConfig<T> CreateMerged<T>(Func<T> createDefault, params string[] filePathes)
+        public static Config<T> CreateMerged<T>(Func<T> createDefault, params string[] filePathes)
             where T : class
         {
             if (createDefault == null) { throw new ArgumentNullException(nameof(createDefault)); }
@@ -44,7 +44,7 @@
             var configs = filePathes.Select(fp => new FileConfig(fp));
             configs.First().EnsureExists(Toml.Create(cfg));
 
-            return new ComaConfig<T>(new MergedConfig(configs));
+            return new Config<T>(new MergedConfig(configs));
         }
 
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)

@@ -42,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComaConfig.cs" />
-    <Compile Include="ComaConfig`1.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Config`1.cs" />
     <Compile Include="FilePersistedConfig.cs" />
     <Compile Include="IPersistedConfig.cs" />
     <Compile Include="MergedConfig.cs" />

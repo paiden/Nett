@@ -19,7 +19,7 @@ namespace Nett.Coma.Tests
                 // Act
                 const int ExpectedIntValue = 3;
                 var cfg = new SingleLevelConfig() { IntValue = ExpectedIntValue };
-                ComaConfig.Create(fileName, () => cfg);
+                Config.Create(fileName, () => cfg);
 
                 // Assert
                 File.Exists(fileName).Should().Be(true);
@@ -44,7 +44,7 @@ namespace Nett.Coma.Tests
                 CreateMergedTestAppConfig(out mainFile, out userFile);
 
                 // Act
-                var merged = ComaConfig.CreateMerged(() => new TestData.TestAppSettings(), mainFile, userFile);
+                var merged = Config.CreateMerged(() => new TestData.TestAppSettings(), mainFile, userFile);
 
                 // Assert
                 merged.Get(c => c.BinDir).Should().Be(TestData.TestAppSettings.GlobalSettings.BinDir);
