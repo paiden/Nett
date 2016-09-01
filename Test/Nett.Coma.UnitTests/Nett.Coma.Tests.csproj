@@ -76,6 +76,7 @@
     <Compile Include="TestData\TestAppSettings.cs" />
     <Compile Include="TestsBase.cs" />
     <Compile Include="Unit\ComaConfigTests.cs" />
+    <Compile Include="Unit\FileConfigTests.cs" />
     <Compile Include="Unit\TomlTableExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@
             where T : class
         {
             var cfg = createDefault();
-            var persisted = new FileConfig(filePath);
+            var persisted = new OptimizedFileConfig(new FileConfig(filePath));
 
             persisted.EnsureExists(Toml.Create(cfg));
 
@@ -41,7 +41,7 @@
 
             var cfg = createDefault();
 
-            var configs = filePathes.Select(fp => new FileConfig(fp));
+            var configs = filePathes.Select(fp => new OptimizedFileConfig(new FileConfig(fp)));
             configs.First().EnsureExists(Toml.Create(cfg));
 
             return new Config<T>(new MergedConfig(configs));

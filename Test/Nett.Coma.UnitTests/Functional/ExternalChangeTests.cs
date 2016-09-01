@@ -23,8 +23,8 @@ namespace Nett.Coma.Tests
                 var nextReadValue = m.Get(cfg => cfg.IntValue);
 
                 // Assert
-                afterInitialLoad.Should().NotBe(nextReadValue, "otherwise we would only test nothing at all changed");
                 nextReadValue.Should().Be(ExpectedNewValue);
+                afterInitialLoad.Should().NotBe(nextReadValue, "otherwise we would only test nothing at all changed");
             }
             finally
             {
