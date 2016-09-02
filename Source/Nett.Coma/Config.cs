@@ -4,31 +4,37 @@
     using System.Linq;
     using Extensions;
 
-    public class Config
+    public class Config : IDisposable
     {
-        private IPersistableConfig persistable;
+        private readonly IPersistableConfig persistable;
 
         internal Config(IPersistableConfig persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
-
-            this.persistable = persistable;
         }
 
         internal delegate void SetAction(ref TomlTable table);
 
         public static Config<T> Create<T>(string filePath, Func<T> createDefault)
             where T : class
-        {
-            var cfg = createDefault();
-            var persisted = new OptimizedFileConfig(new FileConfig(filePath));
+            => Create(filePath, createDefault, ConfigSettings.DefaultInstance);
 
-            persisted.EnsureExists(Toml.Create(cfg));
+        public static Config<T> Create<T>(string filePath, Func<T> createDefault, ConfigSettings settings)
+            where T : class
+        {
+            settings.CheckNotNull(nameof(settings));
+
+            var persisted = settings.GetPersistableConfig(filePath);
+            persisted.EnsureExists(Toml.Create(createDefault()));
 
             return new Config<T>(persisted);
         }
 
-        public static Config<T> CreateMerged<T>(Func<T> createDefault, params string[] filePathes)
+        public static Config<T> CreateMerged<T>(Func<T> createDefault, params string[] filePaths)
+            where T : class
+            => CreateMerged(createDefault, ConfigSettings.DefaultInstance, filePaths);
+
+        public static Config<T> CreateMerged<T>(Func<T> createDefault, ConfigSettings settings, params string[] filePathes)
             where T : class
         {
             if (createDefault == null) { throw new ArgumentNullException(nameof(createDefault)); }
@@ -39,12 +45,15 @@
                     $"For single source configurations use '{nameof(Create)}'.");
             }
 
-            var cfg = createDefault();
-
-            var configs = filePathes.Select(fp => new OptimizedFileConfig(new FileConfig(fp)));
-            configs.First().EnsureExists(Toml.Create(cfg));
+            var configs = settings.GetPersistableConfig(filePathes);
+            configs.First().EnsureExists(Toml.Create(createDefault()));
 
             return new Config<T>(new MergedConfig(configs));
+        }
+
+        public void Dispose()
+        {
+            this.persistable.Dispose();
         }
 
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)

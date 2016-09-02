@@ -10,7 +10,7 @@ namespace Nett.Coma.Tests.Unit
         public void LoadMergedConfig_WhenLocationsIsNull_ThrowsArgNull()
         {
             // Act
-            Action a = () => Config.CreateMerged(() => new SingleLevelConfig(), null);
+            Action a = () => Config.CreateMerged(() => new SingleLevelConfig(), (string[])null);
 
             // Assert
             a.ShouldThrow<ArgumentNullException>();

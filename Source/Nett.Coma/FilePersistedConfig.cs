@@ -14,6 +14,10 @@
             this.filePath = filePath;
         }
 
+        public void Dispose()
+        {
+        }
+
         public bool EnsureExists(TomlTable content)
         {
             if (!File.Exists(this.filePath))

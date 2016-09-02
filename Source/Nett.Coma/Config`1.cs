@@ -2,15 +2,18 @@
 {
     using System;
 
-    public sealed class Config<T>
+    public sealed class Config<T> : IDisposable
         where T : class
     {
         private readonly Config config;
 
+        // Used by factory method in Config
         internal Config(IPersistableConfig persistable)
         {
             this.config = new Config(persistable);
         }
+
+        public void Dispose() => this.config.Dispose();
 
         public TRet Get<TRet>(Func<T, TRet> getter)
         {
