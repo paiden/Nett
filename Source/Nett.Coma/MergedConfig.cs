@@ -37,8 +37,8 @@
         {
             Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
 
-            TomlTable merged = this.configs.First().Load();
-            foreach (var c in this.configs.Skip(1))
+            TomlTable merged = Toml.Create();
+            foreach (var c in this.configs)
             {
                 merged.OverwriteWithValuesForLoadFrom(c.Load());
             }
