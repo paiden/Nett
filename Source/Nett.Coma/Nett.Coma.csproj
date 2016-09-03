@@ -50,6 +50,7 @@
     <Compile Include="MergedConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TomlTableExtensions.cs" />
+    <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

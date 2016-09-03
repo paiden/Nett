@@ -7,5 +7,7 @@
         TomlTable Load();
 
         void Save(TomlTable content);
+
+        bool WasChangedExternally();
     }
 }

@@ -31,6 +31,8 @@
             });
         }
 
+        public IDisposable StartTransaction() => this.config.StartTransaction();
+
         public T Unmanaged() => this.config.Unmanaged().Get<T>();
     }
 }

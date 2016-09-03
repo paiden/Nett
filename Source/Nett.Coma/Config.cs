@@ -62,6 +62,13 @@
             this.SetInternal((ref TomlTable tbl) => setter(tbl));
         }
 
+        public IDisposable StartTransaction()
+        {
+            var transaction = Transaction.Start(this.persistable, onCloseTransactionCallback: original => this.persistable = original);
+            this.persistable = transaction;
+            return transaction;
+        }
+
         public TomlTable Unmanaged() => this.persistable.Load();
 
         internal void SetInternal(SetAction setter)

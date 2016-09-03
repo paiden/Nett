@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -39,6 +39,10 @@
     </Reference>
     <Reference Include="FluentAssertions.Core, Version=4.12.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\..\Solutions\Nett\packages\FluentAssertions.4.12.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Nett\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -69,15 +73,18 @@
     <Compile Include="Functional\AutoSaveTests.cs" />
     <Compile Include="Functional\InitTests.cs" />
     <Compile Include="Functional\MergeTests.cs" />
+    <Compile Include="Functional\TransactionTests.cs" />
     <Compile Include="SingleLevelConfig.cs" />
     <Compile Include="Functional\ExternalChangeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\GitScenario.cs" />
+    <Compile Include="TestData\SingleConfigFileScenario.cs" />
     <Compile Include="TestData\TestAppSettings.cs" />
     <Compile Include="TestsBase.cs" />
     <Compile Include="Unit\ComaConfigTests.cs" />
     <Compile Include="Unit\FileConfigTests.cs" />
     <Compile Include="Unit\TomlTableExtensionsTests.cs" />
+    <Compile Include="Unit\TransactionUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\Nett.Coma\Nett.Coma.csproj">
@@ -94,7 +101,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

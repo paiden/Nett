@@ -52,5 +52,7 @@
                 c.Save(tbl);
             }
         }
+
+        public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());
     }
 }
