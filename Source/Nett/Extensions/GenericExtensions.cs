@@ -7,7 +7,7 @@
         public static T CheckNotNull<T>(this T toCheck, string argName)
             where T : class
         {
-            if (toCheck == null) { throw new ArgumentNullException(nameof(argName)); }
+            if (toCheck == null) { throw new ArgumentNullException(argName); }
 
             return toCheck;
         }
