@@ -21,11 +21,6 @@
             this.configs = new List<IPersistableConfig>(configs);
         }
 
-        public void Dispose()
-        {
-            foreach (var pc in this.configs) { pc.Dispose(); }
-        }
-
         public bool EnsureExists(TomlTable content)
         {
             Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);

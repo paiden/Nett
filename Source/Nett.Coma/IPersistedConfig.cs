@@ -1,8 +1,6 @@
 ﻿namespace Nett.Coma
 {
-    using System;
-
-    public interface IPersistableConfig : IDisposable
+    public interface IPersistableConfig
     {
         bool EnsureExists(TomlTable content);
 

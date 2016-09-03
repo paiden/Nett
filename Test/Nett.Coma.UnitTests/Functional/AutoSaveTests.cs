@@ -23,7 +23,7 @@
                 var f = new SingleLevelConfig();
                 Toml.WriteFile(f, filePath);
                 var beforeChangeValue = f.IntValue;
-                var cfg = CreateConfig(filePath, () => new SingleLevelConfig());
+                var cfg = Config.Create(filePath, () => new SingleLevelConfig());
 
                 // Act
                 cfg.Set(c => c.IntValue = ExpectedNewValue);
@@ -54,7 +54,7 @@
 
                 File.WriteAllText(f1, Pre);
                 File.WriteAllText(f2, Succ);
-                var c = CreateMergedConfig(() => new SingleLevelConfig(), f1, f2);
+                var c = Config.CreateMerged(() => new SingleLevelConfig(), f1, f2);
 
                 // Act
                 c.Set(cfg => cfg.StringValue = NewStringVal);
@@ -87,7 +87,7 @@
                 // Arrange
                 const string Changed = "ChangedUserName";
                 CreateMergedTestAppConfig(out mainFile, out userFile);
-                var cfg = CreateMergedConfig(() => new TestData.TestAppSettings(), mainFile, userFile);
+                var cfg = Config.CreateMerged(() => new TestData.TestAppSettings(), mainFile, userFile);
 
                 // Act
                 cfg.Set(c => c.User.UserName = Changed);
@@ -123,22 +123,6 @@
                     .Get<TomlTable>("Help")
                     .Get<GitScenario.GitConfig.HelpConfig.HelpFormat>("Format").Should().Be(updated);
             }
-        }
-
-        private static Config<T> CreateConfig<T>(string filePath, Func<T> createDefault)
-            where T : class
-        {
-            var settings = ConfigSettings.Create(cfg => cfg
-                .EnableLoadSaveOptimizations(false));
-            return Config.Create(filePath, createDefault, settings);
-        }
-
-        private static Config<T> CreateMergedConfig<T>(Func<T> createDefault, params string[] filePaths)
-            where T : class
-        {
-            var settings = ConfigSettings.Create(cfg => cfg
-                .EnableLoadSaveOptimizations(false));
-            return Config.CreateMerged(createDefault, settings, filePaths);
         }
     }
 }
