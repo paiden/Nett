@@ -46,7 +46,7 @@ IgnoreCase = true";
         }
 
         public Config<GitConfig> CreateMergedFromDefaults() =>
-           Config.CreateMerged(() => new GitConfig(), this.SystemFile, this.UserFile, this.RepoFile);
+           Config.Create(() => new GitConfig(), this.SystemFile, this.UserFile, this.RepoFile);
 
         public static GitScenario Setup(string testName)
         {

@@ -17,34 +17,30 @@
 
         internal delegate void SetAction(ref TomlTable table);
 
-        public static Config<T> Create<T>(string filePath, Func<T> createDefault)
+        public static Config<T> Create<T>(Func<T> createDefault, string filePath)
+            where T : class
+            => Create(createDefault, ConfigSource.CreateFileSource(filePath));
+
+        public static Config<T> Create<T>(Func<T> createDefault, params string[] filePaths)
             where T : class
         {
-            var cfg = createDefault();
-            var persisted = new OptimizedFileConfig(new FileConfig(filePath));
+            var sources = filePaths.Select(fp => ConfigSource.CreateFileSource(fp)).ToArray();
+            var merged = ConfigSource.Merged(sources);
+            return Create(createDefault, merged);
+        }
 
+        public static Config<T> Create<T>(Func<T> createDefault, IConfigSource source)
+            where T : class
+        {
+            createDefault.CheckNotNull(nameof(createDefault));
+            source.CheckNotNull(nameof(source));
+
+            var cfg = createDefault();
+
+            var persisted = ((ISourceFactory)source).CreatePersistable();
             persisted.EnsureExists(Toml.Create(cfg));
 
             return new Config<T>(persisted);
-        }
-
-        public static Config<T> CreateMerged<T>(Func<T> createDefault, params string[] filePathes)
-            where T : class
-        {
-            if (createDefault == null) { throw new ArgumentNullException(nameof(createDefault)); }
-            if (filePathes == null) { throw new ArgumentNullException(nameof(createDefault)); }
-            if (filePathes.Length < 2)
-            {
-                throw new ArgumentException($"'{nameof(CreateMerged)}' requires at least 2 config sources. " +
-                    $"For single source configurations use '{nameof(Create)}'.");
-            }
-
-            var cfg = createDefault();
-
-            var configs = filePathes.Select(fp => new OptimizedFileConfig(new FileConfig(fp)));
-            configs.First().EnsureExists(Toml.Create(cfg));
-
-            return new Config<T>(new MergedConfig(configs));
         }
 
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)

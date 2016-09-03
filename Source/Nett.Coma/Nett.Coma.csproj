@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigSources.cs" />
     <Compile Include="OptimizedFileConfig.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Config`1.cs" />

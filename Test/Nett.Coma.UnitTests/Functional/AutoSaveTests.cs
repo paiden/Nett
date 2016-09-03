@@ -23,7 +23,7 @@
                 var f = new SingleLevelConfig();
                 Toml.WriteFile(f, filePath);
                 var beforeChangeValue = f.IntValue;
-                var cfg = Config.Create(filePath, () => new SingleLevelConfig());
+                var cfg = Config.Create(() => new SingleLevelConfig(), ConfigSource.CreateFileSource(filePath));
 
                 // Act
                 cfg.Set(c => c.IntValue = ExpectedNewValue);
@@ -54,7 +54,7 @@
 
                 File.WriteAllText(f1, Pre);
                 File.WriteAllText(f2, Succ);
-                var c = Config.CreateMerged(() => new SingleLevelConfig(), f1, f2);
+                var c = Config.Create(() => new SingleLevelConfig(), f1, f2);
 
                 // Act
                 c.Set(cfg => cfg.StringValue = NewStringVal);
@@ -87,7 +87,7 @@
                 // Arrange
                 const string Changed = "ChangedUserName";
                 CreateMergedTestAppConfig(out mainFile, out userFile);
-                var cfg = Config.CreateMerged(() => new TestData.TestAppSettings(), mainFile, userFile);
+                var cfg = Config.Create(() => new TestData.TestAppSettings(), mainFile, userFile);
 
                 // Act
                 cfg.Set(c => c.User.UserName = Changed);

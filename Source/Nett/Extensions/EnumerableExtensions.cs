@@ -1,4 +1,4 @@
-﻿namespace Nett.Extensions
+﻿namespace Nett.LinqExtensions
 {
     using System;
     using System.Collections;

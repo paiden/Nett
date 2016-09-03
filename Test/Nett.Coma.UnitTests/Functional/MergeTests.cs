@@ -27,7 +27,10 @@ namespace Nett.Coma.Tests.Functional
                 File.WriteAllText(f2, Config2);
 
                 // Act
-                var c = Config.CreateMerged(() => new SingleLevelConfig(), f1, f2);
+                var sources = ConfigSource.Merged(
+                    ConfigSource.CreateFileSource(f1),
+                    ConfigSource.CreateFileSource(f2));
+                var c = Config.Create(() => new SingleLevelConfig(), sources);
 
                 // Assert
                 c.Get(cfg => cfg.IntValue).Should().Be(1);
@@ -53,7 +56,7 @@ namespace Nett.Coma.Tests.Functional
                 File.WriteAllText(local, Config1A);
 
                 // Act
-                var c = Config.CreateMerged(() => new SingleLevelConfig(), global, local);
+                var c = Config.Create(() => new SingleLevelConfig(), global, local);
 
                 // Assert
                 c.Get(r => r.IntValue).Equals(2);
@@ -79,7 +82,7 @@ StringValue = 'succ'";
                 File.WriteAllText(f2, Succ);
 
                 // Act
-                var c = Config.CreateMerged(() => new SingleLevelConfig(), f1, f2);
+                var c = Config.Create(() => new SingleLevelConfig(), f1, f2);
 
                 // Assert
                 c.Get(cfg => cfg.IntValue).Should().Be(1);
@@ -98,7 +101,7 @@ StringValue = 'succ'";
             using (var s = GitScenario.Setup(nameof(Merge_WhenUsingGitScenario_MergesConfigCorrectly)))
             {
                 // Act
-                var cfg = Config.CreateMerged(() => new GitScenario.GitConfig(), s.SystemFile, s.UserFile, s.RepoFile);
+                var cfg = Config.Create(() => new GitScenario.GitConfig(), s.SystemFile, s.UserFile, s.RepoFile);
 
                 // Assert
                 var x = cfg.Unmanaged();

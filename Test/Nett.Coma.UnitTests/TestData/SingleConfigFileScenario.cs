@@ -20,7 +20,7 @@ namespace Nett.Coma.Tests.TestData
 
         public Config<ConfigContent> CreateConfig()
         {
-            return Config.Create(this.File, () => new ConfigContent());
+            return Config.Create(() => new ConfigContent(), this.File);
         }
 
         public ConfigContent ReadFile()
