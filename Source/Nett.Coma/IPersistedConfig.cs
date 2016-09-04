@@ -6,6 +6,8 @@
 
         TomlTable Load();
 
+        TomlTable LoadSourcesTable();
+
         void Save(TomlTable content);
 
         bool WasChangedExternally();

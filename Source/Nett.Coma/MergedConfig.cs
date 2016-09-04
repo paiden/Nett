@@ -28,18 +28,9 @@
             return this.configs.First().EnsureExists(content);
         }
 
-        public TomlTable Load()
-        {
-            Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
+        public TomlTable Load() => this.MergeTables(c => c.Load());
 
-            TomlTable merged = Toml.Create();
-            foreach (var c in this.configs)
-            {
-                merged.OverwriteWithValuesForLoadFrom(c.Load());
-            }
-
-            return merged;
-        }
+        public TomlTable LoadSourcesTable() => this.MergeTables(c => c.LoadSourcesTable());
 
         public void Save(TomlTable content)
         {
@@ -54,5 +45,18 @@
         }
 
         public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());
+
+        private TomlTable MergeTables(Func<IPersistableConfig, TomlTable> loadSingle)
+        {
+            Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
+
+            TomlTable merged = Toml.Create();
+            foreach (var c in this.configs)
+            {
+                merged.OverwriteWithValuesForLoadFrom(loadSingle(c));
+            }
+
+            return merged;
+        }
     }
 }

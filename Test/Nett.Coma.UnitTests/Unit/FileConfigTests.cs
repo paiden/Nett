@@ -14,7 +14,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfig(file);
+                var cfg = new FileConfig(new FileConfigSource(file));
 
                 // Act
                 var r1 = cfg.WasChangedExternally();
@@ -34,7 +34,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfig(file);
+                var cfg = new FileConfig(new FileConfigSource(file));
                 cfg.Load();
 
                 // Act
@@ -53,7 +53,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfig(file);
+                var cfg = new FileConfig(new FileConfigSource(file));
                 cfg.Load();
                 using (var sw = File.AppendText(file))
                 {

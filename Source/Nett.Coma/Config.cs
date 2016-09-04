@@ -1,6 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Extensions;
 
@@ -51,6 +52,14 @@
             return getter(cfg);
         }
 
+        public IConfigSource GetSource(Func<TomlTable, object> getter)
+        {
+            getter.CheckNotNull(nameof(getter));
+
+            var cfg = this.persistable.LoadSourcesTable();
+            return (IConfigSource)getter(cfg);
+        }
+
         public void Set(Action<TomlTable> setter)
         {
             setter.CheckNotNull(nameof(setter));
@@ -66,6 +75,13 @@
         }
 
         public TomlTable Unmanaged() => this.persistable.Load();
+
+        internal IConfigSource GetSource(IList<string> keyChain)
+        {
+            var table = this.persistable.LoadSourcesTable();
+            var source = table.ResolveKeyChain<TomlSource>(keyChain);
+            return source.Value;
+        }
 
         internal void SetInternal(SetAction setter)
         {

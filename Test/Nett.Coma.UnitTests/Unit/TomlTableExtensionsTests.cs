@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
+using Nett.Coma.Tests.TestData;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Unit
@@ -36,5 +38,35 @@ namespace Nett.Coma.Tests.Unit
             // Assert
             targetTable.Rows.Count.Should().Be(0);
         }
+
+        [MFact(nameof(TomlTableExtensions), nameof(TomlTableExtensions.TransformToSourceTable), "When table is null, throws ArgumentNull exception")]
+        public void TransformToSourceTable_WhenTableIsNull_ThrowsArgNull()
+        {
+            // Arrange
+            TomlTable table = null;
+
+            // Act
+            Action a = () => table.TransformToSourceTable(ConfigSource.CreateFileSource("x"));
+
+            // Assert
+            a.ShouldThrow<ArgumentNullException>().WithMessage("*table*");
+        }
+
+        [MFact(nameof(TomlTableExtensions), nameof(TomlTableExtensions.TransformToSourceTable), "Produces correct source table")]
+        public void TransformToSourceTable_ProducesCorrectTable()
+        {
+            using (var scenario = MultiLevelTableScenario.Setup())
+            {
+                // Act
+                var src = ConfigSource.CreateFileSource("test");
+                var sourceTable = scenario.Table.TransformToSourceTable(src);
+
+                // Assert
+                sourceTable.Get<IConfigSource>(nameof(scenario.Clr.X)).Should().BeSameAs(src);
+                var sub = sourceTable.Get<TomlTable>(nameof(scenario.Clr.Sub));
+                sub.Get<IConfigSource>(nameof(scenario.Clr.Sub.Y)).Should().BeSameAs(src);
+            }
+        }
+
     }
 }

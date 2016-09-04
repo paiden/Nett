@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functional\AutoSaveTests.cs" />
+    <Compile Include="Functional\ConfigSourceTests.cs" />
     <Compile Include="Functional\InitTests.cs" />
     <Compile Include="Functional\MergeTests.cs" />
     <Compile Include="Functional\TransactionTests.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\GitScenario.cs" />
     <Compile Include="TestData\SingleConfigFileScenario.cs" />
+    <Compile Include="TestData\MultiLevelTableScenario.cs" />
     <Compile Include="TestData\TestAppSettings.cs" />
     <Compile Include="TestsBase.cs" />
     <Compile Include="Unit\ComaConfigTests.cs" />

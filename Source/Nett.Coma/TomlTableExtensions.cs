@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Extensions;
 
     internal static class TomlTableExtensions
     {
@@ -58,6 +60,45 @@
                     target.Rows.Remove(rowKey);
                 }
             }
+        }
+
+        public static T ResolveKeyChain<T>(this TomlTable table, IList<string> keyChain)
+            where T : TomlObject
+        {
+            var current = table.CheckNotNull(nameof(table));
+
+            for (int i = 0; i < keyChain.Count - 1; i++)
+            {
+                current = (TomlTable)current[keyChain[i]];
+            }
+
+            return (T)current[keyChain.Last()];
+        }
+
+        public static TomlTable TransformToSourceTable(this TomlTable table, IConfigSource source)
+        {
+            table.CheckNotNull(nameof(table));
+
+            var sourcesTable = Toml.Create();
+            foreach (var r in table.Rows)
+            {
+                if (r.Value.TomlType == TomlObject.TomlObjectType.Table)
+                {
+                    sourcesTable[r.Key] = ((TomlTable)r.Value).TransformToSourceTable(source);
+                }
+                else if (r.Value.TomlType == TomlObject.TomlObjectType.ArrayOfTables)
+                {
+                    var arr = (TomlTableArray)r.Value;
+                    var sourcesArray = new TomlTableArray(table.MetaData, arr.Items.Select(t => t.TransformToSourceTable(source)));
+                    sourcesTable[r.Key] = sourcesArray;
+                }
+                else
+                {
+                    sourcesTable[r.Key] = new TomlSource(table.MetaData, source);
+                }
+            }
+
+            return sourcesTable;
         }
     }
 }

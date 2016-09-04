@@ -51,6 +51,7 @@
     <Compile Include="MergedConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TomlTableExtensions.cs" />
+    <Compile Include="TomlValueSource.cs" />
     <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup>

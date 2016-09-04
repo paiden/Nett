@@ -27,18 +27,23 @@
 
     internal sealed class FileConfigSource : IConfigSource, ISourceFactory
     {
-        private readonly string filePath;
+        public FileConfigSource(string filePath)
+            : this(filePath, filePath)
+        {
+        }
 
         public FileConfigSource(string filePath, string alias)
         {
             this.Alias = alias.CheckNotNull(nameof(alias));
-            this.filePath = filePath.CheckNotNull(nameof(alias));
+            this.FilePath = filePath.CheckNotNull(nameof(alias));
         }
+
+        public string FilePath { get; }
 
         public string Alias { get; }
 
         public IPersistableConfig CreatePersistable()
-            => new OptimizedFileConfig(new FileConfig(this.filePath));
+            => new OptimizedFileConfig(new FileConfig(this));
     }
 
     internal sealed class MergeSource : IConfigSource, ISourceFactory

@@ -8,6 +8,7 @@
         private readonly Action<IPersistableConfig> onCloseTransactionCallback;
         private readonly IPersistableConfig persistable;
         private TomlTable transactionTable;
+        private TomlTable transactionSourcesTable;
 
         private Transaction(IPersistableConfig persistable, Action<IPersistableConfig> onCloseTransactionCallback)
         {
@@ -43,6 +44,8 @@
 
         public TomlTable Load() => this.transactionTable;
 
+        public TomlTable LoadSourcesTable() => this.transactionSourcesTable;
+
         public void Save(TomlTable content) => this.transactionTable = content;
 
         public bool WasChangedExternally() => this.persistable.WasChangedExternally();
@@ -50,6 +53,7 @@
         private void Init()
         {
             this.transactionTable = this.persistable.Load();
+            this.transactionSourcesTable = this.persistable.Load();
         }
     }
 }

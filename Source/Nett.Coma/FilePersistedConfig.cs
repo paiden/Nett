@@ -2,21 +2,24 @@
 {
     using System.IO;
     using System.Security.Cryptography;
+    using Extensions;
 
     internal sealed class FileConfig : IPersistableConfig
     {
-        private readonly string filePath;
+        private readonly FileConfigSource source;
 
         private byte[] latestFileHash = null;
 
-        public FileConfig(string filePath)
+        public FileConfig(FileConfigSource source)
         {
-            this.filePath = filePath;
+            this.source = source.CheckNotNull(nameof(source));
         }
+
+        private string FilePath => this.source.FilePath;
 
         public bool EnsureExists(TomlTable content)
         {
-            if (!File.Exists(this.filePath))
+            if (!File.Exists(this.source.FilePath))
             {
                 this.Save(content);
                 return true;
@@ -27,20 +30,27 @@
 
         public bool WasChangedExternally()
         {
-            var current = ComputeHash(this.filePath);
+            var current = ComputeHash(this.FilePath);
             return !HashEquals(this.latestFileHash, current);
         }
 
         public TomlTable Load()
         {
-            this.latestFileHash = ComputeHash(this.filePath);
-            return Toml.ReadFile(this.filePath);
+            this.latestFileHash = ComputeHash(this.FilePath);
+            return Toml.ReadFile(this.FilePath);
+        }
+
+        public TomlTable LoadSourcesTable()
+        {
+            var table = this.Load();
+            var sourcesTable = table.TransformToSourceTable(this.source);
+            return sourcesTable;
         }
 
         public void Save(TomlTable config)
         {
-            Toml.WriteFile(config, this.filePath);
-            this.latestFileHash = ComputeHash(this.filePath);
+            Toml.WriteFile(config, this.FilePath);
+            this.latestFileHash = ComputeHash(this.FilePath);
         }
 
         private static byte[] ComputeHash(string filePath)

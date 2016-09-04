@@ -7,6 +7,7 @@
         private readonly FileConfig persistable;
 
         private TomlTable loaded = null;
+        private TomlTable loadedSourcesTable = null;
 
         public OptimizedFileConfig(FileConfig persistable)
         {
@@ -17,12 +18,14 @@
 
         public TomlTable Load()
         {
-            if (this.loaded == null || this.persistable.WasChangedExternally())
-            {
-                this.loaded = this.persistable.Load();
-            }
-
+            this.EnsureLastestTableLoaded();
             return this.loaded;
+        }
+
+        public TomlTable LoadSourcesTable()
+        {
+            this.EnsureLastestTableLoaded();
+            return this.loadedSourcesTable;
         }
 
         public void Save(TomlTable content)
@@ -31,5 +34,14 @@
         }
 
         public bool WasChangedExternally() => this.persistable.WasChangedExternally();
+
+        private void EnsureLastestTableLoaded()
+        {
+            if (this.loaded == null || this.persistable.WasChangedExternally())
+            {
+                this.loaded = this.persistable.Load();
+                this.loadedSourcesTable = this.persistable.LoadSourcesTable();
+            }
+        }
     }
 }
