@@ -1,5 +1,6 @@
 ﻿namespace Nett.Coma
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Nett.Extensions;
 
@@ -10,7 +11,7 @@
 
     internal interface ISourceFactory
     {
-        IPersistableConfig CreatePersistable();
+        IMergeableConfig CreateMergedPersistable();
     }
 
     public static class ConfigSource
@@ -42,8 +43,8 @@
 
         public string Alias { get; }
 
-        public IPersistableConfig CreatePersistable()
-            => new OptimizedFileConfig(new FileConfig(this));
+        public IMergeableConfig CreateMergedPersistable()
+            => new MergedConfig(new List<IPersistableConfig>() { new OptimizedFileConfig(new FileConfig(this)) });
     }
 
     internal sealed class MergeSource : IConfigSource, ISourceFactory
@@ -57,12 +58,11 @@
 
         public string Alias => "Aggregate";
 
-        public IPersistableConfig CreatePersistable()
+        public IMergeableConfig CreateMergedPersistable()
         {
             var sourceFactories = this.sources.Cast<ISourceFactory>();
-            var sourcePersistables = sourceFactories.Select(sf => sf.CreatePersistable());
+            var sourcePersistables = sourceFactories.Select(sf => sf.CreateMergedPersistable());
             return new MergedConfig(sourcePersistables);
         }
-
     }
 }

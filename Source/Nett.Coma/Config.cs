@@ -7,9 +7,9 @@
 
     public class Config
     {
-        private IPersistableConfig persistable;
+        private IMergeableConfig persistable;
 
-        internal Config(IPersistableConfig persistable)
+        internal Config(IMergeableConfig persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
 
@@ -38,7 +38,7 @@
 
             var cfg = createDefault();
 
-            var persisted = ((ISourceFactory)source).CreatePersistable();
+            var persisted = ((ISourceFactory)source).CreateMergedPersistable();
             persisted.EnsureExists(Toml.Create(cfg));
 
             return new Config<T>(persisted);

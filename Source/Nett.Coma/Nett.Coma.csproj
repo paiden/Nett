@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigSources.cs" />
+    <Compile Include="IMergeableConfig.cs" />
     <Compile Include="OptimizedFileConfig.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Config`1.cs" />

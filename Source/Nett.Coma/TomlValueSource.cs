@@ -14,13 +14,9 @@
 
         public override string ReadableTypeName => "Value source";
 
-        public override TomlObjectType TomlType
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        // Workaround for the 'internal TOML type' TomlSource as the type doesn't matter for this internal type
+        // How can we provide a better value for this enum inside the COMA lib?
+        public override TomlObjectType TomlType => TomlObjectType.Int;
 
         public override object Get(Type t) => this.Value;
 

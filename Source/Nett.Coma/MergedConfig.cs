@@ -6,7 +6,7 @@
 
     using static System.Diagnostics.Debug;
 
-    internal class MergedConfig : IPersistableConfig
+    internal class MergedConfig : IMergeableConfig
     {
         private const string AssertAtLeastOneConfigMsg =
             "Constructor should check that there is a config and the configs should not get modified later on";
@@ -30,6 +30,11 @@
 
         public TomlTable Load() => this.MergeTables(c => c.Load());
 
+        public TomlTable Load(TomlTable table, IConfigSource source)
+        {
+            throw new NotImplementedException();
+        }
+
         public TomlTable LoadSourcesTable() => this.MergeTables(c => c.LoadSourcesTable());
 
         public void Save(TomlTable content)
@@ -42,6 +47,11 @@
                 tbl.OverwriteWithValuesForSaveFrom(content);
                 c.Save(tbl);
             }
+        }
+
+        public void Save(TomlTable table, IConfigSource source)
+        {
+            throw new NotImplementedException();
         }
 
         public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());

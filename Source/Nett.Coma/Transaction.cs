@@ -3,14 +3,14 @@
     using System;
     using Extensions;
 
-    internal sealed class Transaction : IPersistableConfig, IDisposable
+    internal sealed class Transaction : IMergeableConfig, IDisposable
     {
-        private readonly Action<IPersistableConfig> onCloseTransactionCallback;
-        private readonly IPersistableConfig persistable;
+        private readonly Action<IMergeableConfig> onCloseTransactionCallback;
+        private readonly IMergeableConfig persistable;
         private TomlTable transactionTable;
         private TomlTable transactionSourcesTable;
 
-        private Transaction(IPersistableConfig persistable, Action<IPersistableConfig> onCloseTransactionCallback)
+        private Transaction(IMergeableConfig persistable, Action<IMergeableConfig> onCloseTransactionCallback)
         {
             if (persistable is Transaction)
             {
@@ -22,7 +22,7 @@
             this.onCloseTransactionCallback = onCloseTransactionCallback.CheckNotNull(nameof(onCloseTransactionCallback));
         }
 
-        public static Transaction Start(IPersistableConfig persistable, Action<IPersistableConfig> onCloseTransactionCallback)
+        public static Transaction Start(IMergeableConfig persistable, Action<IMergeableConfig> onCloseTransactionCallback)
         {
             var transaction = new Transaction(persistable, onCloseTransactionCallback);
             transaction.Init();
@@ -54,6 +54,16 @@
         {
             this.transactionTable = this.persistable.Load();
             this.transactionSourcesTable = this.persistable.Load();
+        }
+
+        public TomlTable Load(TomlTable table, IConfigSource source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(TomlTable table, IConfigSource source)
+        {
+            throw new NotImplementedException();
         }
     }
 }
