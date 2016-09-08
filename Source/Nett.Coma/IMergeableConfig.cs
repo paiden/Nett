@@ -2,8 +2,8 @@
 {
     internal interface IMergeableConfig : IPersistableConfig
     {
-        TomlTable Load(TomlTable table, IConfigSource source);
+        TomlTable Load(IConfigSource source);
 
-        void Save(TomlTable table, IConfigSource source);
+        void Save(TomlTable table, IConfigSource target);
     }
 }

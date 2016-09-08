@@ -26,7 +26,7 @@
                 var cfg = Config.Create(() => new SingleLevelConfig(), ConfigSource.CreateFileSource(filePath));
 
                 // Act
-                cfg.Set(c => c.IntValue = ExpectedNewValue);
+                cfg.Set(c => c.IntValue, ExpectedNewValue);
 
                 // Assert
                 var onDisk = Toml.ReadFile<SingleLevelConfig>(filePath);
@@ -57,7 +57,7 @@
                 var c = Config.Create(() => new SingleLevelConfig(), f1, f2);
 
                 // Act
-                c.Set(cfg => cfg.StringValue = NewStringVal);
+                c.Set(cfg => cfg.StringValue, NewStringVal);
 
                 // Assert
                 var preTbl = Toml.ReadFile(f1);
@@ -90,7 +90,7 @@
                 var cfg = Config.Create(() => new TestData.TestAppSettings(), mainFile, userFile);
 
                 // Act
-                cfg.Set(c => c.User.UserName = Changed);
+                cfg.Set(c => c.User.UserName, Changed);
 
                 // Assert
                 var tml = Toml.ReadFile(userFile);
@@ -115,7 +115,7 @@
                 var cfg = scenario.CreateMergedFromDefaults();
 
                 // Act
-                cfg.Set(c => c.Core.Help.Format = updated);
+                cfg.Set(c => c.Core.Help.Format, updated);
 
                 // Assert
                 var tbl = Toml.ReadFile(scenario.SystemFile);

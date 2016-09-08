@@ -1,7 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System;
-    using Extensions;
+    using Nett.Extensions;
 
     internal sealed class Transaction : IMergeableConfig, IDisposable
     {
@@ -65,5 +65,12 @@
         {
             throw new NotImplementedException();
         }
+
+        public TomlTable Load(IConfigSource source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
     }
 }

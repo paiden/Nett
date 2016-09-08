@@ -2,7 +2,7 @@
 {
     using System.IO;
     using System.Security.Cryptography;
-    using Extensions;
+    using Nett.Extensions;
 
     internal sealed class FileConfig : IPersistableConfig
     {
@@ -16,6 +16,8 @@
         }
 
         private string FilePath => this.source.FilePath;
+
+        public bool CanHandleSource(IConfigSource source) => this.source.Alias == source.Alias;
 
         public bool EnsureExists(TomlTable content)
         {

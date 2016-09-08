@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Extensions;
+    using Nett.Extensions;
 
     internal static class TomlTableExtensions
     {
@@ -27,7 +27,7 @@
             }
         }
 
-        public static void OverwriteWithValuesForSaveFrom(this TomlTable target, TomlTable from)
+        public static void OverwriteWithValuesForSaveFrom(this TomlTable target, TomlTable from, bool addNewRows)
         {
             if (from == null) { throw new ArgumentNullException(nameof(from)); }
 
@@ -43,7 +43,7 @@
                     {
                         if (fromObject.TomlType == TomlObject.TomlObjectType.Table)
                         {
-                            ((TomlTable)targetTable).OverwriteWithValuesForSaveFrom((TomlTable)fromObject);
+                            ((TomlTable)targetTable).OverwriteWithValuesForSaveFrom((TomlTable)fromObject, addNewRows);
                         }
                         else
                         {
@@ -54,6 +54,10 @@
                     {
                         target.Rows[rowKey] = fromObject;
                     }
+                }
+                else if (addNewRows)
+                {
+                    target[rowKey] = fromObject;
                 }
                 else
                 {

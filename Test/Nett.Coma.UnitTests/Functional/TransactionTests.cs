@@ -23,9 +23,9 @@
                 // Act
                 using (cfg.StartTransaction())
                 {
-                    cfg.Set(c => c.X = 2);
-                    cfg.Set(c => c.X = 23);
-                    cfg.Set(c => c.X = ChangedX);
+                    cfg.Set(c => c.X, 2);
+                    cfg.Set(c => c.X, 23);
+                    cfg.Set(c => c.X, ChangedX);
                 }
 
                 // Assert
@@ -44,12 +44,12 @@
                 var cfg = scenario.CreateConfig();
                 using (cfg.StartTransaction())
                 {
-                    cfg.Set(c => c.X = 2);
-                    cfg.Set(c => c.X = 23);
+                    cfg.Set(c => c.X, 2);
+                    cfg.Set(c => c.X, 23);
                 }
 
                 // Act
-                cfg.Set(c => c.X = ChangedX);
+                cfg.Set(c => c.X, ChangedX);
 
                 // Assert
                 scenario.ReadFile().X.Should().Be(ChangedX);
@@ -68,9 +68,9 @@
                 cfg.StartTransaction();
 
                 // Act
-                cfg.Set(c => c.X = 2);
-                cfg.Set(c => c.X = 23);
-                cfg.Set(c => c.X = ChangedX);
+                cfg.Set(c => c.X, 2);
+                cfg.Set(c => c.X, 23);
+                cfg.Set(c => c.X, ChangedX);
 
                 // Assert
                 scenario.ReadFile().X.Should().Be(original);
@@ -127,7 +127,7 @@
                 Toml.WriteFile(new SingleConfigFileScenario.ConfigContent() { X = newXValue }, scenario.File);
 
                 // Act
-                cfg.Set(c => c.Y = newYValue);
+                cfg.Set(c => c.Y, newYValue);
                 Action a = () => trans.Dispose();
 
                 // Assert

@@ -38,6 +38,10 @@ IgnoreCase = true";
         public TestFileName UserFile { get; }
         public TestFileName RepoFile { get; }
 
+        public IConfigSource SystemFileSource { get; private set; }
+        public IConfigSource UserFileSource { get; private set; }
+        public IConfigSource RepoFileSource { get; private set; }
+
         public string SystemAlias => "System";
         public string UserAlias => "User";
         public string RepoAlias => "RepoAlias";
@@ -51,10 +55,10 @@ IgnoreCase = true";
 
         public Config<GitConfig> CreateMergedFromDefaults()
         {
-            var source = ConfigSource.Merged(
-                ConfigSource.CreateFileSource(this.SystemFile, SystemAlias),
-                ConfigSource.CreateFileSource(this.UserFile, UserAlias),
-                ConfigSource.CreateFileSource(this.RepoFile, RepoAlias));
+            this.SystemFileSource = ConfigSource.CreateFileSource(this.SystemFile, SystemAlias);
+            this.UserFileSource = ConfigSource.CreateFileSource(this.UserFile, UserAlias);
+            this.RepoFileSource = ConfigSource.CreateFileSource(this.RepoFile, RepoAlias);
+            var source = ConfigSource.Merged(this.SystemFileSource, this.UserFileSource, this.RepoFileSource);
             return Config.Create(() => new GitConfig(), source);
         }
 

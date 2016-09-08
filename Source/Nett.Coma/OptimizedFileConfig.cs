@@ -43,5 +43,7 @@
                 this.loadedSourcesTable = this.persistable.LoadSourcesTable();
             }
         }
+
+        public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
     }
 }

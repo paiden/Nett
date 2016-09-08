@@ -21,6 +21,8 @@
             this.configs = new List<IPersistableConfig>(configs);
         }
 
+        public bool CanHandleSource(IConfigSource source) => this.configs.Any(c => c.CanHandleSource(source));
+
         public bool EnsureExists(TomlTable content)
         {
             Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
@@ -30,9 +32,10 @@
 
         public TomlTable Load() => this.MergeTables(c => c.Load());
 
-        public TomlTable Load(TomlTable table, IConfigSource source)
+        public TomlTable Load(IConfigSource source)
         {
-            throw new NotImplementedException();
+            IPersistableConfig _;
+            return this.LoadInternal(source, out _);
         }
 
         public TomlTable LoadSourcesTable() => this.MergeTables(c => c.LoadSourcesTable());
@@ -44,14 +47,25 @@
             foreach (var c in this.configs)
             {
                 var tbl = c.Load();
-                tbl.OverwriteWithValuesForSaveFrom(content);
+                tbl.OverwriteWithValuesForSaveFrom(content, addNewRows: false);
                 c.Save(tbl);
             }
         }
 
         public void Save(TomlTable table, IConfigSource source)
         {
-            throw new NotImplementedException();
+            IPersistableConfig cfg;
+            var tbl = this.LoadInternal(source, out cfg);
+
+            tbl.OverwriteWithValuesForSaveFrom(table, addNewRows: true);
+
+            cfg.Save(tbl);
+        }
+
+        private TomlTable LoadInternal(IConfigSource source, out IPersistableConfig cfg)
+        {
+            cfg = this.configs.Single(c => c.CanHandleSource(source));
+            return cfg.Load();
         }
 
         public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());

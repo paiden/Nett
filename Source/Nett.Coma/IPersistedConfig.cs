@@ -2,6 +2,8 @@
 {
     internal interface IPersistableConfig
     {
+        bool CanHandleSource(IConfigSource source);
+
         bool EnsureExists(TomlTable content);
 
         TomlTable Load();

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Extensions;
+    using Nett.Extensions;
 
     public class Config
     {
@@ -15,8 +15,6 @@
 
             this.persistable = persistable;
         }
-
-        internal delegate void SetAction(ref TomlTable table);
 
         public static Config<T> Create<T>(Func<T> createDefault, string filePath)
             where T : class
@@ -64,7 +62,18 @@
         {
             setter.CheckNotNull(nameof(setter));
 
-            this.SetInternal((ref TomlTable tbl) => setter(tbl));
+            var tbl = this.persistable.Load();
+            setter(tbl);
+            this.persistable.Save(tbl);
+        }
+
+        public void Set(Action<TomlTable> setter, IConfigSource target)
+        {
+            setter.CheckNotNull(nameof(setter));
+
+            var tbl = this.persistable.Load(target);
+            setter(tbl);
+            this.persistable.Save(tbl, target);
         }
 
         public IDisposable StartTransaction()
@@ -81,13 +90,6 @@
             var table = this.persistable.LoadSourcesTable();
             var source = table.ResolveKeyChain<TomlSource>(keyChain);
             return source.Value;
-        }
-
-        internal void SetInternal(SetAction setter)
-        {
-            var cfg = this.persistable.Load();
-            setter(ref cfg);
-            this.persistable.Save(cfg);
         }
     }
 }

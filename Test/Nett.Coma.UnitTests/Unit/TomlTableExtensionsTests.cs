@@ -17,7 +17,7 @@ namespace Nett.Coma.Tests.Unit
             var fromTable = Toml.Create();
 
             // Act
-            tgtTable.OverwriteWithValuesForSaveFrom(fromTable);
+            tgtTable.OverwriteWithValuesForSaveFrom(fromTable, addNewRows: false);
 
             // Assert
             tgtTable.Rows.Count.Should().Be(0);
@@ -33,7 +33,7 @@ namespace Nett.Coma.Tests.Unit
             fromTable.Add("x", 0);
 
             // Act
-            targetTable.OverwriteWithValuesForSaveFrom(fromTable);
+            targetTable.OverwriteWithValuesForSaveFrom(fromTable, addNewRows: false);
 
             // Assert
             targetTable.Rows.Count.Should().Be(0);
