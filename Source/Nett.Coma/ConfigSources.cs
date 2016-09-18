@@ -1,6 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Nett.Extensions;
 
@@ -10,6 +11,11 @@
     }
 
     internal interface ISourceFactory
+    {
+        IPersistableConfig CreatePersistable();
+    }
+
+    internal interface IMergedSourceFactory
     {
         IMergeableConfig CreateMergedPersistable();
     }
@@ -26,7 +32,8 @@
             => new MergeSource(sources);
     }
 
-    internal sealed class FileConfigSource : IConfigSource, ISourceFactory
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
+    internal sealed class FileConfigSource : IConfigSource, IMergedSourceFactory, ISourceFactory
     {
         public FileConfigSource(string filePath)
             : this(filePath, filePath)
@@ -43,11 +50,15 @@
 
         public string Alias { get; }
 
+        public IPersistableConfig CreatePersistable() => new OptimizedFileConfig(new FileConfig(this));
+
         public IMergeableConfig CreateMergedPersistable()
-            => new MergedConfig(new List<IPersistableConfig>() { new OptimizedFileConfig(new FileConfig(this)) });
+            => new MergedConfig(new List<IPersistableConfig>() { this.CreatePersistable() });
+
+        private string DebuggerDisplay => $"[FileSource] Alias={this.Alias} FilePath={this.FilePath}";
     }
 
-    internal sealed class MergeSource : IConfigSource, ISourceFactory
+    internal sealed class MergeSource : IConfigSource, IMergedSourceFactory
     {
         private IConfigSource[] sources;
 
@@ -61,7 +72,7 @@
         public IMergeableConfig CreateMergedPersistable()
         {
             var sourceFactories = this.sources.Cast<ISourceFactory>();
-            var sourcePersistables = sourceFactories.Select(sf => sf.CreateMergedPersistable());
+            var sourcePersistables = sourceFactories.Select(sf => sf.CreatePersistable());
             return new MergedConfig(sourcePersistables);
         }
     }

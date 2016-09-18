@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nett.Coma.TomlEx;
     using Nett.Extensions;
 
     internal static class TomlTableExtensions
@@ -14,9 +15,9 @@
             foreach (var r in from.Rows)
             {
                 TomlObject targetObject = null;
-                if (target.Rows.TryGetValue(r.Key, out targetObject)
-                    && targetObject.TomlType == TomlObject.TomlObjectType.Table
-                    && r.Value.TomlType == TomlObject.TomlObjectType.Table)
+                if (target.TryGetValue(r.Key, out targetObject)
+                    && targetObject.TomlType == TomlObjectType.Table
+                    && r.Value.TomlType == TomlObjectType.Table)
                 {
                     ((TomlTable)targetObject).OverwriteWithValuesForLoadFrom((TomlTable)r.Value);
                 }
@@ -31,28 +32,28 @@
         {
             if (from == null) { throw new ArgumentNullException(nameof(from)); }
 
-            var allRowKeys = new List<string>(target.Rows.Keys);
+            var allRowKeys = new List<string>(target.Keys);
             foreach (var rowKey in allRowKeys)
             {
                 TomlObject fromObject = null;
-                if (from.Rows.TryGetValue(rowKey, out fromObject))
+                if (from.TryGetValue(rowKey, out fromObject))
                 {
-                    TomlObject targetTable = target.Rows[rowKey] as TomlTable;
+                    TomlObject targetTable = target[rowKey] as TomlTable;
 
                     if (targetTable != null)
                     {
-                        if (fromObject.TomlType == TomlObject.TomlObjectType.Table)
+                        if (fromObject.TomlType == TomlObjectType.Table)
                         {
                             ((TomlTable)targetTable).OverwriteWithValuesForSaveFrom((TomlTable)fromObject, addNewRows);
                         }
                         else
                         {
-                            throw new NotSupportedException($"Merging row with key '{rowKey}' of type {target.Rows[rowKey].ReadableTypeName} with row of type '{fromObject.ReadableTypeName}' is not supported.");
+                            throw new NotSupportedException($"Merging row with key '{rowKey}' of type {target[rowKey].ReadableTypeName} with row of type '{fromObject.ReadableTypeName}' is not supported.");
                         }
                     }
                     else
                     {
-                        target.Rows[rowKey] = fromObject;
+                        target[rowKey] = fromObject;
                     }
                 }
                 else if (addNewRows)
@@ -61,7 +62,7 @@
                 }
                 else
                 {
-                    target.Rows.Remove(rowKey);
+                    target.Remove(rowKey);
                 }
             }
         }
@@ -86,11 +87,11 @@
             var sourcesTable = Toml.Create();
             foreach (var r in table.Rows)
             {
-                if (r.Value.TomlType == TomlObject.TomlObjectType.Table)
+                if (r.Value.TomlType == TomlObjectType.Table)
                 {
                     sourcesTable[r.Key] = ((TomlTable)r.Value).TransformToSourceTable(source);
                 }
-                else if (r.Value.TomlType == TomlObject.TomlObjectType.ArrayOfTables)
+                else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
                     var arr = (TomlTableArray)r.Value;
                     var sourcesArray = new TomlTableArray(table.MetaData, arr.Items.Select(t => t.TransformToSourceTable(source)));
@@ -103,6 +104,25 @@
             }
 
             return sourcesTable;
+        }
+
+        public static TomlTable Clone(this TomlTable input)
+        {
+            input.CheckNotNull(nameof(input));
+
+            TomlTable cloned = Toml.Create(input.MetaData.Config);
+
+            foreach (var r in input.Rows)
+            {
+                switch (r.Value.TomlType)
+                {
+                    case TomlObjectType.Table: cloned.Add(r.Key, ((TomlTable)r.Value).Clone()); break;
+                    case TomlObjectType.ArrayOfTables: cloned.Add(r.Key, ((TomlTableArray)r.Value).Clone()); break;
+                    default: cloned[r.Key] = r.Value; break;
+                }
+            }
+
+            return cloned;
         }
     }
 }

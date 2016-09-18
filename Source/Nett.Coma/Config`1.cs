@@ -22,19 +22,20 @@
             return this.config.Get(tbl =>
             {
                 var keyChain = selector.ResolveKeyChain();
-                var target = keyChain.ResolveTargetTable(tbl);
+                var target = keyChain.ResolveChildTableOf(tbl);
                 return target[keyChain.TargetTableKey].Get<TRet>();
             });
         }
 
-        public IConfigSource GetSource(Expression<Func<T, object>> selector)
+        public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector)
         {
-            return this.config.GetSource(table =>
-            {
-                var keyChain = selector.ResolveKeyChain();
-                var target = keyChain.ResolveTargetTable(table);
-                return ((TomlSource)target[keyChain.TargetTableKey]).Value;
-            });
+            var path = selector.CheckNotNull(nameof(selector)).BuildTPath();
+            return this.config.Clear(path);
+        }
+
+        public IConfigSource GetSource<TResult>(Expression<Func<T, TResult>> selector)
+        {
+            return this.config.TryGetSource(selector.BuildTPath());
         }
 
         public void Set<TProperty>(Expression<Func<T, TProperty>> selector, TProperty value)
@@ -45,13 +46,13 @@
 
         private void ApplySetter(TomlTable rootTable, KeyChain keyChain, object value)
         {
-            var finalTable = keyChain.ResolveTargetTable(rootTable);
+            var finalTable = keyChain.ResolveChildTableOf(rootTable);
             finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.MetaData, value, pi: null);
         }
 
         private void ApplySetter(TomlTable rootTable, KeyChain keyChain, object value, IConfigSource source)
         {
-            var finalTable = keyChain.ResolveTargetTable(rootTable);
+            var finalTable = keyChain.ResolveChildTableOf(rootTable);
             finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.MetaData, value, pi: null);
         }
 

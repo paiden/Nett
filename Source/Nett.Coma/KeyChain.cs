@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Nett.Coma
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     internal sealed class KeyChain
     {
         private readonly List<string> segments;
@@ -17,7 +19,9 @@ namespace Nett.Coma
 
         public string TargetTableKey => this.segments.Last();
 
-        public TomlTable ResolveTargetTable(TomlTable table)
+        private string DebuggerDisplay => string.Join(".", this.segments);
+
+        public TomlTable ResolveChildTableOf(TomlTable table)
         {
             TomlTable resolved = table;
 
@@ -28,5 +32,8 @@ namespace Nett.Coma
 
             return resolved;
         }
+
+        public TomlObject ResolveTargetRow(TomlTable table)
+            => this.ResolveChildTableOf(table)[this.TargetTableKey];
     }
 }

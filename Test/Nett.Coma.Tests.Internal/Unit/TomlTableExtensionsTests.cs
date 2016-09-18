@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using Nett.Coma.Tests.TestData;
+using Nett.Coma.Test.Util;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Unit
@@ -20,7 +20,7 @@ namespace Nett.Coma.Tests.Unit
             tgtTable.OverwriteWithValuesForSaveFrom(fromTable, addNewRows: false);
 
             // Assert
-            tgtTable.Rows.Count.Should().Be(0);
+            tgtTable.Count.Should().Be(0);
         }
 
         [MFact(nameof(TomlTableExtensions), nameof(TomlTableExtensions.OverwriteWithValuesForSaveFrom),
@@ -36,7 +36,7 @@ namespace Nett.Coma.Tests.Unit
             targetTable.OverwriteWithValuesForSaveFrom(fromTable, addNewRows: false);
 
             // Assert
-            targetTable.Rows.Count.Should().Be(0);
+            targetTable.Count.Should().Be(0);
         }
 
         [MFact(nameof(TomlTableExtensions), nameof(TomlTableExtensions.TransformToSourceTable), "When table is null, throws ArgumentNull exception")]

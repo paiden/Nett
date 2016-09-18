@@ -19,18 +19,20 @@
         public TomlTable Load()
         {
             this.EnsureLastestTableLoaded();
-            return this.loaded;
+            return this.loaded.Clone();
         }
 
         public TomlTable LoadSourcesTable()
         {
             this.EnsureLastestTableLoaded();
-            return this.loadedSourcesTable;
+            return this.loadedSourcesTable.Clone();
         }
 
         public void Save(TomlTable content)
         {
             this.persistable.Save(content);
+            this.loaded = content;
+            this.loadedSourcesTable = this.persistable.TransformToSourceTable(this.loaded).Freeze();
         }
 
         public bool WasChangedExternally() => this.persistable.WasChangedExternally();
@@ -39,8 +41,8 @@
         {
             if (this.loaded == null || this.persistable.WasChangedExternally())
             {
-                this.loaded = this.persistable.Load();
-                this.loadedSourcesTable = this.persistable.LoadSourcesTable();
+                this.loaded = this.persistable.Load().Freeze();
+                this.loadedSourcesTable = this.persistable.TransformToSourceTable(this.loaded).Freeze();
             }
         }
 

@@ -9,6 +9,11 @@ namespace Nett.Coma.Tests.TestData
     /// </summary>
     public sealed class GitScenario : IDisposable
     {
+        public const string RepoDefaultContent = @"
+[Core]
+Bare = false
+IgnoreCase = true";
+
         public const string SystemDefaultContent = @"
 [Core]
 Symlinks = false
@@ -22,46 +27,38 @@ Format = ""Web""";
 Name = ""Test User""
 EMail = ""test@user.com""";
 
-        public const string RepoDefaultContent = @"
-[Core]
-Bare = false
-IgnoreCase = true";
+        public static readonly GitConfig MergedDefault;
+        private static readonly string MergedDefaultContent;
 
-        private static readonly string MergedDefaultContent = RepoDefaultContent + Environment.NewLine
-            + SystemDefaultContent.Replace("[Core]", "")
+        static GitScenario()
+        {
+            MergedDefaultContent = RepoDefaultContent + Environment.NewLine
+                    + SystemDefaultContent.Replace("[Core]", "")
             + UserDefaultContent + Environment.NewLine;
 
-
-        public static readonly GitConfig MergedDefault = Toml.ReadString<GitConfig>(MergedDefaultContent);
-
-        public TestFileName SystemFile { get; }
-        public TestFileName UserFile { get; }
-        public TestFileName RepoFile { get; }
-
-        public IConfigSource SystemFileSource { get; private set; }
-        public IConfigSource UserFileSource { get; private set; }
-        public IConfigSource RepoFileSource { get; private set; }
-
-        public string SystemAlias => "System";
-        public string UserAlias => "User";
-        public string RepoAlias => "RepoAlias";
+            MergedDefault = Toml.ReadString<GitConfig>(MergedDefaultContent);
+        }
 
         private GitScenario(string testName)
         {
             this.SystemFile = TestFileName.Create(testName, "system", GitConfig.Extension);
             this.UserFile = TestFileName.Create(testName, "user", GitConfig.Extension);
             this.RepoFile = TestFileName.Create(testName, "repo", GitConfig.Extension);
-        }
 
-        public Config<GitConfig> CreateMergedFromDefaults()
-        {
             this.SystemFileSource = ConfigSource.CreateFileSource(this.SystemFile, SystemAlias);
             this.UserFileSource = ConfigSource.CreateFileSource(this.UserFile, UserAlias);
             this.RepoFileSource = ConfigSource.CreateFileSource(this.RepoFile, RepoAlias);
-            var source = ConfigSource.Merged(this.SystemFileSource, this.UserFileSource, this.RepoFileSource);
-            return Config.Create(() => new GitConfig(), source);
         }
 
+        public string RepoAlias => "RepoAlias";
+        public TestFileName RepoFile { get; }
+        public IConfigSource RepoFileSource { get; private set; }
+        public string SystemAlias => "System";
+        public TestFileName SystemFile { get; }
+        public IConfigSource SystemFileSource { get; private set; }
+        public string UserAlias => "User";
+        public TestFileName UserFile { get; }
+        public IConfigSource UserFileSource { get; private set; }
 
         public static GitScenario Setup(string testName)
         {
@@ -72,6 +69,22 @@ IgnoreCase = true";
             File.WriteAllText(scenario.RepoFile, RepoDefaultContent);
 
             return scenario;
+        }
+
+        public Config<GitConfig> CreateMergedFromDefaults()
+        {
+            var source = ConfigSource.Merged(this.SystemFileSource, this.UserFileSource, this.RepoFileSource);
+            return Config.Create(() => new GitConfig(), source);
+        }
+
+        // Default System settings stored in all scopes
+        public GitScenario UseSystemDefaultContentForeachSource()
+        {
+            File.WriteAllText(this.SystemFile, SystemDefaultContent);
+            File.WriteAllText(this.UserFile, SystemDefaultContent);
+            File.WriteAllText(this.RepoFile, SystemDefaultContent);
+
+            return this;
         }
 
         public void Dispose()
@@ -99,11 +112,11 @@ IgnoreCase = true";
 
             public sealed class CoreConfig
             {
-                public bool Symlinks { get; set; } = false;
                 public bool AutoClrf { get; set; } = true;
-                public HelpConfig Help { get; set; } = new HelpConfig();
                 public bool Bare { get; set; } = false;
+                public HelpConfig Help { get; set; } = new HelpConfig();
                 public bool IgnoreCase { get; set; } = false;
+                public bool Symlinks { get; set; } = false;
 
                 public override bool Equals(object obj)
                 {
@@ -121,14 +134,14 @@ IgnoreCase = true";
 
             public sealed class HelpConfig
             {
-                public HelpFormat Format { get; set; } = HelpFormat.Man;
-
                 public enum HelpFormat
                 {
                     Man,
                     Info,
                     Web,
                 }
+
+                public HelpFormat Format { get; set; } = HelpFormat.Man;
 
                 public override bool Equals(object obj)
                 {
@@ -141,8 +154,8 @@ IgnoreCase = true";
 
             public sealed class UserConfig
             {
-                public string Name { get; set; } = null;
                 public string EMail { get; set; } = null;
+                public string Name { get; set; } = null;
 
                 public override bool Equals(object obj)
                 {

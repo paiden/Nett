@@ -15,8 +15,12 @@ namespace Nett.UnitTests.Util
 
         public static implicit operator string(TestFileName fn) => fn.fileName;
 
-        public static TestFileName Create(string test, string name, string extension) =>
-            new TestFileName($"{test}_{name}".TestRunUniqueName(extension));
+        public static TestFileName Create(string test, string name, string extension)
+        {
+            var fn = $"{test}_{name}".TestRunUniqueName(extension);
+            Directory.CreateDirectory(Path.GetDirectoryName(fn));
+            return new TestFileName(fn);
+        }
 
         public void Dispose() => TryDeleteFile(this.fileName);
 

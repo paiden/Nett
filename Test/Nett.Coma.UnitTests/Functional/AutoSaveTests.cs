@@ -63,10 +63,10 @@
                 var preTbl = Toml.ReadFile(f1);
                 var succTbl = Toml.ReadFile(f2);
 
-                preTbl.Rows.Count.Should().Be(1);
+                preTbl.Count.Should().Be(1);
                 preTbl.Get<int>("IntValue").Should().Be(1);
 
-                succTbl.Rows.Count.Should().Be(1);
+                succTbl.Count.Should().Be(1);
                 succTbl.Get<string>("StringValue").Should().Be(NewStringVal);
             }
             finally

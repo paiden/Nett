@@ -6,10 +6,6 @@
     using System.Linq;
     using System.Reflection;
 
-    public interface ITomlTable : ITomlObject, IDictionary<string, TomlObject>
-    {
-    }
-
     public static class TomlTableExtensions
     {
         public static TomlInt Add(this TomlTable table, string key, int value)
@@ -50,7 +46,7 @@
         }
     }
 
-    public partial class TomlTable : TomlObject, ITomlTable
+    public partial class TomlTable : TomlObject, IDictionary<string, TomlObject>
     {
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
@@ -59,6 +55,22 @@
         private static readonly Type TomlTableType = typeof(TomlTable);
 
         private readonly Dictionary<string, TomlObject> rows = new Dictionary<string, TomlObject>();
+
+        private volatile bool isFrozen = false;
+
+        internal TomlTable Freeze()
+        {
+            this.isFrozen = true;
+            return this;
+        }
+
+        private void CheckNotFrozen()
+        {
+            if (this.isFrozen)
+            {
+                throw new InvalidOperationException("Cannot write into frozen TOML table");
+            }
+        }
 
         internal TomlTable(IMetaDataStore metaData, TableTypes tableType = TableTypes.Default)
             : base(metaData)
@@ -86,7 +98,7 @@
 
         public int Count => this.rows.Count;
 
-        public bool IsReadOnly => false;
+        public bool IsReadOnly => this.isFrozen;
 
         internal bool IsDefined { get; set; }
 
@@ -105,6 +117,7 @@
 
             set
             {
+                this.CheckNotFrozen();
                 this.rows[key] = value;
             }
         }
@@ -112,9 +125,6 @@
         public T Get<T>(string key) => this[key].Get<T>();
 
         public TomlObject Get(string key) => this[key];
-
-        /*public void Add(string key, double @float) => this.Add(key, new TomlFloat(this.MetaData, @float));
-        public void Add(string key, string @string) => this.Add(key, new TomlString(this.MetaData, @string));*/
 
         public override object Get(Type t)
         {
@@ -149,15 +159,31 @@
 
         public bool ContainsKey(string key) => this.rows.ContainsKey(key);
 
-        void IDictionary<string, TomlObject>.Add(string key, TomlObject value) => this.rows.Add(key, value);
+        void IDictionary<string, TomlObject>.Add(string key, TomlObject value)
+        {
+            this.CheckNotFrozen();
+            this.rows.Add(key, value);
+        }
 
-        public bool Remove(string key) => this.rows.Remove(key);
+        public bool Remove(string key)
+        {
+            this.CheckNotFrozen();
+            return this.rows.Remove(key);
+        }
 
         public bool TryGetValue(string key, out TomlObject value) => this.rows.TryGetValue(key, out value);
 
-        public void Add(KeyValuePair<string, TomlObject> item) => this.rows.Add(item.Key, item.Value);
+        public void Add(KeyValuePair<string, TomlObject> item)
+        {
+            this.CheckNotFrozen();
+            this.rows.Add(item.Key, item.Value);
+        }
 
-        public void Clear() => this.rows.Clear();
+        public void Clear()
+        {
+            this.CheckNotFrozen();
+            this.rows.Clear();
+        }
 
         public bool Contains(KeyValuePair<string, TomlObject> item) => this.rows.Contains(item);
 
@@ -166,7 +192,11 @@
             throw new NotImplementedException();
         }
 
-        public bool Remove(KeyValuePair<string, TomlObject> item) => this.rows.Remove(item.Key);
+        public bool Remove(KeyValuePair<string, TomlObject> item)
+        {
+            this.CheckNotFrozen();
+            return this.rows.Remove(item.Key);
+        }
 
         public IEnumerator<KeyValuePair<string, TomlObject>> GetEnumerator() => this.rows.GetEnumerator();
 
@@ -222,11 +252,13 @@
 
         internal void Add(string key, TomlObject value)
         {
+            this.CheckNotFrozen();
             this.rows.Add(key, value);
         }
 
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {
+            this.CheckNotFrozen();
             base.OverwriteCommentsWithCommentsFrom(src, overwriteWithEmpty);
 
             var srcTable = src as TomlTable;

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Nett.Coma.Tests.TestData
+namespace Nett.Coma.Test.Util
 {
-    internal sealed class MultiLevelTableScenario : IDisposable
+    public sealed class MultiLevelTableScenario : IDisposable
     {
         private MultiLevelTableScenario()
         {

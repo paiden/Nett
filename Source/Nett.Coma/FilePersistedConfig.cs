@@ -49,6 +49,8 @@
             return sourcesTable;
         }
 
+        public TomlTable TransformToSourceTable(TomlTable toTransform) => toTransform.TransformToSourceTable(this.source);
+
         public void Save(TomlTable config)
         {
             Toml.WriteFile(config, this.FilePath);

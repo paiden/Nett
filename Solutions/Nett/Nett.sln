@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma", "..\..\Source\N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma.Tests", "..\..\Test\Nett.Coma.UnitTests\Nett.Coma.Tests.csproj", "{973EB2FA-C2BA-4395-BB42-1632A602C5CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma.Tests.Internal", "..\..\Test\Nett.Coma.Tests.Internal\Nett.Coma.Tests.Internal.csproj", "{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{973EB2FA-C2BA-4395-BB42-1632A602C5CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +85,6 @@ Global
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{973EB2FA-C2BA-4395-BB42-1632A602C5CB} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
+		{7AA9DF26-72E2-495F-B779-2C9D55AA9C44} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 	EndGlobalSection
 EndGlobal

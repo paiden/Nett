@@ -33,5 +33,16 @@ namespace Nett.Coma.Extensions
 
             return new KeyChain(keys);
         }
+
+        public static TPath BuildTPath(this LambdaExpression expr)
+        {
+            expr.CheckNotNull(nameof(expr));
+
+            var exprBody = expr.Body.ToString();
+            var withoutRootKey = exprBody.Substring(exprBody.IndexOf(".") + 1);
+
+            var toParse = "/" + withoutRootKey.Replace('.', '/');
+            return TPath.Parse(toParse);
+        }
     }
 }

@@ -54,12 +54,8 @@
 
         public void Save(TomlTable table, IConfigSource source)
         {
-            IPersistableConfig cfg;
-            var tbl = this.LoadInternal(source, out cfg);
-
-            tbl.OverwriteWithValuesForSaveFrom(table, addNewRows: true);
-
-            cfg.Save(tbl);
+            IPersistableConfig cfg = this.configs.Single(c => c.CanHandleSource(source));
+            cfg.Save(table);
         }
 
         private TomlTable LoadInternal(IConfigSource source, out IPersistableConfig cfg)
