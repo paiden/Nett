@@ -66,7 +66,7 @@
                     sb.Append(cs.Consume());
                 }
 
-                if (cs.TryExpect('-')) { sb.Append(cs.Consume()); } else { return FinishDatetimeToken(sb); }
+                if (cs.TryExpect('-') || cs.TryExpect('+')) { sb.Append(cs.Consume()); } else { return FinishDatetimeToken(sb); }
                 if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
                 if (cs.TryExpectDigit()) { sb.Append(cs.Consume()); } else { return null; }
                 if (cs.TryExpect(':')) { sb.Append(cs.Consume()); } else { return null; }
