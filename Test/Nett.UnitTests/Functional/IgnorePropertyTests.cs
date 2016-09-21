@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -18,7 +18,7 @@ namespace Nett.UnitTests.Functional
 
             // Assert
             var read = Toml.ReadString(written);
-            read.Rows.Count.Should().Be(1);
+            read.Rows.Count().Should().Be(1);
             read.Get<int>("Y").Should().Be(YDefault);
         }
 
@@ -35,7 +35,7 @@ namespace Nett.UnitTests.Functional
 
             // Assert
             var read = Toml.ReadString(written);
-            read.Rows.Count.Should().Be(1);
+            read.Rows.Count().Should().Be(1);
             read.Get<int>("X").Should().Be(XDefault);
         }
 
@@ -53,7 +53,7 @@ namespace Nett.UnitTests.Functional
             // Assert
             var read = Toml.ReadString(written);
             var subTbl = read.Get<TomlTable>("T");
-            subTbl.Rows.Count.Should().Be(1);
+            subTbl.Rows.Count().Should().Be(1);
             subTbl.Get<int>("X").Should().Be(XDefault);
         }
 

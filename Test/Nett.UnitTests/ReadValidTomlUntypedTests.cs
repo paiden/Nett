@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using FluentAssertions;
 using Nett.UnitTests.Util.TestData;
 using Xunit;
@@ -25,9 +26,9 @@ namespace Nett.UnitTests
 
             // Assert
             Assert.NotNull(read);
-            Assert.Equal(1, read.Rows.Count);
-            Assert.Equal(typeof(TomlArray), read.Rows["thevoid"].GetType());
-            var rootArray = read.Rows["thevoid"].Get<TomlArray>();
+            Assert.Equal(1, read.Rows.Count());
+            Assert.Equal(typeof(TomlArray), read["thevoid"].GetType());
+            var rootArray = read["thevoid"].Get<TomlArray>();
             Assert.Equal(1, rootArray.Length);
             var subArray = rootArray.Get<TomlArray>(0);
             Assert.Equal(0, subArray.Length);
@@ -204,8 +205,8 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
-            Assert.Equal(typeof(TomlTableArray), read.Rows["albums"].GetType());
+            Assert.Equal(1, read.Rows.Count());
+            Assert.Equal(typeof(TomlTableArray), read["albums"].GetType());
             var arr = read.Get<TomlTableArray>("albums");
             Assert.Equal(2, arr.Count);
 
@@ -272,7 +273,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(0, read.Rows.Count);
+            Assert.Equal(0, read.Rows.Count());
         }
 
         [Fact]
@@ -285,7 +286,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(2, read.Rows.Count());
             Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTimeOffset>("best-day-ever"));
             var tt = (TomlTable)read["numtheory"];
             Assert.Equal(false, tt.Get<bool>("boring"));
@@ -348,7 +349,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<char>("answer"));
         }
 
@@ -362,7 +363,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(2, read.Rows.Count());
             Assert.Equal(42, read.Get<int>("answer"));
             Assert.Equal(-42, read.Get<short>("neganswer"));
         }
@@ -377,7 +378,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal(42, read.Get<int>("answer"));
         }
 
@@ -391,7 +392,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal(42, read.Get<int>("a b"));
         }
 
@@ -405,7 +406,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal(42, read.Get<int>("~!@$^&*()_+-`1234567890[]|/?><.,;:'"));
         }
 
@@ -420,7 +421,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(2, read.Rows.Count());
             Assert.Equal(double.Parse("3.141592653589793", CultureInfo.InvariantCulture), read.Get<double>("longpi"));
             Assert.Equal(double.Parse("-3.141592653589793", CultureInfo.InvariantCulture), read.Get<double>("neglongpi"));
         }
@@ -435,7 +436,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(2, read.Rows.Count());
             Assert.Equal(9223372036854775806, read.Get<long>("answer"));
             Assert.Equal(-9223372036854775807, read.Get<long>("neganswer"));
         }
@@ -451,7 +452,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(7, read.Rows.Count);
+            Assert.Equal(7, read.Rows.Count());
             Assert.Equal("", read.Get<string>("multiline_empty_one"));
             Assert.Equal("", read.Get<string>("multiline_empty_two"));
             Assert.Equal("", read.Get<string>("multiline_empty_three"));
@@ -471,7 +472,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(3, read.Rows.Count);
+            Assert.Equal(3, read.Rows.Count());
             Assert.Equal("This string has a ' quote character.", read.Get<string>("oneline"));
             Assert.Equal("This string has a ' quote character.", read.Get<string>("firstnl"));
             Assert.Equal("This string\r\n has a ' quote character\r\n and more than\r\n one newline\r\n in it.", read.Get<string>("multiline"));
@@ -487,7 +488,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(7, read.Rows.Count);
+            Assert.Equal(7, read.Rows.Count());
             Assert.Equal("This string has a \\b backspace character.", read.Get<string>("backspace"));
             Assert.Equal("This string has a \\t tab character.", read.Get<string>("tab"));
             Assert.Equal("This string has a \\n new line character.", read.Get<string>("newline"));
@@ -518,7 +519,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal("", read.Get<string>("answer"));
         }
 
@@ -532,7 +533,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(11, read.Rows.Count);
+            Assert.Equal(11, read.Rows.Count());
             Assert.Equal("This string has a \b backspace character.", read.Get<string>("backspace"));
             Assert.Equal("This string has a \t tab character.", read.Get<string>("tab"));
             Assert.Equal("This string has a \n new line character.", read.Get<string>("newline"));
@@ -556,7 +557,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(2, read.Rows.Count);
+            Assert.Equal(2, read.Rows.Count());
             Assert.Equal("We see no # comments here.", read.Get<string>("pound"));
             Assert.Equal("But there are # some comments here.", read.Get<string>("poundcomment"));
         }
@@ -571,7 +572,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal("Glory Days", ((read.Get<TomlTable>("albums")).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
         }
 
@@ -600,7 +601,7 @@ namespace Nett.UnitTests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count);
+            Assert.Equal(1, read.Rows.Count());
             Assert.Equal(3, read.Get<TomlTableArray>("people").Count);
             var tt = read.Get<TomlTableArray>("people")[0];
             Assert.Equal("Bruce", tt.Get<string>("first_name"));
@@ -628,9 +629,9 @@ namespace Nett.UnitTests
             var tml = Toml.ReadString("name = { first = \"Tom\", last = \"Preston-Werner\" }");
 
             // Assert
-            tml.TryGet<TomlTable>("name").Should().NotBeNull();
+            (tml.TryGetValue("name") as TomlTable).Should().NotBeNull();
             var t = tml.Get<TomlTable>("name");
-            t.Rows.Count.Should().Be(2);
+            t.Rows.Count().Should().Be(2);
             t.Get<string>("first").Should().Be("Tom");
             t.Get<string>("last").Should().Be("Preston-Werner");
             t.TableType.Should().Be(TomlTable.TableTypes.Inline);

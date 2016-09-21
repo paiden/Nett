@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -322,7 +323,7 @@ trimmed in raw strings.
         {
             var parsed = Toml.ReadString(@"[table]");
 
-            Assert.Equal(1, parsed.Rows.Count);
+            Assert.Equal(1, parsed.Rows.Count());
             Assert.NotNull(parsed.Get<TomlTable>("table"));
         }
 
@@ -336,7 +337,7 @@ key3 = ""value3""";
 
             var parsed = Toml.ReadString(toParse);
 
-            Assert.Equal(3, parsed.Rows.Count);
+            Assert.Equal(3, parsed.Rows.Count());
             Assert.Equal("value1", parsed["key1"].Get<string>());
             Assert.Equal("value2", parsed.Get<string>("key2"));
             Assert.Equal("value3", parsed.Get<string>("key3"));
@@ -352,7 +353,7 @@ key-3 = ""value3""";
 
             var parsed = Toml.ReadString(toParse);
 
-            Assert.Equal(3, parsed.Rows.Count);
+            Assert.Equal(3, parsed.Rows.Count());
             Assert.Equal("value1", parsed["key1"].Get<string>());
             Assert.Equal("value2", parsed.Get<string>("key_2"));
             Assert.Equal("value3", parsed.Get<string>("key-3"));
@@ -369,7 +370,7 @@ key-3 = ""value3""";
 
             var parsed = Toml.ReadString(toParse);
 
-            Assert.Equal(2, parsed.Rows.Count);
+            Assert.Equal(2, parsed.Rows.Count());
             Assert.Equal("value1", parsed["127.0.0.1"].Get<string>());
             Assert.Equal("value2", parsed.Get<string>("character encoding"));
             //Assert.Equal("value3", parsed.Get<string>("ʎǝʞ"));
@@ -431,7 +432,7 @@ color = ""gray""
             Assert.Equal("Hammer", t1.Get<string>("name"));
 
             var t2 = a[1];
-            Assert.Equal(0, t2.Rows.Count);
+            Assert.Equal(0, t2.Rows.Count());
 
             var t3 = a[2];
             Assert.Equal("Nail", t3.Get<string>("name"));

@@ -45,6 +45,8 @@
 
         private static readonly Type TomlTableType = typeof(TomlTable);
 
+        private readonly Dictionary<string, TomlObject> rows = new Dictionary<string, TomlObject>();
+
         internal TomlTable(IMetaDataStore metaData, TableTypes tableType = TableTypes.Default)
             : base(metaData)
         {
@@ -57,9 +59,9 @@
             Inline,
         }
 
-        public override string ReadableTypeName => "table";
+        public IEnumerable<KeyValuePair<string, TomlObject>> Rows => this.rows.AsEnumerable();
 
-        public Dictionary<string, TomlObject> Rows { get; } = new Dictionary<string, TomlObject>();
+        public override string ReadableTypeName => "table";
 
         public TableTypes TableType { get; }
 
@@ -72,7 +74,7 @@
             get
             {
                 TomlObject val;
-                if (!this.Rows.TryGetValue(key, out val))
+                if (!this.rows.TryGetValue(key, out val))
                 {
                     throw new KeyNotFoundException(string.Format("No row with key '{0}' exists in this TOML table.", key));
                 }
@@ -94,7 +96,7 @@
 
             var result = this.MetaData.Config.GetActivatedInstance(t);
 
-            foreach (var r in this.Rows)
+            foreach (var r in this.rows)
             {
                 var targetProperty = result.GetType().GetProperty(r.Key);
                 if (targetProperty != null && !this.MetaData.Config.IsPropertyIgnored(result.GetType(), targetProperty))
@@ -112,12 +114,11 @@
             return converter.Convert(this);
         }
 
-        public T TryGet<T>(string key)
-            where T : TomlObject
+        public TomlObject TryGetValue(string key)
         {
             TomlObject o;
-            this.Rows.TryGetValue(key, out o);
-            return o as T;
+            this.rows.TryGetValue(key, out o);
+            return o;
         }
 
         public override void Visit(ITomlObjectVisitor visitor)
@@ -170,7 +171,7 @@
 
         internal void Add(string key, TomlObject value)
         {
-            this.Rows.Add(key, value);
+            this.rows.Add(key, value);
         }
 
         internal object Merge(TomlTable tt)
@@ -186,10 +187,10 @@
 
             if (srcTable != null)
             {
-                foreach (var r in this.Rows)
+                foreach (var r in this.rows)
                 {
                     TomlObject sourceVal;
-                    if (srcTable.Rows.TryGetValue(r.Key, out sourceVal))
+                    if (srcTable.rows.TryGetValue(r.Key, out sourceVal))
                     {
                         r.Value.OverwriteCommentsWithCommentsFrom(sourceVal, overwriteWithEmpty);
                     }

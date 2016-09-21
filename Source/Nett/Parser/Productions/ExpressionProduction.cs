@@ -41,7 +41,7 @@
                 var addTo = GetTargetTable(root, tableKeyChain, CreateImplicitelyType.Table);
 
                 string name = tableKeyChain.Last();
-                var existingRow = addTo.TryGet<TomlObject>(name);
+                var existingRow = addTo.TryGetValue(name);
                 if (existingRow == null)
                 {
                     addTo.Add(name, newTable);
@@ -83,8 +83,7 @@
 
         private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name, Token errorPosition)
         {
-            TomlObject existing = null;
-            target.Rows.TryGetValue(name, out existing);
+            TomlObject existing = target.TryGetValue(name);
 
             var typed = existing as TomlTableArray;
 
@@ -132,7 +131,7 @@
 
         private static TomlTable GetExistinOrCreateAndAdd(TomlTable tbl, string key, Func<TomlTable, TomlTable> createNewItem)
         {
-            var existingTargetTable = TryGetTableEntry(tbl.TryGet<TomlObject>(key));
+            var existingTargetTable = TryGetTableEntry(tbl.TryGetValue(key));
             if (existingTargetTable != null)
             {
                 return existingTargetTable;
