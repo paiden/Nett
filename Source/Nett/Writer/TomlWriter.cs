@@ -85,19 +85,19 @@
         private bool ShouldAppendWithNewline(TomlObject obj) => !this.ShouldPrependWithNewline(obj);
 
         private bool ShouldPrependWithNewline(TomlObject obj) =>
-            (obj.TomlType == TomlObject.TomlObjectType.Table && ((TomlTable)obj).TableType != TomlTable.TableTypes.Inline)
-            || obj.TomlType == TomlObject.TomlObjectType.ArrayOfTables;
+            (obj.TomlType == TomlObjectType.Table && ((TomlTable)obj).TableType != TomlTable.TableTypes.Inline)
+            || obj.TomlType == TomlObjectType.ArrayOfTables;
 
         private void WriteValue(TomlObject obj)
         {
             switch (obj.TomlType)
             {
-                case TomlObject.TomlObjectType.Bool: this.writer.Write(((TomlBool)obj).Value.ToString().ToLower()); break;
-                case TomlObject.TomlObjectType.Float: this.writer.Write("{0:0.0###############}", ((TomlFloat)obj).Value); break;
-                case TomlObject.TomlObjectType.Int: this.writer.Write(((TomlInt)obj).Value); break;
-                case TomlObject.TomlObjectType.DateTime: this.writer.Write(((TomlDateTime)obj).ToString()); break;
-                case TomlObject.TomlObjectType.TimeSpan: this.writer.Write(((TomlTimeSpan)obj).Value); break;
-                case TomlObject.TomlObjectType.String:
+                case TomlObjectType.Bool: this.writer.Write(((TomlBool)obj).Value.ToString().ToLower()); break;
+                case TomlObjectType.Float: this.writer.Write("{0:0.0###############}", ((TomlFloat)obj).Value); break;
+                case TomlObjectType.Int: this.writer.Write(((TomlInt)obj).Value); break;
+                case TomlObjectType.DateTime: this.writer.Write(((TomlDateTime)obj).ToString()); break;
+                case TomlObjectType.TimeSpan: this.writer.Write(((TomlTimeSpan)obj).Value); break;
+                case TomlObjectType.String:
                     {
                         this.writer.Write('\"');
                         this.writer.Write(((TomlString)obj).Value.Escape() ?? string.Empty);

@@ -40,11 +40,11 @@
 
             private void WriteTableRow(KeyValuePair<string, TomlObject> r)
             {
-                if (r.Value.TomlType == TomlObject.TomlObjectType.Array)
+                if (r.Value.TomlType == TomlObjectType.Array)
                 {
                     this.WriteArray(r.Key, (TomlArray)r.Value);
                 }
-                else if (r.Value.TomlType == TomlObject.TomlObjectType.Table)
+                else if (r.Value.TomlType == TomlObjectType.Table)
                 {
                     var tbl = (TomlTable)r.Value;
                     if (tbl.TableType != TomlTable.TableTypes.Inline)
@@ -54,7 +54,7 @@
 
                     this.WriteInlineTable(r.Key, tbl);
                 }
-                else if (r.Value.TomlType == TomlObject.TomlObjectType.ArrayOfTables)
+                else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
                     throw new InvalidOperationException($"Putting Array of table '{r.Key}' inside inline table is not allowed.");
                 }

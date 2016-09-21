@@ -6,6 +6,10 @@
     using System.Linq;
     using System.Reflection;
 
+    public interface ITomlTable : ITomlObject, IDictionary<string, TomlObject>
+    {
+    }
+
     public static class TomlTableExtensions
     {
         public static TomlInt Add(this TomlTable table, string key, int value)
@@ -37,7 +41,7 @@
         }
     }
 
-    public partial class TomlTable : TomlObject
+    public partial class TomlTable : TomlObject, ITomlTable
     {
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
@@ -67,6 +71,14 @@
 
         public override TomlObjectType TomlType => TomlObjectType.Table;
 
+        public ICollection<string> Keys => this.rows.Keys;
+
+        public ICollection<TomlObject> Values => this.rows.Values;
+
+        public int Count => this.rows.Count;
+
+        public bool IsReadOnly => false;
+
         internal bool IsDefined { get; set; }
 
         public TomlObject this[string key]
@@ -80,6 +92,11 @@
                 }
 
                 return val;
+            }
+
+            set
+            {
+                this.rows[key] = value;
             }
         }
 
@@ -120,6 +137,31 @@
             this.rows.TryGetValue(key, out o);
             return o;
         }
+
+        public bool ContainsKey(string key) => this.rows.ContainsKey(key);
+
+        void IDictionary<string, TomlObject>.Add(string key, TomlObject value) => this.rows.Add(key, value);
+
+        public bool Remove(string key) => this.rows.Remove(key);
+
+        public bool TryGetValue(string key, out TomlObject value) => this.rows.TryGetValue(key, out value);
+
+        public void Add(KeyValuePair<string, TomlObject> item) => this.rows.Add(item.Key, item.Value);
+
+        public void Clear() => this.rows.Clear();
+
+        public bool Contains(KeyValuePair<string, TomlObject> item) => this.rows.Contains(item);
+
+        public void CopyTo(KeyValuePair<string, TomlObject>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(KeyValuePair<string, TomlObject> item) => this.rows.Remove(item.Key);
+
+        public IEnumerator<KeyValuePair<string, TomlObject>> GetEnumerator() => this.rows.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.rows.GetEnumerator();
 
         public override void Visit(ITomlObjectVisitor visitor)
         {

@@ -7,7 +7,28 @@
     using System.Reflection;
     using Extensions;
 
-    public abstract class TomlObject
+    [Flags]
+    public enum TomlObjectType
+    {
+        Bool,
+        Int,
+        Float,
+        String,
+        DateTime,
+        TimeSpan,
+        Array,
+        Table,
+        ArrayOfTables,
+    }
+
+    public interface ITomlObject
+    {
+        string ReadableTypeName { get; }
+
+        TomlObjectType TomlType { get; }
+    }
+
+    public abstract class TomlObject : ITomlObject
     {
         private static readonly Type EnumerableType = typeof(IEnumerable);
 
@@ -21,20 +42,6 @@
 
             this.metaData = metaData;
             this.Comments = new List<TomlComment>();
-        }
-
-        [Flags]
-        public enum TomlObjectType
-        {
-            Bool,
-            Int,
-            Float,
-            String,
-            DateTime,
-            TimeSpan,
-            Array,
-            Table,
-            ArrayOfTables,
         }
 
         public abstract string ReadableTypeName { get; }

@@ -55,9 +55,9 @@
         {
             this.WritePrependNewlines(r.Value);
 
-            if (r.Value.TomlType == TomlObject.TomlObjectType.Array) { this.WriteTomlArrayWithComments(r.Key, (TomlArray)r.Value); }
-            else if (r.Value.TomlType == TomlObject.TomlObjectType.Table) { this.WriteTomlTable(parentKey, r.Key, (TomlTable)r.Value); }
-            else if (r.Value.TomlType == TomlObject.TomlObjectType.ArrayOfTables)
+            if (r.Value.TomlType == TomlObjectType.Array) { this.WriteTomlArrayWithComments(r.Key, (TomlArray)r.Value); }
+            else if (r.Value.TomlType == TomlObjectType.Table) { this.WriteTomlTable(parentKey, r.Key, (TomlTable)r.Value); }
+            else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
             {
                 this.WriteTomlTableArray(parentKey, r.Key, (TomlTableArray)r.Value);
             }
