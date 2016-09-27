@@ -32,7 +32,8 @@
         {
             this.persistable.Save(content);
             this.loaded = content;
-            this.loadedSourcesTable = this.persistable.TransformToSourceTable(this.loaded).Freeze();
+            this.loadedSourcesTable = this.persistable.TransformToSourceTable(this.loaded);
+            this.loadedSourcesTable.Freeze();
         }
 
         public bool WasChangedExternally() => this.persistable.WasChangedExternally();
@@ -41,8 +42,11 @@
         {
             if (this.loaded == null || this.persistable.WasChangedExternally())
             {
-                this.loaded = this.persistable.Load().Freeze();
-                this.loadedSourcesTable = this.persistable.TransformToSourceTable(this.loaded).Freeze();
+                this.loaded = this.persistable.Load();
+                this.loadedSourcesTable = this.persistable.TransformToSourceTable(this.loaded);
+
+                this.loaded.Freeze();
+                this.loadedSourcesTable.Freeze();
             }
         }
 

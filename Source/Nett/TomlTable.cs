@@ -58,12 +58,6 @@
 
         private volatile bool isFrozen = false;
 
-        internal TomlTable Freeze()
-        {
-            this.isFrozen = true;
-            return this;
-        }
-
         private void CheckNotFrozen()
         {
             if (this.isFrozen)
@@ -120,6 +114,24 @@
                 this.CheckNotFrozen();
                 this.rows[key] = value;
             }
+        }
+
+        public bool Freeze()
+        {
+            if (this.isFrozen) { return false; }
+
+            this.isFrozen = true;
+
+            foreach (var r in this.rows)
+            {
+                var tbl = r.Value as TomlTable;
+                if (tbl != null)
+                {
+                    tbl.Freeze();
+                }
+            }
+
+            return true;
         }
 
         public T Get<T>(string key) => this[key].Get<T>();
