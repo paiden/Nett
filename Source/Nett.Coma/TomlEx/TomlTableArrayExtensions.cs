@@ -9,7 +9,7 @@ namespace Nett.Coma.TomlEx
         {
             source.CheckNotNull(nameof(source));
 
-            var cloned = new TomlTableArray(source.MetaData, source.Items.Select(i => i.Clone()));
+            var cloned = new TomlTableArray(source.Root, source.Items.Select(i => i.Clone()));
             return cloned;
         }
     }

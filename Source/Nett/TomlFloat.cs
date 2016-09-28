@@ -2,8 +2,8 @@
 {
     public sealed class TomlFloat : TomlValue<double>
     {
-        internal TomlFloat(IMetaDataStore metaData, double value)
-            : base(metaData, value)
+        internal TomlFloat(ITomlRoot root, double value)
+            : base(root, value)
         {
         }
 

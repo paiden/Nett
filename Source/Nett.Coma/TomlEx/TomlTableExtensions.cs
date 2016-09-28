@@ -94,12 +94,12 @@
                 else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
                     var arr = (TomlTableArray)r.Value;
-                    var sourcesArray = new TomlTableArray(table.MetaData, arr.Items.Select(t => t.TransformToSourceTable(source)));
+                    var sourcesArray = new TomlTableArray(table.Root, arr.Items.Select(t => t.TransformToSourceTable(source)));
                     sourcesTable[r.Key] = sourcesArray;
                 }
                 else
                 {
-                    sourcesTable[r.Key] = new TomlSource(table.MetaData, source);
+                    sourcesTable[r.Key] = new TomlSource(table.Root, source);
                 }
             }
 
@@ -110,7 +110,7 @@
         {
             input.CheckNotNull(nameof(input));
 
-            TomlTable cloned = Toml.Create(input.MetaData.Config);
+            TomlTable cloned = Toml.Create(input.Root.Config);
 
             foreach (var r in input.Rows)
             {

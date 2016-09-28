@@ -16,8 +16,8 @@
 
         public bool CanConvertToToml() => CanConvertToTomlType;
 
-        public object Convert(IMetaDataStore metaData, object o, Type targetType) => this.Convert(metaData, (TFrom)o, targetType);
+        public object Convert(ITomlRoot root, object o, Type targetType) => this.Convert(root, (TFrom)o, targetType);
 
-        public abstract TTo Convert(IMetaDataStore metaData, TFrom from, Type targetType);
+        public abstract TTo Convert(ITomlRoot root, TFrom from, Type targetType);
     }
 }

@@ -35,7 +35,7 @@
             return tt;
         }
 
-        internal sealed class RootTable : TomlTable, IMetaDataStore
+        internal sealed class RootTable : TomlTable, ITomlRoot
         {
             private readonly TomlConfig config;
 
@@ -45,10 +45,10 @@
                 if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
                 this.config = config;
-                this.SetAsMetaDataRoot(this);
+                this.SetAsRoot(this);
             }
 
-            TomlConfig IMetaDataStore.Config => this.config;
+            TomlConfig ITomlRoot.Config => this.config;
         }
     }
 }

@@ -2,8 +2,8 @@
 {
     public sealed class TomlInt : TomlValue<long>
     {
-        internal TomlInt(IMetaDataStore metaData, long value)
-            : base(metaData, value)
+        internal TomlInt(ITomlRoot root, long value)
+            : base(root, value)
         {
         }
 

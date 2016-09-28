@@ -7,8 +7,8 @@
     {
         private TypeOfString type = TypeOfString.Default;
 
-        internal TomlString(IMetaDataStore metaData, string value, TypeOfString type = TypeOfString.Default)
-            : base(metaData, value)
+        internal TomlString(ITomlRoot root, string value, TypeOfString type = TypeOfString.Default)
+            : base(root, value)
         {
             this.type = type;
         }

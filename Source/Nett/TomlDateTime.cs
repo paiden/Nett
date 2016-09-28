@@ -11,8 +11,8 @@
             "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ssZ", "yyyy-MM-ddTHH:mm:ss.FFFFFFK", "yyyy-MM-ddTHH:mm:ss.FFFFFFZ", "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ss.FFFFFF", "yyyy-MM-dd",
         };
 
-        internal TomlDateTime(IMetaDataStore metaData, DateTimeOffset value)
-            : base(metaData, value)
+        internal TomlDateTime(ITomlRoot root, DateTimeOffset value)
+            : base(root, value)
         {
         }
 
@@ -27,11 +27,11 @@
             visitor.Visit(this);
         }
 
-        internal static TomlDateTime Parse(IMetaDataStore metaData, string s)
+        internal static TomlDateTime Parse(ITomlRoot root, string s)
         {
             Debug.Assert(s != null);
             var value = DateTimeOffset.ParseExact(s, ParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
-            return new TomlDateTime(metaData, value);
+            return new TomlDateTime(root, value);
         }
     }
 }

@@ -16,7 +16,7 @@
 
         public bool CanConvertToToml() => false;
 
-        public object Convert(IMetaDataStore metaData, object value, Type targetType)
+        public object Convert(ITomlRoot root, object value, Type targetType)
         {
             var converter = new ConvertTomlTableToDictionaryConversionVisitor();
             return converter.Convert((TomlTable)value);
@@ -93,7 +93,7 @@
         {
             Type tableToTypeMappingTargetType;
 
-            if ((tableToTypeMappingTargetType = table.MetaData.Config.TryGetMappedType(this.currentKey, null)) != null)
+            if ((tableToTypeMappingTargetType = table.Root.Config.TryGetMappedType(this.currentKey, null)) != null)
             {
                 this.table[this.currentKey] = table.Get(tableToTypeMappingTargetType);
             }

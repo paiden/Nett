@@ -25,8 +25,8 @@
                 UInt16Type, UInt32Type,
             };
 
-        public TomlValue(IMetaDataStore metaData)
-            : base(metaData)
+        public TomlValue(ITomlRoot root)
+            : base(root)
         {
         }
 
@@ -52,8 +52,8 @@
         private static readonly Type ValueType = typeof(T);
         private readonly T value;
 
-        public TomlValue(IMetaDataStore metaData, T value)
-            : base(metaData)
+        public TomlValue(ITomlRoot root, T value)
+            : base(root)
         {
             this.value = value;
         }
@@ -64,10 +64,10 @@
         {
             if (this.GetType() == t) { return this; }
 
-            var converter = this.MetaData.Config.TryGetConverter(this.GetType(), t);
+            var converter = this.Root.Config.TryGetConverter(this.GetType(), t);
             if (converter != null)
             {
-                return converter.Convert(this.MetaData, this, t);
+                return converter.Convert(this.Root, this, t);
             }
             else
             {

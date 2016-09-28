@@ -12,8 +12,8 @@
 
         private readonly List<TomlTable> items = new List<TomlTable>();
 
-        public TomlTableArray(IMetaDataStore metaData, IEnumerable<TomlTable> enumerable)
-            : base(metaData)
+        public TomlTableArray(ITomlRoot root, IEnumerable<TomlTable> enumerable)
+            : base(root)
         {
             if (enumerable != null)
             {
@@ -24,8 +24,8 @@
             }
         }
 
-        internal TomlTableArray(IMetaDataStore metaData)
-            : this(metaData, null)
+        internal TomlTableArray(ITomlRoot root)
+            : this(root, null)
         {
         }
 

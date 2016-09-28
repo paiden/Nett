@@ -97,7 +97,7 @@
                 return typed;
             }
 
-            var newTableArray = new TomlTableArray(target.MetaData);
+            var newTableArray = new TomlTableArray(target.Root);
             target.Add(name, newTableArray);
 
             return newTableArray;
@@ -107,7 +107,7 @@
         {
             Func<TomlTable, TomlTable> createNew = (e) =>
                 {
-                    var newTable = new TomlTable(tbl.MetaData);
+                    var newTable = new TomlTable(tbl.Root);
                     tbl.Add(key, newTable);
                     return newTable;
                 };
@@ -119,8 +119,8 @@
         {
             Func<TomlTable, TomlTable> createNew = (e) =>
             {
-                var array = new TomlTableArray(tbl.MetaData);
-                var newTable = new TomlTable(tbl.MetaData);
+                var array = new TomlTableArray(tbl.Root);
+                var newTable = new TomlTable(tbl.Root);
                 array.Add(newTable);
                 tbl.Add(key, array);
                 return newTable;

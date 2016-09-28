@@ -192,7 +192,7 @@
             if (outStream == null) { throw new ArgumentNullException(nameof(outStream)); }
 
             var sw = new FormattingStreamWriter(outStream, CultureInfo.InvariantCulture);
-            var tw = new TomlTableWriter(sw, table.MetaData.Config);
+            var tw = new TomlTableWriter(sw, table.Root.Config);
             tw.WriteToml(table);
             outStream.Position = 0;
         }
@@ -202,7 +202,7 @@
             using (var ms = new MemoryStream(1024))
             {
                 var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
-                var writer = new TomlTableWriter(sw, table.MetaData.Config);
+                var writer = new TomlTableWriter(sw, table.Root.Config);
                 writer.WriteToml(table);
                 ms.Position = 0;
                 StreamReader sr = new StreamReader(ms);

@@ -4,15 +4,15 @@
 
     internal sealed class TomlConverter<TFrom, TTo> : TomlConverterBase<TFrom, TTo>
     {
-        private readonly Func<IMetaDataStore, TFrom, TTo> convert;
+        private readonly Func<ITomlRoot, TFrom, TTo> convert;
 
-        public TomlConverter(Func<IMetaDataStore, TFrom, TTo> convert)
+        public TomlConverter(Func<ITomlRoot, TFrom, TTo> convert)
         {
             if (convert == null) { throw new ArgumentNullException(nameof(convert)); }
 
             this.convert = convert;
         }
 
-        public override TTo Convert(IMetaDataStore metaData, TFrom from, Type targetType) => this.convert(metaData, from);
+        public override TTo Convert(ITomlRoot root, TFrom from, Type targetType) => this.convert(root, from);
     }
 }

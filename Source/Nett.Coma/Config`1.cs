@@ -47,13 +47,13 @@
         private void ApplySetter(TomlTable rootTable, KeyChain keyChain, object value)
         {
             var finalTable = keyChain.ResolveChildTableOf(rootTable);
-            finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.MetaData, value, pi: null);
+            finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.Root, value, pi: null);
         }
 
         private void ApplySetter(TomlTable rootTable, KeyChain keyChain, object value, IConfigSource source)
         {
             var finalTable = keyChain.ResolveChildTableOf(rootTable);
-            finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.MetaData, value, pi: null);
+            finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.Root, value, pi: null);
         }
 
         public void Set<TProperty>(Expression<Func<T, TProperty>> selector, TProperty value, IConfigSource target)

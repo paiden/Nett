@@ -12,11 +12,11 @@
 
         bool CanConvertToToml();
 
-        object Convert(IMetaDataStore metaData, object value, Type targetType);
+        object Convert(ITomlRoot root, object value, Type targetType);
     }
 
     internal interface ITomlConverter<TFrom, TTo> : ITomlConverter
     {
-        TTo Convert(IMetaDataStore metaData, TFrom src, Type targetType);
+        TTo Convert(ITomlRoot root, TFrom src, Type targetType);
     }
 }

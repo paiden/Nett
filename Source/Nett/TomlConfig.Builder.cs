@@ -49,7 +49,7 @@
                 this.converters = converters;
             }
 
-            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert)
+            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<ITomlRoot, TToml, TCustom> convert)
             {
                 this.AddConverter(new TomlConverter<TToml, TCustom>(convert));
                 return this;
@@ -61,7 +61,7 @@
                 return this;
             }
 
-            public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<IMetaDataStore, TCustom, TToml> convert)
+            public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<ITomlRoot, TCustom, TToml> convert)
             {
                 this.AddConverterInternal(new TomlConverter<TCustom, TToml>(convert));
                 return this;

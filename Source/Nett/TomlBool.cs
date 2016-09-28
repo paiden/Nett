@@ -2,8 +2,8 @@
 {
     public sealed class TomlBool : TomlValue<bool>
     {
-        internal TomlBool(IMetaDataStore metaData, bool value)
-            : base(metaData, value)
+        internal TomlBool(ITomlRoot root, bool value)
+            : base(root, value)
         {
         }
 

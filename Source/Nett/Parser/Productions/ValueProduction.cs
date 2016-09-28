@@ -16,9 +16,9 @@
             '\u3000',
         };
 
-        public static TomlObject Apply(IMetaDataStore metaData, TokenBuffer tokens)
+        public static TomlObject Apply(ITomlRoot root, TokenBuffer tokens)
         {
-            var value = ParseTomlValue(metaData, tokens);
+            var value = ParseTomlValue(root, tokens);
 
             if (value == null)
             {
@@ -65,7 +65,7 @@
             return source.Length;
         }
 
-        private static TomlString ParseLiteralString(IMetaDataStore metaData, LookaheadBuffer<Token> tokens)
+        private static TomlString ParseLiteralString(ITomlRoot root, LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
 
@@ -73,10 +73,10 @@
 
             var s = t.value.TrimNChars(1);
 
-            return new TomlString(metaData, s, TomlString.TypeOfString.Literal);
+            return new TomlString(root, s, TomlString.TypeOfString.Literal);
         }
 
-        private static TomlString ParseMultilineLiteralString(IMetaDataStore metaData, LookaheadBuffer<Token> tokens)
+        private static TomlString ParseMultilineLiteralString(ITomlRoot root, LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.MultilineLiteralString);
@@ -87,10 +87,10 @@
             if (s.Length > 0 && s[0] == '\r') { s = s.Substring(1); }
             if (s.Length > 0 && s[0] == '\n') { s = s.Substring(1); }
 
-            return new TomlString(metaData, s, TomlString.TypeOfString.MultilineLiteral);
+            return new TomlString(root, s, TomlString.TypeOfString.MultilineLiteral);
         }
 
-        private static TomlString ParseMultilineString(IMetaDataStore metaData, LookaheadBuffer<Token> tokens)
+        private static TomlString ParseMultilineString(ITomlRoot root, LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.MultilineString);
@@ -103,10 +103,10 @@
 
             s = ReplaceDelimeterBackslash(s);
 
-            return new TomlString(metaData, s, TomlString.TypeOfString.Multiline);
+            return new TomlString(root, s, TomlString.TypeOfString.Multiline);
         }
 
-        private static TomlString ParseStringValue(IMetaDataStore metaData, LookaheadBuffer<Token> tokens)
+        private static TomlString ParseStringValue(ITomlRoot root, LookaheadBuffer<Token> tokens)
         {
             var t = tokens.Consume();
 
@@ -119,10 +119,10 @@
 
             var s = t.value.TrimNChars(1).Unescape(t);
 
-            return new TomlString(metaData, s, TomlString.TypeOfString.Normal);
+            return new TomlString(root, s, TomlString.TypeOfString.Normal);
         }
 
-        private static TomlArray ParseTomlArray(IMetaDataStore metaData, TokenBuffer tokens)
+        private static TomlArray ParseTomlArray(ITomlRoot root, TokenBuffer tokens)
         {
             TomlArray a;
 
@@ -131,12 +131,12 @@
             if (tokens.TryExpect(TokenType.RBrac))
             {
                 tokens.Consume();
-                return new TomlArray(metaData);
+                return new TomlArray(root);
             }
             else
             {
                 List<TomlValue> values = new List<TomlValue>();
-                var v = ParseTomlValue(metaData, tokens);
+                var v = ParseTomlValue(root, tokens);
                 values.Add(v);
 
                 while (!tokens.TryExpect(TokenType.RBrac))
@@ -147,7 +147,7 @@
                     if (!tokens.TryExpect(TokenType.RBrac))
                     {
                         var et = tokens.Peek();
-                        v = ParseTomlValue(metaData, tokens);
+                        v = ParseTomlValue(root, tokens);
 
                         if (v.GetType() != values[0].GetType())
                         {
@@ -158,7 +158,7 @@
                     }
                 }
 
-                a = new TomlArray(metaData, values.ToArray());
+                a = new TomlArray(root, values.ToArray());
             }
 
             a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
@@ -167,7 +167,7 @@
             return a;
         }
 
-        private static TomlFloat ParseTomlFloat(IMetaDataStore metaData, LookaheadBuffer<Token> tokens)
+        private static TomlFloat ParseTomlFloat(ITomlRoot root, LookaheadBuffer<Token> tokens)
         {
             var floatToken = tokens.Consume();
 
@@ -179,10 +179,10 @@
                 throw new Exception($"Failed to parse TOML float with '{floatToken.value}' because it has  a leading '0' which is not allowed by the TOML specification.");
             }
 
-            return new TomlFloat(metaData, double.Parse(floatToken.value.Replace("_", string.Empty), CultureInfo.InvariantCulture));
+            return new TomlFloat(root, double.Parse(floatToken.value.Replace("_", string.Empty), CultureInfo.InvariantCulture));
         }
 
-        private static TomlInt ParseTomlInt(IMetaDataStore metaData, LookaheadBuffer<Token> tokens)
+        private static TomlInt ParseTomlInt(ITomlRoot root, LookaheadBuffer<Token> tokens)
         {
             var token = tokens.Consume();
 
@@ -191,21 +191,21 @@
                 throw new Exception($"Failed to parse TOML int with '{token.value}' because it has  a leading '0' which is not allowed by the TOML specification.");
             }
 
-            return new TomlInt(metaData, long.Parse(token.value.Replace("_", string.Empty)));
+            return new TomlInt(root, long.Parse(token.value.Replace("_", string.Empty)));
         }
 
-        private static TomlValue ParseTomlValue(IMetaDataStore metaData, TokenBuffer tokens)
+        private static TomlValue ParseTomlValue(ITomlRoot root, TokenBuffer tokens)
         {
-            if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(metaData, tokens); }
-            else if (tokens.TryExpect(TokenType.Float)) { return ParseTomlFloat(metaData, tokens); }
-            else if (tokens.TryExpect(TokenType.DateTime)) { return TomlDateTime.Parse(metaData, tokens.Consume().value); }
-            else if (tokens.TryExpect(TokenType.Timespan)) { return new TomlTimeSpan(metaData, TimeSpan.Parse(tokens.Consume().value, CultureInfo.InvariantCulture)); }
-            else if (tokens.TryExpect(TokenType.String)) { return ParseStringValue(metaData, tokens); }
-            else if (tokens.TryExpect(TokenType.LiteralString)) { return ParseLiteralString(metaData, tokens); }
-            else if (tokens.TryExpect(TokenType.MultilineString)) { return ParseMultilineString(metaData, tokens); }
-            else if (tokens.TryExpect(TokenType.MultilineLiteralString)) { return ParseMultilineLiteralString(metaData, tokens); }
-            else if (tokens.TryExpect(TokenType.Bool)) { return new TomlBool(metaData, bool.Parse(tokens.Consume().value)); }
-            else if (tokens.TryExpect(TokenType.LBrac)) { return ParseTomlArray(metaData, tokens); }
+            if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(root, tokens); }
+            else if (tokens.TryExpect(TokenType.Float)) { return ParseTomlFloat(root, tokens); }
+            else if (tokens.TryExpect(TokenType.DateTime)) { return TomlDateTime.Parse(root, tokens.Consume().value); }
+            else if (tokens.TryExpect(TokenType.Timespan)) { return new TomlTimeSpan(root, TimeSpan.Parse(tokens.Consume().value, CultureInfo.InvariantCulture)); }
+            else if (tokens.TryExpect(TokenType.String)) { return ParseStringValue(root, tokens); }
+            else if (tokens.TryExpect(TokenType.LiteralString)) { return ParseLiteralString(root, tokens); }
+            else if (tokens.TryExpect(TokenType.MultilineString)) { return ParseMultilineString(root, tokens); }
+            else if (tokens.TryExpect(TokenType.MultilineLiteralString)) { return ParseMultilineLiteralString(root, tokens); }
+            else if (tokens.TryExpect(TokenType.Bool)) { return new TomlBool(root, bool.Parse(tokens.Consume().value)); }
+            else if (tokens.TryExpect(TokenType.LBrac)) { return ParseTomlArray(root, tokens); }
 
             return null;
         }

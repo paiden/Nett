@@ -12,7 +12,7 @@
 
         public bool CanConvertToToml() => true;
 
-        public object Convert(IMetaDataStore metaData, object value, Type targetType) => new TomlString(metaData, value.ToString());
+        public object Convert(ITomlRoot root, object value, Type targetType) => new TomlString(root, value.ToString());
     }
 
     internal sealed class TomlToEnumConverter : ITomlConverter
@@ -25,6 +25,6 @@
 
         public bool CanConvertToToml() => false;
 
-        public object Convert(IMetaDataStore metaData, object value, Type targetType) => Enum.Parse(targetType, ((TomlString)value).Value);
+        public object Convert(ITomlRoot root, object value, Type targetType) => Enum.Parse(targetType, ((TomlString)value).Value);
     }
 }

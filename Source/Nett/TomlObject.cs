@@ -30,13 +30,13 @@
 
     public abstract class TomlObject : ITomlObject
     {
-        private IMetaDataStore metaData;
+        private ITomlRoot root;
 
-        internal TomlObject(IMetaDataStore metaData)
+        internal TomlObject(ITomlRoot root)
         {
-            if (metaData == null && this.GetType() != typeof(TomlTable.RootTable)) { throw new ArgumentNullException(nameof(metaData)); }
+            if (root == null && this.GetType() != typeof(TomlTable.RootTable)) { throw new ArgumentNullException(nameof(root)); }
 
-            this.metaData = metaData;
+            this.root = root;
             this.Comments = new List<TomlComment>();
         }
 
@@ -46,7 +46,7 @@
 
         internal List<TomlComment> Comments { get; private set; }
 
-        internal IMetaDataStore MetaData => this.metaData;
+        internal ITomlRoot Root => this.root;
 
         public T Get<T>() => (T)this.Get(typeof(T));
 
@@ -54,27 +54,27 @@
 
         public abstract void Visit(ITomlObjectVisitor visitor);
 
-        internal static TomlObject CreateFrom(IMetaDataStore metaData, object val, PropertyInfo pi)
+        internal static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi)
         {
             var t = val.GetType();
-            var converter = metaData.Config.TryGetToTomlConverter(t);
+            var converter = root.Config.TryGetToTomlConverter(t);
 
             if (converter != null)
             {
-                return (TomlObject)converter.Convert(metaData, val, Types.TomlObjectType);
+                return (TomlObject)converter.Convert(root, val, Types.TomlObjectType);
             }
             else if (val as IDictionary != null)
             {
-                return TomlTable.CreateFromDictionary(metaData, (IDictionary)val, metaData.Config.GetTableType(pi));
+                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Config.GetTableType(pi));
             }
             else if (t != Types.StringType && (val as IEnumerable) != null)
             {
-                return CreateArrayType(metaData, (IEnumerable)val);
+                return CreateArrayType(root, (IEnumerable)val);
             }
             else
             {
-                var tableType = metaData.Config.GetTableType(pi);
-                return TomlTable.CreateFromClass(metaData, val, tableType);
+                var tableType = root.Config.GetTableType(pi);
+                return TomlTable.CreateFromClass(root, val, tableType);
             }
         }
 
@@ -86,25 +86,25 @@
             }
         }
 
-        internal void SetAsMetaDataRoot(TomlTable.RootTable root) => this.metaData = root;
+        internal void SetAsRoot(TomlTable.RootTable root) => this.root = root;
 
-        private static TomlObject CreateArrayType(IMetaDataStore metaData, IEnumerable e)
+        private static TomlObject CreateArrayType(ITomlRoot root, IEnumerable e)
         {
             var et = e.GetElementType();
 
             if (et != null)
             {
-                var conv = metaData.Config.TryGetToTomlConverter(et);
+                var conv = root.Config.TryGetToTomlConverter(et);
                 if (conv != null)
                 {
                     if (conv.CanConvertTo(typeof(TomlValue)))
                     {
-                        var values = e.Select((o) => (TomlValue)conv.Convert(metaData, o, Types.TomlValueType));
-                        return new TomlArray(metaData, values.ToArray());
+                        var values = e.Select((o) => (TomlValue)conv.Convert(root, o, Types.TomlValueType));
+                        return new TomlArray(root, values.ToArray());
                     }
                     else if (conv.CanConvertTo(typeof(TomlTable)))
                     {
-                        return new TomlTableArray(metaData, e.Select((o) => (TomlTable)conv.Convert(metaData, o, Types.TomlTableType)));
+                        return new TomlTableArray(root, e.Select((o) => (TomlTable)conv.Convert(root, o, Types.TomlTableType)));
                     }
                     else
                     {
@@ -113,11 +113,11 @@
                 }
                 else
                 {
-                    return new TomlTableArray(metaData, e.Select((o) => TomlTable.CreateFromClass(metaData, o)));
+                    return new TomlTableArray(root, e.Select((o) => TomlTable.CreateFromClass(root, o)));
                 }
             }
 
-            return new TomlArray(metaData);
+            return new TomlArray(root);
         }
     }
 }

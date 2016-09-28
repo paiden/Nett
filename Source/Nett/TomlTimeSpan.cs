@@ -4,8 +4,8 @@
 
     public sealed class TomlTimeSpan : TomlValue<TimeSpan>
     {
-        internal TomlTimeSpan(IMetaDataStore metaData, TimeSpan value)
-            : base(metaData, value)
+        internal TomlTimeSpan(ITomlRoot root, TimeSpan value)
+            : base(root, value)
         {
         }
 

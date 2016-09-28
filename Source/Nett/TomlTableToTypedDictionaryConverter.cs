@@ -17,7 +17,7 @@
 
         public bool CanConvertToToml() => false;
 
-        public object Convert(IMetaDataStore metaData, object value, Type targetType)
+        public object Convert(ITomlRoot root, object value, Type targetType)
         {
             Assert(
                 targetType != typeof(Dictionary<string, object>),

@@ -7,8 +7,8 @@
 
     public sealed class TomlArray : TomlValue<TomlValue[]>
     {
-        internal TomlArray(IMetaDataStore metaData, params TomlValue[] values)
-            : base(metaData, values)
+        internal TomlArray(ITomlRoot root, params TomlValue[] values)
+            : base(root, values)
         {
         }
 

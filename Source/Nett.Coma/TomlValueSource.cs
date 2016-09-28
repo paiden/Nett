@@ -4,8 +4,8 @@
 
     internal sealed class TomlSource : TomlObject
     {
-        public TomlSource(IMetaDataStore metaData, IConfigSource source)
-            : base(metaData)
+        public TomlSource(ITomlRoot root, IConfigSource source)
+            : base(root)
         {
             this.Value = source;
         }

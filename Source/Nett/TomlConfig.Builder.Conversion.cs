@@ -6,7 +6,7 @@
     public interface IConfigureConversionBuilder<TCustom, TToml>
         where TToml : TomlObject
     {
-        IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<IMetaDataStore, TToml, TCustom> convert);
+        IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<ITomlRoot, TToml, TCustom> convert);
 
         IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
     }
@@ -25,7 +25,7 @@
             this IConfigureConversionBuilder<TCustom, TomlBool> cb, Func<TCustom, bool> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlBool>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlBool>((metaData, customValue) => new TomlBool(metaData, conv(customValue))));
+                new TomlConverter<TCustom, TomlBool>((root, customValue) => new TomlBool(root, conv(customValue))));
             return cb;
         }
 
@@ -33,7 +33,7 @@
             this IConfigureConversionBuilder<TCustom, TomlInt> cb, Func<TCustom, long> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlInt>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlInt>((metaData, customValue) => new TomlInt(metaData, conv(customValue))));
+                new TomlConverter<TCustom, TomlInt>((root, customValue) => new TomlInt(root, conv(customValue))));
             return cb;
         }
 
@@ -41,7 +41,7 @@
             this IConfigureConversionBuilder<TCustom, TomlFloat> cb, Func<TCustom, double> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlFloat>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlFloat>((metaData, customValue) => new TomlFloat(metaData, conv(customValue))));
+                new TomlConverter<TCustom, TomlFloat>((root, customValue) => new TomlFloat(root, conv(customValue))));
             return cb;
         }
 
@@ -49,7 +49,7 @@
             this IConfigureConversionBuilder<TCustom, TomlString> cb, Func<TCustom, string> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlString>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlString>((metaData, customValue) => new TomlString(metaData, conv(customValue))));
+                new TomlConverter<TCustom, TomlString>((root, customValue) => new TomlString(root, conv(customValue))));
             return cb;
         }
 
@@ -57,7 +57,7 @@
             this IConfigureConversionBuilder<TCustom, TomlDateTime> cb, Func<TCustom, DateTimeOffset> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlDateTime>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlDateTime>((metaData, customValue) => new TomlDateTime(metaData, conv(customValue))));
+                new TomlConverter<TCustom, TomlDateTime>((root, customValue) => new TomlDateTime(root, conv(customValue))));
             return cb;
         }
 
@@ -65,7 +65,7 @@
             this IConfigureConversionBuilder<TCustom, TomlTimeSpan> cb, Func<TCustom, TimeSpan> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlTimeSpan>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlTimeSpan>((metaData, customValue) => new TomlTimeSpan(metaData, conv(customValue))));
+                new TomlConverter<TCustom, TomlTimeSpan>((root, customValue) => new TomlTimeSpan(root, conv(customValue))));
             return cb;
         }
 
@@ -73,9 +73,9 @@
             this IConfigureConversionBuilder<TCustom, TomlTable> cb, Action<TCustom, TomlTable> conv)
         {
             ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlTable>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlTable>((metaData, customValue) =>
+                new TomlConverter<TCustom, TomlTable>((root, customValue) =>
                 {
-                    var t = new TomlTable(metaData);
+                    var t = new TomlTable(root);
                     conv(customValue, t);
                     return t;
                 }));
@@ -173,8 +173,8 @@
     {
         public static List<ITomlConverter> AddBidirectionalConverter<TToml, TClr>(
             this List<ITomlConverter> converterlist,
-            Func<IMetaDataStore, TClr, TToml> toToml,
-            Func<IMetaDataStore, TToml, TClr> toClr)
+            Func<ITomlRoot, TClr, TToml> toToml,
+            Func<ITomlRoot, TToml, TClr> toClr)
             where TToml : TomlObject
         {
             converterlist.Add(new TomlConverter<TToml, TClr>(toClr));

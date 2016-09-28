@@ -1,6 +1,6 @@
 ﻿namespace Nett
 {
-    public interface IMetaDataStore
+    public interface ITomlRoot
     {
         TomlConfig Config { get; }
     }
