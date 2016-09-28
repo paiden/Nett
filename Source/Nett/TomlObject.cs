@@ -30,13 +30,12 @@
 
     public abstract class TomlObject : ITomlObject
     {
-        private ITomlRoot root;
 
         internal TomlObject(ITomlRoot root)
         {
             if (root == null && this.GetType() != typeof(TomlTable.RootTable)) { throw new ArgumentNullException(nameof(root)); }
 
-            this.root = root;
+            this.Root = root ?? (TomlTable.RootTable)this;
             this.Comments = new List<TomlComment>();
         }
 
@@ -46,7 +45,7 @@
 
         internal List<TomlComment> Comments { get; private set; }
 
-        internal ITomlRoot Root => this.root;
+        internal ITomlRoot Root { get; }
 
         public T Get<T>() => (T)this.Get(typeof(T));
 
@@ -85,8 +84,6 @@
                 this.Comments = new List<TomlComment>(src.Comments);
             }
         }
-
-        internal void SetAsRoot(TomlTable.RootTable root) => this.root = root;
 
         private static TomlObject CreateArrayType(ITomlRoot root, IEnumerable e)
         {

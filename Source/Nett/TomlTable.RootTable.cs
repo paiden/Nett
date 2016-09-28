@@ -45,7 +45,6 @@
                 if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
                 this.config = config;
-                this.SetAsRoot(this);
             }
 
             TomlConfig ITomlRoot.Config => this.config;
