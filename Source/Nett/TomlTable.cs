@@ -96,7 +96,15 @@
 
         internal bool IsDefined { get; set; }
 
+        private IDictionary<string, TomlObject> AsDict => this;
+
         public TomlObject this[string key]
+        {
+            get { return this.AsDict[key]; }
+            internal set { this.AsDict[key] = value; }
+        }
+
+        TomlObject IDictionary<string, TomlObject>.this[string key]
         {
             get
             {
@@ -115,6 +123,8 @@
                 this.rows[key] = value;
             }
         }
+
+
 
         public bool Freeze()
         {
