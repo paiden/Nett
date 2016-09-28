@@ -48,12 +48,6 @@
 
     public partial class TomlTable : TomlObject, IDictionary<string, TomlObject>
     {
-        private static readonly Type EnumerableType = typeof(IEnumerable);
-
-        private static readonly Type StringType = typeof(string);
-
-        private static readonly Type TomlTableType = typeof(TomlTable);
-
         private readonly Dictionary<string, TomlObject> rows = new Dictionary<string, TomlObject>();
 
         private volatile bool isFrozen = false;
@@ -150,7 +144,7 @@
 
         public override object Get(Type t)
         {
-            if (t == TomlTableType) { return this; }
+            if (t == Types.TomlTableType) { return this; }
 
             var result = this.MetaData.Config.GetActivatedInstance(t);
 

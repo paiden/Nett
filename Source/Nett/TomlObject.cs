@@ -30,10 +30,6 @@
 
     public abstract class TomlObject : ITomlObject
     {
-        private static readonly Type EnumerableType = typeof(IEnumerable);
-
-        private static readonly Type StringType = typeof(string);
-
         private IMetaDataStore metaData;
 
         internal TomlObject(IMetaDataStore metaData)
@@ -71,7 +67,7 @@
             {
                 return TomlTable.CreateFromDictionary(metaData, (IDictionary)val, metaData.Config.GetTableType(pi));
             }
-            else if (t != StringType && (val as IEnumerable) != null)
+            else if (t != Types.StringType && (val as IEnumerable) != null)
             {
                 return CreateArrayType(metaData, (IEnumerable)val);
             }

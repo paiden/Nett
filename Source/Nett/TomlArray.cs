@@ -7,10 +7,6 @@
 
     public sealed class TomlArray : TomlValue<TomlValue[]>
     {
-        private static readonly Type ListType = typeof(IList);
-        private static readonly Type ObjectType = typeof(object);
-        private static readonly Type TomlArrayType = typeof(TomlArray);
-
         internal TomlArray(IMetaDataStore metaData, params TomlValue[] values)
             : base(metaData, values)
         {
@@ -30,7 +26,7 @@
 
         public override object Get(Type t)
         {
-            if (t == TomlArrayType) { return this; }
+            if (t == Types.TomlArrayType) { return this; }
 
             if (t.IsArray)
             {
@@ -45,13 +41,13 @@
                 return a;
             }
 
-            if (!ListType.IsAssignableFrom(t))
+            if (!Types.ListType.IsAssignableFrom(t))
             {
                 throw new InvalidOperationException(string.Format("Cannot convert TOML array to '{0}'.", t.FullName));
             }
 
             var collection = (IList)Activator.CreateInstance(t);
-            Type itemType = ObjectType;
+            Type itemType = Types.ObjectType;
             if (t.IsGenericType)
             {
                 itemType = t.GetGenericArguments()[0];
