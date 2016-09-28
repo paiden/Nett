@@ -21,16 +21,8 @@
         ArrayOfTables,
     }
 
-    public interface ITomlObject
+    public abstract class TomlObject
     {
-        string ReadableTypeName { get; }
-
-        TomlObjectType TomlType { get; }
-    }
-
-    public abstract class TomlObject : ITomlObject
-    {
-
         internal TomlObject(ITomlRoot root)
         {
             if (root == null && this.GetType() != typeof(TomlTable.RootTable)) { throw new ArgumentNullException(nameof(root)); }
