@@ -34,8 +34,10 @@
 
         public TomlTable Load(IConfigSource source)
         {
+#pragma warning disable SA1312
             IPersistableConfig _;
             return this.LoadInternal(source, out _);
+#pragma warning restore SA1312
         }
 
         public TomlTable LoadSourcesTable() => this.MergeTables(c => c.LoadSourcesTable());
@@ -58,13 +60,13 @@
             cfg.Save(table);
         }
 
+        public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());
+
         private TomlTable LoadInternal(IConfigSource source, out IPersistableConfig cfg)
         {
             cfg = this.configs.Single(c => c.CanHandleSource(source));
             return cfg.Load();
         }
-
-        public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());
 
         private TomlTable MergeTables(Func<IPersistableConfig, TomlTable> loadSingle)
         {

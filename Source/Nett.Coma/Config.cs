@@ -41,22 +41,6 @@
             return new Config<T>(persisted);
         }
 
-        internal bool Clear(TPath path)
-        {
-            var ste = path.TryApply(this.persistable.LoadSourcesTable()) as TomlSource;
-
-            if (ste == null)
-            {
-                return false;
-            }
-
-            var src = ste.Value;
-            var sourceTable = this.persistable.Load(src);
-            var wasRemoved = path.ClearFrom(sourceTable);
-            this.persistable.Save(sourceTable, src);
-            return wasRemoved;
-        }
-
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)
         {
             getter.CheckNotNull(nameof(getter));
@@ -65,29 +49,12 @@
             return getter(cfg);
         }
 
-        internal TomlObject GetFromPath(TPath path)
-        {
-            path.CheckNotNull(nameof(path));
-
-            var cfg = this.persistable.Load();
-            return path.Apply(cfg);
-        }
-
         public IConfigSource GetSource(Func<TomlTable, object> getter)
         {
             getter.CheckNotNull(nameof(getter));
 
             var cfg = this.persistable.LoadSourcesTable();
             return (IConfigSource)getter(cfg);
-        }
-
-        internal IConfigSource TryGetSource(TPath path)
-        {
-            path.CheckNotNull(nameof(path));
-
-            var cfgTable = this.persistable.LoadSourcesTable();
-            var source = path.TryApply(cfgTable) as TomlSource;
-            return source?.Value;
         }
 
         public void Set(Action<TomlTable> setter)
@@ -117,6 +84,30 @@
 
         public TomlTable Unmanaged() => this.persistable.Load();
 
+        internal bool Clear(TPath path)
+        {
+            var ste = path.TryApply(this.persistable.LoadSourcesTable()) as TomlSource;
+
+            if (ste == null)
+            {
+                return false;
+            }
+
+            var src = ste.Value;
+            var sourceTable = this.persistable.Load(src);
+            var wasRemoved = path.ClearFrom(sourceTable);
+            this.persistable.Save(sourceTable, src);
+            return wasRemoved;
+        }
+
+        internal TomlObject GetFromPath(TPath path)
+        {
+            path.CheckNotNull(nameof(path));
+
+            var cfg = this.persistable.Load();
+            return path.Apply(cfg);
+        }
+
         internal void Set(TPath path, object value)
         {
             path.CheckNotNull(nameof(path));
@@ -131,6 +122,15 @@
             value.CheckNotNull(nameof(value));
 
             this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
+        }
+
+        internal IConfigSource TryGetSource(TPath path)
+        {
+            path.CheckNotNull(nameof(path));
+
+            var cfgTable = this.persistable.LoadSourcesTable();
+            var source = path.TryApply(cfgTable) as TomlSource;
+            return source?.Value;
         }
     }
 }

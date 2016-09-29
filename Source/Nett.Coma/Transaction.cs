@@ -7,8 +7,8 @@
     {
         private readonly Action<IMergeableConfig> onCloseTransactionCallback;
         private readonly IMergeableConfig persistable;
-        private TomlTable transactionTable;
         private TomlTable transactionSourcesTable;
+        private TomlTable transactionTable;
 
         private Transaction(IMergeableConfig persistable, Action<IMergeableConfig> onCloseTransactionCallback)
         {
@@ -29,6 +29,8 @@
             return transaction;
         }
 
+        public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
+
         public void Dispose()
         {
             if (this.persistable.WasChangedExternally())
@@ -44,24 +46,7 @@
 
         public TomlTable Load() => this.transactionTable;
 
-        public TomlTable LoadSourcesTable() => this.transactionSourcesTable;
-
-        public void Save(TomlTable content) => this.transactionTable = content;
-
-        public bool WasChangedExternally() => this.persistable.WasChangedExternally();
-
-        private void Init()
-        {
-            this.transactionTable = this.persistable.Load();
-            this.transactionSourcesTable = this.persistable.Load();
-        }
-
         public TomlTable Load(TomlTable table, IConfigSource source)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Save(TomlTable table, IConfigSource source)
         {
             throw new NotImplementedException();
         }
@@ -71,6 +56,21 @@
             throw new NotImplementedException();
         }
 
-        public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
+        public TomlTable LoadSourcesTable() => this.transactionSourcesTable;
+
+        public void Save(TomlTable content) => this.transactionTable = content;
+
+        public void Save(TomlTable table, IConfigSource source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool WasChangedExternally() => this.persistable.WasChangedExternally();
+
+        private void Init()
+        {
+            this.transactionTable = this.persistable.Load();
+            this.transactionSourcesTable = this.persistable.Load();
+        }
     }
 }

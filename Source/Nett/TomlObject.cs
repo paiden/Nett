@@ -35,8 +35,6 @@
 
         public abstract TomlObjectType TomlType { get; }
 
-        internal abstract TomlObject WithRoot(ITomlRoot root);
-
         internal List<TomlComment> Comments { get; private set; }
 
         internal ITomlRoot Root { get; }
@@ -78,6 +76,8 @@
                 this.Comments = new List<TomlComment>(src.Comments);
             }
         }
+
+        internal abstract TomlObject WithRoot(ITomlRoot root);
 
         private static TomlObject CreateArrayType(ITomlRoot root, IEnumerable e)
         {

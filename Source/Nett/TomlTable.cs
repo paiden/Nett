@@ -56,14 +56,6 @@
 
         private volatile bool isFrozen = false;
 
-        private void CheckNotFrozen()
-        {
-            if (this.isFrozen)
-            {
-                throw new InvalidOperationException("Cannot write into frozen TOML table");
-            }
-        }
-
         internal TomlTable(ITomlRoot root, TableTypes tableType = TableTypes.Default)
             : base(root)
         {
@@ -76,31 +68,25 @@
             Inline,
         }
 
-        public IEnumerable<KeyValuePair<string, TomlObject>> Rows => this.rows.AsEnumerable();
+        public int Count => this.rows.Count;
+
+        public bool IsReadOnly => this.isFrozen;
+
+        public ICollection<string> Keys => this.rows.Keys;
 
         public override string ReadableTypeName => "table";
+
+        public IEnumerable<KeyValuePair<string, TomlObject>> Rows => this.rows.AsEnumerable();
 
         public TableTypes TableType { get; }
 
         public override TomlObjectType TomlType => TomlObjectType.Table;
 
-        public ICollection<string> Keys => this.rows.Keys;
-
         public ICollection<TomlObject> Values => this.rows.Values;
-
-        public int Count => this.rows.Count;
-
-        public bool IsReadOnly => this.isFrozen;
 
         internal bool IsDefined { get; set; }
 
         private IDictionary<string, TomlObject> AsDict => this;
-
-        public TomlObject this[string key]
-        {
-            get { return this.AsDict[key]; }
-            internal set { this.AsDict[key] = value; }
-        }
 
         TomlObject IDictionary<string, TomlObject>.this[string key]
         {
@@ -122,6 +108,27 @@
                 this.CheckNotFrozen();
                 this.rows[key] = this.EnsureCorrectRoot(value);
             }
+        }
+
+        public TomlObject this[string key]
+        {
+            get { return this.AsDict[key]; }
+            internal set { this.AsDict[key] = value; }
+        }
+
+        public void Clear()
+        {
+            this.CheckNotFrozen();
+            this.rows.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, TomlObject> item) => this.rows.Contains(item);
+
+        public bool ContainsKey(string key) => this.rows.ContainsKey(key);
+
+        public void CopyTo(KeyValuePair<string, TomlObject>[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
         }
 
         public bool Freeze()
@@ -164,6 +171,26 @@
             return result;
         }
 
+        public IEnumerator<KeyValuePair<string, TomlObject>> GetEnumerator() => this.rows.GetEnumerator();
+
+        void ICollection<KeyValuePair<string, TomlObject>>.Add(KeyValuePair<string, TomlObject> item) => this.Add(item.Key, item.Value);
+
+        void IDictionary<string, TomlObject>.Add(string key, TomlObject value) => this.Add(key, value);
+
+        IEnumerator IEnumerable.GetEnumerator() => this.rows.GetEnumerator();
+
+        public bool Remove(string key)
+        {
+            this.CheckNotFrozen();
+            return this.rows.Remove(key);
+        }
+
+        public bool Remove(KeyValuePair<string, TomlObject> item)
+        {
+            this.CheckNotFrozen();
+            return this.rows.Remove(item.Key);
+        }
+
         public Dictionary<string, object> ToDictionary()
         {
             var converter = new ConvertTomlTableToDictionaryConversionVisitor();
@@ -177,40 +204,7 @@
             return o;
         }
 
-        public bool ContainsKey(string key) => this.rows.ContainsKey(key);
-
-        void IDictionary<string, TomlObject>.Add(string key, TomlObject value) => this.Add(key, value);
-
-        public bool Remove(string key)
-        {
-            this.CheckNotFrozen();
-            return this.rows.Remove(key);
-        }
-
         public bool TryGetValue(string key, out TomlObject value) => this.rows.TryGetValue(key, out value);
-
-        public void Clear()
-        {
-            this.CheckNotFrozen();
-            this.rows.Clear();
-        }
-
-        public bool Contains(KeyValuePair<string, TomlObject> item) => this.rows.Contains(item);
-
-        public void CopyTo(KeyValuePair<string, TomlObject>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(KeyValuePair<string, TomlObject> item)
-        {
-            this.CheckNotFrozen();
-            return this.rows.Remove(item.Key);
-        }
-
-        public IEnumerator<KeyValuePair<string, TomlObject>> GetEnumerator() => this.rows.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => this.rows.GetEnumerator();
 
         public override void Visit(ITomlObjectVisitor visitor)
         {
@@ -288,8 +282,6 @@
             }
         }
 
-        internal override TomlObject WithRoot(ITomlRoot root) => this.TableWithRoot(root);
-
         internal TomlTable TableWithRoot(ITomlRoot root)
         {
             root.CheckNotNull(nameof(root));
@@ -304,7 +296,7 @@
             return table;
         }
 
-        private TomlObject EnsureCorrectRoot(TomlObject obj) => obj.Root == this.Root ? obj : obj.WithRoot(this.Root);
+        internal override TomlObject WithRoot(ITomlRoot root) => this.TableWithRoot(root);
 
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {
@@ -349,8 +341,6 @@
             }
         }
 
-        void ICollection<KeyValuePair<string, TomlObject>>.Add(KeyValuePair<string, TomlObject> item) => this.Add(item.Key, item.Value);
-
         [Conditional(Constants.Debug)]
         private void AssertIntegrity()
         {
@@ -369,5 +359,15 @@
                 }
             }
         }
+
+        private void CheckNotFrozen()
+        {
+            if (this.isFrozen)
+            {
+                throw new InvalidOperationException("Cannot write into frozen TOML table");
+            }
+        }
+
+        private TomlObject EnsureCorrectRoot(TomlObject obj) => obj.Root == this.Root ? obj : obj.WithRoot(this.Root);
     }
 }

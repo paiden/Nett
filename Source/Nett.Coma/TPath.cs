@@ -11,9 +11,9 @@ namespace Nett.Coma
     {
         TomlObject Apply(TomlObject obj);
 
-        TomlObject TryApply(TomlObject obj);
-
         void ApplyValue(TomlObject target, TomlObject value);
+
+        TomlObject TryApply(TomlObject obj);
     }
 
     [DebuggerDisplay("{DebuggerDisplay}")]
@@ -23,10 +23,6 @@ namespace Nett.Coma
 
         private readonly TPath prefixPath;
         private readonly ITPathSegment segment;
-
-        public TPath Prefix => this.prefixPath;
-
-        private bool IsRootPrefixPath => this.segment == null;
 
         public TPath()
         {
@@ -40,61 +36,11 @@ namespace Nett.Coma
             this.segment = segment;
         }
 
-        public TomlObject Apply(TomlObject obj)
-        {
-            var ar = this.TryApply(obj);
-            if (ar == null)
-            {
-                throw new InvalidOperationException("Failed to apply TPath");
-            }
-            else
-            {
-                return ar;
-            }
-        }
+        public TPath Prefix => this.prefixPath;
 
-        public void ApplyValue(TomlObject applyTo, TomlObject value)
-        {
-            var target = this.prefixPath.Apply(applyTo);
-            this.segment.ApplyValue(target, value);
-        }
+        private string DebuggerDisplay => this.ToString();
 
-        public TomlObject TryApply(TomlObject obj)
-        {
-            if (this.IsRootPrefixPath)
-            {
-                return obj;
-            }
-
-            var po = this.prefixPath.TryApply(obj);
-            return this.segment.TryApply(po);
-        }
-
-        public bool Equals(TPath other)
-        {
-            if (other == null) { return false; }
-            if (other.segment != this.segment) { return false; }
-
-            return this.prefixPath == other.prefixPath;
-        }
-
-        public TPath WithKeyAdded(string key) => new TPath(this, new KeySegment(key));
-
-        public TPath WithIndexAdded(int index) => new TPath(this, new IndexSegment(index));
-
-        public bool ClearFrom(TomlTable from)
-        {
-            from.CheckNotNull(nameof(from));
-
-            var keySegment = this.segment as KeySegment;
-            if (keySegment == null)
-            {
-                throw new InvalidOperationException("Final segment of path needs to be a key");
-            }
-
-            var targetTable = (TomlTable)this.prefixPath.Apply(from);
-            return keySegment.ClearFrom(targetTable);
-        }
+        private bool IsRootPrefixPath => this.segment == null;
 
         public static TPath Parse(string src)
         {
@@ -125,9 +71,85 @@ namespace Nett.Coma
             return path;
         }
 
-        private static string ParseKey(ref int parseIndex, string input) => ParseSegment(ref parseIndex, input, 32);
+        public TomlObject Apply(TomlObject obj)
+        {
+            var ar = this.TryApply(obj);
+            if (ar == null)
+            {
+                throw new InvalidOperationException("Failed to apply TPath");
+            }
+            else
+            {
+                return ar;
+            }
+        }
+
+        public void ApplyValue(TomlObject applyTo, TomlObject value)
+        {
+            var target = this.prefixPath.Apply(applyTo);
+            this.segment.ApplyValue(target, value);
+        }
+
+        public bool ClearFrom(TomlTable from)
+        {
+            from.CheckNotNull(nameof(from));
+
+            var keySegment = this.segment as KeySegment;
+            if (keySegment == null)
+            {
+                throw new InvalidOperationException("Final segment of path needs to be a key");
+            }
+
+            var targetTable = (TomlTable)this.prefixPath.Apply(from);
+            return keySegment.ClearFrom(targetTable);
+        }
+
+        public bool Equals(TPath other)
+        {
+            if (other == null) { return false; }
+            if (other.segment != this.segment) { return false; }
+
+            return this.prefixPath == other.prefixPath;
+        }
+
+        public IEnumerator<ITPathSegment> GetEnumerator() => this.Segments().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+        public override string ToString()
+        {
+            if (this.IsRootPrefixPath) { return string.Empty; }
+
+            return this.prefixPath.ToString() + this.segment.ToString();
+        }
+
+        public TomlObject TryApply(TomlObject obj)
+        {
+            if (this.IsRootPrefixPath)
+            {
+                return obj;
+            }
+
+            var po = this.prefixPath.TryApply(obj);
+            return this.segment.TryApply(po);
+        }
+
+        public TPath WithIndexAdded(int index) => new TPath(this, new IndexSegment(index));
+
+        public TPath WithKeyAdded(string key) => new TPath(this, new KeySegment(key));
+
+        internal TPath WithSegmentAdded(ITPathSegment segment) => new TPath(this, segment);
+
+        private static string GetKey(string segment)
+        {
+            var endIndex = segment.IndexOf("[");
+            endIndex = endIndex > 0 ? endIndex : segment.Length;
+            return segment.Substring(0, endIndex);
+        }
 
         private static int ParseIndex(ref int parseIndex, string input) => int.Parse(ParseSegment(ref parseIndex, input, 8));
+
+        private static string ParseKey(ref int parseIndex, string input) => ParseSegment(ref parseIndex, input, 32);
 
         private static string ParseSegment(ref int parseIndex, string input, int capacity)
         {
@@ -157,22 +179,6 @@ namespace Nett.Coma
             return s;
         }
 
-        public override string ToString()
-        {
-            if (this.IsRootPrefixPath) { return string.Empty; }
-
-            return this.prefixPath.ToString() + this.segment.ToString();
-        }
-
-        internal TPath WithSegmentAdded(ITPathSegment segment) => new TPath(this, segment);
-
-        private static string GetKey(string segment)
-        {
-            var endIndex = segment.IndexOf("[");
-            endIndex = endIndex > 0 ? endIndex : segment.Length;
-            return segment.Substring(0, endIndex);
-        }
-
         private static int? TryGetIndex(string segment)
         {
             int index = segment.IndexOf("[");
@@ -186,12 +192,6 @@ namespace Nett.Coma
 
             return null;
         }
-
-        public IEnumerator<ITPathSegment> GetEnumerator() => this.Segments().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-        private string DebuggerDisplay => this.ToString();
 
         private IEnumerable<ITPathSegment> Segments()
         {
@@ -211,64 +211,6 @@ namespace Nett.Coma
             yield return this.segment;
         }
 
-        private sealed class KeySegment : ITPathSegment
-        {
-            private readonly string key;
-
-            public KeySegment(string key)
-            {
-                this.key = key;
-            }
-
-            public TomlObject TryApply(TomlObject obj)
-            {
-                var table = obj as TomlTable;
-                if (table != null && table.ContainsKey(this.key)) { return table[this.key]; }
-
-                return null;
-            }
-
-            public TomlObject Apply(TomlObject obj)
-            {
-                var ar = this.TryApply(obj);
-
-                if (ar == null)
-                {
-                    throw new InvalidOperationException(
-                        $"Cannot apply key path segment '{this.key}' on TOML object of type '{obj.ReadableTypeName}.");
-                }
-                else
-                {
-                    return ar;
-                }
-            }
-
-            public int CompareTo(ITPathSegment other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool Equals(ITPathSegment other)
-            {
-                var otherKeySegment = other as KeySegment;
-
-                if (other == null) { return false; }
-
-                return this.key == otherKeySegment.key;
-            }
-
-            public bool ClearFrom(TomlTable table) => table.Remove(this.key);
-
-            public override bool Equals(object obj) => this.Equals(obj as ITPathSegment);
-
-            public override string ToString() => $"/{this.key}";
-
-            public void ApplyValue(TomlObject target, TomlObject value)
-            {
-                ((TomlTable)target)[this.key] = value;
-            }
-        }
-
         private sealed class IndexSegment : ITPathSegment
         {
             private readonly int index;
@@ -276,17 +218,6 @@ namespace Nett.Coma
             public IndexSegment(int index)
             {
                 this.index = index;
-            }
-
-            public TomlObject TryApply(TomlObject obj)
-            {
-                var ta = obj as TomlArray;
-                if (ta != null) { return ta[this.index]; }
-
-                var tta = obj as TomlTableArray;
-                if (tta != null) { return tta[this.index]; }
-
-                return null;
             }
 
             public TomlObject Apply(TomlObject obj)
@@ -304,6 +235,11 @@ namespace Nett.Coma
                 }
             }
 
+            public void ApplyValue(TomlObject target, TomlObject value)
+            {
+                throw new NotSupportedException("Applying values on (table-) arrays is not yet supported");
+            }
+
             public bool Equals(ITPathSegment other)
             {
                 var otherIndexSeg = other as IndexSegment;
@@ -314,9 +250,73 @@ namespace Nett.Coma
 
             public override string ToString() => $"[{this.index.ToString()}]";
 
+            public TomlObject TryApply(TomlObject obj)
+            {
+                var ta = obj as TomlArray;
+                if (ta != null) { return ta[this.index]; }
+
+                var tta = obj as TomlTableArray;
+                if (tta != null) { return tta[this.index]; }
+
+                return null;
+            }
+        }
+
+        private sealed class KeySegment : ITPathSegment
+        {
+            private readonly string key;
+
+            public KeySegment(string key)
+            {
+                this.key = key;
+            }
+
+            public TomlObject Apply(TomlObject obj)
+            {
+                var ar = this.TryApply(obj);
+
+                if (ar == null)
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot apply key path segment '{this.key}' on TOML object of type '{obj.ReadableTypeName}.");
+                }
+                else
+                {
+                    return ar;
+                }
+            }
+
             public void ApplyValue(TomlObject target, TomlObject value)
             {
-                throw new NotSupportedException("Applying values on (table-) arrays is not yet supported");
+                ((TomlTable)target)[this.key] = value;
+            }
+
+            public bool ClearFrom(TomlTable table) => table.Remove(this.key);
+
+            public int CompareTo(ITPathSegment other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Equals(ITPathSegment other)
+            {
+                var otherKeySegment = other as KeySegment;
+
+                if (other == null) { return false; }
+
+                return this.key == otherKeySegment.key;
+            }
+
+            public override bool Equals(object obj) => this.Equals(obj as ITPathSegment);
+
+            public override string ToString() => $"/{this.key}";
+
+            public TomlObject TryApply(TomlObject obj)
+            {
+                var table = obj as TomlTable;
+                if (table != null && table.ContainsKey(this.key)) { return table[this.key]; }
+
+                return null;
             }
         }
     }

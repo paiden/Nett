@@ -10,14 +10,14 @@
         string Alias { get; }
     }
 
-    internal interface ISourceFactory
-    {
-        IPersistableConfig CreatePersistable();
-    }
-
     internal interface IMergedSourceFactory
     {
         IMergeableConfig CreateMergedPersistable();
+    }
+
+    internal interface ISourceFactory
+    {
+        IPersistableConfig CreatePersistable();
     }
 
     public static class ConfigSource
@@ -46,16 +46,16 @@
             this.FilePath = filePath.CheckNotNull(nameof(alias));
         }
 
-        public string FilePath { get; }
-
         public string Alias { get; }
 
-        public IPersistableConfig CreatePersistable() => new OptimizedFileConfig(new FileConfig(this));
+        public string FilePath { get; }
+
+        private string DebuggerDisplay => $"[FileSource] Alias={this.Alias} FilePath={this.FilePath}";
 
         public IMergeableConfig CreateMergedPersistable()
             => new MergedConfig(new List<IPersistableConfig>() { this.CreatePersistable() });
 
-        private string DebuggerDisplay => $"[FileSource] Alias={this.Alias} FilePath={this.FilePath}";
+        public IPersistableConfig CreatePersistable() => new OptimizedFileConfig(new FileConfig(this));
     }
 
     internal sealed class MergeSource : IConfigSource, IMergedSourceFactory

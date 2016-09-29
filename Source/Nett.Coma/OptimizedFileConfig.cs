@@ -14,6 +14,8 @@
             this.persistable = persistable.CheckNotNull(nameof(persistable));
         }
 
+        public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
+
         public bool EnsureExists(TomlTable content) => this.persistable.EnsureExists(content);
 
         public TomlTable Load()
@@ -49,7 +51,5 @@
                 this.loadedSourcesTable.Freeze();
             }
         }
-
-        public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
     }
 }
