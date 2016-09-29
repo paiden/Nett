@@ -17,14 +17,10 @@
 
         public TRet Get<TRet>(Expression<Func<T, TRet>> selector)
         {
-            if (selector == null) { throw new ArgumentNullException(nameof(selector)); }
+            selector.CheckNotNull(nameof(selector));
 
-            return this.config.Get(tbl =>
-            {
-                var keyChain = selector.ResolveKeyChain();
-                var target = keyChain.ResolveChildTableOf(tbl);
-                return target[keyChain.TargetTableKey].Get<TRet>();
-            });
+            var obj = this.config.GetFromPath(selector.BuildTPath());
+            return obj.Get<TRet>();
         }
 
         public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector)
@@ -40,32 +36,23 @@
 
         public void Set<TProperty>(Expression<Func<T, TProperty>> selector, TProperty value)
         {
-            var keyChain = selector.CheckNotNull(nameof(selector)).ResolveKeyChain();
-            this.config.Set(table => this.ApplySetter(table, keyChain, value));
-        }
+            selector.CheckNotNull(nameof(selector));
 
-        private void ApplySetter(TomlTable rootTable, KeyChain keyChain, object value)
-        {
-            var finalTable = keyChain.ResolveChildTableOf(rootTable);
-            finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.Root, value, pi: null);
-        }
-
-        private void ApplySetter(TomlTable rootTable, KeyChain keyChain, object value, IConfigSource source)
-        {
-            var finalTable = keyChain.ResolveChildTableOf(rootTable);
-            finalTable[keyChain.TargetTableKey] = TomlValue.CreateFrom(rootTable.Root, value, pi: null);
+            var path = selector.BuildTPath();
+            this.config.Set(path, value);
         }
 
         public void Set<TProperty>(Expression<Func<T, TProperty>> selector, TProperty value, IConfigSource target)
         {
-            var keyChain = selector.CheckNotNull(nameof(selector)).ResolveKeyChain();
-            this.config.Set(table => this.ApplySetter(table, keyChain, value), target);
+            selector.CheckNotNull(nameof(selector));
+            target.CheckNotNull(nameof(target));
+
+            var path = selector.BuildTPath();
+            this.config.Set(path, value, target);
         }
 
         public IDisposable StartTransaction() => this.config.StartTransaction();
 
         public T Unmanaged() => this.config.Unmanaged().Get<T>();
-
-
     }
 }

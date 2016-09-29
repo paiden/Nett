@@ -12,6 +12,8 @@ namespace Nett.Coma
         TomlObject Apply(TomlObject obj);
 
         TomlObject TryApply(TomlObject obj);
+
+        void ApplyValue(TomlObject target, TomlObject value);
     }
 
     [DebuggerDisplay("{DebuggerDisplay}")]
@@ -21,6 +23,8 @@ namespace Nett.Coma
 
         private readonly TPath prefixPath;
         private readonly ITPathSegment segment;
+
+        public TPath Prefix => this.prefixPath;
 
         private bool IsRootPrefixPath => this.segment == null;
 
@@ -47,6 +51,12 @@ namespace Nett.Coma
             {
                 return ar;
             }
+        }
+
+        public void ApplyValue(TomlObject applyTo, TomlObject value)
+        {
+            var target = this.prefixPath.Apply(applyTo);
+            this.segment.ApplyValue(target, value);
         }
 
         public TomlObject TryApply(TomlObject obj)
@@ -88,6 +98,8 @@ namespace Nett.Coma
 
         public static TPath Parse(string src)
         {
+            src.CheckNotNull(nameof(src));
+
             var path = new TPath();
 
             for (int i = 0; i < src.Length; i++)
@@ -106,7 +118,7 @@ namespace Nett.Coma
                 }
                 else
                 {
-                    throw new Exception("Input is no valid TPath");
+                    throw new ArgumentException($"Input '{src}' is no valid TPath");
                 }
             }
 
@@ -135,7 +147,14 @@ namespace Nett.Coma
                 }
             }
 
-            return sb.ToString();
+            var s = sb.ToString();
+
+            if (s.Trim().Length <= 0)
+            {
+                throw new ArgumentException($"Input '{input}' is no valid TPath");
+            }
+
+            return s;
         }
 
         public override string ToString()
@@ -243,6 +262,11 @@ namespace Nett.Coma
             public override bool Equals(object obj) => this.Equals(obj as ITPathSegment);
 
             public override string ToString() => $"/{this.key}";
+
+            public void ApplyValue(TomlObject target, TomlObject value)
+            {
+                ((TomlTable)target)[this.key] = value;
+            }
         }
 
         private sealed class IndexSegment : ITPathSegment
@@ -288,7 +312,12 @@ namespace Nett.Coma
 
             public override bool Equals(object obj) => this.Equals(obj as ITPathSegment);
 
-            public override string ToString() => this.index.ToString();
+            public override string ToString() => $"[{this.index.ToString()}]";
+
+            public void ApplyValue(TomlObject target, TomlObject value)
+            {
+                throw new NotSupportedException("Applying values on (table-) arrays is not yet supported");
+            }
         }
     }
 }

@@ -65,6 +65,14 @@
             return getter(cfg);
         }
 
+        internal TomlObject GetFromPath(TPath path)
+        {
+            path.CheckNotNull(nameof(path));
+
+            var cfg = this.persistable.Load();
+            return path.Apply(cfg);
+        }
+
         public IConfigSource GetSource(Func<TomlTable, object> getter)
         {
             getter.CheckNotNull(nameof(getter));
@@ -108,5 +116,21 @@
         }
 
         public TomlTable Unmanaged() => this.persistable.Load();
+
+        internal void Set(TPath path, object value)
+        {
+            path.CheckNotNull(nameof(path));
+            value.CheckNotNull(nameof(value));
+
+            this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+        }
+
+        internal void Set(TPath path, object value, IConfigSource source)
+        {
+            path.CheckNotNull(nameof(path));
+            value.CheckNotNull(nameof(value));
+
+            this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
+        }
     }
 }

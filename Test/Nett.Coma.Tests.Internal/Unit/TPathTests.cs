@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using FluentAssertions;
@@ -44,6 +45,54 @@ namespace Nett.Coma.Tests.Internal.Unit
 
             // Assert
             p.Should().Equal(expectedPath);
+        }
+
+        [MTheory(nameof(TPath), nameof(TPath.ToString), "Returns correct string representation")]
+        [MemberData(nameof(ValidParseData))]
+        public void ToString_ReturnsCorrectStringRep(string input, object _)
+        {
+            // Arrange
+            var p = TPath.Parse(input);
+
+            // Act
+            var s = p.ToString();
+
+            // Assert
+            s.Should().Be(input);
+        }
+
+        public static TheoryData<string> InvalidParseData = new TheoryData<string>()
+        {
+            "//",
+            "///",
+            " ",
+            " /",
+            "convert(/X)",
+            "(",
+            "X",
+        };
+
+        [MTheory(nameof(TPath), nameof(TPath.Parse), "When input is invalid throws a parse exception")]
+        [MemberData(nameof(InvalidParseData))]
+        public void Parse_WhenInputIsInvalid_ThorwsException(string src)
+        {
+            // Arrange
+
+            // Act
+            Action a = () => TPath.Parse(src);
+
+            // Assert
+            a.ShouldThrow<ArgumentException>().WithMessage($"*{src}**no valid TPath*");
+        }
+
+        [MFact(nameof(TPath), nameof(TPath.Parse), "When input is null throws ArgNull")]
+        public void Parse_WhenInptuIsNull_ThrowsArgNull()
+        {
+            // Act
+            Action a = () => TPath.Parse(null);
+
+            // Assert
+            a.ShouldThrow<ArgumentNullException>().WithMessage("*src*");
         }
     }
 }
