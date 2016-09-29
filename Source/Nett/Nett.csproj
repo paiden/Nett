@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ArrayExtensions.cs" />
     <Compile Include="Attributes\TomlIgnore.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="EnumConverter.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />

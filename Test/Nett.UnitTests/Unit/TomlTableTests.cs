@@ -71,7 +71,6 @@ namespace Nett.UnitTests.Unit
             get
             {
                 yield return new object[] { "Add", (Action<TomlTable>)((tt) => tt.Add("xujsj", 0)) };
-                yield return new object[] { "AddKvp", (Action<TomlTable>)((tt) => tt.Add(new KeyValuePair<string, TomlObject>("xujsj", null))) };
                 yield return new object[] { "Remove", (Action<TomlTable>)((tt) => tt.Remove(MultiLevelTableScenario.RootXKey)) };
                 yield return new object[] { "RemoveKvp", (Action<TomlTable>)((tt) => tt.Remove(new KeyValuePair<string, TomlObject>(MultiLevelTableScenario.RootXKey, null))) };
                 yield return new object[] { "Clear", (Action<TomlTable>)((tt) => tt.Clear()) };

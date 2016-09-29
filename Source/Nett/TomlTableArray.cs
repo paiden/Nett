@@ -3,6 +3,8 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
+    using Extensions;
 
     public sealed class TomlTableArray : TomlObject
     {
@@ -86,6 +88,19 @@
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        internal override TomlObject WithRoot(ITomlRoot root)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal TomlTableArray TableArrayWithRoot(ITomlRoot root)
+        {
+            root.CheckNotNull(nameof(root));
+
+            var a = new TomlTableArray(root, this.Items.Select(t => t.TableWithRoot(root)));
+            return a;
         }
     }
 }

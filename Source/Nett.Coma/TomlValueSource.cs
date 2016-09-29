@@ -1,6 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using Nett.Extensions;
 
     internal sealed class TomlSource : TomlObject
     {
@@ -23,6 +24,13 @@
         public override void Visit(ITomlObjectVisitor visitor)
         {
             throw new NotImplementedException();
+        }
+
+        internal override TomlObject WithRoot(ITomlRoot root)
+        {
+            root.CheckNotNull(nameof(root));
+
+            return new TomlSource(root, this.Value);
         }
     }
 }

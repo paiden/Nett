@@ -30,6 +30,8 @@
         {
         }
 
+        internal abstract TomlValue ValueWithRoot(ITomlRoot root);
+
         private static bool IsFloatType(Type t) => t == DoubleType || t == FloatType;
 
         private static bool IsIntegerType(Type t)

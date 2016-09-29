@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Extensions;
 
     public sealed class TomlArray : TomlValue<TomlValue[]>
     {
@@ -70,6 +71,17 @@
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        internal override TomlObject WithRoot(ITomlRoot root) => this.ArrayWithRoot(root);
+
+        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.ArrayWithRoot(root);
+
+        internal TomlArray ArrayWithRoot(ITomlRoot root)
+        {
+            root.CheckNotNull(nameof(root));
+
+            return new TomlArray(root, this.Items.Select(i => i.ValueWithRoot(root)).ToArray());
         }
     }
 }

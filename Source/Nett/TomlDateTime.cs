@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using Extensions;
 
     public sealed class TomlDateTime : TomlValue<DateTimeOffset>
     {
@@ -32,6 +33,17 @@
             Debug.Assert(s != null);
             var value = DateTimeOffset.ParseExact(s, ParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
             return new TomlDateTime(root, value);
+        }
+
+        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.DateTimeWithRoot(root);
+
+        internal override TomlObject WithRoot(ITomlRoot root) => this.DateTimeWithRoot(root);
+
+        internal TomlDateTime DateTimeWithRoot(ITomlRoot root)
+        {
+            root.CheckNotNull(nameof(root));
+
+            return new TomlDateTime(root, this.Value);
         }
     }
 }

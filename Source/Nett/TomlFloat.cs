@@ -1,4 +1,6 @@
-﻿namespace Nett
+﻿using Nett.Extensions;
+
+namespace Nett
 {
     public sealed class TomlFloat : TomlValue<double>
     {
@@ -14,6 +16,17 @@
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.FloatWithRoot(root);
+
+        internal override TomlObject WithRoot(ITomlRoot root) => this.FloatWithRoot(root);
+
+        internal TomlFloat FloatWithRoot(ITomlRoot root)
+        {
+            root.CheckNotNull(nameof(root));
+
+            return new TomlFloat(root, this.Value);
         }
     }
 }

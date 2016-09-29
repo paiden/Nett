@@ -3,8 +3,12 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
+    using Extensions;
+
+    using static System.Diagnostics.Debug;
 
     public static class TomlTableExtensions
     {
@@ -102,6 +106,7 @@
         {
             get
             {
+                this.AssertIntegrity();
                 TomlObject val;
                 if (!this.rows.TryGetValue(key, out val))
                 {
@@ -113,8 +118,9 @@
 
             set
             {
+                this.AssertIntegrity();
                 this.CheckNotFrozen();
-                this.rows[key] = value;
+                this.rows[key] = this.EnsureCorrectRoot(value);
             }
         }
 
@@ -173,11 +179,7 @@
 
         public bool ContainsKey(string key) => this.rows.ContainsKey(key);
 
-        void IDictionary<string, TomlObject>.Add(string key, TomlObject value)
-        {
-            this.CheckNotFrozen();
-            this.rows.Add(key, value);
-        }
+        void IDictionary<string, TomlObject>.Add(string key, TomlObject value) => this.Add(key, value);
 
         public bool Remove(string key)
         {
@@ -186,12 +188,6 @@
         }
 
         public bool TryGetValue(string key, out TomlObject value) => this.rows.TryGetValue(key, out value);
-
-        public void Add(KeyValuePair<string, TomlObject> item)
-        {
-            this.CheckNotFrozen();
-            this.rows.Add(item.Key, item.Value);
-        }
 
         public void Clear()
         {
@@ -264,10 +260,12 @@
             return tomlTable;
         }
 
-        internal void Add(string key, TomlObject value)
+        internal TomlObject Add(string key, TomlObject value)
         {
             this.CheckNotFrozen();
-            this.rows.Add(key, value);
+            var toAdd = this.EnsureCorrectRoot(value);
+            this.rows.Add(key, toAdd);
+            return toAdd;
         }
 
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
@@ -289,6 +287,24 @@
                 }
             }
         }
+
+        internal override TomlObject WithRoot(ITomlRoot root) => this.TableWithRoot(root);
+
+        internal TomlTable TableWithRoot(ITomlRoot root)
+        {
+            root.CheckNotNull(nameof(root));
+
+            var table = new TomlTable(root, this.TableType);
+
+            foreach (var r in this.rows)
+            {
+                table.Add(r.Key, r.Value.WithRoot(root));
+            }
+
+            return table;
+        }
+
+        private TomlObject EnsureCorrectRoot(TomlObject obj) => obj.Root == this.Root ? obj : obj.WithRoot(this.Root);
 
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {
@@ -330,6 +346,27 @@
             foreach (var a in allObjects.Where(o => ScopeCreatingType(o.Item2)))
             {
                 this.Add(a.Item1, a.Item2);
+            }
+        }
+
+        void ICollection<KeyValuePair<string, TomlObject>>.Add(KeyValuePair<string, TomlObject> item) => this.Add(item.Key, item.Value);
+
+        [Conditional(Constants.Debug)]
+        private void AssertIntegrity()
+        {
+            foreach (var r in this.rows)
+            {
+                const string message = "All objects that are part of the same TOML root table need to have the same root. "
+                    + "Check that all add/insert operations ensure this condition if not change them accordingly. If this assertion "
+                    + "triggers something in the TOML table implementation is broken and needs to be fixed.";
+
+                Assert(r.Value.Root == this.Root, message);
+                var tbl = r.Value as TomlTable;
+
+                if (tbl != null)
+                {
+                    tbl.AssertIntegrity();
+                }
             }
         }
     }

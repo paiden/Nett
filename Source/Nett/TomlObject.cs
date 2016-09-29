@@ -35,6 +35,8 @@
 
         public abstract TomlObjectType TomlType { get; }
 
+        internal abstract TomlObject WithRoot(ITomlRoot root);
+
         internal List<TomlComment> Comments { get; private set; }
 
         internal ITomlRoot Root { get; }
