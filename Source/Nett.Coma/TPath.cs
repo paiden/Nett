@@ -248,6 +248,8 @@ namespace Nett.Coma
 
             public override bool Equals(object obj) => this.Equals(obj as ITPathSegment);
 
+            public override int GetHashCode() => this.index;
+
             public override string ToString() => $"[{this.index.ToString()}]";
 
             public TomlObject TryApply(TomlObject obj)
@@ -308,6 +310,8 @@ namespace Nett.Coma
             }
 
             public override bool Equals(object obj) => this.Equals(obj as ITPathSegment);
+
+            public override int GetHashCode() => this.key.GetHashCode();
 
             public override string ToString() => $"/{this.key}";
 
