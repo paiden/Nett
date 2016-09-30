@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Nett.UnitTests.Util
 {
+    [ExcludeFromCodeCoverage]
     public static class StringExtensions
     {
         public static Stream ToStream(this string s)

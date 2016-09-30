@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nett.Coma.Tests.TestData
 {
+    [ExcludeFromCodeCoverage]
     public class TestAppSettings
     {
         public static readonly TestAppSettings GlobalSettings = new TestAppSettings()

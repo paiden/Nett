@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Nett.UnitTests.Util.TestData;
 using Xunit;
 
 namespace Nett.UnitTests
 {
+    [ExcludeFromCodeCoverage]
     public class ToDictionaryTests
     {
         private const string Src = @"

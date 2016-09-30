@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Nett.UnitTests
@@ -10,6 +8,7 @@ namespace Nett.UnitTests
     /// <summary>
     /// Read/Write one larger TOML file with many different components.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class MasterTests
     {
         [Fact]
@@ -66,7 +65,7 @@ namespace Nett.UnitTests
 
             public bool Equals(SystemConfig config)
             {
-                if(config == null) { return false; }
+                if (config == null) { return false; }
 
                 return
                     object.ReferenceEquals(this, config) ||
@@ -88,7 +87,7 @@ namespace Nett.UnitTests
 
             public bool Equals(Environment env)
             {
-                if(env == null) { return false; }
+                if (env == null) { return false; }
                 return
                     object.ReferenceEquals(this, env) ||
                     object.Equals(this.Home, env.Home) &&
@@ -109,7 +108,7 @@ namespace Nett.UnitTests
 
             public bool Equals(Resource resource)
             {
-                if(resource == null) { return false; }
+                if (resource == null) { return false; }
 
                 return
                     object.ReferenceEquals(this, resource) ||

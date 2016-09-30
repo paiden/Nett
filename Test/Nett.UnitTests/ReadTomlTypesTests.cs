@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
@@ -9,6 +10,7 @@ namespace Nett.UnitTests
     /// Checks that basic TOML types can be loaded in alls possible ranges and formats. These tests don't care about
     /// the larger TOML document structure.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ReadTomlTypesTests
     {
         [Theory]

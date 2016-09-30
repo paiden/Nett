@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Nett.UnitTests.Util
 {
+    [ExcludeFromCodeCoverage]
     public sealed class TestFileName : IDisposable
     {
         private readonly string fileName;

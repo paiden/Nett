@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Nett.UnitTests.Util.TestData;
 using Xunit;
 
@@ -10,6 +11,7 @@ namespace Nett.UnitTests
     /// This test can only work when the Untyped* equivalent tests are OK. These tests proof that the transformation from a
     /// generic TomlTable to some typed C# class via reflection works correctly.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ReadValidTomlTypedTests
     {
         [Fact]

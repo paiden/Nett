@@ -1,9 +1,11 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Nett.UnitTests.Util;
 using Xunit;
 
 namespace Nett.UnitTests
 {
+    [ExcludeFromCodeCoverage]
     public sealed class NestedTablesTests
     {
         private const string ExpectedSerForB = @"

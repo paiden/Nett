@@ -1,12 +1,14 @@
 ﻿namespace Nett.Coma.Tests
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using FluentAssertions;
     using TestData;
     using UnitTests.Util;
     using Xunit;
 
+    [ExcludeFromCodeCoverage]
     public sealed class AutoSaveTests : TestsBase
     {
         private const string FuncSaveMergedConfig = "Save Merged Config";

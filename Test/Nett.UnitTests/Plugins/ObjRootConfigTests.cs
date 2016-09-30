@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests.Plugins
 {
+    [ExcludeFromCodeCoverage]
     public sealed class ObjRootConfigTests
     {
         [Fact(DisplayName = "When mapping from table key to type exists, property gets set to that type")]

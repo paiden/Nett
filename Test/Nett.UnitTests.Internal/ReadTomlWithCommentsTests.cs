@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests.Internal
 {
+    [ExcludeFromCodeCoverage]
     public class ReadTomlWithCommentsTests
     {
         [Fact]

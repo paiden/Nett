@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
 namespace Nett.Coma.Tests
 {
+    [ExcludeFromCodeCoverage]
     public sealed class ExternalChangeTests : TestsBase
     {
         [Fact(DisplayName = "External change: When file changed on disk the next property access will deliver that new value form the file.")]

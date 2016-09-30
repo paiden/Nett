@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Nett.Coma.Test.Util;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Unit
 {
+    [ExcludeFromCodeCoverage]
     public sealed class TomlTableExtensionsTests
     {
         [MFact(nameof(TomlTableExtensions), nameof(TomlTableExtensions.OverwriteWithValuesForSaveFrom),

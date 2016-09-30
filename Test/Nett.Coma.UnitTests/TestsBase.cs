@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests
 {
+    [ExcludeFromCodeCoverage]
     public abstract class TestsBase
     {
         protected static void ModifyFileOnDisk(string fileName, Action<SingleLevelConfig> modify)

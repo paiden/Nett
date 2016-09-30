@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests
 {
+    [ExcludeFromCodeCoverage]
     public sealed class TableArrayTests
     {
         [Fact(DisplayName = "Table array with inline tables is read correctly")]

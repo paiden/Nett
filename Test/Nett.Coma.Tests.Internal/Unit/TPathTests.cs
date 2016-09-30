@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Nett.UnitTests.Util;
@@ -8,6 +9,7 @@ using Xunit;
 
 namespace Nett.Coma.Tests.Internal.Unit
 {
+    [ExcludeFromCodeCoverage]
     public sealed class TPathTests
     {
         public static IEnumerable<object[]> ValidParseData

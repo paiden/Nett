@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests
 {
+    [ExcludeFromCodeCoverage]
     public sealed class VerifyIssuesTests
     {
         [Fact(DisplayName = "Verify that issue #8 was fixed")]

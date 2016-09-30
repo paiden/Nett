@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using Nett.UnitTests.Util;
@@ -7,7 +8,7 @@ using static System.FormattableString;
 
 namespace Nett.UnitTests
 {
-
+    [ExcludeFromCodeCoverage]
     public class Configuration
     {
         public bool EnableDebug { get; set; }
@@ -15,6 +16,7 @@ namespace Nett.UnitTests
         public Client Client { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class ConfigurationWithDepdendency : Configuration
     {
         public ConfigurationWithDepdendency(object dependency)
@@ -23,16 +25,19 @@ namespace Nett.UnitTests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class Server
     {
         public TimeSpan Timeout { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class Client
     {
         public string ServerAddress { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public struct Money
     {
         public string Currency { get; set; }
@@ -42,16 +47,19 @@ namespace Nett.UnitTests
         public override string ToString() => Invariant($"{this.Ammount} {this.Currency}");
     }
 
+    [ExcludeFromCodeCoverage]
     public class TableContainingMoney
     {
         public Money NotSupported { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TypeNotSupportedByToml
     {
         public Guid SomeGuid { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public sealed class Computed
     {
         public int X { get; set; } = 1;
@@ -61,6 +69,7 @@ namespace Nett.UnitTests
         public int Z => X + Y;
     }
 
+    [ExcludeFromCodeCoverage]
     public class DocumentationExamples
     {
         private string exp = @"EnableDebug = true

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
 using FluentAssertions;
 using Nett.Parser;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace Nett.UnitTests.Parser
 {
+    [ExcludeFromCodeCoverage] 
     public class LaBufferTests
     {
         [Fact]

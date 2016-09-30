@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests.Functional
 {
+    [ExcludeFromCodeCoverage]
     public class IgnorePropertyTests
     {
         private const int XDefault = 1;

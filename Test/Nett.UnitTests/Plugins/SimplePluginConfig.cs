@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nett.UnitTests.Plugins
 {
     /// <summary>
     /// Simple sub config. This should be used to validate basic plugin mapping techniques.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class SimplePluginConfig
     {
         public const int SettingDefaultValue = 1;

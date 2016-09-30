@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Nett.UnitTests.Util;
 
@@ -7,6 +8,7 @@ namespace Nett.Coma.Tests.TestData
     /// <summary>
     /// Simulate a git config system with different configuration scopes
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class GitScenario : IDisposable
     {
         public const string RepoDefaultContent = @"

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
@@ -11,6 +12,7 @@ using Xunit;
 
 namespace Nett.UnitTests.Internal.Parser
 {
+    [ExcludeFromCodeCoverage]
     public class TokenizerTests
     {
         [Fact]

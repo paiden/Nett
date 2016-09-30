@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Nett.UnitTests.Util;
@@ -6,6 +7,7 @@ using Xunit;
 
 namespace Nett.UnitTests.Plugins
 {
+    [ExcludeFromCodeCoverage]
     public sealed class DictRootConfigTests
     {
         private const string ExpectedConfigWrittenWhenARegistered = @"

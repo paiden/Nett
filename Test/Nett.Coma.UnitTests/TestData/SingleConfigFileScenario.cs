@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.TestData
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class SingleConfigFileScenario : IDisposable
     {
         public TestFileName File { get; }

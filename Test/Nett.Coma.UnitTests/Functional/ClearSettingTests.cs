@@ -1,17 +1,19 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Nett.Coma.Tests.TestData;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Functional
 {
+    [ExcludeFromCodeCoverage]
     public sealed class ClearSettingTests
     {
         private const string FuncClearSetting = "Clear Setting";
 
-        [FFact(FuncClearSetting, "When no target is specified, the current originator source is cleared of the setting (clear removes it from repo source).")]
-        public void Foo()
+        [FFact(FuncClearSetting, "When no target is specified and current source is repo, new source will be user file")]
+        public void ClearSetting_WhenNoTargetSpecifiedAndRepoIsSource_NewSourceWillBeUserFile()
         {
-            using (var scenario = GitScenario.Setup(nameof(Foo))
+            using (var scenario = GitScenario.Setup(nameof(ClearSetting_WhenNoTargetSpecifiedAndRepoIsSource_NewSourceWillBeUserFile))
                 .UseSystemDefaultContentForeachSource())
             {
                 // Arrange
@@ -25,10 +27,10 @@ namespace Nett.Coma.Tests.Functional
             }
         }
 
-        [FFact(FuncClearSetting, "When no target is specified, the current originator source is cleared of the setting (clear removes it from user source).")]
-        public void FooX()
+        [FFact(FuncClearSetting, "When no target is specified and current source is user, new source will be system file")]
+        public void ClearSetting_WhenNoTargetSpecifiedAndUserIsSource_NewSourceWillBeSystemFile()
         {
-            using (var scenario = GitScenario.Setup(nameof(Foo))
+            using (var scenario = GitScenario.Setup(nameof(ClearSetting_WhenNoTargetSpecifiedAndUserIsSource_NewSourceWillBeSystemFile))
                 .UseSystemDefaultContentForeachSource())
             {
                 // Arrange
@@ -43,10 +45,10 @@ namespace Nett.Coma.Tests.Functional
             }
         }
 
-        [FFact(FuncClearSetting, "When no target is specified, the current originator source is cleared of the setting (clear removes it from user system source and so completely form the config -> CLR default is used).")]
-        public void FooXX()
+        [FFact(FuncClearSetting, "When no target is specified and current source is system, new source will be null as setting is not in any source anymore")]
+        public void ClearSetting_WhenNoTargetSpecifiedAndRepoIsSystem_NewSourceWillBeNull()
         {
-            using (var scenario = GitScenario.Setup(nameof(Foo))
+            using (var scenario = GitScenario.Setup(nameof(ClearSetting_WhenNoTargetSpecifiedAndRepoIsSystem_NewSourceWillBeNull))
                 .UseSystemDefaultContentForeachSource())
             {
                 // Arrange
@@ -62,10 +64,10 @@ namespace Nett.Coma.Tests.Functional
             }
         }
 
-        [FFact(FuncClearSetting, "When no target is specified, the current originator source is cleared of the setting (clear does nothing as there is no source with the setting left).")]
-        public void FooXXX()
+        [FFact(FuncClearSetting, "When no target is specified and setting is not in any file, nothing will happen")]
+        public void ClearSetting_WhenNoTargetSpecifiedSourceIsNull_NothingWillHappen()
         {
-            using (var scenario = GitScenario.Setup(nameof(Foo))
+            using (var scenario = GitScenario.Setup(nameof(ClearSetting_WhenNoTargetSpecifiedSourceIsNull_NothingWillHappen))
                 .UseSystemDefaultContentForeachSource())
             {
                 // Arrange

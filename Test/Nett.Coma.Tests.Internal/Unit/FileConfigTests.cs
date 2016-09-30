@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentAssertions;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Unit
 {
+    [ExcludeFromCodeCoverage]
     public sealed class FileConfigTests
     {
         [MFact(nameof(FileConfig), nameof(FileConfig.WasChangedExternally), "When file was not loaded will always return true")]

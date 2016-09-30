@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nett.UnitTests.Plugins
 {
     /// <summary>
     /// Root config that maps its sections into a dictionary
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class DictRootConfig
     {
         public string Setting { get; set; } = "";

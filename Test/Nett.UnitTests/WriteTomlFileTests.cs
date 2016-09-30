@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests
 {
+    [ExcludeFromCodeCoverage]
     public class WriteTomlFileTests : IDisposable
     {
         private string fn;

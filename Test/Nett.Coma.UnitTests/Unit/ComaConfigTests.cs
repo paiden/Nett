@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
 
 namespace Nett.Coma.Tests.Unit
 {
+    [ExcludeFromCodeCoverage]
     public sealed class ComaConfigTests
     {
         [Fact(DisplayName = "Load with null as file locations throws argument null exception.")]

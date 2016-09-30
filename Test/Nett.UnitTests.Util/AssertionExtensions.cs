@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 
 namespace Nett.UnitTests.Util
 {
+    [ExcludeFromCodeCoverage]
     public static class AssertionExtensions
     {
         /// <summary>

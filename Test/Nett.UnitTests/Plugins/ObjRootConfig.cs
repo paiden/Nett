@@ -1,8 +1,11 @@
-﻿namespace Nett.UnitTests.Plugins
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Nett.UnitTests.Plugins
 {
     /// <summary>
     /// Root config that holds properties of type object to map it's sub sections.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class ObjRootConfig
     {
         public const string DefaultSimpleToml = @"

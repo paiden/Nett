@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentAssertions;
 using Nett.Coma.Tests.TestData;
 using Nett.UnitTests.Util;
@@ -6,6 +7,7 @@ using Xunit;
 
 namespace Nett.Coma.Tests.Functional
 {
+    [ExcludeFromCodeCoverage]
     public sealed class MergeTests : TestsBase
     {
         private const string FuncLoadMergedConfig = "Load Merged Config";

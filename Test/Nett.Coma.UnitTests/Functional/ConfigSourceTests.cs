@@ -1,18 +1,20 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Nett.Coma.Tests.TestData;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Functional
 {
+    [ExcludeFromCodeCoverage]
     public sealed class ConfigSourceTests
     {
         private const string FuncGetSettingSource = "Get Setting Source";
         private const string FuncSetSettingWithSource = "Set Setting with source";
 
         [FFact(FuncSetSettingWithSource, "When explicit source is specified, that setting gets saved into that source")]
-        public void Foo()
+        public void SetSource_WhenExplitSourceSpecified_SettingGetsSavedToThatSource()
         {
-            using (var scenario = GitScenario.Setup(nameof(Foo)))
+            using (var scenario = GitScenario.Setup(nameof(SetSource_WhenExplitSourceSpecified_SettingGetsSavedToThatSource)))
             {
                 // Arrange
                 var config = scenario.CreateMergedFromDefaults();

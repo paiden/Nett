@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Nett.UnitTests.Util;
 
 namespace Nett.UnitTests.Plugins
 {
+    [ExcludeFromCodeCoverage]
     public sealed class PluginConfigWithIntDict
     {
         public static readonly string Key = nameof(PluginConfigWithIntDict);

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nett.UnitTests
 {
+    [ExcludeFromCodeCoverage]
     public class PerformanceTests
     {
         public class TheTable

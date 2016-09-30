@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using Nett.UnitTests.Util;
 
 namespace Nett.Coma.Tests.Internal.Integration
 {
+    [ExcludeFromCodeCoverage]
     public sealed class OptimizedFileConfigTests
     {
         [MFact(nameof(OptimizedFileConfig), nameof(OptimizedFileConfig.Save), "Updates in memory table")]

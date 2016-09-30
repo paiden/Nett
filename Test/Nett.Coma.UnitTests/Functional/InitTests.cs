@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentAssertions;
 using Nett.UnitTests.Util;
 using Xunit;
 
 namespace Nett.Coma.Tests
 {
+    [ExcludeFromCodeCoverage]
     public sealed class CreateTests : TestsBase
     {
         private const string FuncInitMergeConfig = "Init merge config";

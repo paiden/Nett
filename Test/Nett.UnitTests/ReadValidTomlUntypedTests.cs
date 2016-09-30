@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
@@ -13,6 +14,7 @@ namespace Nett.UnitTests
     /// These cases handle some special cases and some document structure cases.
     /// Everything will be deserialized into a generic TomlTable data structure. Extracting the data has to be done by hand.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ReadValidTomlUntypedTests
     {
         [Fact]

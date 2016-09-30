@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Nett.Coma.Extensions;
 using Xunit;
 
 namespace Nett.Coma.Tests.Unit
 {
+    [ExcludeFromCodeCoverage]
     public sealed class LambdaExpressionExtensionTests
     {
         [Fact]

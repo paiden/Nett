@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Nett.UnitTests.Util;
@@ -7,6 +8,7 @@ using Xunit;
 namespace Nett.UnitTests.Internal
 {
     //TODO: Move to public API test as soon as API is adapted for new config mechanism
+    [ExcludeFromCodeCoverage]
     public class NestedTableViaConverterTests
     {
         private const string SerializedTomlForDictconverter = @"

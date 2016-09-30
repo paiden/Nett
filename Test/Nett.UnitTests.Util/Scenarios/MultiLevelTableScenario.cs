@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nett.Coma.Test.Util
 {
+    [ExcludeFromCodeCoverage]
     public sealed class MultiLevelTableScenario : IDisposable
     {
         public const string RootXKey = "X";
