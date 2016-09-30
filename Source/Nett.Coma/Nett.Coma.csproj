@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="ConfigSources.cs" />
     <Compile Include="Extensions\LambdaExpressionExtensions.cs" />
-    <Compile Include="IFreezable.cs" />
     <Compile Include="IMergeableConfig.cs" />
     <Compile Include="KeyChain.cs" />
     <Compile Include="OptimizedFileConfig.cs" />
