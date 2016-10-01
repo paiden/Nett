@@ -2,14 +2,14 @@
 {
     using Nett.Extensions;
 
-    internal sealed class OptimizedFileConfig : IPersistableConfig
+    internal sealed class ReloadOnExternalChangeFileConfig : IPersistableConfig
     {
         private readonly FileConfig persistable;
 
         private TomlTable loaded = null;
         private TomlTable loadedSourcesTable = null;
 
-        public OptimizedFileConfig(FileConfig persistable)
+        public ReloadOnExternalChangeFileConfig(FileConfig persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
         }

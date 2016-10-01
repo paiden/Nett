@@ -70,7 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integration\OptimizedFileConfigTests.cs" />
+    <Compile Include="Integration\ReloadOnExternalChangeFileConfigTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\FileConfigTests.cs" />
     <Compile Include="Unit\LambdaExpressionExtensionTests.cs" />

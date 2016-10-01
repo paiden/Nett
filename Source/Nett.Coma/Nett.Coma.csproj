@@ -48,7 +48,7 @@
     <Compile Include="ConfigSources.cs" />
     <Compile Include="Extensions\LambdaExpressionExtensions.cs" />
     <Compile Include="IMergeableConfig.cs" />
-    <Compile Include="OptimizedFileConfig.cs" />
+    <Compile Include="ReloadOnExternalChangeFileConfig.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Config`1.cs" />
     <Compile Include="FilePersistedConfig.cs" />

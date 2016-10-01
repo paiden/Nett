@@ -7,9 +7,9 @@ using Nett.UnitTests.Util;
 namespace Nett.Coma.Tests.Internal.Integration
 {
     [ExcludeFromCodeCoverage]
-    public sealed class OptimizedFileConfigTests
+    public sealed class ReloadOnExternalChangeFileConfigTests
     {
-        [MFact(nameof(OptimizedFileConfig), nameof(OptimizedFileConfig.Save), "Updates in memory table")]
+        [MFact(nameof(ReloadOnExternalChangeFileConfig), nameof(ReloadOnExternalChangeFileConfig.Save), "Updates in memory table")]
         [Description("There was a bug, where optimized file config didn't update the in memory table and so the next load delivered old stuff")]
         public void Save_UpdatesInMemoryConfigSoNextLoadWillDeliverThatConfig()
         {
@@ -17,7 +17,7 @@ namespace Nett.Coma.Tests.Internal.Integration
             {
                 // Arrange
                 var fc = new FileConfig(new FileConfigSource(fn));
-                var oc = new OptimizedFileConfig(fc);
+                var oc = new ReloadOnExternalChangeFileConfig(fc);
                 File.WriteAllText(fn, "X = 1");
                 oc.Load(); // At least one load needs to be done, otherwise a load will be done because not any data was loaded yet
 

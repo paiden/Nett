@@ -55,7 +55,7 @@
         public IMergeableConfig CreateMergedPersistable()
             => new MergedConfig(new List<IPersistableConfig>() { this.CreatePersistable() });
 
-        public IPersistableConfig CreatePersistable() => new OptimizedFileConfig(new FileConfig(this));
+        public IPersistableConfig CreatePersistable() => new ReloadOnExternalChangeFileConfig(new FileConfig(this));
     }
 
     internal sealed class MergeSource : IConfigSource, IMergedSourceFactory
