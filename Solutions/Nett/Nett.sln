@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E524EAFD-2545-4294-A49C-E05200F9363F}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\.gitattributes = ..\..\.gitattributes
+		..\..\.gitignore = ..\..\.gitignore
 		..\..\build.ps1 = ..\..\build.ps1
 		..\..\Nett.nuspec = ..\..\Nett.nuspec
 		..\..\Infrastructure\Nett.ruleset = ..\..\Infrastructure\Nett.ruleset
