@@ -29,6 +29,12 @@
             return this.config.Clear(path);
         }
 
+        public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector, IConfigSource source)
+        {
+            var path = selector.CheckNotNull(nameof(selector)).BuildTPath();
+            return this.config.Clear(path, source);
+        }
+
         public IConfigSource GetSource<TResult>(Expression<Func<T, TResult>> selector)
         {
             return this.config.TryGetSource(selector.BuildTPath());

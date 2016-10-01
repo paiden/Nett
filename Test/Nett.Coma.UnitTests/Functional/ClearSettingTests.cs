@@ -79,8 +79,48 @@ namespace Nett.Coma.Tests.Functional
                 // Act
                 var r = config.Clear(c => c.Core.Symlinks); // nothing happens
 
+                // Assert
                 r.Should().Be(false);
                 config.GetSource(c => c.Core.Symlinks).Should().Be(null);
+            }
+        }
+
+        [FFact(FuncClearSetting, "When source is specified and setting exists in source, setting is cleared from that source")]
+        public void ClearSetting_WhenSourceSpecifiedAndSettingExists_SettingIsClearedFromThatSource()
+        {
+            using (var scenario = GitScenario.Setup(nameof(ClearSetting_WhenSourceSpecifiedAndSettingExists_SettingIsClearedFromThatSource))
+                .UseSystemDefaultContentForeachSource())
+            {
+                // Arrange
+                var config = scenario.CreateMergedFromDefaults();
+                var tbl = (TomlTable)Toml.ReadFile(scenario.UserFile)["Core"];
+                tbl.ContainsKey(nameof(GitScenario.GitConfig.CoreConfig.Symlinks)).Should().Be(true);
+
+                // Act
+                var r = config.Clear(c => c.Core.Symlinks, scenario.UserFileSource);
+
+                // Assert
+                r.Should().Be(true);
+                tbl = (TomlTable)Toml.ReadFile(scenario.UserFile)["Core"];
+                tbl.ContainsKey(nameof(GitScenario.GitConfig.CoreConfig.Symlinks)).Should().Be(false);
+            }
+        }
+
+        [FFact(FuncClearSetting, "When source is specified and setting exists in source, setting is cleared from that source")]
+        public void ClearSetting_WhenSourceSpecifiedButSettingDoesnExist_NothingHappens()
+        {
+            using (var scenario = GitScenario.Setup(nameof(ClearSetting_WhenSourceSpecifiedButSettingDoesnExist_NothingHappens))
+                .UseSystemDefaultContentForeachSource())
+            {
+                // Arrange
+                var config = scenario.CreateMergedFromDefaults();
+                config.Clear(c => c.Core.Symlinks, scenario.UserFileSource);
+
+                // Act
+                var r = config.Clear(c => c.Core.Symlinks, scenario.UserFileSource);
+
+                // Assert
+                r.Should().Be(false);
             }
         }
     }

@@ -93,10 +93,14 @@
                 return false;
             }
 
-            var src = ste.Value;
-            var sourceTable = this.persistable.Load(src);
+            return this.Clear(path, ste.Value);
+        }
+
+        internal bool Clear(TPath path, IConfigSource source)
+        {
+            var sourceTable = this.persistable.Load(source);
             var wasRemoved = path.ClearFrom(sourceTable);
-            this.persistable.Save(sourceTable, src);
+            this.persistable.Save(sourceTable, source);
             return wasRemoved;
         }
 
