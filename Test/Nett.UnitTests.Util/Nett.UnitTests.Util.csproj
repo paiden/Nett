@@ -69,6 +69,7 @@
     <Compile Include="FFact.cs" />
     <Compile Include="MTheory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenarios\ComaDocExampleScenario.cs" />
     <Compile Include="Scenarios\MultiLevelTableScenario.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TestData\TomlStrings.cs" />
@@ -80,6 +81,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\Nett.Coma\Nett.Coma.csproj">
+      <Project>{a453af50-8154-4766-84dd-9db71e38be0c}</Project>
+      <Name>Nett.Coma</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Source\Nett\Nett.csproj">
       <Project>{11e1bd88-fab6-407d-b3ef-42a291d4aa14}</Project>
       <Name>Nett</Name>
