@@ -371,6 +371,16 @@ Using the fluent configuration API has the benefit, that the CLR object
 doesn't need to be modified.
 
 # Changelog
+XXXX-XX-XX: **v0.6.0** *(TOML 0.4.0)*
+
+Nett:
++ Add: TomlTable supports Freezable pattern
++ Add: Properties of TOML mapped classes can be ignored via attribute or config
+
+Coma: 
++ Initial release
+
+
 2016-08-14: **v0.5.0** *(TOML 0.4.0)*
 
 + Changed: Configuration API to have clearer syntax and behavior
