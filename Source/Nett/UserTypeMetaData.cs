@@ -1,6 +1,7 @@
 ﻿namespace Nett
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -8,7 +9,7 @@
 
     internal static class UserTypeMetaData
     {
-        private static readonly Dictionary<Type, MetaDataInfo> MetaData = new Dictionary<Type, MetaDataInfo>();
+        private static readonly ConcurrentDictionary<Type, MetaDataInfo> MetaData = new ConcurrentDictionary<Type, MetaDataInfo>();
 
         public static bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
         {
