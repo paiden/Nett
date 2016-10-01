@@ -1,0 +1,21 @@
+<package>
+  <metadata>
+    <version>$version$</version>
+    <id>Nett.Coma$SNE$</id>
+    <authors>paiden@outlook.com</authors>
+    <owners>paiden@outlook.com</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.Net Configuration System based on TOML configuration format</description>
+    <tags>TOML Serialization Configuration</tags>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/paiden/Nett</projectUrl>
+    <dependencies>
+      <dependency id="Nett$SNE$" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Source\Nett.Coma\bin\$configuration$$SNE$\Nett.Coma.dll" target="lib\Net40" />
+    <file src="Source\Nett.Coma\bin\$configuration$\Nett.Coma.pdb" target="lib\Net40" />
+    <file src="Source\Nett.Coma\**\*.cs" target="src\" />
+  </files>
+</package>
