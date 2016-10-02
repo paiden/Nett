@@ -62,14 +62,22 @@
                 return null;
             }
 
-            bool hadNewLine = false;
             while (!this.characters.End && this.characters.TryExpectWhitespace())
             {
+                int lineBeforeConsume = this.characters.Line;
+                int colBeforeConsume = this.characters.Column;
+
                 var c = this.characters.Consume();
+
+                if (c == '\r' && this.characters.TryExpect('\n'))
+                {
+                    this.characters.Consume();
+                    return Token.NewLine(lineBeforeConsume, colBeforeConsume);
+                }
 
                 if (c == '\n')
                 {
-                    hadNewLine = true;
+                    return Token.NewLine(lineBeforeConsume, colBeforeConsume);
                 }
             }
 
@@ -78,8 +86,8 @@
                 return null;
             }
 
-            int line = this.characters.Line;
-            int column = this.characters.Column;
+            int lineAtFirstTokenChar = this.characters.Line;
+            int colAtFirstTokenChar = this.characters.Column;
 
             var token = SymbolsMatcher.TryMatch(this.characters)
                 ?? BoolMatcher.TryMatch(this.characters)
@@ -91,19 +99,15 @@
 
             if (token != null)
             {
-                // TOML defines that no newline is allowed after key. As this parser generally doesn't care about newlines and throws them away
-                // I have to do it in a some kind wacky way, by replacing the assignment token by a specialized newline token, that later will
-                // cause the key value production to fail, because it doesn't encounter the expected '=' token.
-                if (hadNewLine && token.Value.type == TokenType.Assign)
-                {
-                    return new Token(TokenType.NewLine, "<NewLine>");
-                }
-
-                return new Token(token.Value.type, token.Value.value) { line = line, col = column };
+                return new Token(token.Value.type, token.Value.value) { line = lineAtFirstTokenChar, col = colAtFirstTokenChar };
             }
             else
             {
-                return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd()) { line = line, col = column };
+                return new Token(TokenType.Unknown, this.characters.ConsumeTillWhitespaceOrEnd())
+                {
+                    line = lineAtFirstTokenChar,
+                    col = colAtFirstTokenChar
+                };
             }
         }
 

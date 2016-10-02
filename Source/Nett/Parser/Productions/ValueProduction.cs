@@ -127,6 +127,7 @@
             TomlArray a;
 
             tokens.ExpectAndConsume(TokenType.LBrac);
+            tokens.ConsumeAllNewlines();
 
             if (tokens.TryExpect(TokenType.RBrac))
             {
@@ -142,6 +143,7 @@
                 while (!tokens.TryExpect(TokenType.RBrac))
                 {
                     tokens.ExpectAndConsume(TokenType.Comma);
+                    tokens.ConsumeAllNewlines();
                     values.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
                     if (!tokens.TryExpect(TokenType.RBrac))
@@ -155,6 +157,7 @@
                         }
 
                         values.Add(v);
+                        tokens.ConsumeAllNewlines();
                     }
                 }
 

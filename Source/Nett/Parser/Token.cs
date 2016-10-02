@@ -51,6 +51,8 @@
             this.col = 0;
         }
 
+        public static Token NewLine(int line, int col) => new Token(TokenType.NewLine, "<NewLine>") { line = line, col = col };
+
         public string PrefixWithTokenPostion(string message) => $"Line {this.line} at column {this.col}: {message}";
     }
 }

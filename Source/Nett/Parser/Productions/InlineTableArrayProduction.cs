@@ -13,6 +13,7 @@
         private static TomlTableArray Apply(ITomlRoot root, TokenBuffer tokens)
         {
             tokens.ExpectAndConsume(TokenType.LBrac);
+            tokens.ConsumeAllNewlines();
 
             var arr = new TomlTableArray(root);
             TomlTable tbl = null;
@@ -23,13 +24,16 @@
                 if (tokens.TryExpect(TokenType.Comma))
                 {
                     tokens.Consume();
+                    tokens.ConsumeAllNewlines();
                 }
                 else
                 {
+                    tokens.ConsumeAllNewlines();
                     tokens.Expect(TokenType.RBrac);
                 }
             }
 
+            tokens.ConsumeAllNewlines();
             tokens.ExpectAndConsume(TokenType.RBrac);
 
             return arr;

@@ -4,6 +4,8 @@
 
     internal sealed class TokenBuffer : LookaheadBuffer<Token>
     {
+        private bool autoThrowAwayNewlines = false;
+
         public TokenBuffer(Func<Token?> read, int lookAhead)
             : base(read, lookAhead)
         {
@@ -44,6 +46,36 @@
         public bool TryExpectAt(TokenType tt)
         {
             return this.Peek().type == tt;
+        }
+
+        public void ConsumeAllNewlines()
+        {
+            while (this.Peek().type == TokenType.NewLine) { this.Consume(); }
+        }
+
+        private Token ConsumeInternal()
+        {
+            var t = this.Consume();
+
+            if (this.autoThrowAwayNewlines)
+            {
+                this.ConsumeAllNewlines();
+            }
+
+            return t;
+        }
+
+        private class AutoThrowAwayNewLinesContext : IDisposable
+        {
+            private readonly TokenBuffer buffer;
+
+            public AutoThrowAwayNewLinesContext(TokenBuffer buffer)
+            {
+                this.buffer = buffer;
+                buffer.autoThrowAwayNewlines = true;
+            }
+
+            public void Dispose() => this.buffer.autoThrowAwayNewlines = false;
         }
     }
 }

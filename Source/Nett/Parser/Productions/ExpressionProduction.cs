@@ -14,8 +14,12 @@
 
         public static TomlTable TryApply(TomlTable current, TomlTable.RootTable root, TokenBuffer tokens)
         {
+            tokens.ConsumeAllNewlines();
+
             var preComments = CommentProduction.TryParsePreExpressionCommenst(tokens);
             var expressionToken = tokens.Peek();
+
+            tokens.ConsumeAllNewlines();
 
             var arrayKeyChain = TomlArrayTableProduction.TryApply(tokens);
             if (arrayKeyChain != null)

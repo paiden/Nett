@@ -217,20 +217,29 @@ namespace Nett.UnitTests.Internal.Parser
         public void TokizingAssignsLineAndColumnNumbersOneBased()
         {
             string input =
-@"x
- x
-  x";
+@"a
+ b
+  c";
 
             var t = new Tokenizer(input.ToStream());
 
+            //a
             t.Tokens.PeekAt(0).line.Should().Be(1);
             t.Tokens.PeekAt(0).col.Should().Be(1);
-
-            t.Tokens.PeekAt(1).line.Should().Be(2);
+            // newline
+            t.Tokens.PeekAt(1).line.Should().Be(1);
             t.Tokens.PeekAt(1).col.Should().Be(2);
 
-            t.Tokens.PeekAt(2).line.Should().Be(3);
-            t.Tokens.PeekAt(2).col.Should().Be(3);
+            //b
+            t.Tokens.PeekAt(2).line.Should().Be(2);
+            t.Tokens.PeekAt(2).col.Should().Be(2);
+            //newline
+            t.Tokens.PeekAt(3).line.Should().Be(2);
+            t.Tokens.PeekAt(3).col.Should().Be(3);
+
+            //c
+            t.Tokens.PeekAt(4).line.Should().Be(3);
+            t.Tokens.PeekAt(4).col.Should().Be(3);
         }
 
         internal static IEnumerable<Token> Tokens
@@ -354,6 +363,7 @@ namespace Nett.UnitTests.Internal.Parser
             t.Tokens.Consume().value.Should().Be("longpi");
             t.Tokens.Consume().value.Should().Be("=");
             t.Tokens.Consume().value.Should().Be("3.141592653589793");
+            t.Tokens.Consume().type.Should().Be(TokenType.NewLine);
             t.Tokens.Consume().value.Should().Be("neglongpi");
             t.Tokens.Consume().value.Should().Be("=");
             t.Tokens.Consume().value.Should().Be("-3.141592653589793");

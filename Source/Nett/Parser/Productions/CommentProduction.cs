@@ -21,7 +21,10 @@
             while (tokens.TryExpect(TokenType.Comment))
             {
                 comments.Add(new TomlComment(tokens.Consume().value, location));
+                tokens.ConsumeAllNewlines();
             }
+
+            tokens.ConsumeAllNewlines();
 
             return comments;
         }
@@ -32,7 +35,10 @@
             while (tokens.TryExpect(TokenType.Comment))
             {
                 comments.Add(new TomlComment(tokens.Consume().value, CommentLocation.Prepend));
+                tokens.ConsumeAllNewlines();
             }
+
+            tokens.ConsumeAllNewlines();
 
             return comments;
         }
