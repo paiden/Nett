@@ -25,7 +25,9 @@
             }
         }
 
-        public bool End => this.ItemsAvailable <= 0;
+        public virtual bool End => this.EndInternal;
+
+        protected bool EndInternal => this.ItemsAvailable <= 0;
 
         protected int ItemsAvailable { get; private set; }
 
@@ -58,7 +60,7 @@
 
         public T Peek()
         {
-            return this.End ? default(T) : this.PeekAt(0);
+            return this.EndInternal ? default(T) : this.PeekAt(0);
         }
 
         public T PeekAt(int la)
@@ -74,7 +76,7 @@
 
         public bool TryExpect(T expected)
         {
-            return !this.End && object.Equals(this.Peek(), expected);
+            return !this.EndInternal && object.Equals(this.Peek(), expected);
         }
 
         public bool TryExpectAt(int la, T expected)

@@ -34,8 +34,6 @@
     [DebuggerDisplay("{value}")]
     internal struct Token
     {
-        public static Token Eof = new Token(TokenType.Eof, "<End of input>");
-
 #pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
         public int col;
         public int line;
@@ -52,6 +50,8 @@
         }
 
         public static Token NewLine(int line, int col) => new Token(TokenType.NewLine, "<NewLine>") { line = line, col = col };
+
+        public static Token EndOfFile(int line, int col) => new Token(TokenType.Eof, "<EndOfFile>") { line = line, col = col };
 
         public string PrefixWithTokenPostion(string message) => $"Line {this.line} at column {this.col}: {message}";
     }

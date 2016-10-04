@@ -55,12 +55,11 @@
             return new Token(TokenType.String, sb.ToString());
         }
 
+        private Token CreateEof() => Token.EndOfFile(this.characters.Line, this.characters.Column + 1);
+
         private Token? NextToken()
         {
-            if (this.characters.End)
-            {
-                return null;
-            }
+            if (this.characters.End) { return this.CreateEof(); }
 
             while (!this.characters.End && this.characters.TryExpectWhitespace())
             {
@@ -81,10 +80,7 @@
                 }
             }
 
-            if (this.characters.End)
-            {
-                return null;
-            }
+            if (this.characters.End) { return this.CreateEof(); }
 
             int lineAtFirstTokenChar = this.characters.Line;
             int colAtFirstTokenChar = this.characters.Column;

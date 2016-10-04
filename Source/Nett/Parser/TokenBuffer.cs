@@ -11,6 +11,13 @@
         {
         }
 
+        public override bool End => this.Peek().type == TokenType.Eof || base.End;
+
+        public void ConsumeAllNewlines()
+        {
+            while (this.Peek().type == TokenType.NewLine) { this.Consume(); }
+        }
+
         public Token Expect(TokenType tt)
         {
             var t = this.Peek();
@@ -46,11 +53,6 @@
         public bool TryExpectAt(TokenType tt)
         {
             return this.Peek().type == tt;
-        }
-
-        public void ConsumeAllNewlines()
-        {
-            while (this.Peek().type == TokenType.NewLine) { this.Consume(); }
         }
 
         private Token ConsumeInternal()
