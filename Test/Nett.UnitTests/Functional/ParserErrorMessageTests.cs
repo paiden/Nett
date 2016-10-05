@@ -16,7 +16,7 @@ namespace Nett.UnitTests.Functional
                 { "1.0", "*Failed to parse key because unexpected token '1.0' was found.", 1, 1 },
                 { "X = ", ValueMissingError, 1, 5 },
                 { "X = \r\n", ValueMissingError, 1, 5 },
-                { "X = \r", ValueMissingError, 1, 6 }, // \r is a ommited char, and after that EOF will cause error => 5 + 1
+                { "X = \r", ValueMissingError, 1, 6 }, // \r is a omitted char, and after that EOF will cause error => 5 + 1
                 { "X = \n", ValueMissingError, 1, 5 },
                 { "X = \r\n 2.0", ValueMissingError, 1, 5 },
                 { "=1", KeyMissingError, 1, 1 },
