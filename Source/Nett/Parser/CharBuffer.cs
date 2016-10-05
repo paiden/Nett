@@ -26,6 +26,8 @@
 
         public int Line { get; private set; }
 
+        public FilePosition FilePosition => new FilePosition() { Line = this.Line, Column = this.Column };
+
         public override char Consume()
         {
             this.Column++; // TODO adapt counting for non visible characters, ignore for now not important enough

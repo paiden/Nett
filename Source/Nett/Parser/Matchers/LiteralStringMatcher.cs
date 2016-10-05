@@ -1,6 +1,5 @@
 ﻿namespace Nett.Parser.Matchers
 {
-    using System;
     using System.Text;
 
     internal sealed class LiteralStringMatcher
@@ -14,6 +13,8 @@
             {
                 return null;
             }
+
+            var errPos = cs.FilePosition;
 
             if (cs.TryExpectAt(1, StringTag) && cs.TryExpectAt(2, StringTag))
             {
@@ -29,7 +30,7 @@
 
             if (!cs.TryExpect(StringTag))
             {
-                throw new Exception($"Closing '{StringTag}' not found for literal string '{sb.ToString()}'");
+                throw Parser.CreateParseError(errPos, Constants.ParseErrorStringNotClosed);
             }
             else
             {

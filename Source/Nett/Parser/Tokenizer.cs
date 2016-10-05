@@ -55,7 +55,7 @@
             return new Token(TokenType.String, sb.ToString());
         }
 
-        private Token CreateEof() => Token.EndOfFile(this.characters.Line, this.characters.Column + 1);
+        private Token CreateEof() => Token.EndOfFile(this.characters.Line, this.characters.Column);
 
         private Token? NextToken()
         {

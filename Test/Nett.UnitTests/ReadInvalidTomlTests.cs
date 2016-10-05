@@ -73,20 +73,5 @@ name = ""Born in the USA""
             // Assert
             a.ShouldThrow<Exception>();
         }
-
-        [Theory(DisplayName = "Reading TOML where string tag is not closed should provide useful error message")]
-        [InlineData("x = 'broken")]
-        [InlineData("x = \"broken")]
-        [InlineData("x = '''broken''")]
-        [InlineData("x = '''broken'")]
-        [InlineData("x = '''broken''")]
-        public void ReadToml_WhenStringTagNotClosed_ShouldGiveUnderstandableErrorMessage(string input)
-        {
-            // Act
-            Action a = () => Toml.ReadString(input);
-
-            // Assert
-            a.ShouldThrow<Exception>().WithMessage("*Closing*not found for*broken*");
-        }
     }
 }

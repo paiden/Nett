@@ -1,6 +1,5 @@
 ﻿namespace Nett.Parser.Matchers
 {
-    using System;
     using System.Linq;
     using System.Text;
 
@@ -11,6 +10,8 @@
         public static Token? TryMatch(CharBuffer cs)
         {
             if (!cs.TryExpect(StringTag)) { return null; }
+
+            var errPos = cs.FilePosition;
 
             StringBuilder sb = new StringBuilder(64);
             sb.Append(cs.Consume(StringTag.Length).ToArray());
@@ -32,7 +33,7 @@
 
             if (!cs.TryExpect(StringTag))
             {
-                throw new Exception($"Closing '{StringTag}' not found for string {sb.ToString()}'");
+                throw Parser.CreateParseError(errPos, Constants.ParseErrorStringNotClosed);
             }
             else
             {

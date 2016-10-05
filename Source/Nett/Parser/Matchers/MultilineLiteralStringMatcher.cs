@@ -16,6 +16,8 @@
                 return null;
             }
 
+            var errPos = cs.FilePosition;
+
             sb.Append(cs.Consume(3).ToArray());
 
             while (!cs.End && !cs.TryExpect(StringTag))
@@ -25,7 +27,7 @@
 
             if (!cs.TryExpect(StringTag))
             {
-                throw new Exception($"Closing '{StringTag}' not found for literal string '{sb.ToString()}'");
+                throw Parser.CreateParseError(errPos, Constants.ParseErrorStringNotClosed);
             }
             else
             {

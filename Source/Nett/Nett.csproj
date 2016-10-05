@@ -61,6 +61,7 @@
     <Compile Include="ITomlConverter.cs" />
     <Compile Include="ITomlObjectVisitor.cs" />
     <Compile Include="IMetaDataStore.cs" />
+    <Compile Include="Parser\FilePosition.cs" />
     <Compile Include="Parser\Matchers\BareKeyMatcher.cs" />
     <Compile Include="Parser\Matchers\BoolMatcher.cs" />
     <Compile Include="Parser\CharBuffer.cs" />

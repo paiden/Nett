@@ -53,6 +53,12 @@
 
         public static Token EndOfFile(int line, int col) => new Token(TokenType.Eof, "<EndOfFile>") { line = line, col = col };
 
+        public bool IsEmpty => this.value == null || this.value.Trim().Length <= 0;
+
+        public bool IsEof => this.type == TokenType.Eof;
+
+        public bool IsNewLine => this.type == TokenType.NewLine;
+
         public string PrefixWithTokenPostion(string message) => $"Line {this.line} at column {this.col}: {message}";
     }
 }

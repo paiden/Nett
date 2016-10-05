@@ -1,6 +1,5 @@
 ﻿namespace Nett.Parser.Matchers
 {
-    using System;
     using System.Text;
 
     internal static class StringMatcher
@@ -14,6 +13,8 @@
             {
                 return null;
             }
+
+            var errorPosition = cs.FilePosition;
 
             if (cs.TryExpectAt(1, StringTag) && cs.TryExpectAt(2, StringTag))
             {
@@ -34,7 +35,7 @@
 
             if (!cs.TryExpect(StringTag))
             {
-                throw new Exception($"Closing '{StringTag}' not found for string {sb.ToString()}'");
+                throw Parser.CreateParseError(errorPosition, Constants.ParseErrorStringNotClosed);
             }
             else
             {

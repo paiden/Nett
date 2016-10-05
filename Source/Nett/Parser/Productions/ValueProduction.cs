@@ -22,7 +22,17 @@
 
             if (value == null)
             {
-                throw new Exception($"Expected a value while parsing key value pair but value incompatible token '{tokens.Peek().value}' of type '{tokens.Peek().type}' was found.");
+                var t = tokens.Peek();
+                if (t.IsEmpty || t.IsEof || t.IsNewLine)
+                {
+                    throw Parser.CreateParseError(t, "Value is missing.");
+                }
+                else
+                {
+                    string msg = $"Expected a value while parsing key value pair but value incompatible "
+                        + $"token '{t.value}' of type '{t.type}' was found.";
+                    throw Parser.CreateParseError(t, msg);
+                }
             }
 
             return value;

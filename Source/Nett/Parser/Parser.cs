@@ -20,6 +20,12 @@
 
         private TokenBuffer Tokens => this.tokenizer.Tokens;
 
+        public static Exception CreateParseError(FilePosition pos, string message)
+            => new Exception($"Line {pos.Line}, Column {pos.Column}: {message}");
+
+        public static Exception CreateParseError(Token position, string message)
+            => CreateParseError(new FilePosition { Line = position.line, Column = position.col }, message);
+
         public TomlTable Parse()
         {
             return this.Toml();

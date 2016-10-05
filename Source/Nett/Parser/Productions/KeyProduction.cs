@@ -12,7 +12,15 @@
             else if (tokens.TryExpect(TokenType.String)) { return tokens.Consume().value.Replace("\"", string.Empty); }
             else if (required)
             {
-                throw new System.Exception($"Failed to parse key because unexpected token '{tokens.Peek().value}' was found.");
+                var t = tokens.Peek();
+                if (t.value == "=")
+                {
+                    throw Parser.CreateParseError(t, "Key is missing.");
+                }
+                else
+                {
+                    throw Parser.CreateParseError(t, $"Failed to parse key because unexpected token '{t.value}' was found.");
+                }
             }
             else
             {
