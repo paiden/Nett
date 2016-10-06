@@ -23,7 +23,7 @@
             var t = this.Peek();
             if (t.type != tt)
             {
-                throw new Exception($"Expected token of type '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
+                throw Parser.CreateParseError(t, $"Expected token of type '{tt}' but token with value of '{t.value}' and the type '{t.type}' was found.");
             }
 
             return t;
@@ -38,6 +38,17 @@
         public bool TryExpect(string tokenValue)
         {
             return this.Peek().value == tokenValue;
+        }
+
+        public bool TryExpectAndConsume(TokenType tt)
+        {
+            var r = this.TryExpect(tt);
+            if(r)
+            {
+                this.Consume();
+            }
+
+            return r;
         }
 
         public bool TryExpect(TokenType tt)

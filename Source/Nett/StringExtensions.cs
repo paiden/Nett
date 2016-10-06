@@ -81,7 +81,7 @@
                         case 'u': goto case 'U';
                         case 'U': hasUnicodeSequences = true; sb.Append(src[i]); sb.Append(src[i + 1]); break;
                         default:
-                            throw new Exception(tkn.PrefixWithTokenPostion($"String '{src}' contains the invalid escape sequence '\\{src[i = 1]}'."));
+                            throw Parser.Parser.CreateParseError(tkn, $"String '{src}' contains the invalid escape sequence '\\{src[i = 1]}'.");
                     }
 
                     i++;

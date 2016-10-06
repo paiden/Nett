@@ -58,7 +58,5 @@
         public bool IsEof => this.type == TokenType.Eof;
 
         public bool IsNewLine => this.type == TokenType.NewLine;
-
-        public string PrefixWithTokenPostion(string message) => $"Line {this.line} at column {this.col}: {message}";
     }
 }

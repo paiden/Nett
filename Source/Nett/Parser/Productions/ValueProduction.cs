@@ -124,7 +124,7 @@
 
             if (t.value.Contains("\n"))
             {
-                throw new ArgumentException($"String '{t.value}' is invalid because it contains newlines.");
+                throw Parser.CreateParseError(t, $"String '{t.value}' is invalid because it contains newlines.");
             }
 
             var s = t.value.TrimNChars(1).Unescape(t);
@@ -141,18 +141,30 @@
 
             if (tokens.TryExpect(TokenType.RBrac))
             {
+                // Empty array handled inside this if, else part can assume the array has values
                 tokens.Consume();
                 return new TomlArray(root);
             }
             else
             {
                 List<TomlValue> values = new List<TomlValue>();
+                var errPos = tokens.Peek();
                 var v = ParseTomlValue(root, tokens);
+
+                if (v == null)
+                {
+                    throw Parser.CreateParseError(errPos, $"Array value is missing.");
+                }
+
                 values.Add(v);
 
                 while (!tokens.TryExpect(TokenType.RBrac))
                 {
-                    tokens.ExpectAndConsume(TokenType.Comma);
+                    if (!tokens.TryExpectAndConsume(TokenType.Comma))
+                    {
+                        throw Parser.CreateParseError(tokens.Peek(), "Array not closed.");
+                    }
+
                     tokens.ConsumeAllNewlines();
                     values.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
@@ -161,9 +173,14 @@
                         var et = tokens.Peek();
                         v = ParseTomlValue(root, tokens);
 
+                        if (v == null)
+                        {
+                            throw Parser.CreateParseError(et, $"Array value is missing.");
+                        }
+
                         if (v.GetType() != values[0].GetType())
                         {
-                            throw new Exception(et.PrefixWithTokenPostion($"Expected array item of type '{values[0].ReadableTypeName}' but item of type '{v.ReadableTypeName}' was found."));
+                            throw Parser.CreateParseError(et, $"Expected value of type '{values[0].ReadableTypeName}' but value of type '{v.ReadableTypeName}' was found.");
                         }
 
                         values.Add(v);

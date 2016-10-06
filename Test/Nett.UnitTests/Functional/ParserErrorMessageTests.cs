@@ -6,9 +6,12 @@ namespace Nett.UnitTests.Functional
 {
     public sealed class ParserErrorMessageTests
     {
+        private const string NoSpecificErrorMessage = "";
         private const string KeyMissingError = "*Key is missing.";
         private const string ValueMissingError = "*Value is missing.";
         private const string StringNotClosedError = "*String not closed.";
+        private const string ArrayValueIsMissing = "Array value is missing.";
+        private const string ArrayNotClosed = "Array not closed.";
 
         public static TheoryData<string, string, int, int> InputData =
             new TheoryData<string, string, int, int>
@@ -25,6 +28,15 @@ namespace Nett.UnitTests.Functional
                 { "X = 'Hello", StringNotClosedError, 1, 5 },
                 { "X = '''Hello \r\n\r\n", StringNotClosedError, 1, 5 },
                 { "X = \"\"\"Hello \r\n\r\n", StringNotClosedError, 1, 5 },
+                { "X = \"\r\n\"", "*is invalid because it contains newlines.", 1, 5 },
+                { "X = [", ArrayValueIsMissing, 1, 6 },
+                { "X = [,]", ArrayValueIsMissing, 1, 6 },
+                { "X = [1, ,]", ArrayValueIsMissing, 1, 9 }, // Space is not oken, so the ',' is the error position => 9 instead of 8
+                { "X = [1, 'X']", "*Expected value of type 'int' but value of type 'string' was found.", 1, 9 },
+                { "X = [1, 2, []", "*Expected value of type 'int' but value of type 'array' was found.", 1, 12 },
+                { "X = [[1, 2], []", ArrayNotClosed, 1, 16 },
+                { "X = [[1, 2], ['a', 'b']", ArrayNotClosed, 1, 24 },
+                { "X = [[1, 2]['a', 'b']]", ArrayNotClosed, 1, 12 },
             };
 
         [Theory(DisplayName = "ErrMsg has correct pos")]
