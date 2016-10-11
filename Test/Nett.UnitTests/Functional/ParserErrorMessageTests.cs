@@ -12,11 +12,22 @@ namespace Nett.UnitTests.Functional
         private const string StringNotClosedError = "*String not closed.";
         private const string ArrayValueIsMissing = "Array value is missing.";
         private const string ArrayNotClosed = "Array not closed.";
+        private const string FloatFractionMissign = "*Fraction of float is missing.";
+        private const string FloatMissingExponent = "*Exponent of float is missing.";
+        private const string FailedToReadInteger = "*Failed to read integer.*";
 
         public static TheoryData<string, string, int, int> InputData =
             new TheoryData<string, string, int, int>
             {
                 { "1.0", "*Failed to parse key because unexpected token '1.0' was found.", 1, 1 },
+                { "X = 2.", FloatFractionMissign, 1, 7 },
+                { "X = 2.X", FloatFractionMissign, 1, 7 },
+                { "X = 2.1X", "*Failed to read float because fraction '1X' is invalid.", 1, 7 },
+                { "X = 2e", FloatMissingExponent, 1, 7 },
+                { "X = 2e-", FailedToReadInteger, 1, 8 },
+                { "X = 2e-1X", "*Failed to read float because exponent '-1X' is invalid.", 1, 7 },
+                //{ "X = 2e01", "Integer is invalid because of leading '0'.", 1, 7 }, // Leading zero not allowed in E-part (currently not working because of bug, will be fixed separately)
+                { "X = 2eX", FloatMissingExponent, 1, 7 },
                 { "X = ", ValueMissingError, 1, 5 },
                 { "X = \r\n", ValueMissingError, 1, 5 },
                 { "X = \r", ValueMissingError, 1, 6 }, // \r is a omitted char, and after that EOF will cause error => 5 + 1
@@ -31,7 +42,7 @@ namespace Nett.UnitTests.Functional
                 { "X = \"\r\n\"", "*is invalid because it contains newlines.", 1, 5 },
                 { "X = [", ArrayValueIsMissing, 1, 6 },
                 { "X = [,]", ArrayValueIsMissing, 1, 6 },
-                { "X = [1, ,]", ArrayValueIsMissing, 1, 9 }, // Space is not oken, so the ',' is the error position => 9 instead of 8
+                { "X = [1, ,]", ArrayValueIsMissing, 1, 9 }, // Space is no token, so the ',' is the error position => 9 instead of 8
                 { "X = [1, 'X']", "*Expected value of type 'int' but value of type 'string' was found.", 1, 9 },
                 { "X = [1, 2, []", "*Expected value of type 'int' but value of type 'array' was found.", 1, 12 },
                 { "X = [[1, 2], []", ArrayNotClosed, 1, 16 },

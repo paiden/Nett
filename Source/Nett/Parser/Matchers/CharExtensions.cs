@@ -11,5 +11,14 @@
         {
             return c.InRange('a', 'z') || c.InRange('A', 'Z') || c.InRange('0', '9') || c == '-' || c == '_';
         }
+
+        public static bool IsNumericSign(this char c) => c == '+' || c == '-';
+
+        public static string ToReadble(this char c)
+        {
+            if (c == '\0') { return "<EndOfFile>"; }
+
+            return new string(c, 1);
+        }
     }
 }

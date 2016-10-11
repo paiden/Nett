@@ -1,6 +1,7 @@
 ﻿namespace Nett.Parser.Matchers
 {
     using System.Text;
+    using Util;
 
     internal static class IntMatcher
     {
@@ -13,6 +14,12 @@
             {
                 StringBuilder sb = new StringBuilder(16);
                 sb.Append(cs.Consume());
+
+                if (hasSign && !cs.TryExpectInRange('0', '9'))
+                {
+                    throw Parser.CreateParseError(
+                        cs.FilePosition, $"Failed to read Integer. Expected a number but '{cs.Peek().ToReadble()}' was found instead.");
+                }
 
                 while (!cs.End && (cs.TryExpectInRange('0', '9') || cs.TryExpect('_')))
                 {
@@ -36,7 +43,7 @@
                 {
                     if (cs.TryExpect('E') || cs.TryExpect('e') || cs.TryExpect('.'))
                     {
-                        return FloatMatcher.TryMatch(sb, cs);
+                        return FloatMatcher.Match(sb, cs);
                     }
                     else
                     {
