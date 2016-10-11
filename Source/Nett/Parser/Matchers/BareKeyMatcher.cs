@@ -7,17 +7,17 @@
     /// </summary>
     internal static class BareKeyMatcher
     {
-        public static Token? TryContinueMatch(StringBuilder alreadyMatched, LookaheadBuffer<char> cs)
+        public static Token? TryContinueMatch(StringBuilder alreadyMatched, CharBuffer cs)
         {
             return TryMatchInternal(alreadyMatched, cs);
         }
 
-        public static Token? TryMatch(LookaheadBuffer<char> cs)
+        public static Token? TryMatch(CharBuffer cs)
         {
             return TryMatchInternal(null, cs);
         }
 
-        private static Token? TryMatchInternal(StringBuilder alreadyMatched, LookaheadBuffer<char> cs)
+        private static Token? TryMatchInternal(StringBuilder alreadyMatched, CharBuffer cs)
         {
             var sb = alreadyMatched ?? new StringBuilder(64);
 
@@ -26,7 +26,16 @@
                 sb.Append(cs.Consume());
             }
 
+            if (sb.Length > 0 && !TokenDone(cs))
+            {
+                return Token.CreateUnknownTokenFromFragment(cs, sb);
+            }
+
             return sb.Length > 0 ? new Token(TokenType.BareKey, sb.ToString()) : default(Token?);
         }
+
+        private static bool TokenDone(CharBuffer cs) => cs.TokenDone() || NextTokenIsValidBareKeySuccessor(cs);
+
+        private static bool NextTokenIsValidBareKeySuccessor(CharBuffer cs) => cs.Peek() == '=' || cs.Peek() == '.';
     }
 }

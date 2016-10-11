@@ -29,8 +29,8 @@
                 }
                 else
                 {
-                    string msg = $"Expected a value while parsing key value pair but value incompatible "
-                        + $"token '{t.value}' of type '{t.type}' was found.";
+                    string msg = $"Expected a TOML value while parsing key value pair."
+                        + $" Token of type '{t.type}' with value '{t.value}' is invalid.";
                     throw Parser.CreateParseError(t, msg);
                 }
             }

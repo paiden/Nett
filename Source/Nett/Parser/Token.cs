@@ -1,6 +1,7 @@
 ﻿namespace Nett.Parser
 {
     using System.Diagnostics;
+    using System.Text;
 
     internal enum TokenType
     {
@@ -47,6 +48,13 @@
             this.value = value;
             this.line = 0;
             this.col = 0;
+        }
+
+        public static Token CreateUnknownTokenFromFragment(CharBuffer cs, StringBuilder fragment)
+        {
+            while (!cs.TokenDone()) { fragment.Append(cs.Consume()); }
+
+            return new Token(TokenType.Unknown, fragment.ToString());
         }
 
         public static Token NewLine(int line, int col) => new Token(TokenType.NewLine, "<NewLine>") { line = line, col = col };
