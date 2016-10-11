@@ -93,7 +93,8 @@
 
             if (existing != null && typed == null)
             {
-                throw Parser.CreateParseError(errorPosition, 
+                throw Parser.CreateParseError(
+                    errorPosition,
                     $"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'.");
             }
             else if (typed != null)

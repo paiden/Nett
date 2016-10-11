@@ -38,7 +38,7 @@
             }
             else
             {
-                throw new Exception($"Failed to parse timespan token because unexpected character '{cs.Peek()}' was found.");
+                throw Parser.CreateParseError(cs.FilePosition, $"Failed to parse timespan token because unexpected character '{cs.Peek().ToReadable()}' was found.");
             }
         }
 

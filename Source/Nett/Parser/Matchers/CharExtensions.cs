@@ -14,7 +14,7 @@
 
         public static bool IsNumericSign(this char c) => c == '+' || c == '-';
 
-        public static string ToReadble(this char c)
+        public static string ToReadable(this char c)
         {
             if (c == '\0') { return "<EndOfFile>"; }
 

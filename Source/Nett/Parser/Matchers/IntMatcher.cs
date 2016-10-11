@@ -18,7 +18,7 @@
                 if (hasSign && !cs.TryExpectInRange('0', '9'))
                 {
                     throw Parser.CreateParseError(
-                        cs.FilePosition, $"Failed to read Integer. Expected a number but '{cs.Peek().ToReadble()}' was found instead.");
+                        cs.FilePosition, $"Failed to read Integer. Expected a number but '{cs.Peek().ToReadable()}' was found instead.");
                 }
 
                 while (!cs.End && (cs.TryExpectInRange('0', '9') || cs.TryExpect('_')))
