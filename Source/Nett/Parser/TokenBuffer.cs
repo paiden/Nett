@@ -43,7 +43,7 @@
         public bool TryExpectAndConsume(TokenType tt)
         {
             var r = this.TryExpect(tt);
-            if(r)
+            if (r)
             {
                 this.Consume();
             }

@@ -50,6 +50,12 @@
             this.col = 0;
         }
 
+        public bool IsEmpty => this.value == null || this.value.Trim().Length <= 0;
+
+        public bool IsEof => this.type == TokenType.Eof;
+
+        public bool IsNewLine => this.type == TokenType.NewLine;
+
         public static Token CreateUnknownTokenFromFragment(CharBuffer cs, StringBuilder fragment)
         {
             while (!cs.TokenDone()) { fragment.Append(cs.Consume()); }
@@ -60,11 +66,5 @@
         public static Token NewLine(int line, int col) => new Token(TokenType.NewLine, "<NewLine>") { line = line, col = col };
 
         public static Token EndOfFile(int line, int col) => new Token(TokenType.Eof, "<EndOfFile>") { line = line, col = col };
-
-        public bool IsEmpty => this.value == null || this.value.Trim().Length <= 0;
-
-        public bool IsEof => this.type == TokenType.Eof;
-
-        public bool IsNewLine => this.type == TokenType.NewLine;
     }
 }
