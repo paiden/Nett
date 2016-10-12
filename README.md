@@ -15,10 +15,12 @@ Nett is a library that helps to read and write [TOML](https://github.com/toml-la
 
 Install it via NuGet:
 
-|Package | Latest Version |
-|--------|------|
-|[Nett](https://www.nuget.org/packages/Nett/)| ![#](https://img.shields.io/nuget/v/Nett.svg)|
-|[Nett Strong Named](https://www.nuget.org/packages/Nett.StrongNamed/)| ![#](https://img.shields.io/nuget/v/Nett.StrongNamed.svg)|
+
+
+|Package                | Nett | Nett.Coma |
+|-----------------------|------|-----------|
+| Standard              | [![NuGet](https://img.shields.io/nuget/v/Nett.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.Coma/) |
+| With Strong Name      | [![NuGet](https://img.shields.io/nuget/v/Nett.StrongNamed.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.StrongNamed/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.StrongNamed.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.Coma.StrongNamed/) |
 
 All common 'TOML' operations are performed via the static class `Nett.Toml`. Although there are other
 types available from the library in general using that single type should be sufficient
@@ -447,11 +449,14 @@ settings.Clear(s => s.IdleTimeout);
 ```
 
 # Changelog
-XXXX-XX-XX: **v0.6.0** *(TOML 0.4.0)*
+2016-10-12: **v0.6.0** *(TOML 0.4.0)*
 
 Nett:
-+ Add: TomlTable supports Freezable pattern
 + Add: Properties of TOML mapped classes can be ignored via attribute or config
++ Add: TomlTable supports Freezable pattern
++ Fix: All parser errors include line and column
++ Fix: Various invalid TOML cases now cause a parser error as expected
++ Removed: Comments merge mode (will be redesigned and added in future version)
 
 Coma: 
 + Initial release
