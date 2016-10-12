@@ -109,8 +109,13 @@ if($NuGetPackage) {
         Copy-Item $srcComa -Destination $dstComa
 
         $devsnk = "`"$env:DEVSNK`""
-        Invoke-ExpandedChecked { & $snTool -AssemblyFile "`"$dstNett`"" -KeyFile $devsnk }
-        Invoke-ExpandedChecked { & $snTool -AssemblyFile "`"$dstComa`"" -KeyFile $devsnk }
+
+        # Escape the stuff
+        $dstNett = "`"$dstNett`""
+        $dstComa = "`"$dstComa`""
+
+        Invoke-ExpandedChecked { & $snTool -AssemblyFile $dstNett -KeyFile $devsnk }
+        Invoke-ExpandedChecked { & $snTool -AssemblyFile $dstComa -KeyFile $devsnk }
     }
 
     $v = $nugetPackageVersion.ToString()
