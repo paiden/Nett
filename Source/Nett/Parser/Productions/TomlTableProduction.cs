@@ -9,6 +9,14 @@
             tokens.ExpectAndConsume(TokenType.LBrac);
             IList<string> tableKeyChain = TableKeyProduction.Apply(tokens);
             tokens.ExpectAndConsume(TokenType.RBrac);
+
+            if (!tokens.TryExpectAndConsume(TokenType.NewLine) && !tokens.TryExpectAndConsume(TokenType.Comment) && !tokens.End)
+            {
+                var msg = $"Expected newline after table specifier. "
+                    + $"Token of type '{tokens.Peek().type}' with value '{tokens.Peek().value}' on same line.";
+                throw Parser.CreateParseError(tokens.Peek(), msg);
+            }
+
             return tableKeyChain;
         }
 

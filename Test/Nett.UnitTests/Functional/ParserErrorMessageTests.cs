@@ -48,7 +48,8 @@ namespace Nett.UnitTests.Functional
                 { "X = [[1, 2], []", ArrayNotClosed, 1, 16 },
                 { "X = [[1, 2], ['a', 'b']", ArrayNotClosed, 1, 24 },
                 { "X = [[1, 2]['a', 'b']]", ArrayNotClosed, 1, 12 },
-                { "X = 1;", "Expected a TOML value while parsing key value pair. Token of type 'Unknown' with value '1;' is invalid.", 1, 5 }
+                { "X = 1;", "Expected a TOML value while parsing key value pair. Token of type 'Unknown' with value '1;' is invalid.", 1, 5 },
+                { "[X]A", "Expected newline after table specifier. Token of type 'BareKey' with value 'A' on same line.", 1, 4 },
             };
 
         [Theory(DisplayName = "ErrMsg has correct pos")]
