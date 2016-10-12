@@ -135,14 +135,6 @@ namespace Nett.UnitTests.Internal
         }
 
         [Fact]
-        public void WriteFile_WhenTomlConfigIsNullAndMergeMode_ThrowsArgNull()
-        {
-            Action a = () => Toml.WriteFile(CreateSimpleTomlAsTable(1), RndFilePath, Toml.MergeCommentsMode.Overwrite, null);
-
-            a.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
         public void WriteFileT_WhenObjIsNull_ThrowsArgNull()
         {
             Action a = () => Toml.WriteFile((SimpleToml)null, RndFilePath);
@@ -161,24 +153,6 @@ namespace Nett.UnitTests.Internal
         {
             Action a = () => Toml.WriteFile(new SimpleToml(), null);
             a.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Theory]
-        [InlineData(Toml.MergeCommentsMode.KeepAll)]
-        [InlineData(Toml.MergeCommentsMode.KeepNonEmpty)]
-        [InlineData(Toml.MergeCommentsMode.Overwrite)]
-        public void WriteFileT_WithCommentMergeMode_WritesCorrectly(Toml.MergeCommentsMode mode)
-        {
-            // Arrange
-            string fn = RndFilePath;
-            const int expected = 1;
-
-            // Act
-            Toml.WriteFile(CreateSimpleTomlAsTable(expected), fn, mode);
-
-            // Assert
-            var read = Toml.ReadFile<SimpleToml>(fn);
-            read.X.Should().Be(expected);
         }
 
         [Fact]

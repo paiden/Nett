@@ -11,15 +11,6 @@
     {
         public const string FileExtension = ".toml";
 
-        private const MergeCommentsMode DefaultMergeCommentsMode = MergeCommentsMode.KeepNonEmpty;
-
-        public enum MergeCommentsMode
-        {
-            Overwrite,
-            KeepNonEmpty,
-            KeepAll,
-        }
-
         public static TomlTable Create() => Create(TomlConfig.DefaultInstance);
 
         public static TomlTable Create(TomlConfig config)
@@ -117,37 +108,23 @@
         }
 
         public static void WriteFile<T>(T obj, string filePath) =>
-            WriteFile(obj, filePath, DefaultMergeCommentsMode, TomlConfig.DefaultInstance);
+            WriteFile(obj, filePath, TomlConfig.DefaultInstance);
 
-        public static void WriteFile<T>(T obj, string filePath, MergeCommentsMode cm) =>
-            WriteFile(obj, filePath, cm, TomlConfig.DefaultInstance);
-
-        public static void WriteFile<T>(T obj, string filePath, TomlConfig config) =>
-            WriteFile(obj, filePath, DefaultMergeCommentsMode, config);
-
-        public static void WriteFile<T>(T obj, string filePath, MergeCommentsMode cm, TomlConfig config)
+        public static void WriteFile<T>(T obj, string filePath, TomlConfig config)
         {
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
 
             var table = TomlTable.RootTable.From(config, obj);
 
-            WriteFileInternal(table, filePath, cm, config);
+            WriteFileInternal(table, filePath, config);
         }
 
         public static void WriteFile(TomlTable table, string filePath) =>
-            WriteFileInternal(table, filePath, DefaultMergeCommentsMode, TomlConfig.DefaultInstance);
+            WriteFileInternal(table, filePath, TomlConfig.DefaultInstance);
 
         public static void WriteFile(TomlTable table, string filePath, TomlConfig config) =>
-            WriteFileInternal(table, filePath, DefaultMergeCommentsMode, config);
-
-        public static void WriteFile(TomlTable table, string filePath, MergeCommentsMode cm) =>
-            WriteFileInternal(table, filePath, cm, TomlConfig.DefaultInstance);
-
-        public static void WriteFile(TomlTable table, string filePath, MergeCommentsMode cm, TomlConfig config)
-        {
-            WriteFileInternal(table, filePath, cm, config);
-        }
+            WriteFileInternal(table, filePath, config);
 
         public static void WriteStream<T>(T obj, Stream output) =>
             WriteStreamInternal(TomlTable.RootTable.From(TomlConfig.DefaultInstance, obj), output);
@@ -164,17 +141,11 @@
         public static string WriteString<T>(T obj, TomlConfig config) =>
             WriteStringInternal(TomlTable.RootTable.From(config, obj));
 
-        private static void WriteFileInternal(TomlTable table, string filePath, MergeCommentsMode cm, TomlConfig config)
+        private static void WriteFileInternal(TomlTable table, string filePath, TomlConfig config)
         {
             if (table == null) { throw new ArgumentNullException(nameof(table)); }
             if (filePath == null) { throw new ArgumentNullException(nameof(filePath)); }
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
-
-            if ((cm == MergeCommentsMode.KeepNonEmpty || cm == MergeCommentsMode.KeepAll) && File.Exists(filePath))
-            {
-                var existing = ReadFile(filePath, config);
-                table.OverwriteCommentsWithCommentsFrom(existing, cm == MergeCommentsMode.KeepAll);
-            }
 
             filePath.EnsureDirectoryExists();
 
