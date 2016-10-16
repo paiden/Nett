@@ -26,9 +26,9 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5")]
-[assembly: AssemblyFileVersion("0.5.0")]
-[assembly: AssemblyInformationalVersion("0.5.0")]
+[assembly: AssemblyVersion("0.6")]
+[assembly: AssemblyFileVersion("0.6.1")]
+[assembly: AssemblyInformationalVersion("0.6.1")]
 [assembly: CLSCompliant(true)]
 
 [assembly: InternalsVisibleTo("Nett.UnitTests.Internal")]
