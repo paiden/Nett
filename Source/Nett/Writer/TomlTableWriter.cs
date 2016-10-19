@@ -98,7 +98,7 @@
             foreach (var t in tableArray.Items)
             {
                 this.writer.Write("[[");
-                this.writer.Write(key);
+                this.writer.Write(parentKey + key);
                 this.writer.Write("]]");
                 this.writer.WriteLine();
                 this.WriteAppendComments(tableArray);
