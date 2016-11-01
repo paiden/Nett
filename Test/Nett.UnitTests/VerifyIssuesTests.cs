@@ -47,6 +47,13 @@ namespace Nett.UnitTests
             public string MyProp { get; set; } = "MyProp";
         }
 
+        public class Size
+        {
+            public double Width { get; set; } = 1.0;
+            public double Height { get; set; } = 2.0;
+            public static Size Empty { get; } = new Size { Width = 0, Height = 0 };
+        }
+
         [Fact(DisplayName = "Verify issue #15 was fixed: Serialization ignores static properties")]
         public void WriteToml_WhenInputIsClassWithStaticProperty_StaticPropertyIsIgnored()
         {
@@ -57,6 +64,33 @@ namespace Nett.UnitTests
             str.Should().NotContain(ClassWithStaticProperty.StaticPropertyValue);
         }
 
+        [Fact(DisplayName = "Verify issue #15 was fixed: Deserialization ignores static properties")]
+        public void ReadToml_WhenInputContainsKeyForStaticProperty_ThatInputGetsIgnored()
+        {
+            // Arrange
+            var input = $"{nameof(ClassWithStaticProperty.MyProp)} = 'X' \r\n {nameof(ClassWithStaticProperty.MyStaticProp)} = 'DoNotDeserThis'";
+
+            // Act
+            var read = Toml.ReadString<ClassWithStaticProperty>(input);
+
+            // Assert
+            ClassWithStaticProperty.MyStaticProp.Should().Be(ClassWithStaticProperty.StaticPropertyValue);
+        }
+
+        [Fact(DisplayName = "Verify issue #15 was fixed: Deserialization of class with self referencing static property causes StackOverflow")]
+        public void ReadToml_WhenObjectHasSelfRefStaticProp_CanBeDeserializedCorrectl()
+        {
+            // Arrange
+            var s = new Size();
+            var written = Toml.WriteString(s);
+
+            // Act
+            var read = Toml.ReadString<Size>(written);
+
+            // Assert
+            read.Width.Should().Be(s.Width);
+            read.Height.Should().Be(s.Height);
+        }
 
         [Fact(DisplayName = "Verify issue #14 was fixed: Array of tables serialization forgot parent key")]
         public void WriteWithArrayOfTables_ProducesCorrectToml()

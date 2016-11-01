@@ -161,8 +161,8 @@
 
             foreach (var r in this.rows)
             {
-                var targetProperty = result.GetType().GetProperty(r.Key);
-                if (targetProperty != null && !this.Root.Config.IsPropertyIgnored(result.GetType(), targetProperty))
+                var targetProperty = this.Root.Config.TryGetMappingProperty(result.GetType(), r.Key);
+                if (targetProperty != null)
                 {
                     MapTableRowToProperty(result, targetProperty, r, this.Root);
                 }

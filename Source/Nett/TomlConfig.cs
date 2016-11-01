@@ -17,6 +17,8 @@
     {
         internal static readonly TomlConfig DefaultInstance = Create();
 
+        private const BindingFlags PropBindingFlags = BindingFlags.Public | BindingFlags.Instance;
+
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
@@ -86,11 +88,17 @@
 
         internal IEnumerable<PropertyInfo> GetSerializationProperties(Type t)
         {
-            return t.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            return t.GetProperties(PropBindingFlags)
                 .Where(pi => !this.IsPropertyIgnored(t, pi));
         }
 
-        internal bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
+        internal PropertyInfo TryGetMappingProperty(Type t, string key)
+        {
+            var pi = t.GetProperty(key, PropBindingFlags);
+            return pi != null && !this.IsPropertyIgnored(t, pi) ? pi : null;
+        }
+
+        private bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
         {
             Assert(ownerType != null);
             Assert(pi != null);
