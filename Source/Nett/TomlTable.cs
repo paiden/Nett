@@ -219,10 +219,10 @@
 
             TomlTable tt = new TomlTable(root, tableType);
 
-            var props = obj.GetType().GetProperties();
+            var props = root.Config.GetSerializationProperties(obj.GetType());
             var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach (var p in props.Where(filter => !root.Config.IsPropertyIgnored(obj.GetType(), filter)))
+            foreach (var p in props)
             {
                 object val = p.GetValue(obj, null);
                 if (val != null)

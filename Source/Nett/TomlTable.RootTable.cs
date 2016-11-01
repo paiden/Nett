@@ -16,10 +16,10 @@
 
             var tt = new RootTable(config);
             var t = obj.GetType();
-            var props = t.GetProperties();
+            var props = config.GetSerializationProperties(t);
             var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach (var p in props.Where(check => !config.IsPropertyIgnored(t, check)))
+            foreach (var p in props)
             {
                 object val = p.GetValue(obj, null);
                 if (val != null)

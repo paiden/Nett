@@ -40,6 +40,24 @@ namespace Nett.UnitTests
             }
         }
 
+        public class ClassWithStaticProperty
+        {
+            public const string StaticPropertyValue = "ShouldNotGetSerialized";
+            public static string MyStaticProp { get; set; } = StaticPropertyValue;
+            public string MyProp { get; set; } = "MyProp";
+        }
+
+        [Fact(DisplayName = "Verify issue #15 was fixed: Serialization ignores static properties")]
+        public void WriteToml_WhenInputIsClassWithStaticProperty_StaticPropertyIsIgnored()
+        {
+            // Act
+            var str = Toml.WriteString(new ClassWithStaticProperty());
+
+            // Assert
+            str.Should().NotContain(ClassWithStaticProperty.StaticPropertyValue);
+        }
+
+
         [Fact(DisplayName = "Verify issue #14 was fixed: Array of tables serialization forgot parent key")]
         public void WriteWithArrayOfTables_ProducesCorrectToml()
         {

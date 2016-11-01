@@ -84,6 +84,12 @@
                 : TomlTable.TableTypes.Default;
         }
 
+        internal IEnumerable<PropertyInfo> GetSerializationProperties(Type t)
+        {
+            return t.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(pi => !this.IsPropertyIgnored(t, pi));
+        }
+
         internal bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
         {
             Assert(ownerType != null);
