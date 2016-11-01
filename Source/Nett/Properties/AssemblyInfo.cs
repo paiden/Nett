@@ -27,8 +27,8 @@ using System.Runtime.CompilerServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.6")]
-[assembly: AssemblyFileVersion("0.6.1")]
-[assembly: AssemblyInformationalVersion("0.6.1")]
+[assembly: AssemblyFileVersion("0.6.2")]
+[assembly: AssemblyInformationalVersion("0.6.2")]
 [assembly: CLSCompliant(true)]
 
 [assembly: InternalsVisibleTo("Nett.UnitTests.Internal")]
