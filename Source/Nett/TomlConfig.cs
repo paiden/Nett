@@ -98,24 +98,6 @@
             return pi != null && !this.IsPropertyIgnored(t, pi) ? pi : null;
         }
 
-        private bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
-        {
-            Assert(ownerType != null);
-            Assert(pi != null);
-
-            HashSet<string> ignored;
-
-            bool contained = UserTypeMetaData.IsPropertyIgnored(ownerType, pi);
-            if (contained) { return true; }
-
-            if (this.ignoredProperties.TryGetValue(ownerType, out ignored))
-            {
-                return ignored.Contains(pi.Name);
-            }
-
-            return false;
-        }
-
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);
 
@@ -134,6 +116,24 @@
 
         internal ITomlConverter TryGetToTomlConverter(Type fromType) =>
             this.converters.TryGetLatestToTomlConverter(fromType);
+
+        private bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
+        {
+            Assert(ownerType != null);
+            Assert(pi != null);
+
+            HashSet<string> ignored;
+
+            bool contained = UserTypeMetaData.IsPropertyIgnored(ownerType, pi);
+            if (contained) { return true; }
+
+            if (this.ignoredProperties.TryGetValue(ownerType, out ignored))
+            {
+                return ignored.Contains(pi.Name);
+            }
+
+            return false;
+        }
 
         private void AddConverter(ITomlConverter converter) =>
                                                                             this.converters.Add(converter);
