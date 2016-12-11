@@ -449,6 +449,15 @@ settings.Clear(s => s.IdleTimeout);
 ```
 
 # Changelog
+
+2016-12-11: **v0.6.2** *(TOML 0.4.0)*
+Nett:
++ Fix: Ignore static properties [#15](https://github.com/paiden/Nett/issues/15)
+
+2016-10-22: **v0.6.1** *(TOML 0.4.0)*
+Nett:
++ Fix: Array of tables serialization [#14](https://github.com/paiden/Nett/issues/14)
+
 2016-10-12: **v0.6.0** *(TOML 0.4.0)*
 
 Nett:
