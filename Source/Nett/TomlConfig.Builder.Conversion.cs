@@ -124,6 +124,7 @@
             // CLR -> TOML
             // * -> TomlInt
             new TomlConverter<ulong, TomlInt>((m, v) => new TomlInt(m, (long)v)),
+            new TomlConverter<uint, TomlInt>((m, v) => new TomlInt(m, v)),
             new TomlConverter<int, TomlInt>((m, v) => new TomlInt(m, v)),
             new TomlConverter<short, TomlInt>((m, v) => new TomlInt(m, v)),
             new TomlConverter<ushort, TomlInt>((m, v) => new TomlInt(m, v)),

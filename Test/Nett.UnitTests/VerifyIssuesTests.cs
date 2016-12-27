@@ -131,6 +131,24 @@ SomeValue = 5";
             parsed.MyFloat.Should().Be(123.0f);
         }
 
+        [Fact(DisplayName = "Verify issue #16 is fixed: Uint gets serialized correctly.")]
+        public void WriteToml_Issue16_Check()
+        {
+            // Arrange
+            var obj = new WithUint();
+
+            // Act
+            string output = Toml.WriteString(obj);
+
+            // Assert
+            output.Trim().Should().Be("Prop = 1"); 
+        }
+
+        public class WithUint
+        {
+            public uint Prop { get; set; } = 1;
+        }
+
         public class MyObject
         {
             public float MyFloat { get; set; }
