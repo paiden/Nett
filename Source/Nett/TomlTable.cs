@@ -159,12 +159,19 @@
 
             var result = this.Root.Config.GetActivatedInstance(t);
 
+            var conv = this.Root.Config.TryGetConverter(Types.TomlTableType, t);
+            if (conv != null)
+            {
+                return conv.Convert(this.Root, this, t);
+            }
+
             foreach (var r in this.rows)
             {
                 var targetProperty = this.Root.Config.TryGetMappingProperty(result.GetType(), r.Key);
                 if (targetProperty != null)
                 {
-                    MapTableRowToProperty(result, targetProperty, r, this.Root);
+                    Type keyMapingTargetType = this.Root.Config.TryGetMappedType(r.Key, targetProperty);
+                    targetProperty.SetValue(result, r.Value.Get(keyMapingTargetType ?? targetProperty.PropertyType), null);
                 }
             }
 
@@ -304,24 +311,6 @@
             foreach (var c in comments)
             {
                 obj.Comments.Add(new TomlComment(c.Comment, c.Location));
-            }
-        }
-
-        private static void MapTableRowToProperty(
-            object target, PropertyInfo property, KeyValuePair<string, TomlObject> tableRow, ITomlRoot root)
-        {
-            Type keyMapingTargetType = root.Config.TryGetMappedType(tableRow.Key, property);
-
-            var converter = root.Config.TryGetConverter(tableRow.Value.GetType(), property.PropertyType);
-            if (converter != null && keyMapingTargetType == null)
-            {
-                var src = tableRow.Value.Get(converter.FromType);
-                var val = converter.Convert(root, src, property.PropertyType);
-                property.SetValue(target, val, null);
-            }
-            else
-            {
-                property.SetValue(target, tableRow.Value.Get(keyMapingTargetType ?? property.PropertyType), null);
             }
         }
 

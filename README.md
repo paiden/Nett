@@ -451,8 +451,12 @@ settings.Clear(s => s.IdleTimeout);
 # Changelog
 
 XXXX-XX-XX: **v0.6.3** *(TOML 0.4.0)*
+
 Nett:
 + Fix: Serialize `uint` correctly [#16](https://github.com/paiden/Nett/issues/16)
+
+Coma:
++ Fix: Type conversions  [#17](https://github.com/paiden/Nett/issues/17)
 
 2016-12-11: **v0.6.2** *(TOML 0.4.0)*
 Nett:
