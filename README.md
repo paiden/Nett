@@ -450,7 +450,7 @@ settings.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-XXXX-XX-XX: **v0.6.3** *(TOML 0.4.0)*
+2017-04-20: **v0.6.3** *(TOML 0.4.0)*
 
 Nett:
 + Fix: Serialize `uint` correctly [#16](https://github.com/paiden/Nett/issues/16)
