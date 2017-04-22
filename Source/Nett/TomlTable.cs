@@ -241,7 +241,7 @@
             visitor.Visit(this);
         }
 
-        internal static TomlTable CreateFromClass<T>(ITomlRoot root, T obj, TableTypes tableType = TableTypes.Default)
+        internal static TomlTable CreateFromClass<T>(ITomlRoot root, T obj, TableTypes tableType)
             where T : class
         {
             if (root == null) { throw new ArgumentNullException(nameof(root)); }
@@ -268,7 +268,7 @@
             return tt;
         }
 
-        internal static TomlTable CreateFromDictionary(ITomlRoot root, IDictionary dict, TableTypes tableType = TableTypes.Default)
+        internal static TomlTable CreateFromDictionary(ITomlRoot root, IDictionary dict, TableTypes tableType)
         {
             if (root == null) { throw new ArgumentNullException(nameof(root)); }
             if (dict == null) { throw new ArgumentNullException(nameof(dict)); }

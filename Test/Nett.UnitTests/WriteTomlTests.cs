@@ -144,7 +144,7 @@ TheBool = false
         {
             var s = Toml.WriteString(new WithInlineTable());
 
-            s.Should().Be("Table = {Ival = 1, Sval = \"x\"}\r\n");
+            s.Should().Be("Table = { Ival = 1, Sval = \"x\" }\r\n");
         }
 
         [Fact]
@@ -160,7 +160,7 @@ TheBool = false
         {
             var s = Toml.WriteString(new MultipleInline());
 
-            s.Should().Be("Inline = {SubInline = {Ival = 1, Sval = \"x\"}}\r\n");
+            s.Should().Be("Inline = { SubInline = { Ival = 1, Sval = \"x\" } }\r\n");
         }
 
         [Fact]

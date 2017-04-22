@@ -77,11 +77,14 @@
             }
         }
 
-        internal TomlTable.TableTypes GetTableType(PropertyInfo pi)
+        internal TomlTable.TableTypes GetTableType(Type valType, PropertyInfo pi)
         {
+            if (this.inlineTableTypes.Contains(valType)) { return TomlTable.TableTypes.Inline; }
+
             if (pi == null) { return TomlTable.TableTypes.Default; }
 
-            return this.inlineTableTypes.Contains(pi.PropertyType) || pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute))
+            return this.inlineTableTypes.Contains(pi.PropertyType)
+                || pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute))
                 ? TomlTable.TableTypes.Inline
                 : TomlTable.TableTypes.Default;
         }

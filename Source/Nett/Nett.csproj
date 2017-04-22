@@ -125,7 +125,7 @@
     <Compile Include="UserTypeMetaData.cs" />
     <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Writer\TomlWriter.cs" />
-    <Compile Include="Writer\TomlInlineTableWriter.cs" />
+    <Compile Include="Writer\TomlTableWriter.Inline.cs" />
     <Compile Include="Writer\TomlTableWriter.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Util\FormattingStreamWriter.cs" />
