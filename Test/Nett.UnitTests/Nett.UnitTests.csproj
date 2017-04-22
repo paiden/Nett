@@ -104,6 +104,7 @@
     <Compile Include="TomlConfigTests.cs" />
     <Compile Include="Unit\TomlObjectFactoryTests.cs" />
     <Compile Include="Unit\TomlTableTests.cs" />
+    <Compile Include="Unit\TomlTests.cs" />
     <Compile Include="VerifyIssuesTests.cs" />
     <Compile Include="WriteTomlFileTests.cs" />
     <Compile Include="WriteTomlTests.cs" />

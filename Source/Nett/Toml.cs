@@ -7,12 +7,30 @@
     using Nett.Util;
     using Writer;
 
+    /// <summary>
+    /// Main Nett API access.
+    /// </summary>
     public static class Toml
     {
+        /// <summary>
+        /// The TOML standard file extension '.toml'.
+        /// </summary>
         public const string FileExtension = ".toml";
 
+        /// <summary>
+        /// Creates a empty TOML table.
+        /// </summary>
+        /// <returns>A empty table instance created with the default config.</returns>
+        /// <remarks>[!include[_](../specs/toml-create-remarks.md)]</remarks>
         public static TomlTable Create() => Create(TomlConfig.DefaultInstance);
 
+        /// <summary>
+        /// Creates a empty TOML table.
+        /// </summary>
+        /// <param name="config">The config to use, to create the table.</param>
+        /// <returns>A new empty table created with the given config.</returns>
+        /// <exception cref="ArgumentNullException">*config* is **null**.</exception>
+        /// <remarks>[!include[_](../specs/toml-create-remarks.md)]</remarks>
         public static TomlTable Create(TomlConfig config)
         {
             if (config == null) { throw new ArgumentNullException(nameof(config)); }
@@ -20,8 +38,29 @@
             return new TomlTable.RootTable(config);
         }
 
+        /// <summary>
+        /// Creates a new TOML table from a given CLR object.
+        /// </summary>
+        /// <typeparam name="T">The type of the CLR object.</typeparam>
+        /// <param name="obj">The CLR object instance for that the TOML table will be created.</param>
+        /// <returns>
+        /// A new TomlTable created with the default config, equivalent to the passed CLR object.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">*obj* is **null**.</exception>
+        /// <remarks>
+        /// [!include[_](../specs/toml-create-from-remarks.md)]
+        /// [!include[_](../specs/toml-create-remarks.md)]
+        /// </remarks>
         public static TomlTable Create<T>(T obj) => Create(obj, TomlConfig.DefaultInstance);
 
+        /// <summary>
+        /// Creates a TOML table from a given CLR object.
+        /// </summary>
+        /// <typeparam name="T">The type of the CLR object.</typeparam>
+        /// <param name="obj">The CLR object instance for that the TOML table will be created.</param>
+        /// <param name="config">The config to use for the creation.</param>
+        /// <returns>A new table representing the CLR object. The table is associated with the given config.</returns>
+        /// <remarks>[!include[_](../specs/toml-create-remarks.md)]</remarks>
         public static TomlTable Create<T>(T obj, TomlConfig config) => TomlTable.RootTable.From(config, obj);
 
         public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlConfig.DefaultInstance);

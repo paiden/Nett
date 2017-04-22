@@ -28,6 +28,8 @@
       {
         "files": [
           "articles/**.md",
+          "gettingstarted/**.md",
+          "gettingstarted/**/toc.yml",
           "articles/**/toc.yml",
           "toc.yml",
           "*.md"
@@ -52,7 +54,8 @@
     "overwrite": [
       {
         "files": [
-          "apidoc/**.md"
+          "apidoc/**.md",
+          "specs/*.md"
         ],
         "exclude": [
           "obj/**",
