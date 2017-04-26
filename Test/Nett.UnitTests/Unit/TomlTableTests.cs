@@ -20,7 +20,7 @@ namespace Nett.UnitTests.Unit
                 scenario.Table.Freeze();
 
                 // Assert
-                Action a = () => scenario.Table.Add("new", 0.0);
+                Action a = () => scenario.Table.AddValue("new", 0.0);
                 a.ShouldThrow<InvalidOperationException>().WithMessage("*frozen*");
             }
         }
@@ -34,7 +34,7 @@ namespace Nett.UnitTests.Unit
                 scenario.Table.Freeze();
 
                 // Assert
-                Action a = () => scenario.SubTable.Add("new", 0);
+                Action a = () => scenario.SubTable.AddValue("new", 0);
                 a.ShouldThrow<InvalidOperationException>().WithMessage("*frozen*");
             }
         }
@@ -72,7 +72,7 @@ namespace Nett.UnitTests.Unit
         {
             get
             {
-                yield return new object[] { "Add", (Action<TomlTable>)((tt) => tt.Add("xujsj", 0)) };
+                yield return new object[] { "Add", (Action<TomlTable>)((tt) => tt.AddValue("xujsj", 0)) };
                 yield return new object[] { "Remove", (Action<TomlTable>)((tt) => tt.Remove(MultiLevelTableScenario.RootXKey)) };
                 yield return new object[] { "RemoveKvp", (Action<TomlTable>)((tt) => tt.Remove(new KeyValuePair<string, TomlObject>(MultiLevelTableScenario.RootXKey, null))) };
                 yield return new object[] { "Clear", (Action<TomlTable>)((tt) => tt.Clear()) };

@@ -453,6 +453,7 @@ settings.Clear(s => s.IdleTimeout);
 XXXX-XX-XX: **v0.7.0** *(TOML 0.4.0)*
 
 Nett: 
++ Add: Factory methods to allow generic construction of TOML object graphs [#21](https://github.com/paiden/Nett/issues/21)
 + Fix: Write key back to file with same type [#23](https://github.com/paiden/Nett/issues/23)
 
 2017-04-20: **v0.6.3** *(TOML 0.4.0)*

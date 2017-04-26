@@ -10,55 +10,6 @@
 
     using static System.Diagnostics.Debug;
 
-    public static class TomlTableExtensions
-    {
-        public static TomlTable Add(this TomlTable table, string key, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
-        {
-            var t = new TomlTable(table.Root, tableType);
-            table.AddRow(new TomlKey(key), t);
-            return t;
-        }
-
-        public static TomlInt Add(this TomlTable table, string key, int value)
-        {
-            var i = new TomlInt(table.Root, value);
-            table.AddRow(new TomlKey(key), i);
-            return i;
-        }
-
-        public static TomlFloat Add(this TomlTable table, string key, double value)
-        {
-            var f = new TomlFloat(table.Root, value);
-            table.AddRow(new TomlKey(key), f);
-            return f;
-        }
-
-        public static TomlString Add(this TomlTable table, string key, string value)
-        {
-            var s = new TomlString(table.Root, value);
-            table.AddRow(new TomlKey(key), s);
-            return s;
-        }
-
-        public static TomlArray Add(this TomlTable table, string key, params long[] values)
-        {
-            var a = new TomlArray(table.Root, values.Select(v => new TomlInt(table.Root, v)).ToArray());
-            table.AddRow(new TomlKey(key), a);
-            return a;
-        }
-
-        public static TomlTable Add<T>(
-            this TomlTable table, string key, T obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
-            where T : class
-        {
-            if (obj is TomlTable) { throw new InvalidOperationException("Cannot add TOML table to table. Use TomlTable.Add(string) to add a new empty sub table."); }
-
-            var t = TomlTable.CreateFromClass(table.Root, obj, tableType);
-            table.AddRow(new TomlKey(key), t);
-            return t;
-        }
-    }
-
     public partial class TomlTable : TomlObject, IDictionary<string, TomlObject>
     {
         private readonly Dictionary<TomlKey, TomlObject> rows = new Dictionary<TomlKey, TomlObject>();

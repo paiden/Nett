@@ -39,7 +39,7 @@ namespace Nett.Coma.Tests
             var main = TestData.TestAppSettings.GlobalSettings;
             var userSettings = TestData.TestAppSettings.User1Settings;
             var user = Toml.Create();
-            user.Add(nameof(main.User), userSettings);
+            user.AddTableFromClass(nameof(main.User), userSettings);
 
             // Act
             Toml.WriteFile(main, mainFile);

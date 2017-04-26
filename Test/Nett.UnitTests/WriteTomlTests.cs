@@ -14,7 +14,7 @@ namespace Nett.UnitTests
         {
             // Arrange
             var tt = Toml.Create();
-            tt.Add("TheFloat", 1.2);
+            tt.AddValue("TheFloat", 1.2);
 
             // Act
             var s = Toml.WriteString(tt);
