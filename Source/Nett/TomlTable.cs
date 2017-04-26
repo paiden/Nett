@@ -57,9 +57,18 @@
         private volatile bool isFrozen = false;
 
         internal TomlTable(ITomlRoot root, TableTypes tableType = TableTypes.Default)
+            : this(root, Enumerable.Empty<KeyValuePair<string, TomlObject>>(), tableType)
+        {
+        }
+
+        internal TomlTable(ITomlRoot root, IEnumerable<KeyValuePair<string, TomlObject>> pairs, TableTypes tableType = TableTypes.Default)
             : base(root)
         {
             this.TableType = tableType;
+            foreach (var pair in pairs)
+            {
+                this.rows.Add(pair.Key, pair.Value);
+            }
         }
 
         public enum TableTypes
