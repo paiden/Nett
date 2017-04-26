@@ -98,6 +98,7 @@
     <Compile Include="TomlConfig.Builder.Conversion.cs">
       <DependentUpon>TomlConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="TomlObjectFactory.cs" />
     <Compile Include="TomlTable.RootTable.cs" />
     <Compile Include="TomlTableToDictionaryConverter.cs" />
     <Compile Include="Toml.cs" />
