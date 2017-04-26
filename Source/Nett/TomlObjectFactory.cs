@@ -43,7 +43,7 @@ namespace Nett
 
         public static TomlTable CreateTable(this TomlObject rootSource, IEnumerable<KeyValuePair<string, TomlObject>> values)
         {
-            return new TomlTable(rootSource.Root, TomlTable.TableTypes.Default);
+            return new TomlTable(rootSource.Root, values, TomlTable.TableTypes.Default);
         }
 
         public static TomlTableArray CreateTableArray(this TomlObject rootSource, IEnumerable<TomlTable> values)
