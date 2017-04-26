@@ -93,13 +93,12 @@ namespace Nett.UnitTests
         private TomlTable CreateComplex()
         {
             var t = Toml.Create();
-            var tt = Toml.Create();
+            var tt = t.Add("SubTable");
             t.Add("I", 1);
             t.Add("F", 1.0);
 
             tt.Add("A", 1, 2, 3);
 
-            t.Add("SubTable", tt);
             return t;
         }
 

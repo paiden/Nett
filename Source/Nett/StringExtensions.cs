@@ -1,11 +1,11 @@
 ﻿namespace Nett
 {
-    using System;
     using System.Globalization;
     using System.IO;
     using System.Text;
     using System.Text.RegularExpressions;
     using Nett.Parser;
+    using Nett.Parser.Matchers;
 
     internal static class StringExtensions
     {
@@ -56,6 +56,19 @@
         public static string TrimNChars(this string s, int n)
         {
             return s.Substring(0, s.Length - n).Substring(n);
+        }
+
+        public static bool HasBareKeyCharsOnly(this string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (!s[i].IsBareKeyChar())
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static string Unescape(this string src, Token tkn)

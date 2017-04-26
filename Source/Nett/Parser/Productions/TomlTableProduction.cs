@@ -4,10 +4,10 @@
 
     internal static class TomlTableProduction
     {
-        public static IList<string> Apply(TokenBuffer tokens)
+        public static IList<TomlKey> Apply(TokenBuffer tokens)
         {
             tokens.ExpectAndConsume(TokenType.LBrac);
-            IList<string> tableKeyChain = TableKeyProduction.Apply(tokens);
+            IList<TomlKey> tableKeyChain = TableKeyProduction.Apply(tokens);
             tokens.ExpectAndConsume(TokenType.RBrac);
 
             if (!tokens.TryExpectAndConsume(TokenType.NewLine) && !tokens.TryExpectAndConsume(TokenType.Comment) && !tokens.End)
@@ -20,6 +20,6 @@
             return tableKeyChain;
         }
 
-        public static IList<string> TryApply(TokenBuffer tokens) => !tokens.TryExpect(TokenType.LBrac) ? null : Apply(tokens);
+        public static IList<TomlKey> TryApply(TokenBuffer tokens) => !tokens.TryExpect(TokenType.LBrac) ? null : Apply(tokens);
     }
 }

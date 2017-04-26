@@ -4,7 +4,7 @@
 
     internal static class KeyValuePairProduction
     {
-        public static Tuple<string, TomlObject> Apply(ITomlRoot root, TokenBuffer tokens)
+        public static Tuple<TomlKey, TomlObject> Apply(ITomlRoot root, TokenBuffer tokens)
         {
             var key = KeyProduction.Apply(tokens);
 
@@ -13,13 +13,13 @@
             var inlineTableArray = InlineTableArrayProduction.TryApply(root, tokens);
             if (inlineTableArray != null)
             {
-                return new Tuple<string, TomlObject>(key, inlineTableArray);
+                return new Tuple<TomlKey, TomlObject>(key, inlineTableArray);
             }
 
             var inlineTable = InlineTableProduction.TryApply(root, tokens);
             if (inlineTable != null)
             {
-                return new Tuple<string, TomlObject>(key, inlineTable);
+                return new Tuple<TomlKey, TomlObject>(key, inlineTable);
             }
 
             var value = ValueProduction.Apply(root, tokens);

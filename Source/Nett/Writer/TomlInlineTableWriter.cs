@@ -14,14 +14,14 @@
             {
             }
 
-            public void WriteInlineTable(string key, TomlTable table)
+            public void WriteInlineTable(TomlKey key, TomlTable table)
             {
                 this.WritePrependComments(table);
 
-                this.writer.Write(key);
+                this.writer.Write(key.ToString());
                 this.writer.Write(" = {");
 
-                var rows = table.Rows.ToArray();
+                var rows = table.InternalRows.ToArray();
 
                 for (int i = 0; i < rows.Length - 1; i++)
                 {
@@ -38,7 +38,7 @@
                 this.WriteAppendComments(table);
             }
 
-            private void WriteTableRow(KeyValuePair<string, TomlObject> r)
+            private void WriteTableRow(KeyValuePair<TomlKey, TomlObject> r)
             {
                 if (r.Value.TomlType == TomlObjectType.Array)
                 {

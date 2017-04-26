@@ -86,7 +86,6 @@
     <Compile Include="Parser\Productions\KeyValuePairProduction.cs" />
     <Compile Include="Parser\Productions\TableKeyProduction.cs" />
     <Compile Include="Parser\Productions\TomlArrayTableProduction .cs" />
-    <Compile Include="Parser\Productions\TomlKey.cs" />
     <Compile Include="Parser\Productions\TomlTableProduction.cs" />
     <Compile Include="Parser\Productions\ValueProduction.cs" />
     <Compile Include="Parser\Token.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="TomlConfig.Builder.Conversion.cs">
       <DependentUpon>TomlConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="TomlKey.cs" />
     <Compile Include="TomlTable.RootTable.cs" />
     <Compile Include="TomlTableToDictionaryConverter.cs" />
     <Compile Include="Toml.cs" />

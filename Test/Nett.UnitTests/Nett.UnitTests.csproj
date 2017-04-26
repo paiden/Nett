@@ -76,6 +76,7 @@
     <Compile Include="EnumConversionTests.cs" />
     <Compile Include="Functional\IgnorePropertyTests.cs" />
     <Compile Include="Functional\ParserErrorMessageTests.cs" />
+    <Compile Include="Functional\ReadInWriteOutTests.cs" />
     <Compile Include="Plugins\DictRootConfig.cs" />
     <Compile Include="Plugins\ObjRootConfig.cs" />
     <Compile Include="Plugins\PluginConfigWithIntDict.cs" />

@@ -4,9 +4,9 @@
 
     internal static class TableKeyProduction
     {
-        public static IList<string> Apply(TokenBuffer tokens)
+        public static IList<TomlKey> Apply(TokenBuffer tokens)
         {
-            List<string> keyChain = new List<string>();
+            List<TomlKey> keyChain = new List<TomlKey>();
             var key = KeyProduction.Apply(tokens);
             keyChain.Add(key);
 
