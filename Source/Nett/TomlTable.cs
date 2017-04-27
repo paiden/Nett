@@ -67,7 +67,7 @@
             this.TableType = tableType;
             foreach (var pair in pairs)
             {
-                this.rows.Add(pair.Key, pair.Value);
+                this.rows.Add(new TomlKey(pair.Key), pair.Value);
             }
         }
 
