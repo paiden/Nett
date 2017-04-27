@@ -20,16 +20,16 @@
             this.writer.Flush();
         }
 
-        private static string CombineKey(string parent, string key) => parent + key + ".";
+        private static string CombineKey(string parent, TomlKey key) => parent + key.ToString() + ".";
 
-        private void WriteKeyedValueWithComments(KeyValuePair<string, TomlObject> row)
+        private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row)
         {
             this.WritePrependComments(row.Value);
             this.WriteKeyedValue(row);
             this.WriteAppendComments(row.Value);
         }
 
-        private void WriteNormalTomlTable(string parentKey, string key, TomlTable table)
+        private void WriteNormalTomlTable(string parentKey, TomlKey key, TomlTable table)
         {
             this.WritePrependComments(table);
             this.writer.Write('[');
@@ -38,20 +38,20 @@
             this.writer.WriteLine();
             this.WriteAppendComments(table);
 
-            foreach (var r in table.Rows)
+            foreach (var r in table.InternalRows)
             {
-                this.WriteTableRow(parentKey + key + ".", r);
+                this.WriteTableRow(CombineKey(parentKey, key), r);
             }
         }
 
-        private void WriteTomlArrayWithComments(string key, TomlArray array)
+        private void WriteTomlArrayWithComments(TomlKey key, TomlArray array)
         {
             this.WritePrependComments(array);
             this.WriteArray(key, array);
             this.WriteAppendComments(array);
         }
 
-        private void WriteTableRow(string parentKey, KeyValuePair<string, TomlObject> r)
+        private void WriteTableRow(string parentKey, KeyValuePair<TomlKey, TomlObject> r)
         {
             this.WritePrependNewlines(r.Value);
 
@@ -70,19 +70,19 @@
         {
             Assert(table != null);
 
-            foreach (var r in table.Rows)
+            foreach (var r in table.InternalRows)
             {
                 this.WriteTableRow(parentKey, r);
             }
         }
 
-        private void WriteTomlInlineTable(string parentKey, string key, TomlTable table)
+        private void WriteTomlInlineTable(string parentKey, TomlKey key, TomlTable table)
         {
             var inlineWriter = new TomlInlineTableWriter(this.writer, this.config);
             inlineWriter.WriteInlineTable(key, table);
         }
 
-        private void WriteTomlTable(string parentKey, string key, TomlTable table)
+        private void WriteTomlTable(string parentKey, TomlKey key, TomlTable table)
         {
             switch (table.TableType)
             {
@@ -91,14 +91,14 @@
             }
         }
 
-        private void WriteTomlTableArray(string parentKey, string key, TomlTableArray tableArray)
+        private void WriteTomlTableArray(string parentKey, TomlKey key, TomlTableArray tableArray)
         {
             this.WritePrependComments(tableArray);
 
             foreach (var t in tableArray.Items)
             {
                 this.writer.Write("[[");
-                this.writer.Write(parentKey + key);
+                this.writer.Write(parentKey + key.ToString());
                 this.writer.Write("]]");
                 this.writer.WriteLine();
                 this.WriteAppendComments(tableArray);

@@ -2,14 +2,24 @@
 {
     internal static class KeyProduction
     {
-        public static string Apply(TokenBuffer tokens) => ApplyInternal(tokens, required: true);
+        public static TomlKey Apply(TokenBuffer tokens) => ApplyInternal(tokens, required: true);
 
-        public static string TryApply(TokenBuffer tokens) => ApplyInternal(tokens, required: false);
+        public static TomlKey TryApply(TokenBuffer tokens) => ApplyInternal(tokens, required: false);
 
-        private static string ApplyInternal(TokenBuffer tokens, bool required)
+        private static TomlKey ApplyInternal(TokenBuffer tokens, bool required)
         {
-            if (tokens.TryExpect(TokenType.BareKey) || tokens.TryExpect(TokenType.Integer)) { return tokens.Consume().value; }
-            else if (tokens.TryExpect(TokenType.String)) { return tokens.Consume().value.Replace("\"", string.Empty); }
+            if (tokens.TryExpect(TokenType.BareKey) || tokens.TryExpect(TokenType.Integer))
+            {
+                return new TomlKey(tokens.Consume().value, TomlKey.KeyType.Bare);
+            }
+            else if (tokens.TryExpect(TokenType.String))
+            {
+                return new TomlKey(tokens.Consume().value.TrimNChars(1), TomlKey.KeyType.Basic);
+            }
+            else if (tokens.TryExpect(TokenType.LiteralString))
+            {
+                return new TomlKey(tokens.Consume().value.TrimNChars(1), TomlKey.KeyType.Literal);
+            }
             else if (required)
             {
                 var t = tokens.Peek();
@@ -24,7 +34,7 @@
             }
             else
             {
-                return null;
+                return new TomlKey(string.Empty);
             }
         }
     }

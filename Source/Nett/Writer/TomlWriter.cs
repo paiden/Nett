@@ -35,9 +35,9 @@
             }
         }
 
-        protected void WriteArray(string key, TomlArray array)
+        protected void WriteArray(TomlKey key, TomlArray array)
         {
-            this.writer.Write(key);
+            this.writer.Write(key.ToString());
             this.writer.Write(" = [");
 
             for (int i = 0; i < array.Items.Length - 1; i++)
@@ -54,9 +54,9 @@
             this.writer.Write(']');
         }
 
-        protected void WriteKeyedValue(KeyValuePair<string, TomlObject> kvp)
+        protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp)
         {
-            this.writer.Write(kvp.Key);
+            this.writer.Write(kvp.Key.ToString());
             this.writer.Write(" = ");
             this.WriteValue(kvp.Value);
         }

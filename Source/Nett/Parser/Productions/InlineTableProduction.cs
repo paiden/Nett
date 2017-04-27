@@ -11,13 +11,13 @@
             if (!tokens.TryExpect(TokenType.RBrac))
             {
                 var kvp = KeyValuePairProduction.Apply(root, tokens);
-                inlineTable.Add(kvp.Item1, kvp.Item2);
+                inlineTable.AddRow(kvp.Item1, kvp.Item2);
 
                 while (tokens.TryExpect(TokenType.Comma))
                 {
                     tokens.Consume();
                     kvp = KeyValuePairProduction.Apply(root, tokens);
-                    inlineTable.Add(kvp.Item1, kvp.Item2);
+                    inlineTable.AddRow(kvp.Item1, kvp.Item2);
                 }
             }
 

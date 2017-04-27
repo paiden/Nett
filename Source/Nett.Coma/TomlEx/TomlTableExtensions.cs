@@ -112,13 +112,13 @@
 
             TomlTable cloned = Toml.Create(input.Root.Config);
 
-            foreach (var r in input.Rows)
+            foreach (var r in input.InternalRows)
             {
                 switch (r.Value.TomlType)
                 {
-                    case TomlObjectType.Table: cloned.Add(r.Key, ((TomlTable)r.Value).Clone()); break;
-                    case TomlObjectType.ArrayOfTables: cloned.Add(r.Key, ((TomlTableArray)r.Value).Clone()); break;
-                    default: cloned[r.Key] = r.Value; break;
+                    case TomlObjectType.Table: cloned.AddRow(r.Key, ((TomlTable)r.Value).Clone()); break;
+                    case TomlObjectType.ArrayOfTables: cloned.AddRow(r.Key, ((TomlTableArray)r.Value).Clone()); break;
+                    default: cloned[r.Key.Value] = r.Value; break;
                 }
             }
 

@@ -44,18 +44,18 @@
 
                 var addTo = GetTargetTable(root, tableKeyChain, CreateImplicitelyType.Table);
 
-                string name = tableKeyChain.Last();
-                var existingRow = addTo.TryGetValue(name);
+                var key = tableKeyChain.Last();
+                var existingRow = addTo.TryGetValue(key);
                 if (existingRow == null)
                 {
-                    addTo.Add(name, newTable);
+                    addTo.AddRow(key, newTable);
                 }
                 else
                 {
                     var tbl = existingRow as TomlTable;
                     if (tbl.IsDefined)
                     {
-                        throw new Exception($"Failed to add new table because the target table already contains a row with the key '{name}' of type '{existingRow.ReadableTypeName}'.");
+                        throw new Exception($"Failed to add new table because the target table already contains a row with the key '{key}' of type '{existingRow.ReadableTypeName}'.");
                     }
                     else
                     {
@@ -75,7 +75,7 @@
                     kvp.Item2.Comments.AddRange(preComments);
                     kvp.Item2.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
-                    current.Add(kvp.Item1, kvp.Item2);
+                    current.AddRow(kvp.Item1, kvp.Item2);
                     return current;
                 }
             }
@@ -85,9 +85,9 @@
             return null;
         }
 
-        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, string name, Token errorPosition)
+        private static TomlTableArray GetExistingOrCreateAndAdd(TomlTable target, TomlKey key, Token errorPosition)
         {
-            TomlObject existing = target.TryGetValue(name);
+            TomlObject existing = target.TryGetValue(key);
 
             var typed = existing as TomlTableArray;
 
@@ -95,7 +95,7 @@
             {
                 throw Parser.CreateParseError(
                     errorPosition,
-                    $"Cannot create array of tables with name '{name}' because there already is an row with that key of type '{existing.ReadableTypeName}'.");
+                    $"Cannot create array of tables with key '{key}' because there already is an row with that key of type '{existing.ReadableTypeName}'.");
             }
             else if (typed != null)
             {
@@ -103,38 +103,38 @@
             }
 
             var newTableArray = new TomlTableArray(target.Root);
-            target.Add(name, newTableArray);
+            target.AddRow(key, newTableArray);
 
             return newTableArray;
         }
 
-        private static TomlTable GetExistingOrCreateAndAddTable(TomlTable tbl, string key)
+        private static TomlTable GetExistingOrCreateAndAddTable(TomlTable tbl, TomlKey key)
         {
             Func<TomlTable, TomlTable> createNew = (e) =>
                 {
                     var newTable = new TomlTable(tbl.Root);
-                    tbl.Add(key, newTable);
+                    tbl.AddRow(key, newTable);
                     return newTable;
                 };
 
             return GetExistinOrCreateAndAdd(tbl, key, createNew);
         }
 
-        private static TomlTable GetExistingOrCreateAndAddTableArray(TomlTable tbl, string key)
+        private static TomlTable GetExistingOrCreateAndAddTableArray(TomlTable tbl, TomlKey key)
         {
             Func<TomlTable, TomlTable> createNew = (e) =>
             {
                 var array = new TomlTableArray(tbl.Root);
                 var newTable = new TomlTable(tbl.Root);
                 array.Add(newTable);
-                tbl.Add(key, array);
+                tbl.AddRow(key, array);
                 return newTable;
             };
 
             return GetExistinOrCreateAndAdd(tbl, key, createNew);
         }
 
-        private static TomlTable GetExistinOrCreateAndAdd(TomlTable tbl, string key, Func<TomlTable, TomlTable> createNewItem)
+        private static TomlTable GetExistinOrCreateAndAdd(TomlTable tbl, TomlKey key, Func<TomlTable, TomlTable> createNewItem)
         {
             var existingTargetTable = TryGetTableEntry(tbl.TryGetValue(key));
             if (existingTargetTable != null)
@@ -145,7 +145,7 @@
             return createNewItem(tbl);
         }
 
-        private static TomlTable GetTargetTable(TomlTable root, IList<string> keyChain, CreateImplicitelyType ct)
+        private static TomlTable GetTargetTable(TomlTable root, IList<TomlKey> keyChain, CreateImplicitelyType ct)
         {
             var tgt = root;
             for (int i = 0; i < keyChain.Count - 1; i++)
