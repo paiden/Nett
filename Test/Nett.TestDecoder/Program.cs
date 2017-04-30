@@ -22,8 +22,6 @@ namespace Nett.TestDecoder
                 var json = conv.Convert(t);
                 writer.Write(json);
 
-                Console.WriteLine(json);
-
                 return 0;
             }
             catch (Exception exc)
