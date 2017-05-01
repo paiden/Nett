@@ -48,5 +48,13 @@ namespace Nett.UnitTests.Functional
 
             s.Should().Be(InlineDictViaAttribute.TwoItemsSerialized);
         }
+
+        [Fact]
+        public void Write_GivenItemsThatAreInlinedViaClassAttribute_WritesThatItemsAsInlineStructures()
+        {
+            var s = Toml.WriteString(InlineArrayAttributeOnItem.TwoItems);
+
+            s.Should().Be(InlineArrayAttributeOnItem.TowItemsSerialized);
+        }
     }
 }

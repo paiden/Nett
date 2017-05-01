@@ -7,6 +7,21 @@ namespace Nett.UnitTests.Functional
     /// </summary>
     public sealed partial class InlineTableTests
     {
+        public class InlineArrayAttributeOnItem
+        {
+            public const string TowItemsSerialized = @"
+Items = [ { SVal = ""X"", BVal = true, IVal = 1 },
+          { SVal = ""Y"", BVal = false, IVal = 2 } ]
+";
+
+            public static readonly InlineArrayAttributeOnItem TwoItems = new InlineArrayAttributeOnItem()
+            {
+                Items = new List<AttItem>() { AttItem.Item1, AttItem.Item2 }
+            };
+
+            public List<AttItem> Items { get; set; } = new List<AttItem>();
+        }
+
         public class InlineDictViaAttribute
         {
             public const string TwoItemsSerialized = @"Dict = { First = { SVal = ""X"", BVal = true, IVal = 1 }, Second = { SVal = ""Y"", BVal = false, IVal = 2 } }
@@ -47,7 +62,7 @@ Second = { SVal = ""Y"", BVal = false, IVal = 2 }
             public const string ExpectedTwoItems = @"
 TblArray = [ { SVal = ""X"", BVal = true, IVal = 1 },
              { SVal = ""Y"", BVal = false, IVal = 2 } ]
-";  
+";
 
             public static readonly InlineArray Empty = new InlineArray();
             public static readonly InlineArray TwoItems = new InlineArray()
@@ -67,6 +82,13 @@ TblArray = [ { SVal = ""X"", BVal = true, IVal = 1 },
             public string SVal { get; set; } = "X";
             public bool BVal { get; set; } = true;
             public int IVal { get; set; } = 1;
+        }
+
+        [TomlInlineTable]
+        public class AttItem : Item
+        {
+            public static readonly AttItem Item1 = new AttItem() { SVal = "X", BVal = true, IVal = 1 };
+            public static readonly AttItem Item2 = new AttItem() { SVal = "Y", BVal = false, IVal = 2 };
         }
     }
 }

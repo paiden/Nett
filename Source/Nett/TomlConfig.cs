@@ -79,7 +79,11 @@
 
         internal TomlTable.TableTypes GetTableType(Type valType, PropertyInfo pi)
         {
-            if (this.inlineTableTypes.Contains(valType)) { return TomlTable.TableTypes.Inline; }
+            if (this.inlineTableTypes.Contains(valType)
+                || valType.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute)))
+            {
+                return TomlTable.TableTypes.Inline;
+            }
 
             if (pi == null) { return TomlTable.TableTypes.Default; }
 
