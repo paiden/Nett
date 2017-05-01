@@ -113,7 +113,7 @@
     <Compile Include="TomlConverterBase.cs" />
     <Compile Include="TomlDateTime.cs" />
     <Compile Include="TomlFloat.cs" />
-    <Compile Include="TomlInlineTableAttribute.cs" />
+    <Compile Include="TreatAsInlineTableAttribute.cs" />
     <Compile Include="TomlInt.cs" />
     <Compile Include="TomlObject.cs" />
     <Compile Include="TomlString.cs" />

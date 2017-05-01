@@ -77,20 +77,15 @@
             }
         }
 
-        internal TomlTable.TableTypes GetTableType(Type valType, PropertyInfo pi)
+        internal TomlTable.TableTypes GetTableType(Type valType)
         {
             if (this.inlineTableTypes.Contains(valType)
-                || valType.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute)))
+                || valType.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TreatAsInlineTableAttribute)))
             {
                 return TomlTable.TableTypes.Inline;
             }
 
-            if (pi == null) { return TomlTable.TableTypes.Default; }
-
-            return this.inlineTableTypes.Contains(pi.PropertyType)
-                || pi.GetCustomAttributes(false).Any((a) => a.GetType() == typeof(TomlInlineTableAttribute))
-                ? TomlTable.TableTypes.Inline
-                : TomlTable.TableTypes.Default;
+            return TomlTable.TableTypes.Default;
         }
 
         internal IEnumerable<PropertyInfo> GetSerializationProperties(Type t)

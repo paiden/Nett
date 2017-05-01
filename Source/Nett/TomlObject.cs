@@ -56,7 +56,7 @@
             }
             else if (val as IDictionary != null)
             {
-                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Config.GetTableType(t, pi));
+                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Config.GetTableType(t));
             }
             else if (t != Types.StringType && (val as IEnumerable) != null)
             {
@@ -64,7 +64,7 @@
             }
             else
             {
-                var tableType = root.Config.GetTableType(t, pi);
+                var tableType = root.Config.GetTableType(t);
                 return TomlTable.CreateFromClass(root, val, tableType);
             }
         }
@@ -106,7 +106,7 @@
                 else
                 {
                     return new TomlTableArray(root, e.Select((o) =>
-                        TomlTable.CreateFromClass(root, o, root.Config.GetTableType(et, null))));
+                        TomlTable.CreateFromClass(root, o, root.Config.GetTableType(et))));
                 }
             }
 

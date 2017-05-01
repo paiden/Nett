@@ -8,17 +8,9 @@ namespace Nett.UnitTests.Functional
         [Fact]
         public void Read_WhenStringContainsDictWithInlineTables_ProducesCorrectInMemoryStructure()
         {
-            var read = Toml.ReadString<InlineDict>(InlineDict.Expected);
+            var read = Toml.ReadString<ItemDict>(ItemDict.TwoItemsInlineSerialzed);
 
-            read.SouldBeEqualByJsonCompare(new InlineDict());
-        }
-
-        [Fact]
-        public void Read_GivenSerialzedContent_WhenReadIntoAttributedDataStructure_ProducesCorrectInMemoryRepresenation()
-        {
-            var read = Toml.ReadString<InlineDict>(InlineDictViaAttribute.TwoItemsSerialized);
-
-            read.SouldBeEqualByJsonCompare(InlineDictViaAttribute.TwoItems);
+            read.SouldBeEqualByJsonCompare(ItemDict.TwoItems);
         }
     }
 }

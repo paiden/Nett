@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.UnitTests.Functional
@@ -12,9 +13,21 @@ namespace Nett.UnitTests.Functional
                 cfg.ConfigureType<Item>(type =>
                     type.TreatAsInlineTable()));
 
-            var s = Toml.WriteString(new InlineDict(), config);
+            var s = Toml.WriteString(ItemDict.TwoItems, config);
 
-            s.Should().Be(InlineDict.Expected);
+            s.Should().Be(ItemDict.TwoItemsInlineSerialzed);
+        }
+
+        [Fact]
+        public void Write_WhenDictIsMarkedAsInline_WritesDictAsInlineAndItemsAutomaticallyAsNestedInlineTables()
+        {
+            var config = TomlConfig.Create(cfg =>
+                cfg.ConfigureType<Dictionary<string, Item>>(type =>
+                    type.TreatAsInlineTable()));
+
+            var s = Toml.WriteString(ItemDict.TwoItems, config);
+
+            s.Should().Be(ItemDict.TwoItemsDictInlineSerialized);
         }
 
         [Fact]
@@ -41,13 +54,7 @@ namespace Nett.UnitTests.Functional
             s.Should().Be(InlineArray.ExpectedTwoItems);
         }
 
-        [Fact]
-        public void Write_GivenRootItemThatInlinesDictViaPropertyAttribute_WritesTheDictAndItemsAsInlineItems()
-        {
-            var s = Toml.WriteString(InlineDictViaAttribute.TwoItems);
 
-            s.Should().Be(InlineDictViaAttribute.TwoItemsSerialized);
-        }
 
         [Fact]
         public void Write_GivenItemsThatAreInlinedViaClassAttribute_WritesThatItemsAsInlineStructures()

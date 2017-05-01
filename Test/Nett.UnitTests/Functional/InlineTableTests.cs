@@ -16,42 +16,33 @@ Items = [ { SVal = ""X"", BVal = true, IVal = 1 },
 
             public static readonly InlineArrayAttributeOnItem TwoItems = new InlineArrayAttributeOnItem()
             {
-                Items = new List<AttItem>() { AttItem.Item1, AttItem.Item2 }
+                Items = new List<AttItem>() { AttItem.AttItem1, AttItem.AttItem2 }
             };
 
             public List<AttItem> Items { get; set; } = new List<AttItem>();
         }
 
-        public class InlineDictViaAttribute
+        public class ItemDict
         {
-            public const string TwoItemsSerialized = @"Dict = { First = { SVal = ""X"", BVal = true, IVal = 1 }, Second = { SVal = ""Y"", BVal = false, IVal = 2 } }
-";
-            public static InlineDictViaAttribute TwoItems = new InlineDictViaAttribute()
-            {
-                Dict = new Dictionary<string, Item>()
-                {
-                    { "First", new Item() { SVal = "X", BVal = true, IVal = 1 } },
-                    { "Second", new Item() { SVal = "Y", BVal = false, IVal = 2 }},
-                }
-            };
-
-            [TomlInlineTable]
-            public Dictionary<string, Item> Dict { get; set; } = new Dictionary<string, Item>();
-        }
-
-        public class InlineDict
-        {
-            public const string Expected = @"
+            public const string TwoItemsInlineSerialzed = @"
 [Dict]
 First = { SVal = ""X"", BVal = true, IVal = 1 }
 Second = { SVal = ""Y"", BVal = false, IVal = 2 }
 ";
+            public const string TwoItemsDictInlineSerialized = @"Dict = { First = { SVal = ""X"", BVal = true, IVal = 1 }, Second = { SVal = ""Y"", BVal = false, IVal = 2 } }
+";
 
-            public Dictionary<string, Item> Dict { get; set; } = new Dictionary<string, Item>()
+
+            public static readonly ItemDict TwoItems = new ItemDict()
             {
-                { "First", new Item() { SVal = "X", BVal = true, IVal = 1 } },
-                { "Second", new Item() { SVal = "Y", BVal = false, IVal = 2 }},
+                Dict = new Dictionary<string, Item>()
+                {
+                    { "First", Item.Item1 },
+                    { "Second", Item.Item2 },
+                }
             };
+
+            public Dictionary<string, Item> Dict { get; set; } = new Dictionary<string, Item>();
         }
 
         public class InlineArray
@@ -67,11 +58,7 @@ TblArray = [ { SVal = ""X"", BVal = true, IVal = 1 },
             public static readonly InlineArray Empty = new InlineArray();
             public static readonly InlineArray TwoItems = new InlineArray()
             {
-                TblArray = new List<Item>()
-                {
-                    new Item() { SVal = "X", BVal = true, IVal = 1 },
-                    new Item() { SVal = "Y", BVal = false, IVal = 2 },
-                }
+                TblArray = new List<Item>() { Item.Item1, Item.Item2 }
             };
 
             public List<Item> TblArray { get; set; } = new List<Item>();
@@ -79,16 +66,19 @@ TblArray = [ { SVal = ""X"", BVal = true, IVal = 1 },
 
         public class Item
         {
+            public static readonly AttItem Item1 = new AttItem() { SVal = "X", BVal = true, IVal = 1 };
+            public static readonly AttItem Item2 = new AttItem() { SVal = "Y", BVal = false, IVal = 2 };
+
             public string SVal { get; set; } = "X";
             public bool BVal { get; set; } = true;
             public int IVal { get; set; } = 1;
         }
 
-        [TomlInlineTable]
+        [TreatAsInlineTable]
         public class AttItem : Item
         {
-            public static readonly AttItem Item1 = new AttItem() { SVal = "X", BVal = true, IVal = 1 };
-            public static readonly AttItem Item2 = new AttItem() { SVal = "Y", BVal = false, IVal = 2 };
+            public static readonly AttItem AttItem1 = new AttItem() { SVal = "X", BVal = true, IVal = 1 };
+            public static readonly AttItem AttItem2 = new AttItem() { SVal = "Y", BVal = false, IVal = 2 };
         }
     }
 }
