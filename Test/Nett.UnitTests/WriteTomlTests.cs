@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
@@ -148,11 +147,11 @@ TheBool = false
         }
 
         [Fact]
-        public void Write_WithInvalidInlineTable_ThrowsInvalidOp()
+        public void Write_WithNormalTableInsideInlineTable_WritesInnerTableAsInlineTableAlso()
         {
-            Action a = () => Toml.WriteString(new WithDisallowedInlineTable());
+            var s = Toml.WriteString(new MultiLevelInlineTable());
 
-            a.ShouldThrow<InvalidOperationException>();
+            s.Should().Be("InlineL1 = { InlineL2 = { IntProp = 0 } }\r\n");
         }
 
         [Fact]
@@ -310,25 +309,25 @@ TheBool = false
             }
         }
 
-        private class WithDisallowedInlineTable
+        private class MultiLevelInlineTable
         {
             [TomlInlineTable]
-            public InlineTableWithDisallowedNormalTable InvalidInlineTable { get; set; }
+            public NormalTableInsideInlineTable InlineL1 { get; set; }
 
-            public WithDisallowedInlineTable()
+            public MultiLevelInlineTable()
             {
-                this.InvalidInlineTable = new InlineTableWithDisallowedNormalTable();
+                this.InlineL1 = new NormalTableInsideInlineTable();
             }
 
         }
-        private class InlineTableWithDisallowedNormalTable
+        private class NormalTableInsideInlineTable
         {
-            public ClassProperty Disallowed { get; set; }
+            public ClassProperty InlineL2 { get; set; }
 
 
-            public InlineTableWithDisallowedNormalTable()
+            public NormalTableInsideInlineTable()
             {
-                this.Disallowed = new ClassProperty();
+                this.InlineL2 = new ClassProperty();
             }
         }
     }

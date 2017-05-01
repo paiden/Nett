@@ -1,6 +1,5 @@
 ﻿namespace Nett.Writer
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Util;
@@ -78,17 +77,11 @@
                 }
                 else if (r.Value.TomlType == TomlObjectType.Table)
                 {
-                    var tbl = (TomlTable)r.Value;
-                    if (tbl.TableType != TomlTable.TableTypes.Inline)
-                    {
-                        throw new InvalidOperationException($"Putting normal table '{r.Key}' inside inline table is not allowed.");
-                    }
-
-                    this.WriteInlineTable(r.Key, tbl);
+                    this.WriteInlineTable(r.Key, (TomlTable)r.Value);
                 }
                 else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
-                    throw new InvalidOperationException($"Putting Array of table '{r.Key}' inside inline table is not allowed.");
+                    this.WriteTomlTableArray(r.Key, (TomlTableArray)r.Value);
                 }
                 else
                 {

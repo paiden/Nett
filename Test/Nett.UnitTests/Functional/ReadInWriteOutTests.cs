@@ -3,6 +3,9 @@ using Xunit;
 
 namespace Nett.UnitTests.Functional
 {
+    /// <summary>
+    /// Tests that show, that data is written back correctly after a read of a file.
+    /// </summary>
     public sealed class ReadInNWriteOutTests
     {
         [Theory]
