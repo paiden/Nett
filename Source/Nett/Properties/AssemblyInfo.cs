@@ -32,5 +32,6 @@ using System.Runtime.CompilerServices;
 [assembly: CLSCompliant(true)]
 
 [assembly: InternalsVisibleTo("Nett.UnitTests.Internal")]
+[assembly: InternalsVisibleTo("Nett.Coma.Tests.Internal")]
 [assembly: InternalsVisibleTo("Nett.Coma")]
 [assembly: InternalsVisibleTo("Nett.PerfTests")]

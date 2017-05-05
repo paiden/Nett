@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Nett.Coma.Test.Util;
 using Nett.UnitTests.Util;
+using Xunit;
 
 namespace Nett.Coma.Tests.Unit
 {
@@ -70,5 +71,18 @@ namespace Nett.Coma.Tests.Unit
             }
         }
 
+        [Fact]
+        public void Clone_WhenSourceTableHasTypeInline_CloneTableHasSameTableType()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            tbl.TableType = TomlTable.TableTypes.Inline;
+
+            // Act
+            var cloned = tbl.Clone();
+
+            // Assert
+            cloned.TableType.Should().Be(tbl.TableType);
+        }
     }
 }

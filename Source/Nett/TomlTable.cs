@@ -88,7 +88,7 @@
         public IEnumerable<KeyValuePair<string, TomlObject>> Rows => this.rows.Select(
             r => new KeyValuePair<string, TomlObject>(r.Key.Value, r.Value));
 
-        public TableTypes TableType { get; }
+        public TableTypes TableType { get; internal set; }
 
         public override TomlObjectType TomlType => TomlObjectType.Table;
 

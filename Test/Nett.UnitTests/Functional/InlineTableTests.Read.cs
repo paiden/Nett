@@ -1,4 +1,5 @@
-﻿using Nett.UnitTests.Util;
+﻿using FluentAssertions;
+using Nett.UnitTests.Util;
 using Xunit;
 
 namespace Nett.UnitTests.Functional
@@ -11,6 +12,14 @@ namespace Nett.UnitTests.Functional
             var read = Toml.ReadString<ItemDict>(ItemDict.TwoItemsInlineSerialzed);
 
             read.SouldBeEqualByJsonCompare(ItemDict.TwoItems);
+        }
+
+        [Fact]
+        public void GivenTomlWithInlineTable_WhenRead_ProducesInMemoryInlineTable()
+        {
+            var read = Toml.ReadString("X = { 'A' = true, 'B' = false }");
+
+            read.Get<TomlTable>("X").TableType.Should().Be(TomlTable.TableTypes.Inline);
         }
     }
 }
