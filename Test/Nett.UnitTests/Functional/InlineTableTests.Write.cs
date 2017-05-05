@@ -63,5 +63,13 @@ namespace Nett.UnitTests.Functional
 
             s.Should().Be(InlineArrayAttributeOnItem.TowItemsSerialized);
         }
+
+        [Fact]
+        public void GivenSringBoolDictConfig_WhenWrittenAsToml_WritesTheDictAsInlineTable()
+        {
+            var s = Toml.WriteString(new ConfigWithStringBoolDict());
+
+            s.Should().Be(ConfigWithStringBoolDict.Serialized);
+        }
     }
 }

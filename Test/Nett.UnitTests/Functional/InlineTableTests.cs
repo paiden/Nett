@@ -7,6 +7,28 @@ namespace Nett.UnitTests.Functional
     /// </summary>
     public sealed partial class InlineTableTests
     {
+        public class ConfigWithStringBoolDict
+        {
+            public const string Serialized = @"
+[User]
+Items = { X = true, Y = false }
+";
+
+            [TreatAsInlineTable]
+            public class Items : Dictionary<string, bool> { };
+
+            public UserSettings User { get; set; } = new UserSettings();
+
+            public class UserSettings
+            {
+                public Items Items { get; set; } = new Items()
+            {
+                { "X", true },
+                { "Y", false },
+            };
+            }
+        }
+
         public class InlineArrayAttributeOnItem
         {
             public const string TowItemsSerialized = @"
