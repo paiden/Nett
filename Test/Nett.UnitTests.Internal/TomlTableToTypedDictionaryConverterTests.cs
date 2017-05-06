@@ -61,8 +61,8 @@ namespace Nett.UnitTests.Internal
         private static TomlTable CreateInputTable()
         {
             var tbl = Toml.Create();
-            tbl.Add("X", 1.0);
-            tbl.Add("Y", 0.0);
+            tbl.AddValue("X", 1.0);
+            tbl.AddValue("Y", 0.0);
             return tbl;
         }
 
