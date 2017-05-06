@@ -73,6 +73,7 @@
     <Compile Include="ReadTomlWithCommentsTests.cs" />
     <Compile Include="StringExtensionTests.cs" />
     <Compile Include="TomlTableTests.cs" />
+    <Compile Include="TomlTableToTypedDictionaryConverterTests.cs" />
     <Compile Include="TomlValueTests.cs" />
   </ItemGroup>
   <ItemGroup>

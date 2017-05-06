@@ -39,7 +39,7 @@
         public IEnumerable<KeyValuePair<string, TomlObject>> Rows => this.rows.Select(
             r => new KeyValuePair<string, TomlObject>(r.Key.Value, r.Value));
 
-        public TableTypes TableType { get; }
+        public TableTypes TableType { get; internal set; }
 
         public override TomlObjectType TomlType => TomlObjectType.Table;
 
@@ -192,7 +192,7 @@
             visitor.Visit(this);
         }
 
-        internal static TomlTable CreateFromClass<T>(ITomlRoot root, T obj, TableTypes tableType = TableTypes.Default)
+        internal static TomlTable CreateFromClass<T>(ITomlRoot root, T obj, TableTypes tableType)
             where T : class
         {
             if (root == null) { throw new ArgumentNullException(nameof(root)); }
@@ -219,7 +219,7 @@
             return tt;
         }
 
-        internal static TomlTable CreateFromDictionary(ITomlRoot root, IDictionary dict, TableTypes tableType = TableTypes.Default)
+        internal static TomlTable CreateFromDictionary(ITomlRoot root, IDictionary dict, TableTypes tableType)
         {
             if (root == null) { throw new ArgumentNullException(nameof(root)); }
             if (dict == null) { throw new ArgumentNullException(nameof(dict)); }

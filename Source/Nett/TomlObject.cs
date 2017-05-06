@@ -56,7 +56,7 @@
             }
             else if (val as IDictionary != null)
             {
-                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Config.GetTableType(pi));
+                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Config.GetTableType(t));
             }
             else if (t != Types.StringType && (val as IEnumerable) != null)
             {
@@ -64,7 +64,7 @@
             }
             else
             {
-                var tableType = root.Config.GetTableType(pi);
+                var tableType = root.Config.GetTableType(t);
                 return TomlTable.CreateFromClass(root, val, tableType);
             }
         }
@@ -99,12 +99,14 @@
                     }
                     else
                     {
-                        throw new NotSupportedException($"Cannot create array type from enumerable with element type {et.FullName}");
+                        throw new NotSupportedException(
+                            $"Cannot create array type from enumerable with element type {et.FullName}");
                     }
                 }
                 else
                 {
-                    return new TomlTableArray(root, e.Select((o) => TomlTable.CreateFromClass(root, o)));
+                    return new TomlTableArray(root, e.Select((o) =>
+                        TomlTable.CreateFromClass(root, o, root.Config.GetTableType(et))));
                 }
             }
 

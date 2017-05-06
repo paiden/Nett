@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Newtonsoft.Json;
 
 namespace Nett.UnitTests.Util
 {
@@ -17,6 +18,14 @@ namespace Nett.UnitTests.Util
         public static void ShouldBeSemanticallyEquivalentTo(this string sx, string sy)
         {
             sx.StripWhitespace().Should().Be(sy.StripWhitespace());
+        }
+
+        public static void SouldBeEqualByJsonCompare(this object x, object y)
+        {
+            var xj = JsonConvert.SerializeObject(x);
+            var yj = JsonConvert.SerializeObject(y);
+
+            xj.Should().Be(yj);
         }
     }
 }

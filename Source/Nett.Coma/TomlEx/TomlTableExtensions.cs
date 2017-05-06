@@ -12,6 +12,10 @@
         {
             if (from == null) { throw new ArgumentNullException(nameof(from)); }
 
+            // Loaded table type from file is more important than in memory table type
+            // => always overwrite the target table type with the loaded stuff
+            target.TableType = from.TableType;
+
             foreach (var r in from.Rows)
             {
                 TomlObject targetObject = null;
@@ -84,7 +88,7 @@
         {
             table.CheckNotNull(nameof(table));
 
-            var sourcesTable = Toml.Create();
+            var sourcesTable = Toml.Create(table.TableType);
             foreach (var r in table.Rows)
             {
                 if (r.Value.TomlType == TomlObjectType.Table)
@@ -111,6 +115,7 @@
             input.CheckNotNull(nameof(input));
 
             TomlTable cloned = Toml.Create(input.Root.Config);
+            cloned.TableType = input.TableType;
 
             foreach (var r in input.InternalRows)
             {

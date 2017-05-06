@@ -75,6 +75,7 @@
     <Compile Include="Functional\ClearSettingTests.cs" />
     <Compile Include="Functional\ConfigSourceTests.cs" />
     <Compile Include="Functional\InitTests.cs" />
+    <Compile Include="Functional\InlineTableTest.cs" />
     <Compile Include="Functional\MergeTests.cs" />
     <Compile Include="Functional\TransactionTests.cs" />
     <Compile Include="SingleLevelConfig.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="TestData\TestAppSettings.cs" />
     <Compile Include="TestsBase.cs" />
     <Compile Include="Unit\ComaConfigTests.cs" />
+    <Compile Include="Unit\TomlTableExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\Nett.Coma\Nett.Coma.csproj">

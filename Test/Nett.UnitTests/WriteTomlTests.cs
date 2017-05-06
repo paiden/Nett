@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit;
@@ -140,30 +139,6 @@ TheBool = false
         }
 
         [Fact]
-        public void Write_WithInlineTableAsAttribute_WritesInlineTableCorrect()
-        {
-            var s = Toml.WriteString(new WithInlineTable());
-
-            s.Should().Be("Table = {Ival = 1, Sval = \"x\"}\r\n");
-        }
-
-        [Fact]
-        public void Write_WithInvalidInlineTable_ThrowsInvalidOp()
-        {
-            Action a = () => Toml.WriteString(new WithDisallowedInlineTable());
-
-            a.ShouldThrow<InvalidOperationException>();
-        }
-
-        [Fact]
-        public void Write_WithMultipleInlineTables_WritesInlineTablesCorrect()
-        {
-            var s = Toml.WriteString(new MultipleInline());
-
-            s.Should().Be("Inline = {SubInline = {Ival = 1, Sval = \"x\"}}\r\n");
-        }
-
-        [Fact]
         public void Write_WhenMarkedAsInlineTableInConfig_WritesTableAsInlineTable()
         {
             var cfg = TomlConfig.Create(config => config
@@ -267,7 +242,6 @@ TheBool = false
 
         public class WithInlineTable
         {
-            [TomlInlineTable]
             public InlineTable Table { get; set; }
 
             public WithInlineTable()
@@ -290,7 +264,6 @@ TheBool = false
 
         private class MultipleInline
         {
-            [TomlInlineTable]
             public InlineTableWithInlineTable Inline { get; set; }
 
             public MultipleInline()
@@ -301,7 +274,6 @@ TheBool = false
 
         public class InlineTableWithInlineTable
         {
-            [TomlInlineTable]
             public InlineTable SubInline { get; set; }
 
             public InlineTableWithInlineTable()
@@ -310,25 +282,24 @@ TheBool = false
             }
         }
 
-        private class WithDisallowedInlineTable
+        private class MultiLevelInlineTable
         {
-            [TomlInlineTable]
-            public InlineTableWithDisallowedNormalTable InvalidInlineTable { get; set; }
+            public NormalTableInsideInlineTable InlineL1 { get; set; }
 
-            public WithDisallowedInlineTable()
+            public MultiLevelInlineTable()
             {
-                this.InvalidInlineTable = new InlineTableWithDisallowedNormalTable();
+                this.InlineL1 = new NormalTableInsideInlineTable();
             }
 
         }
-        private class InlineTableWithDisallowedNormalTable
+        private class NormalTableInsideInlineTable
         {
-            public ClassProperty Disallowed { get; set; }
+            public ClassProperty InlineL2 { get; set; }
 
 
-            public InlineTableWithDisallowedNormalTable()
+            public NormalTableInsideInlineTable()
             {
-                this.Disallowed = new ClassProperty();
+                this.InlineL2 = new ClassProperty();
             }
         }
     }

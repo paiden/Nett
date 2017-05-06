@@ -23,7 +23,7 @@
                 targetType != typeof(Dictionary<string, object>),
                 $"Ensure '{nameof(TomlTableToDictionaryConverter)}' converter registered before this one.");
 
-            var valueType = targetType.GetGenericArguments()[1];
+            var valueType = FindDictionaryValueType(targetType);
             var target = (IDictionary)Activator.CreateInstance(targetType);
 
             TomlTable table = (TomlTable)value;
@@ -33,6 +33,19 @@
             }
 
             return target;
+        }
+
+        private static Type FindDictionaryValueType(Type sourceType)
+        {
+            if (sourceType == null) { return typeof(object); }
+
+            var ga = sourceType.GetGenericArguments();
+            if (ga.Length == 2 && sourceType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                return ga[1];
+            }
+
+            return FindDictionaryValueType(sourceType.BaseType);
         }
     }
 }

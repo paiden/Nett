@@ -1,6 +1,7 @@
 ﻿namespace Nett.Writer
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Nett.Util;
     using static System.Diagnostics.Debug;
 
@@ -21,6 +22,9 @@
         }
 
         private static string CombineKey(string parent, TomlKey key) => parent + key.ToString() + ".";
+
+        private static bool IsInlineTomlTableArray(TomlTableArray a)
+            => a.Items.Any(t => t.TableType == TomlTable.TableTypes.Inline);
 
         private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row)
         {
@@ -93,16 +97,24 @@
 
         private void WriteTomlTableArray(string parentKey, TomlKey key, TomlTableArray tableArray)
         {
-            this.WritePrependComments(tableArray);
-
-            foreach (var t in tableArray.Items)
+            if (IsInlineTomlTableArray(tableArray))
             {
-                this.writer.Write("[[");
-                this.writer.Write(parentKey + key.ToString());
-                this.writer.Write("]]");
-                this.writer.WriteLine();
-                this.WriteAppendComments(tableArray);
-                this.WriteTableRows(CombineKey(parentKey, key), t);
+                var inlineWriter = new TomlInlineTableWriter(this.writer, this.config);
+                inlineWriter.WriteTomlTableArray(key, tableArray);
+            }
+            else
+            {
+                this.WritePrependComments(tableArray);
+
+                foreach (var t in tableArray.Items)
+                {
+                    this.writer.Write("[[");
+                    this.writer.Write(parentKey + key.ToString());
+                    this.writer.Write("]]");
+                    this.writer.WriteLine();
+                    this.WriteAppendComments(tableArray);
+                    this.WriteTableRows(CombineKey(parentKey, key), t);
+                }
             }
         }
     }

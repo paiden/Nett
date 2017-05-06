@@ -1,6 +1,5 @@
 ﻿namespace Nett.Writer
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Util;
@@ -19,8 +18,41 @@
                 this.WritePrependComments(table);
 
                 this.writer.Write(key.ToString());
-                this.writer.Write(" = {");
+                this.writer.Write(" = ");
+                this.WriteInlineTableBody(table);
 
+                this.WriteAppendComments(table);
+            }
+
+            public void WriteTomlTableArray(TomlKey key, TomlTableArray tableArray)
+            {
+                this.WritePrependComments(tableArray);
+
+                const string assignment = " = [ ";
+                this.writer.Write(key.ToString());
+                this.writer.Write(assignment);
+
+                int indentLen = key.ToString().Length + assignment.Length;
+                string indent = new string(' ', indentLen);
+
+                for (int i = 0; i < tableArray.Items.Count; i++)
+                {
+                    this.WriteInlineTableBody(tableArray.Items[i]);
+
+                    if (i < tableArray.Items.Count - 1)
+                    {
+                        this.writer.Write(",");
+                        this.writer.WriteLine();
+                        this.writer.Write(indent);
+                    }
+                }
+
+                this.writer.WriteLine(" ]");
+            }
+
+            private void WriteInlineTableBody(TomlTable table)
+            {
+                this.writer.Write("{ ");
                 var rows = table.InternalRows.ToArray();
 
                 for (int i = 0; i < rows.Length - 1; i++)
@@ -34,8 +66,7 @@
                     this.WriteTableRow(rows[rows.Length - 1]);
                 }
 
-                this.writer.Write('}');
-                this.WriteAppendComments(table);
+                this.writer.Write(" }");
             }
 
             private void WriteTableRow(KeyValuePair<TomlKey, TomlObject> r)
@@ -46,17 +77,11 @@
                 }
                 else if (r.Value.TomlType == TomlObjectType.Table)
                 {
-                    var tbl = (TomlTable)r.Value;
-                    if (tbl.TableType != TomlTable.TableTypes.Inline)
-                    {
-                        throw new InvalidOperationException($"Putting normal table '{r.Key}' inside inline table is not allowed.");
-                    }
-
-                    this.WriteInlineTable(r.Key, tbl);
+                    this.WriteInlineTable(r.Key, (TomlTable)r.Value);
                 }
                 else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
-                    throw new InvalidOperationException($"Putting Array of table '{r.Key}' inside inline table is not allowed.");
+                    this.WriteTomlTableArray(r.Key, (TomlTableArray)r.Value);
                 }
                 else
                 {
