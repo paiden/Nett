@@ -41,5 +41,25 @@ namespace Nett.Coma.Tests.Functional
                 f.Should().Be(expected);
             }
         }
+
+        [Fact]
+        public void Read_WithInlineTableProperty_ReadsThatPropertyCorrectly()
+        {
+            using (var file = TestFileName.Create(nameof(Read_WithInlineTableProperty_ReadsThatPropertyCorrectly), "input", ".toml"))
+            {
+                // Arrange
+                const string input = "UserItems = { 'X' = false, 'Y' = true }";
+                File.WriteAllText(file, input);
+
+                // Act
+                var cfg = Config.Create(() => new Cfg(), ConfigSource.CreateFileSource(file));
+                var items = cfg.Get(c => c.UserItems);
+
+                // Assert
+                items.Count.Should().Be(2);
+                items["X"].Should().Be(false);
+                items["Y"].Should().Be(true);
+            }
+        }
     }
 }
