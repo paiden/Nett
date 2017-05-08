@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Nett.UnitTests.Util;
+using Nett.UnitTests.Util.TestData;
 using Xunit;
 
 namespace Nett.UnitTests
@@ -141,7 +142,15 @@ SomeValue = 5";
             string output = Toml.WriteString(obj);
 
             // Assert
-            output.Trim().Should().Be("Prop = 1"); 
+            output.Trim().Should().Be("Prop = 1");
+        }
+
+        [Fact]
+        public void VerifyIssue26_InlineTableWithoutSpaceAfeterValue_CanBeParsed()
+        {
+            var parsed = Toml.ReadString(TomlStrings.Valid.InlineTableNoSpaces);
+
+            parsed.Get<TomlTable>("Test").Get<TomlTable>("InlineTable").Get<int>("test").Should().Be(1);
         }
 
         public class WithUint

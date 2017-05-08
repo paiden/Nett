@@ -98,7 +98,7 @@
 
         public bool TokenDone()
         {
-            return this.End || this.TryExpectWhitespace() || this.TryExpect(']') || this.TryExpect(',');
+            return this.End || this.TryExpectWhitespace() || this.TryExpect(']') || this.TryExpect(',') || this.TryExpect('}');
         }
 
         public bool TryExpect(string seq)

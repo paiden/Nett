@@ -369,6 +369,39 @@ namespace Nett.UnitTests.Internal.Parser
             t.Tokens.Consume().value.Should().Be("-3.141592653589793");
         }
 
+        [Theory]
+        [InlineData("1}", "1")]
+        [InlineData("1.0}", "1.0")]
+        [InlineData("1]", "1")]
+        [InlineData("1.0]", "1.0")]
+        public void Tokenize_ValuesWithoutSpaceToBraces_ProducesValueTokensCorrectly(string input, string expectedValueToken)
+        {
+            var t = new Tokenizer(input.ToStream());
+
+            t.Tokens.Consume().value.Should().Be(expectedValueToken);
+        }
+
+        [Fact]
+        public void Tokenize_InlineTableWithoutSpaces_ProducesCorrectTokens()
+        {
+            // Act
+            var t = new Tokenizer(TomlStrings.Valid.InlineTableNoSpaces.ToStream());
+
+            // Assert
+            t.Tokens.Consume().value.Should().Be("<NewLine>");
+            t.Tokens.Consume().value.Should().Be("[");
+            t.Tokens.Consume().value.Should().Be("Test");
+            t.Tokens.Consume().value.Should().Be("]");
+            t.Tokens.Consume().value.Should().Be("<NewLine>");
+            t.Tokens.Consume().value.Should().Be("InlineTable");
+            t.Tokens.Consume().value.Should().Be("=");
+            t.Tokens.Consume().value.Should().Be("{");
+            t.Tokens.Consume().value.Should().Be("\"test\"");
+            t.Tokens.Consume().value.Should().Be("=");
+            t.Tokens.Consume().value.Should().Be("1");
+            t.Tokens.Consume().value.Should().Be("}");
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();

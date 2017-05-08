@@ -225,6 +225,10 @@ last_name = ""Seger""";
 
   [[fruits.variety]]
     name = ""plantain""";
+
+            public const string InlineTableNoSpaces = @"
+[Test]
+InlineTable = {""test"" = 1}";
         }
     }
 }
