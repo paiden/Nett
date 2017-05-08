@@ -39,6 +39,12 @@ namespace Nett.Coma.Tests.TestData
         {
             public int X { get; set; } = 1;
             public string Y { get; set; } = "Y";
+
+            public SubContent Sub { get; set; }
+        }
+        public class SubContent
+        {
+            public int Z { get; set; } = 1;
         }
     }
 }
