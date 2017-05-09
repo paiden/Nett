@@ -1,7 +1,9 @@
-﻿using System;
+﻿using FluentAssertions;
+using Nett.Coma.Extensions;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using Nett.Coma.Extensions;
 using Xunit;
 
 namespace Nett.Coma.Tests.Unit
@@ -10,59 +12,130 @@ namespace Nett.Coma.Tests.Unit
     public sealed class LambdaExpressionExtensionTests
     {
         [Fact]
-        public void Foo()
+        public void BuildTPath_WhenValueMemberAccessed_CreatesCorrectTPath()
         {
             // Arrange
-            Expression<Func<TestObject, L1Object>> x = (TestObject o) => o.L1;
+            Expression<Func<Root, int>> e = r => r.I;
 
             // Act
-            var path = x.BuildTPath();
+            var path = e.BuildTPath();
 
             // Assert
-            path.Equals(TPath.Parse($"/{nameof(TestObject.L1)}"));
+            path.ToString().Should().Be("/I");
         }
 
         [Fact]
-        public void FooA()
+        public void BuildTPath_WhenArrayMemberAccessed_CreatesCorrectTPath()
         {
             // Arrange
-            const int Index = 1;
-            Expression<Func<TestObject, L1Object>> x = (TestObject o) => o.L1Array[Index];
+            Expression<Func<Root, int[]>>e = r => r.A;
+            object x = e;
 
             // Act
-            var path = x.BuildTPath();
+            var path = e.BuildTPath();
 
             // Assert
-            path.Equals(TPath.Parse($"/{nameof(TestObject.L1)}[{Index}]"));
+            path.ToString().Should().Be("/[A]");
         }
-
 
         [Fact]
-        public void FooB()
+        public void BuildTPath_WhenEnumerableMemberAccessed_CreatesCorrectTPath()
         {
             // Arrange
-            const int Index = 1;
-            const int IndexA = 3;
-            Expression<Func<TestObject, L1Object>> x = (TestObject o) => o.L1MArray[Index][IndexA];
+            Expression<Func<Root, IEnumerable<bool>>> e = r => r.E;
 
             // Act
-            var path = x.BuildTPath();
+            var path = e.BuildTPath();
 
             // Assert
-            path.Equals(TPath.Parse($"/{nameof(TestObject.L1)}[{Index}][{IndexA}]"));
+            path.ToString().Should().Be("/[E]");
         }
 
-
-        private class TestObject
+        [Fact]
+        public void BuildTPath_WhenListMemberAccessed_CreatesCorrectTPath()
         {
-            public L1Object L1 { get; set; }
+            // Arrange
+            Expression<Func<Root, List<string>>> e = r => r.L;
 
-            public L1Object[] L1Array { get; set; }
+            // Act
+            var path = e.BuildTPath();
 
-            public L1Object[][] L1MArray { get; set; }
+            // Assert
+            path.ToString().Should().Be("/[L]");
         }
 
-        private class L1Object
+        [Fact]
+        public void BuildTPath_WhenComplexMemberAccessed_CreatesCorrectTPath()
+        {
+            // Arrange
+            Expression<Func<Root, Item>> e = r => r.Item;
+
+            // Act
+            var path = e.BuildTPath();
+
+            // Assert
+            path.ToString().Should().Be("/{Item}");
+        }
+
+        [Fact]
+        public void BuildTPath_WhenComplexArrayMemberAccessed_CreatesCorrectTPath()
+        {
+            // Arrange
+            Expression<Func<Root, Item[]>> e = r => r.Items;
+
+            // Act
+            var path = e.BuildTPath();
+
+            // Assert
+            path.ToString().Should().Be("/[{Items}]");
+        }
+
+        [Fact]
+        public void BuildTPath_WhenComplexEnumMemberAccessed_CreatesCorrectTPath()
+        {
+            // Arrange
+            Expression<Func<Root, IEnumerable<Item>>> e = r => r.EItems;
+
+            // Act
+            var path = e.BuildTPath();
+
+            // Assert
+            path.ToString().Should().Be("/[{EItems}]");
+        }
+
+        [Fact]
+        public void BuildTPath_WhenComplexListMemberAccessed_CreatesCorrectTPath()
+        {
+            // Arrange
+            Expression<Func<Root, List<Item>>> e = r => r.LItems;
+
+            // Act
+            var path = e.BuildTPath();
+
+            // Assert
+            path.ToString().Should().Be("/[{LItems}]");
+        }
+
+        public class Root
+        {
+            public int I { get; set; }
+
+            public int[] A { get; set; }
+
+            public IEnumerable<bool> E { get; set; }
+
+            public List<string> L { get; set; }
+
+            public Item Item { get; set; }
+
+            public Item[] Items { get; set; }
+
+            public IEnumerable<Item> EItems { get; set; }
+
+            public List<Item> LItems { get; set; }
+        }
+
+        public class Item
         {
 
         }

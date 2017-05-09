@@ -1,8 +1,9 @@
 ﻿namespace Nett.Coma
 {
+    using Nett.Coma.Path;
+    using Nett.Extensions;
     using System;
     using System.Linq;
-    using Nett.Extensions;
 
     public sealed class Config
     {
@@ -117,7 +118,7 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+            this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
         }
 
         internal void Set(TPath path, object value, IConfigSource source)
@@ -125,7 +126,7 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
+            this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
         }
 
         internal IConfigSource TryGetSource(TPath path)

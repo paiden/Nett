@@ -11,6 +11,8 @@
 
         public Type FromType => Types.TomlTableType;
 
+        public TomlObjectType? TomlTargetType => null;
+
         public bool CanConvertFrom(Type t) => t == Types.TomlTableType;
 
         public bool CanConvertTo(Type t) => DictType.IsAssignableFrom(t);

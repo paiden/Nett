@@ -13,6 +13,8 @@
         public bool CanConvertToToml() => true;
 
         public object Convert(ITomlRoot root, object value, Type targetType) => new TomlString(root, value.ToString());
+
+        public TomlObjectType? TomlTargetType => TomlObjectType.String;
     }
 
     internal sealed class TomlToEnumConverter : ITomlConverter
@@ -26,5 +28,7 @@
         public bool CanConvertToToml() => false;
 
         public object Convert(ITomlRoot root, object value, Type targetType) => Enum.Parse(targetType, ((TomlString)value).Value);
+
+        public TomlObjectType? TomlTargetType => null;
     }
 }
