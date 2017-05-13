@@ -4,43 +4,44 @@ namespace Nett.Coma.Path
 {
     internal sealed partial class TPath
     {
-        private sealed class IndexSegment : Segment
+        private sealed class IndexSegment : ITPathSegment
         {
             private readonly int index;
 
-            public IndexSegment(TomlObjectType segmentType, int index)
-                : base(segmentType)
+            public IndexSegment(int index)
             {
                 this.index = index;
             }
 
-            public override TomlObject Apply(TomlObject obj)
+            public TomlObject Apply(TomlObject obj)
             {
-                return this.ApplyIndex(obj, (err) => throw new InvalidOperationException(err), this.ThrowWhenIncompatibleType);
+                return this.ApplyIndex(obj, (err) => throw new InvalidOperationException(err));
             }
 
-            public override TomlObject ApplyOrCreate(TomlObject obj)
+            public TomlObject ApplyOrCreate(TomlObject obj)
             {
                 throw new NotImplementedException();
             }
 
-            public override void SetValue(TomlObject value)
+            public void SetValue(TomlObject value)
             {
                 throw new NotImplementedException();
             }
 
-            public override TomlObject TryApply(TomlObject obj)
+            public TomlObject TryApply(TomlObject obj)
             {
                 throw new NotImplementedException();
             }
+
+            public override string ToString() => $"[{this.index}]";
 
             private TomlObject ApplyIndex(
-                TomlObject obj, Func<string, TomlObject> onError, Func<TomlObject, TomlObject> onIncompatibleType)
+                TomlObject obj, Func<string, TomlObject> onError)
             {
                 switch (obj)
                 {
-                    case TomlArray a: return this.VerifyType(a[this.index], onIncompatibleType);
-                    case TomlTableArray ta: return this.VerifyType(ta[this.index], onIncompatibleType);
+                    case TomlArray a: return a[this.index];
+                    case TomlTableArray ta: return ta[this.index];
                     default:
                         return onError(
                         $"Cannot apply index '[{this.index}]' onto TOML object of type '{obj.ReadableTypeName}'.");

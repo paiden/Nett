@@ -28,7 +28,7 @@ namespace Nett.Coma.Tests.Unit
         public void BuildTPath_WhenArrayMemberAccessed_CreatesCorrectTPath()
         {
             // Arrange
-            Expression<Func<Root, int[]>>e = r => r.A;
+            Expression<Func<Root, int[]>> e = r => r.A;
             object x = e;
 
             // Act
@@ -116,6 +116,32 @@ namespace Nett.Coma.Tests.Unit
             path.ToString().Should().Be("/[{LItems}]");
         }
 
+        [Fact]
+        public void BuildTPath_WhenItemIntMemberAccessed_CreatesCorrectTPath()
+        {
+            // Arrange
+            Expression<Func<Root, int>> e = r => r.Item.I;
+
+            // Act
+            var path = e.BuildTPath();
+
+            // Assert
+            path.ToString().Should().Be("/{Item}/I");
+        }
+
+        [Fact]
+        public void BuildTPath_WhenAMemberIndexAccessed_CreatesCorrectTPath()
+        {
+            // Arrange
+            Expression<Func<Root, int>> e = r => r.A[0];
+
+            // Act
+            var path = e.BuildTPath();
+
+            // Assert
+            path.ToString().Should().Be("/[A][0]");
+        }
+
         public class Root
         {
             public int I { get; set; }
@@ -137,7 +163,7 @@ namespace Nett.Coma.Tests.Unit
 
         public class Item
         {
-
+            public int I { get; set; }
         }
     }
 }

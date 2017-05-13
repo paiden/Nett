@@ -10,20 +10,30 @@ namespace Nett.Coma.Path
         {
             public static TPath Build(LambdaExpression expression)
             {
-                return Build(expression.Body, new TPath(), TomlConfig.DefaultInstance);
+                return Build(expression.Body, TomlConfig.DefaultInstance);
             }
 
-            private static TPath Build(Expression expression, TPath current, TomlConfig config)
+            private static TPath Build(Expression expression, TomlConfig config)
             {
                 switch (expression)
                 {
                     case MemberExpression me:
-                        return current / GetSegmentFromMemberExpression(me, config);
-                    case ConstantExpression ce:
-                        break;
+                        var path = Build(me.Expression, config);
+                        return path / GetSegmentFromMemberExpression(me, config);
+                    case BinaryExpression be:
+                        path = Build(be.Left, config);
+                        var seg = GetSegmentFromConstantExpression((ConstantExpression)be.Right);
+                        return path / seg;
+                    case ParameterExpression pe:
+                        return new TPath();
+                    default:
+                        throw new InvalidOperationException($"TPath cannot be created as expression '{expression}' cannot be handled.");
                 }
+            }
 
-                return new TPath();
+            private static ITPathSegment GetSegmentFromConstantExpression(ConstantExpression ce)
+            {
+                return new IndexSegment((int)ce.Value);
             }
 
             private static ITPathSegment GetSegmentFromMemberExpression(MemberExpression expr, TomlConfig config)
@@ -34,25 +44,6 @@ namespace Nett.Coma.Path
 
             private static TomlObjectType GetTargetType(Type memberType, TomlConfig config)
             {
-                var converter = config.TryGetToTomlConverter(memberType);
-                if (converter != null)
-                {
-                    return converter.TomlTargetType.Value;
-                }
-
-                if (memberType.IsArray)
-                {
-                    return GetTargetTypeFromArrayType();
-                }
-                else if (typeof(IEnumerable).IsAssignableFrom(memberType))
-                {
-                    return GetTargetTypeFromEnumerableType();
-                }
-
-
-
-                return TomlObjectType.Table;
-
                 TomlObjectType GetTargetTypeFromArrayType()
                 {
                     var et = memberType.GetElementType();
@@ -85,6 +76,23 @@ namespace Nett.Coma.Path
                         ? TomlObjectType.ArrayOfTables
                         : TomlObjectType.Array;
                 }
+
+                var converter = config.TryGetToTomlConverter(memberType);
+                if (converter != null)
+                {
+                    return converter.TomlTargetType.Value;
+                }
+
+                if (memberType.IsArray)
+                {
+                    return GetTargetTypeFromArrayType();
+                }
+                else if (typeof(IEnumerable).IsAssignableFrom(memberType))
+                {
+                    return GetTargetTypeFromEnumerableType();
+                }
+
+                return TomlObjectType.Table;
             }
 
             private static ITPathSegment GetSegmentFromTargetType(TomlObjectType targetType, string key)
