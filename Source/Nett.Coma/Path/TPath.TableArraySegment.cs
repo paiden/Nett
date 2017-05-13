@@ -13,25 +13,28 @@ namespace Nett.Coma.Path
 
             public override TomlObject Apply(TomlObject obj)
             {
-                throw new NotImplementedException();
+                return this.ApplyTableArray(obj, this.ThrowWhenKeyNotFound, this.ThrowWhenIncompatibleType);
             }
 
-            public override TomlObject ApplyOrCreate(TomlObject obj)
-            {
-                throw new NotImplementedException();
-            }
+            public override TomlObject ApplyOrCreate(TomlObject obj) => this.Apply(obj);
 
             public override void SetValue(TomlObject value)
             {
                 throw new NotImplementedException();
             }
 
-            public override TomlObject TryApply(TomlObject obj)
-            {
-                throw new NotImplementedException();
-            }
+            public override TomlObject TryApply(TomlObject obj) => this.ApplyTableArray(obj, _ => null, _ => null);
 
             public override string ToString() => $"/[{{{this.key}}}]";
+
+            private TomlObject ApplyTableArray(
+                                        TomlObject obj,
+                                        Func<TomlTable, TomlObject> onDoesNotExist,
+                                        Func<TomlObject, TomlObject> onIncompatibleType)
+            {
+                var target = this.ApplyKey(obj, onDoesNotExist);
+                return this.VerifyType(target, onIncompatibleType);
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace Nett.Coma
 {
-    using Nett.Coma.Path;
-    using Nett.Extensions;
     using System;
     using System.Linq;
+    using Nett.Coma.Path;
+    using Nett.Extensions;
 
     public sealed class Config
     {

@@ -6,13 +6,13 @@
     {
         Type FromType { get; }
 
+        TomlObjectType? TomlTargetType { get; }
+
         bool CanConvertFrom(Type t);
 
         bool CanConvertTo(Type t);
 
         bool CanConvertToToml();
-
-        TomlObjectType? TomlTargetType { get; }
 
         object Convert(ITomlRoot root, object value, Type targetType);
     }

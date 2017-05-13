@@ -18,20 +18,14 @@ namespace Nett.Coma.Path
                 return this.ApplyIndex(obj, (err) => throw new InvalidOperationException(err));
             }
 
-            public TomlObject ApplyOrCreate(TomlObject obj)
-            {
-                throw new NotImplementedException();
-            }
+            public TomlObject ApplyOrCreate(TomlObject obj) => this.Apply(obj);
 
             public void SetValue(TomlObject value)
             {
                 throw new NotImplementedException();
             }
 
-            public TomlObject TryApply(TomlObject obj)
-            {
-                throw new NotImplementedException();
-            }
+            public TomlObject TryApply(TomlObject obj) => this.ApplyIndex(obj, _ => null);
 
             public override string ToString() => $"[{this.index}]";
 
