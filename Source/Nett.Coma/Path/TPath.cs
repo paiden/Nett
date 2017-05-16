@@ -37,22 +37,22 @@ namespace Nett.Coma.Path
             return new TPath(path, segment);
         }
 
-        public TomlObject Apply(TomlObject obj)
+        public TomlObject Apply(TomlObject obj, PathSettings settings = PathSettings.None)
         {
             if (this.IsRootPrefixPath) { return obj; }
 
-            var po = this.prefixPath.Apply(obj);
-            return this.segment.Apply(po);
+            var po = this.prefixPath.Apply(obj, settings);
+            return this.segment.Apply(po, settings);
         }
 
-        public TomlObject TryApply(TomlObject obj)
+        public TomlObject TryApply(TomlObject obj, PathSettings settings = PathSettings.None)
         {
             try
             {
                 if (this.IsRootPrefixPath) { return obj; }
 
-                var po = this.prefixPath.TryApply(obj);
-                return this.segment.TryApply(po);
+                var po = this.prefixPath.TryApply(obj, settings);
+                return this.segment.TryApply(po, settings);
             }
             catch
             {
@@ -61,10 +61,10 @@ namespace Nett.Coma.Path
             }
         }
 
-        public void SetValue(TomlObject applyTo, TomlObject value)
+        public void SetValue(TomlObject applyTo, TomlObject value, PathSettings settings = PathSettings.CreateTables)
         {
-            var target = this.prefixPath.Apply(applyTo);
-            this.segment.SetValue(target);
+            var target = this.prefixPath.Apply(applyTo, settings);
+            this.segment.SetValue(target, value, settings);
         }
 
         public bool ClearFrom(TomlTable from)

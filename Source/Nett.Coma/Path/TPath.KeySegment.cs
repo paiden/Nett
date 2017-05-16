@@ -6,6 +6,11 @@ namespace Nett.Coma.Path
     {
         private abstract class KeySegment : Segment
         {
+            protected static readonly Func<string, TomlObject> ThrowOnError =
+                err => throw new InvalidOperationException(err);
+
+            protected static readonly Func<string, TomlObject> ReturnDefaultOnError = _ => null;
+
             protected readonly Func<TomlTable, TomlObject> ThrowWhenKeyNotFound;
 
             protected readonly string key;
@@ -14,28 +19,52 @@ namespace Nett.Coma.Path
                 : base(segmentType)
             {
                 if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentException(nameof(key)); }
-
                 this.key = key;
-                this.ThrowWhenKeyNotFound = _
-                    => throw new InvalidOperationException($"TOML table does not contain a row with key '{this.key}'.");
+
+                this.ThrowWhenKeyNotFound = _ => throw new InvalidOperationException(this.KeyNotFoundMessage);
             }
+
+            protected string KeyNotFoundMessage => $"TOML table does not contain a row with key '{this.key}'.";
 
             public bool ClearFrom(TomlTable tbl)
             {
                 return tbl.Remove(this.key);
             }
 
-            protected TomlObject ApplyKey(TomlObject obj, Func<TomlTable, TomlObject> onDoesNotExist)
+            public override TomlObject Apply(TomlObject obj, PathSettings settings)
+                => this.ApplyKey(obj, this.ThrowWhenKeyNotFound, ThrowOnError, settings);
+
+            public override TomlObject TryApply(TomlObject obj, PathSettings settings)
+                => this.ApplyKey(obj, _ => null, ReturnDefaultOnError, settings);
+
+            public override void SetValue(TomlObject target, TomlObject value, PathSettings settings)
+            {
+                if (target is TomlTable tbl)
+                {
+                    tbl[this.key] = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot set key '{this.key}' value for path segment '{this.ToString()}' because target " +
+                        $"object is of type '{target.ReadableTypeName}' instead of 'table'.");
+                }
+            }
+
+            protected TomlObject ApplyKey(
+                TomlObject obj,
+                Func<TomlTable, TomlObject> onDoesNotExist,
+                Func<string, TomlObject> onError,
+                PathSettings settings)
             {
                 switch (obj)
                 {
                     case TomlTable tbl:
                         return tbl.TryGetValue(this.key, out var val)
-                            ? val
+                            ? this.VerifyType(val, onError, settings)
                             : onDoesNotExist(tbl);
                     default:
-                        throw new InvalidOperationException(
-                           $"Key cannot be applied. " +
+                        return onError($"Key '{this.key}' cannot be applied. " +
                            $"Keys can only be applied on TOML tables but object has type '{obj.ReadableTypeName}'.");
                 }
             }

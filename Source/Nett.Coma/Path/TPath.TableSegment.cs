@@ -12,45 +12,37 @@ namespace Nett.Coma.Path
             {
             }
 
-            public override TomlObject Apply(TomlObject obj)
+            public override TomlObject Apply(TomlObject obj, PathSettings settings = PathSettings.None)
             {
-                return this.ApplyTableSegment(obj, this.ThrowWhenKeyNotFound, this.ThrowWhenIncompatibleType);
+                return base.TryApply(obj, settings)
+                    ?? this.TryCreateTable(obj, settings)
+                    ?? throw new InvalidOperationException(this.KeyNotFoundMessage);
             }
 
-            public override TomlObject ApplyOrCreate(TomlObject obj)
-            {
-                return this.ApplyTableSegment(obj, tbl => tbl.AddTable(this.key), this.ThrowWhenIncompatibleType);
-            }
-
-            public override void SetValue(TomlObject value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override TomlObject TryApply(TomlObject obj)
+            public override TomlObject TryApply(TomlObject obj, PathSettings settings = PathSettings.None)
             {
                 try
                 {
-                    return obj == null
-                        ? null
-                        : this.ApplyTableSegment(obj, _ => null, _ => null);
+                    return base.TryApply(obj, settings) ?? this.TryCreateTable(obj, settings);
                 }
                 catch
                 {
-                    Debug.Assert(false, "This should never happen if ApplyTableSegment was implemented correctly");
+                    Debug.Assert(false, "This should never happen if the stuff in the try block is implemented correctly.");
                     return null;
                 }
             }
 
             public override string ToString() => $"/{{{this.key}}}";
 
-            private TomlObject ApplyTableSegment(
-                TomlObject obj,
-                Func<TomlTable, TomlObject> onDoesNotExist,
-                Func<TomlObject, TomlObject> onIncompatibleType)
+            private TomlTable TryCreateTable(TomlObject obj, PathSettings settings)
             {
-                var target = this.ApplyKey(obj, onDoesNotExist);
-                return this.VerifyType(target, onIncompatibleType);
+                if (settings.HasFlag(PathSettings.CreateTables) && obj is TomlTable tbl)
+                {
+                    var table = tbl.AddTable(this.key, tbl.CreateAttachedTable());
+                    return table;
+                }
+
+                return null;
             }
         }
     }

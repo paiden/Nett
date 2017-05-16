@@ -13,19 +13,28 @@ namespace Nett.Coma.Path
                 this.index = index;
             }
 
-            public TomlObject Apply(TomlObject obj)
+            public TomlObject Apply(TomlObject obj, PathSettings settings = PathSettings.None)
+                => this.ApplyIndex(obj, (err) => throw new InvalidOperationException(err));
+
+            public TomlObject TryApply(TomlObject obj, PathSettings settings = PathSettings.None)
+                => this.ApplyIndex(obj, _ => null);
+
+            public void SetValue(TomlObject target, TomlObject value, PathSettings settings)
             {
-                return this.ApplyIndex(obj, (err) => throw new InvalidOperationException(err));
+                if (value is TomlArray a)
+                {
+                    a.Items[this.index] = (TomlValue)value;
+                }
+                else if (value is TomlTableArray ta)
+                {
+                    ta.Items[this.index] = (TomlTable)value;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot apply index '[{this.index}]' onto TOML object of type '{target.ReadableTypeName}'.");
+                }
             }
-
-            public TomlObject ApplyOrCreate(TomlObject obj) => this.Apply(obj);
-
-            public void SetValue(TomlObject value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public TomlObject TryApply(TomlObject obj) => this.ApplyIndex(obj, _ => null);
 
             public override string ToString() => $"[{this.index}]";
 

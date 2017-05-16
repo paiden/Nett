@@ -6,32 +6,30 @@ namespace Nett.Coma.Path
     {
         internal abstract class Segment : ITPathSegment
         {
-            protected readonly Func<TomlObject, TomlObject> ThrowWhenIncompatibleType;
-
             protected readonly TomlObjectType segmentType;
 
             public Segment(TomlObjectType segmentType)
             {
                 this.segmentType = segmentType;
-
-                this.ThrowWhenIncompatibleType = (to)
-                    => throw new InvalidOperationException(
-                        $"Cannot apply '{this.ToString()}' because TOML table row has incompatible type '{to.ReadableTypeName}'.");
             }
 
-            public abstract TomlObject Apply(TomlObject obj);
+            public abstract TomlObject Apply(TomlObject obj, PathSettings settings);
 
-            public abstract TomlObject ApplyOrCreate(TomlObject obj);
+            public abstract void SetValue(TomlObject target, TomlObject value, PathSettings settings);
 
-            public abstract void SetValue(TomlObject value);
+            public abstract TomlObject TryApply(TomlObject target, PathSettings settings);
 
-            public abstract TomlObject TryApply(TomlObject obj);
-
-            protected TomlObject VerifyType(TomlObject obj, Func<TomlObject, TomlObject> onVerifyFailed)
+            protected TomlObject VerifyType(TomlObject obj, Func<string, TomlObject> onError, PathSettings settings)
             {
-                return obj.TomlType == this.segmentType
-                    ? obj
-                    : onVerifyFailed(obj);
+                if (settings.HasFlag(PathSettings.VerifyType))
+                {
+                    return obj.TomlType == this.segmentType
+                        ? obj
+                        : onError($"Cannot apply '{this.ToString()}' with type '{this.segmentType}' because TOML table " +
+                            $"row has incompatible type '{obj.ReadableTypeName}'.");
+                }
+
+                return obj;
             }
         }
     }
