@@ -8,6 +8,8 @@
     public interface IConfigSource
     {
         string Alias { get; }
+
+        IConfigSource PrimarySource { get; }
     }
 
     internal interface IMergedSourceFactory
@@ -50,6 +52,8 @@
 
         public string FilePath { get; }
 
+        public IConfigSource PrimarySource => this;
+
         private string DebuggerDisplay => $"[FileSource] Alias={this.Alias} FilePath={this.FilePath}";
 
         public IMergeableConfig CreateMergedPersistable()
@@ -68,6 +72,8 @@
         }
 
         public string Alias => "Aggregate";
+
+        public IConfigSource PrimarySource => this.sources[this.sources.Length - 1];
 
         public IMergeableConfig CreateMergedPersistable()
         {

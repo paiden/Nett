@@ -73,7 +73,25 @@ namespace Nett.Coma.Tests
                 cfg.Set(c => c.Sub.Z, 1);
 
                 // Assert
-                File.ReadAllText(scenario.File).Should().Be("Add expectation when exception is fixed.");
+                File.ReadAllText(scenario.File).Should().Be("X = 1\r\nY = \"Y\"\r\n\r\n[Sub]\r\nZ = 1\r\n");
+            }
+        }
+
+        [Fact]
+        public void SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved()
+        {
+            using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved)))
+            {
+                // Arrange
+                var src = ConfigSource.CreateFileSource(scenario.File);
+                var cfg = Config.Create(
+                    () => new SingleConfigFileScenario.ConfigContent(), src);
+
+                // Act
+                cfg.Set(c => c.Sub.Z, 1, src);
+
+                // Assert
+                File.ReadAllText(scenario.File).Should().Be("X = 1\r\nY = \"Y\"\r\n\r\n[Sub]\r\nZ = 1\r\n");
             }
         }
 
@@ -89,7 +107,7 @@ namespace Nett.Coma.Tests
                 cfg.Set(c => c.Core.AutoClrf, true, scenario.UserFileSource);
 
                 // Assert
-                File.ReadAllText(scenario.UserFile).Should().Be("Add expectation when exception is fixed.");
+                File.ReadAllText(scenario.UserFile).Should().Be("\r\n[User]\r\nName = \"Test User\"\r\nEMail = \"test@user.com\"\r\n\r\n[Core]\r\nAutoClrf = true\r\n");
             }
         }
     }

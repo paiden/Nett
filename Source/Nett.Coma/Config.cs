@@ -7,13 +7,13 @@
 
     public sealed class Config
     {
+        private readonly IConfigSource source;
         private IMergeableConfig persistable;
 
-        internal Config(IMergeableConfig persistable)
+        internal Config(IMergeableConfig persistable, IConfigSource source)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
-
-            this.persistable = persistable;
+            this.source = source.CheckNotNull(nameof(source));
         }
 
         public static Config<T> Create<T>(Func<T> createDefault, string filePath)
@@ -39,7 +39,7 @@
             var persisted = ((IMergedSourceFactory)source).CreateMergedPersistable();
             persisted.EnsureExists(Toml.Create(cfg));
 
-            return new Config<T>(persisted);
+            return new Config<T>(persisted, source);
         }
 
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)
@@ -118,7 +118,17 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+            var src = this.TryGetSource(path);
+
+            bool notStoredInConfigYet = this.TryGetSource(path) == null;
+            if (notStoredInConfigYet)
+            {
+                this.Set(path, value, this.source.PrimarySource);
+            }
+            else
+            {
+                this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+            }
         }
 
         internal void Set(TPath path, object value, IConfigSource source)

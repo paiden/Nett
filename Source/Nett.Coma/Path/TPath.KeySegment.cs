@@ -65,7 +65,8 @@ namespace Nett.Coma.Path
                             : onDoesNotExist(tbl);
                     default:
                         return onError($"Key '{this.key}' cannot be applied. " +
-                           $"Keys can only be applied on TOML tables but object has type '{obj.ReadableTypeName}'.");
+                           $"Keys can only be applied on TOML tables but object has type " +
+                           $"'{obj?.ReadableTypeName ?? "object was null"}'.");
                 }
             }
         }
