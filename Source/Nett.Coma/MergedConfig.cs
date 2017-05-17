@@ -11,14 +11,14 @@
         private const string AssertAtLeastOneConfigMsg =
             "Constructor should check that there is a config and the configs should not get modified later on";
 
-        private readonly List<IPersistableConfig> configs;
+        private readonly List<IConfigStore> configs;
 
-        public MergedConfig(IEnumerable<IPersistableConfig> configs)
+        public MergedConfig(IEnumerable<IConfigStore> configs)
         {
             if (configs == null) { throw new ArgumentNullException(nameof(configs)); }
             if (configs.Count() <= 0) { throw new ArgumentException("There needs to be at least one config", nameof(configs)); }
 
-            this.configs = new List<IPersistableConfig>(configs);
+            this.configs = new List<IConfigStore>(configs);
         }
 
         public bool CanHandleSource(IConfigSource source) => this.configs.Any(c => c.CanHandleSource(source));
@@ -35,7 +35,7 @@
         public TomlTable Load(IConfigSource source)
         {
 #pragma warning disable SA1312
-            IPersistableConfig _;
+            IConfigStore _;
             return this.LoadInternal(source, out _);
 #pragma warning restore SA1312
         }
@@ -56,19 +56,19 @@
 
         public void Save(TomlTable table, IConfigSource source)
         {
-            IPersistableConfig cfg = this.configs.Single(c => c.CanHandleSource(source));
+            IConfigStore cfg = this.configs.Single(c => c.CanHandleSource(source));
             cfg.Save(table);
         }
 
         public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());
 
-        private TomlTable LoadInternal(IConfigSource source, out IPersistableConfig cfg)
+        private TomlTable LoadInternal(IConfigSource source, out IConfigStore cfg)
         {
             cfg = this.configs.Single(c => c.CanHandleSource(source));
             return cfg.Load();
         }
 
-        private TomlTable MergeTables(Func<IPersistableConfig, TomlTable> loadSingle)
+        private TomlTable MergeTables(Func<IConfigStore, TomlTable> loadSingle)
         {
             Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
 

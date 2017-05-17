@@ -4,13 +4,13 @@
     using System.Security.Cryptography;
     using Nett.Extensions;
 
-    internal sealed class FileConfig : IPersistableConfig
+    internal sealed class FileConfigStore : IConfigStore
     {
         private readonly FileConfigSource source;
 
         private byte[] latestFileHash = null;
 
-        public FileConfig(FileConfigSource source)
+        public FileConfigStore(FileConfigSource source)
         {
             this.source = source.CheckNotNull(nameof(source));
         }

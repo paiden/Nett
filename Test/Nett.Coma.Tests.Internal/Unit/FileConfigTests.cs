@@ -8,7 +8,7 @@ namespace Nett.Coma.Tests.Unit
     [ExcludeFromCodeCoverage]
     public sealed class FileConfigTests
     {
-        [MFact(nameof(FileConfig), nameof(FileConfig.WasChangedExternally), "When file was not loaded will always return true")]
+        [MFact(nameof(FileConfigStore), nameof(FileConfigStore.WasChangedExternally), "When file was not loaded will always return true")]
         public void WasChangedExternally_WhenFileWasNotLoadedAtLeastOnce_WillAlwaysReturnTrue()
         {
             var t = nameof(WasChangedExternally_WhenThereWasNoModification_ReturnsFalse);
@@ -16,7 +16,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfig(new FileConfigSource(file));
+                var cfg = new FileConfigStore(new FileConfigSource(file));
 
                 // Act
                 var r1 = cfg.WasChangedExternally();
@@ -28,7 +28,7 @@ namespace Nett.Coma.Tests.Unit
             }
         }
 
-        [MFact(nameof(FileConfig), nameof(FileConfig.WasChangedExternally), "When there was no modification will return false")]
+        [MFact(nameof(FileConfigStore), nameof(FileConfigStore.WasChangedExternally), "When there was no modification will return false")]
         public void WasChangedExternally_WhenThereWasNoModification_ReturnsFalse()
         {
             var t = nameof(WasChangedExternally_WhenThereWasNoModification_ReturnsFalse);
@@ -36,7 +36,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfig(new FileConfigSource(file));
+                var cfg = new FileConfigStore(new FileConfigSource(file));
                 cfg.Load();
 
                 // Act
@@ -47,7 +47,7 @@ namespace Nett.Coma.Tests.Unit
             }
         }
 
-        [MFact(nameof(FileConfig), nameof(FileConfig.WasChangedExternally), "When there was a modification will return true until changes were loaded")]
+        [MFact(nameof(FileConfigStore), nameof(FileConfigStore.WasChangedExternally), "When there was a modification will return true until changes were loaded")]
         public void WasChangedExternally_WhenFileWasModified_ReturnsTrueUntilLoadIsPerformed()
         {
             var t = nameof(WasChangedExternally_WhenThereWasNoModification_ReturnsFalse);
@@ -55,7 +55,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfig(new FileConfigSource(file));
+                var cfg = new FileConfigStore(new FileConfigSource(file));
                 cfg.Load();
                 using (var sw = File.AppendText(file))
                 {

@@ -1,6 +1,6 @@
 ﻿namespace Nett.Coma
 {
-    internal interface IMergeableConfig : IPersistableConfig
+    internal interface IMergeableConfig : IConfigStore
     {
         TomlTable Load(IConfigSource source);
 

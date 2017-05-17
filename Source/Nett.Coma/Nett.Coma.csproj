@@ -59,7 +59,7 @@
     <Compile Include="ReloadOnExternalChangeFileConfig.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Config`1.cs" />
-    <Compile Include="FilePersistedConfig.cs" />
+    <Compile Include="FileConfigStore.cs" />
     <Compile Include="IPersistedConfig.cs" />
     <Compile Include="MergedConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

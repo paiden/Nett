@@ -19,7 +19,7 @@
 
     internal interface ISourceFactory
     {
-        IPersistableConfig CreatePersistable();
+        IConfigStore CreatePersistable();
     }
 
     public static class ConfigSource
@@ -57,9 +57,9 @@
         private string DebuggerDisplay => $"[FileSource] Alias={this.Alias} FilePath={this.FilePath}";
 
         public IMergeableConfig CreateMergedPersistable()
-            => new MergedConfig(new List<IPersistableConfig>() { this.CreatePersistable() });
+            => new MergedConfig(new List<IConfigStore>() { this.CreatePersistable() });
 
-        public IPersistableConfig CreatePersistable() => new ReloadOnExternalChangeFileConfig(new FileConfig(this));
+        public IConfigStore CreatePersistable() => new ReloadOnExternalChangeFileConfig(new FileConfigStore(this));
     }
 
     internal sealed class MergeSource : IConfigSource, IMergedSourceFactory
