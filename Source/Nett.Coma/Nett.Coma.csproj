@@ -45,9 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigSources.cs" />
+    <Compile Include="ConfigSource.cs" />
     <Compile Include="Extensions\LambdaExpressionExtensions.cs" />
-    <Compile Include="IMergeableConfig.cs" />
+    <Compile Include="IMergeConfigStore.cs" />
     <Compile Include="Path\TPath.ArraySegment.cs" />
     <Compile Include="Path\TPath.Builder.cs" />
     <Compile Include="Path\TPath.IndexSegment.cs" />
@@ -61,7 +61,7 @@
     <Compile Include="Config`1.cs" />
     <Compile Include="FileConfigStore.cs" />
     <Compile Include="IPersistedConfig.cs" />
-    <Compile Include="MergedConfig.cs" />
+    <Compile Include="MergeConfigStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TomlEx\TomlTableArrayExtensions.cs" />
     <Compile Include="TomlEx\TomlTableExtensions.cs" />

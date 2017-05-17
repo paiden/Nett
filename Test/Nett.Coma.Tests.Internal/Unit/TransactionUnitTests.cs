@@ -10,11 +10,11 @@ namespace Nett.Coma.Tests.Unit
     [ExcludeFromCodeCoverage]
     public sealed class TransactionUnitTests
     {
-        private readonly IMergeableConfig persistable;
+        private readonly IMergeConfigStore persistable;
 
         public TransactionUnitTests()
         {
-            this.persistable = Substitute.For<IMergeableConfig>();
+            this.persistable = Substitute.For<IMergeConfigStore>();
         }
 
         [MFact(nameof(Transaction), nameof(Transaction.Start), "when peristable is null throws arg null")]

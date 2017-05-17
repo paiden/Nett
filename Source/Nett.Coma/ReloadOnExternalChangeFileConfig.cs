@@ -14,6 +14,8 @@
             this.persistable = persistable.CheckNotNull(nameof(persistable));
         }
 
+        public string Alias => this.persistable.Alias;
+
         public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
 
         public bool EnsureExists(TomlTable content) => this.persistable.EnsureExists(content);

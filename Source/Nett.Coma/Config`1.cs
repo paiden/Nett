@@ -10,9 +10,9 @@
     {
         private readonly Config config;
 
-        internal Config(IMergeableConfig persistable, IConfigSource source)
+        internal Config(IMergeConfigStore persistable)
         {
-            this.config = new Config(persistable, source);
+            this.config = new Config(persistable);
         }
 
         public TRet Get<TRet>(Expression<Func<T, TRet>> selector)

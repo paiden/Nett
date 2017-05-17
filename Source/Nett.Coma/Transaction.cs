@@ -1,16 +1,17 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using System.Collections.Generic;
     using Nett.Extensions;
 
-    internal sealed class Transaction : IMergeableConfig, IDisposable
+    internal sealed class Transaction : IMergeConfigStore, IDisposable
     {
-        private readonly Action<IMergeableConfig> onCloseTransactionCallback;
-        private readonly IMergeableConfig persistable;
+        private readonly Action<IMergeConfigStore> onCloseTransactionCallback;
+        private readonly IMergeConfigStore persistable;
         private TomlTable transactionSourcesTable;
         private TomlTable transactionTable;
 
-        private Transaction(IMergeableConfig persistable, Action<IMergeableConfig> onCloseTransactionCallback)
+        private Transaction(IMergeConfigStore persistable, Action<IMergeConfigStore> onCloseTransactionCallback)
         {
             if (persistable is Transaction)
             {
@@ -22,7 +23,11 @@
             this.onCloseTransactionCallback = onCloseTransactionCallback.CheckNotNull(nameof(onCloseTransactionCallback));
         }
 
-        public static Transaction Start(IMergeableConfig persistable, Action<IMergeableConfig> onCloseTransactionCallback)
+        public IEnumerable<IConfigSource> Sources => this.persistable.Sources;
+
+        public string Alias => this.persistable.Alias;
+
+        public static Transaction Start(IMergeConfigStore persistable, Action<IMergeConfigStore> onCloseTransactionCallback)
         {
             var transaction = new Transaction(persistable, onCloseTransactionCallback);
             transaction.Init();
