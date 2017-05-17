@@ -25,8 +25,6 @@
 
         public string Alias => throw new NotImplementedException();
 
-        //public string Alias => string.Join("+", this.stores.Select(s => s.Alias);
-
         public bool CanHandleSource(IConfigSource source) => this.stores.Any(c => c.CanHandleSource(source));
 
         public bool EnsureExists(TomlTable content)

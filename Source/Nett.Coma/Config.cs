@@ -37,21 +37,6 @@
             }
         }
 
-        internal static Config<T> CreateInternal<T>(Func<T> createDefault, IMergeConfigStore store)
-            where T : class
-        {
-            createDefault.CheckNotNull(nameof(createDefault));
-            store.CheckNotNull(nameof(store));
-
-            var cfg = createDefault();
-            store.EnsureExists(Toml.Create(cfg));
-
-            return new Config<T>(store);
-        }
-
-        private static MergeConfigStore CreateMergeStore(IConfigStore store)
-            => new MergeConfigStore(new List<IConfigStore>() { store });
-
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)
         {
             getter.CheckNotNull(nameof(getter));
@@ -94,6 +79,18 @@
         }
 
         public TomlTable Unmanaged() => this.persistable.Load();
+
+        internal static Config<T> CreateInternal<T>(Func<T> createDefault, IMergeConfigStore store)
+                    where T : class
+        {
+            createDefault.CheckNotNull(nameof(createDefault));
+            store.CheckNotNull(nameof(store));
+
+            var cfg = createDefault();
+            store.EnsureExists(Toml.Create(cfg));
+
+            return new Config<T>(store);
+        }
 
         internal bool Clear(TPath path)
         {
@@ -157,5 +154,8 @@
             var source = path.TryApply(cfgTable) as TomlSource;
             return source?.Value;
         }
+
+        private static MergeConfigStore CreateMergeStore(IConfigStore store)
+                    => new MergeConfigStore(new List<IConfigStore>() { store });
     }
 }
