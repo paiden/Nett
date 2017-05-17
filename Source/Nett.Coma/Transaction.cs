@@ -8,6 +8,9 @@
     {
         private readonly Action<IMergeConfigStore> onCloseTransactionCallback;
         private readonly IMergeConfigStore persistable;
+        private readonly Dictionary<IConfigSource, TomlTable> perSourceTransactionTables
+            = new Dictionary<IConfigSource, TomlTable>(new SourceEqualityComparer());
+
         private TomlTable transactionSourcesTable;
         private TomlTable transactionTable;
 
@@ -44,6 +47,12 @@
             }
 
             this.persistable.Save(this.transactionTable);
+
+            foreach (var kvp in this.perSourceTransactionTables)
+            {
+                this.persistable.Save(kvp.Value, kvp.Key);
+            }
+
             this.onCloseTransactionCallback(this.persistable);
         }
 
@@ -51,24 +60,14 @@
 
         public TomlTable Load() => this.transactionTable;
 
-        public TomlTable Load(TomlTable table, IConfigSource source)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TomlTable Load(IConfigSource source)
-        {
-            throw new NotImplementedException();
-        }
+        public TomlTable Load(IConfigSource source) => this.perSourceTransactionTables[source];
 
         public TomlTable LoadSourcesTable() => this.transactionSourcesTable;
 
         public void Save(TomlTable content) => this.transactionTable = content;
 
         public void Save(TomlTable table, IConfigSource source)
-        {
-            throw new NotImplementedException();
-        }
+            => this.perSourceTransactionTables[source] = table;
 
         public bool WasChangedExternally() => this.persistable.WasChangedExternally();
 
@@ -76,6 +75,24 @@
         {
             this.transactionTable = this.persistable.Load();
             this.transactionSourcesTable = this.persistable.Load();
+
+            foreach (var s in this.persistable.Sources)
+            {
+                this.perSourceTransactionTables[s] = this.persistable.Load(s);
+            }
+        }
+
+        private sealed class SourceEqualityComparer : IEqualityComparer<IConfigSource>
+        {
+            public bool Equals(IConfigSource x, IConfigSource y)
+            {
+                return x.Alias == y.Alias;
+            }
+
+            public int GetHashCode(IConfigSource obj)
+            {
+                return obj.Alias.GetHashCode();
+            }
         }
     }
 }
