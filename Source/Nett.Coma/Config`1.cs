@@ -10,7 +10,7 @@
     {
         private readonly Config config;
 
-        internal Config(IMergeableConfig persistable)
+        internal Config(IMergeConfigStore persistable)
         {
             this.config = new Config(persistable);
         }

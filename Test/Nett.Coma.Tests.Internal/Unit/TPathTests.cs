@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.Linq.Expressions;
 using FluentAssertions;
-using Nett.UnitTests.Util;
+using Nett.Coma.Extensions;
 using Xunit;
 
 namespace Nett.Coma.Tests.Internal.Unit
@@ -12,89 +11,93 @@ namespace Nett.Coma.Tests.Internal.Unit
     [ExcludeFromCodeCoverage]
     public sealed class TPathTests
     {
-        public static IEnumerable<object[]> ValidParseData
-        {
-            get
-            {
-                yield return new object[] { "", new TPath() };
-                yield return new object[] { "/X", new TPath().WithKeyAdded("X") };
-                yield return new object[] { "/X/Y", new TPath().WithKeyAdded("X").WithKeyAdded("Y") };
-                yield return new object[] { "[1]", new TPath().WithIndexAdded(1) };
-                yield return new object[] { "/X[1]", new TPath().WithKeyAdded("X").WithIndexAdded(1) };
-                yield return new object[] { "/X[1][2]", new TPath().WithKeyAdded("X").WithIndexAdded(1).WithIndexAdded(2) };
-                yield return new object[] { "/X[1][2]/Y/Z[3]", new TPath().WithKeyAdded("X").WithIndexAdded(1).WithIndexAdded(2).WithKeyAdded("Y").WithKeyAdded("Z").WithIndexAdded(3) };
+        private readonly Root r;
+        private readonly TomlTable tbl;
 
-            }
+        public TPathTests()
+        {
+            this.r = new Root();
+            this.tbl = Toml.Create(this.r);
         }
 
-        [MTheory(nameof(TPath), nameof(TPath.Parse), "When input data is a parseable path, produces the TPath equivalent")]
-        [MemberData(nameof(ValidParseData))]
-        public void Parse_ProducesCorrectTPath(string toParse, object expected)
+        [Fact]
+        public void Apply_WhenIMemberAccessed_ReturnsTheIMember()
         {
             // Arrange
-            TPath expectedPath = (TPath)expected;
+            Expression<Func<Root, int>> e = r => r.I;
+            var path = e.BuildTPath();
 
             // Act
-            var p = TPath.Parse(toParse);
-
-            foreach (var s in p)
-            {
-                Debug.WriteLine(s);
-            }
-
-            var a = p.ToList();
-            var b = expectedPath.ToList();
+            var o = path.Apply(this.tbl);
 
             // Assert
-            p.Should().Equal(expectedPath);
+            o.Get<int>().Should().Be(1);
         }
 
-        [MTheory(nameof(TPath), nameof(TPath.ToString), "Returns correct string representation")]
-        [MemberData(nameof(ValidParseData))]
-        public void ToString_ReturnsCorrectStringRep(string input, object _)
+        [Fact]
+        public void Apply_WhenAMemberAccessed_ReturnsTheAMember()
         {
             // Arrange
-            var p = TPath.Parse(input);
+            Expression<Func<Root, int[]>> e = r => r.A;
+            var path = e.BuildTPath();
 
             // Act
-            var s = p.ToString();
+            var o = path.Apply(this.tbl);
 
             // Assert
-            s.Should().Be(input);
+            o.Get<int[]>().Should().Equal(new int[] { 1, 2 });
         }
 
-        public static TheoryData<string> InvalidParseData = new TheoryData<string>()
-        {
-            "//",
-            "///",
-            " ",
-            " /",
-            "convert(/X)",
-            "(",
-            "X",
-        };
-
-        [MTheory(nameof(TPath), nameof(TPath.Parse), "When input is invalid throws a parse exception")]
-        [MemberData(nameof(InvalidParseData))]
-        public void Parse_WhenInputIsInvalid_ThorwsException(string src)
+        [Fact]
+        public void Apply_WhenItemIMemberAccessed_ReturnsItemIMember()
         {
             // Arrange
+            Expression<Func<Root, int>> e = r => r.Item.I;
+            var path = e.BuildTPath();
 
             // Act
-            Action a = () => TPath.Parse(src);
+            var o = path.Apply(this.tbl);
 
             // Assert
-            a.ShouldThrow<ArgumentException>().WithMessage($"*{src}**no valid TPath*");
+            o.Get<int>().Should().Be(this.r.Item.I);
         }
 
-        [MFact(nameof(TPath), nameof(TPath.Parse), "When input is null throws ArgNull")]
-        public void Parse_WhenInptuIsNull_ThrowsArgNull()
+        [Fact]
+        public void Apply_WhenAItemIndexAccessed_ReturnsValueOfThatIndex()
         {
+            // Arrange
+            Expression<Func<Root, int>> e = r => r.A[1];
+            var path = e.BuildTPath();
+
             // Act
-            Action a = () => TPath.Parse(null);
+            var o = path.Apply(this.tbl);
 
             // Assert
-            a.ShouldThrow<ArgumentNullException>().WithMessage("*src*");
+            o.Get<int>().Should().Be(this.r.A[1]);
+        }
+
+        public class Root
+        {
+            public int I { get; set; } = 1;
+
+            public int[] A { get; set; } = new int[] { 1, 2 };
+
+            public IEnumerable<bool> E { get; set; }
+
+            public List<string> L { get; set; }
+
+            public Item Item { get; set; } = new Item();
+
+            public Item[] Items { get; set; }
+
+            public IEnumerable<Item> EItems { get; set; }
+
+            public List<Item> LItems { get; set; }
+        }
+
+        public class Item
+        {
+            public int I { get; set; } = 2;
         }
     }
 }

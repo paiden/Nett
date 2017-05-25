@@ -457,6 +457,9 @@ Nett:
 + Fix: Write key back to file with same type [#23](https://github.com/paiden/Nett/issues/23)
 + Fix: Parse errors caused by absent optional whitespace [#26](https://github.com/paiden/Nett/issues/26)
 
+Coma:
++ Add: Settings can be moved between config scopes.
+
 2017-04-20: **v0.6.3** *(TOML 0.4.0)*
 
 Nett:

@@ -1,6 +1,6 @@
 ﻿namespace Nett.Coma
 {
-    internal interface IPersistableConfig
+    internal interface IConfigStore : IConfigSource
     {
         bool CanHandleSource(IConfigSource source);
 

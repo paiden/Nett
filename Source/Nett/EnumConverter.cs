@@ -6,6 +6,8 @@
     {
         public Type FromType => Types.EnumType;
 
+        public TomlObjectType? TomlTargetType => TomlObjectType.String;
+
         public bool CanConvertFrom(Type t) => t.BaseType == Types.EnumType;
 
         public bool CanConvertTo(Type t) => Types.TomlObjectType.IsAssignableFrom(t);
@@ -18,6 +20,8 @@
     internal sealed class TomlToEnumConverter : ITomlConverter
     {
         public Type FromType => Types.TomlStringType;
+
+        public TomlObjectType? TomlTargetType => null;
 
         public bool CanConvertFrom(Type t) => t == this.FromType;
 

@@ -2,17 +2,19 @@
 {
     using Nett.Extensions;
 
-    internal sealed class ReloadOnExternalChangeFileConfig : IPersistableConfig
+    internal sealed class ReloadOnExternalChangeFileConfig : IConfigStore
     {
-        private readonly FileConfig persistable;
+        private readonly FileConfigStore persistable;
 
         private TomlTable loaded = null;
         private TomlTable loadedSourcesTable = null;
 
-        public ReloadOnExternalChangeFileConfig(FileConfig persistable)
+        public ReloadOnExternalChangeFileConfig(FileConfigStore persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
         }
+
+        public string Alias => this.persistable.Alias;
 
         public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
 

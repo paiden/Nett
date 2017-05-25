@@ -6,6 +6,8 @@
     {
         Type FromType { get; }
 
+        TomlObjectType? TomlTargetType { get; }
+
         bool CanConvertFrom(Type t);
 
         bool CanConvertTo(Type t);

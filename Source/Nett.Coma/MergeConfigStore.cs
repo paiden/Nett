@@ -6,28 +6,32 @@
 
     using static System.Diagnostics.Debug;
 
-    internal class MergedConfig : IMergeableConfig
+    internal class MergeConfigStore : IMergeConfigStore
     {
         private const string AssertAtLeastOneConfigMsg =
             "Constructor should check that there is a config and the configs should not get modified later on";
 
-        private readonly List<IPersistableConfig> configs;
+        private readonly List<IConfigStore> stores;
 
-        public MergedConfig(IEnumerable<IPersistableConfig> configs)
+        public MergeConfigStore(IEnumerable<IConfigStore> configs)
         {
             if (configs == null) { throw new ArgumentNullException(nameof(configs)); }
             if (configs.Count() <= 0) { throw new ArgumentException("There needs to be at least one config", nameof(configs)); }
 
-            this.configs = new List<IPersistableConfig>(configs);
+            this.stores = new List<IConfigStore>(configs);
         }
 
-        public bool CanHandleSource(IConfigSource source) => this.configs.Any(c => c.CanHandleSource(source));
+        public IEnumerable<IConfigSource> Sources => this.stores;
+
+        public string Alias => throw new NotImplementedException();
+
+        public bool CanHandleSource(IConfigSource source) => this.stores.Any(c => c.CanHandleSource(source));
 
         public bool EnsureExists(TomlTable content)
         {
-            Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
+            Assert(this.stores.Count > 0, AssertAtLeastOneConfigMsg);
 
-            return this.configs.First().EnsureExists(content);
+            return this.stores.First().EnsureExists(content);
         }
 
         public TomlTable Load() => this.MergeTables(c => c.Load());
@@ -35,7 +39,7 @@
         public TomlTable Load(IConfigSource source)
         {
 #pragma warning disable SA1312
-            IPersistableConfig _;
+            IConfigStore _;
             return this.LoadInternal(source, out _);
 #pragma warning restore SA1312
         }
@@ -44,9 +48,9 @@
 
         public void Save(TomlTable content)
         {
-            Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
+            Assert(this.stores.Count > 0, AssertAtLeastOneConfigMsg);
 
-            foreach (var c in this.configs)
+            foreach (var c in this.stores)
             {
                 var tbl = c.Load();
                 tbl.OverwriteWithValuesForSaveFrom(content, addNewRows: false);
@@ -56,24 +60,24 @@
 
         public void Save(TomlTable table, IConfigSource source)
         {
-            IPersistableConfig cfg = this.configs.Single(c => c.CanHandleSource(source));
+            IConfigStore cfg = this.stores.Single(c => c.CanHandleSource(source));
             cfg.Save(table);
         }
 
-        public bool WasChangedExternally() => this.configs.Any(c => c.WasChangedExternally());
+        public bool WasChangedExternally() => this.stores.Any(c => c.WasChangedExternally());
 
-        private TomlTable LoadInternal(IConfigSource source, out IPersistableConfig cfg)
+        private TomlTable LoadInternal(IConfigSource source, out IConfigStore cfg)
         {
-            cfg = this.configs.Single(c => c.CanHandleSource(source));
+            cfg = this.stores.Single(c => c.CanHandleSource(source));
             return cfg.Load();
         }
 
-        private TomlTable MergeTables(Func<IPersistableConfig, TomlTable> loadSingle)
+        private TomlTable MergeTables(Func<IConfigStore, TomlTable> loadSingle)
         {
-            Assert(this.configs.Count > 0, AssertAtLeastOneConfigMsg);
+            Assert(this.stores.Count > 0, AssertAtLeastOneConfigMsg);
 
             TomlTable merged = Toml.Create();
-            foreach (var c in this.configs)
+            foreach (var c in this.stores)
             {
                 merged.OverwriteWithValuesForLoadFrom(loadSingle(c));
             }

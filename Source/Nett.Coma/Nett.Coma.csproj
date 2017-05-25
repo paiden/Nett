@@ -45,20 +45,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigSources.cs" />
+    <Compile Include="ConfigSource.cs" />
     <Compile Include="Extensions\LambdaExpressionExtensions.cs" />
-    <Compile Include="IMergeableConfig.cs" />
+    <Compile Include="IMergeConfigStore.cs" />
+    <Compile Include="Path\TPath.ArraySegment.cs" />
+    <Compile Include="Path\TPath.Builder.cs" />
+    <Compile Include="Path\TPath.IndexSegment.cs" />
+    <Compile Include="Path\TPath.KeySegment.cs" />
+    <Compile Include="Path\TPath.Segment.cs" />
+    <Compile Include="Path\TPath.TableArraySegment.cs" />
+    <Compile Include="Path\TPath.TableSegment.cs" />
+    <Compile Include="Path\TPath.ValueSegment.cs" />
     <Compile Include="ReloadOnExternalChangeFileConfig.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Config`1.cs" />
-    <Compile Include="FilePersistedConfig.cs" />
+    <Compile Include="FileConfigStore.cs" />
     <Compile Include="IPersistedConfig.cs" />
-    <Compile Include="MergedConfig.cs" />
+    <Compile Include="MergeConfigStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TomlEx\TomlTableArrayExtensions.cs" />
     <Compile Include="TomlEx\TomlTableExtensions.cs" />
     <Compile Include="TomlValueSource.cs" />
-    <Compile Include="TPath.cs" />
+    <Compile Include="Path\TPath.ITPathSegment.cs" />
+    <Compile Include="Path\TPath.cs" />
     <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup>

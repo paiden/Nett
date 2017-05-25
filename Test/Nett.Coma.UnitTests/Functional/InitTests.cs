@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
+using Nett.Coma.Tests.TestData;
 using Nett.UnitTests.Util;
 using Xunit;
 
@@ -56,6 +57,57 @@ namespace Nett.Coma.Tests
             {
                 TryDeleteFile(mainFile);
                 TryDeleteFile(userFile);
+            }
+        }
+
+        [Fact]
+        public void SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved()
+        {
+            using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved)))
+            {
+                // Arrange
+                var cfg = Config.Create(
+                    () => new SingleConfigFileScenario.ConfigContent(), ConfigSource.CreateFileSource(scenario.File));
+
+                // Act
+                cfg.Set(c => c.Sub.Z, 1);
+
+                // Assert
+                File.ReadAllText(scenario.File).Should().Be("X = 1\r\nY = \"Y\"\r\n\r\n[Sub]\r\nZ = 1\r\n");
+            }
+        }
+
+        [Fact]
+        public void SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved()
+        {
+            using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved)))
+            {
+                // Arrange
+                var src = ConfigSource.CreateFileSource(scenario.File);
+                var cfg = Config.Create(
+                    () => new SingleConfigFileScenario.ConfigContent(), src);
+
+                // Act
+                cfg.Set(c => c.Sub.Z, 1, src);
+
+                // Assert
+                File.ReadAllText(scenario.File).Should().Be("X = 1\r\nY = \"Y\"\r\n\r\n[Sub]\r\nZ = 1\r\n");
+            }
+        }
+
+        [Fact]
+        public void SaveSetting_WhenMovedBetweenConfigScopes_SavesThatSettingCorrectly()
+        {
+            using (var scenario = GitScenario.Setup(nameof(SaveSetting_WhenMovedBetweenConfigScopes_SavesThatSettingCorrectly)))
+            {
+                // Arrange
+                var cfg = scenario.CreateMergedFromDefaults();
+
+                // Act
+                cfg.Set(c => c.Core.AutoClrf, true, scenario.UserFileSource);
+
+                // Assert
+                File.ReadAllText(scenario.UserFile).Should().Be("\r\n[User]\r\nName = \"Test User\"\r\nEMail = \"test@user.com\"\r\n\r\n[Core]\r\nAutoClrf = true\r\n");
             }
         }
     }

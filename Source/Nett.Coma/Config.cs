@@ -1,44 +1,40 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using Nett.Coma.Path;
     using Nett.Extensions;
 
     public sealed class Config
     {
-        private IMergeableConfig persistable;
+        private IMergeConfigStore persistable;
 
-        internal Config(IMergeableConfig persistable)
+        internal Config(IMergeConfigStore persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
-
-            this.persistable = persistable;
         }
 
         public static Config<T> Create<T>(Func<T> createDefault, string filePath)
             where T : class
-            => Create(createDefault, ConfigSource.CreateFileSource(filePath));
+            => Create(createDefault, new MergeConfigStore(new List<IConfigStore>() { new FileConfigStore(filePath) }));
 
         public static Config<T> Create<T>(Func<T> createDefault, params string[] filePaths)
             where T : class
         {
-            var sources = filePaths.Select(fp => ConfigSource.CreateFileSource(fp)).ToArray();
-            var merged = ConfigSource.Merged(sources);
-            return Create(createDefault, merged);
+            var store = new MergeConfigStore(filePaths.Select(fp => new FileConfigStore(fp)));
+            return Create(createDefault, store);
         }
 
         public static Config<T> Create<T>(Func<T> createDefault, IConfigSource source)
             where T : class
         {
-            createDefault.CheckNotNull(nameof(createDefault));
-            source.CheckNotNull(nameof(source));
-
-            var cfg = createDefault();
-
-            var persisted = ((IMergedSourceFactory)source).CreateMergedPersistable();
-            persisted.EnsureExists(Toml.Create(cfg));
-
-            return new Config<T>(persisted);
+            switch (source)
+            {
+                case IMergeConfigStore merged: return CreateInternal(createDefault, merged);
+                case IConfigStore store: return CreateInternal(createDefault, CreateMergeStore(store));
+                default: throw new ArgumentException(nameof(source));
+            }
         }
 
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)
@@ -84,6 +80,18 @@
 
         public TomlTable Unmanaged() => this.persistable.Load();
 
+        internal static Config<T> CreateInternal<T>(Func<T> createDefault, IMergeConfigStore store)
+                    where T : class
+        {
+            createDefault.CheckNotNull(nameof(createDefault));
+            store.CheckNotNull(nameof(store));
+
+            var cfg = createDefault();
+            store.EnsureExists(Toml.Create(cfg));
+
+            return new Config<T>(store);
+        }
+
         internal bool Clear(TPath path)
         {
             var ste = path.TryApply(this.persistable.LoadSourcesTable()) as TomlSource;
@@ -117,7 +125,17 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+            var src = this.TryGetSource(path);
+
+            bool notStoredInConfigYet = this.TryGetSource(path) == null;
+            if (notStoredInConfigYet)
+            {
+                this.Set(path, value, this.persistable.Sources.First());
+            }
+            else
+            {
+                this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+            }
         }
 
         internal void Set(TPath path, object value, IConfigSource source)
@@ -125,7 +143,7 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.ApplyValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
+            this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
         }
 
         internal IConfigSource TryGetSource(TPath path)
@@ -136,5 +154,8 @@
             var source = path.TryApply(cfgTable) as TomlSource;
             return source?.Value;
         }
+
+        private static MergeConfigStore CreateMergeStore(IConfigStore store)
+                    => new MergeConfigStore(new List<IConfigStore>() { store });
     }
 }

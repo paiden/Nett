@@ -1,27 +1,33 @@
 ﻿namespace Nett.Coma
 {
+    using System;
     using System.IO;
     using System.Security.Cryptography;
-    using Nett.Extensions;
 
-    internal sealed class FileConfig : IPersistableConfig
+    internal sealed class FileConfigStore : IConfigStore
     {
-        private readonly FileConfigSource source;
+        private readonly string filePath;
 
         private byte[] latestFileHash = null;
 
-        public FileConfig(FileConfigSource source)
+        public FileConfigStore(string filePath)
+            : this(filePath, filePath)
         {
-            this.source = source.CheckNotNull(nameof(source));
         }
 
-        private string FilePath => this.source.FilePath;
+        public FileConfigStore(string filePath, string alias)
+        {
+            this.filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+            this.Alias = alias;
+        }
 
-        public bool CanHandleSource(IConfigSource source) => this.source.Alias == source.Alias;
+        public string Alias { get; }
+
+        public bool CanHandleSource(IConfigSource source) => this.Alias == source.Alias;
 
         public bool EnsureExists(TomlTable content)
         {
-            if (!File.Exists(this.source.FilePath))
+            if (!File.Exists(this.filePath))
             {
                 this.Save(content);
                 return true;
@@ -32,29 +38,29 @@
 
         public bool WasChangedExternally()
         {
-            var current = ComputeHash(this.FilePath);
+            var current = ComputeHash(this.filePath);
             return !HashEquals(this.latestFileHash, current);
         }
 
         public TomlTable Load()
         {
-            this.latestFileHash = ComputeHash(this.FilePath);
-            return Toml.ReadFile(this.FilePath);
+            this.latestFileHash = ComputeHash(this.filePath);
+            return Toml.ReadFile(this.filePath);
         }
 
         public TomlTable LoadSourcesTable()
         {
             var table = this.Load();
-            var sourcesTable = table.TransformToSourceTable(this.source);
+            var sourcesTable = table.TransformToSourceTable(this);
             return sourcesTable;
         }
 
-        public TomlTable TransformToSourceTable(TomlTable toTransform) => toTransform.TransformToSourceTable(this.source);
+        public TomlTable TransformToSourceTable(TomlTable toTransform) => toTransform.TransformToSourceTable(this);
 
         public void Save(TomlTable config)
         {
-            Toml.WriteFile(config, this.FilePath);
-            this.latestFileHash = ComputeHash(this.FilePath);
+            Toml.WriteFile(config, this.filePath);
+            this.latestFileHash = ComputeHash(this.filePath);
         }
 
         private static byte[] ComputeHash(string filePath)

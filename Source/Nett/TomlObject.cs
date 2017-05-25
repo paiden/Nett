@@ -113,4 +113,25 @@
             return new TomlArray(root);
         }
     }
+
+    internal static class TomlObjecTypeExtensions
+    {
+        public static Type ToTomlClassType(this TomlObjectType t)
+        {
+            switch (t)
+            {
+                case TomlObjectType.Bool: return Types.TomlBoolType;
+                case TomlObjectType.String: return Types.TomlStringType;
+                case TomlObjectType.Int: return Types.TomlIntType;
+                case TomlObjectType.Float: return Types.TomlFloatType;
+                case TomlObjectType.DateTime: return Types.TomlDateTimeType;
+                case TomlObjectType.TimeSpan: return Types.TomlTimeSpanType;
+                case TomlObjectType.Array: return Types.TomlArrayType;
+                case TomlObjectType.Table: return Types.TomlTableType;
+                case TomlObjectType.ArrayOfTables: return Types.TomlTableArrayType;
+                default:
+                    throw new InvalidOperationException($"Cannot convert '{t}' to corresponding class type.");
+            }
+        }
+    }
 }

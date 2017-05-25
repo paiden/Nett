@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Nett.Coma.Path;
 using Nett.Extensions;
 
 namespace Nett.Coma.Extensions
@@ -8,12 +9,7 @@ namespace Nett.Coma.Extensions
         public static TPath BuildTPath(this LambdaExpression expr)
         {
             expr.CheckNotNull(nameof(expr));
-
-            var exprBody = expr.Body.ToString();
-            var withoutRootKey = exprBody.Substring(exprBody.IndexOf(".") + 1);
-
-            var toParse = "/" + withoutRootKey.Replace('.', '/');
-            return TPath.Parse(toParse);
+            return TPath.Builder.Build(expr);
         }
     }
 }
