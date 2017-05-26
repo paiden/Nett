@@ -53,11 +53,6 @@
             return sb.ToString();
         }
 
-        public static string TrimNChars(this string s, int n)
-        {
-            return s.Substring(0, s.Length - n).Substring(n);
-        }
-
         public static bool HasBareKeyCharsOnly(this string s)
         {
             for (int i = 0; i < s.Length; i++)

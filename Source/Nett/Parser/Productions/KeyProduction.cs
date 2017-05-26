@@ -14,11 +14,11 @@
             }
             else if (tokens.TryExpect(TokenType.String))
             {
-                return new TomlKey(tokens.Consume().value.TrimNChars(1), TomlKey.KeyType.Basic);
+                return new TomlKey(tokens.Consume().value, TomlKey.KeyType.Basic);
             }
             else if (tokens.TryExpect(TokenType.LiteralString))
             {
-                return new TomlKey(tokens.Consume().value.TrimNChars(1), TomlKey.KeyType.Literal);
+                return new TomlKey(tokens.Consume().value, TomlKey.KeyType.Literal);
             }
             else if (required)
             {

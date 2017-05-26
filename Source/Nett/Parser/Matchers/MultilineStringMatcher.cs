@@ -1,6 +1,5 @@
 ﻿namespace Nett.Parser.Matchers
 {
-    using System.Linq;
     using System.Text;
 
     internal static class MultilineStringMatcher
@@ -14,7 +13,7 @@
             var errPos = cs.FilePosition;
 
             StringBuilder sb = new StringBuilder(64);
-            sb.Append(cs.Consume(StringTag.Length).ToArray());
+            cs.Consume(StringTag.Length);
 
             while (!cs.TryExpect(StringTag))
             {
@@ -37,7 +36,7 @@
             }
             else
             {
-                sb.Append(cs.Consume(3).ToArray());
+                cs.Consume(StringTag.Length);
                 return new Token(TokenType.MultilineString, sb.ToString());
             }
         }

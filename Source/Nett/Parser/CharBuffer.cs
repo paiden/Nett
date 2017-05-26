@@ -101,6 +101,22 @@
             return this.End || this.TryExpectWhitespace() || this.TryExpect(']') || this.TryExpect(',') || this.TryExpect('}');
         }
 
+        public int TryTrimNewline()
+        {
+            if (this.PeekAt(0) == '\n')
+            {
+                this.Consume();
+                return 1;
+            }
+            else if (this.PeekAt(0) == '\r' && this.PeekAt(1) == '\n')
+            {
+                this.Consume(2);
+                return 2;
+            }
+
+            return 0;
+        }
+
         public bool TryExpect(string seq)
         {
             if (this.ItemsAvailable < seq.Length)

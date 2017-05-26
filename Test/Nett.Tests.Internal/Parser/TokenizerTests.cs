@@ -89,10 +89,10 @@ namespace Nett.Tests.Internal.Parser
         }
 
         [Theory]
-        [InlineData(@"""""")]
-        [InlineData(@"""X""")]
-        [InlineData("\"X\\\"\"")]
-        public void TokenizeString(string token)
+        [InlineData(@"""""", "")]
+        [InlineData(@"""X""", "X")]
+        [InlineData("\"X\\\"\"", @"X\")]
+        public void TokenizeString(string token, string expected)
         {
             // Arrange
             var t = new Tokenizer(token.ToStream());
@@ -102,7 +102,7 @@ namespace Nett.Tests.Internal.Parser
 
             // Assert
             tkn.type.Should().Be(TokenType.String);
-            tkn.value.Should().Be(token);
+            tkn.value.Should().Be(expected);
         }
 
         [Fact]
@@ -114,10 +114,10 @@ namespace Nett.Tests.Internal.Parser
         }
 
         [Theory]
-        [InlineData("''")]
-        [InlineData("'X'")]
-        [InlineData(@"'X\\'")]
-        public void TokenizeLiteralString(string token)
+        [InlineData("''", "")]
+        [InlineData("'X'", "X")]
+        [InlineData(@"'X\\'", @"X\\")]
+        public void TokenizeLiteralString(string token, string expected)
         {
             // Arrange
             var t = new Tokenizer(token.ToStream());
@@ -127,15 +127,16 @@ namespace Nett.Tests.Internal.Parser
 
             // Assert
             tkn.type.Should().Be(TokenType.LiteralString);
-            tkn.value.Should().Be(token);
+            tkn.value.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData("''''''")]
-        [InlineData("'''X\\'''")]
+        [InlineData("''''''", "")]
+        [InlineData("'''X\\'''", @"X\\")]
         [InlineData(@"'''
-2nd line'''")]
-        public void TokenizeMultilineLiteralString(string token)
+2nd line'''", @"
+2ndline")]
+        public void TokenizeMultilineLiteralString(string token, string expected)
         {
             // Arrange
             var t = new Tokenizer(token.ToStream());
@@ -145,15 +146,16 @@ namespace Nett.Tests.Internal.Parser
 
             // Assert
             tkn.type.Should().Be(TokenType.MultilineLiteralString);
-            tkn.value.Should().Be(token);
+            tkn.value.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData("\"\"\"\"\"\"")]
-        [InlineData("\"\"\"X\\\"\"\"\"")]
+        [InlineData("\"\"\"\"\"\"", "")]
+        [InlineData("\"\"\"X\\\"\"\"\"", @"X\")]
         [InlineData(@"""""""
-2nd line""""""")]
-        public void TokenizeMultilineString(string token)
+2nd line""""""", @"
+2nd line")]
+        public void TokenizeMultilineString(string token, string expected)
         {
             // Arrange
             var t = new Tokenizer(token.ToStream());
@@ -163,7 +165,7 @@ namespace Nett.Tests.Internal.Parser
 
             // Assert
             tkn.type.Should().Be(TokenType.MultilineString);
-            tkn.value.Should().Be(token);
+            tkn.value.Should().Be(expected);
         }
 
         [Theory]
@@ -213,6 +215,27 @@ namespace Nett.Tests.Internal.Parser
             t.Tokens.PeekAt(1).value.Should().Be("}");
         }
 
+        [Theory]
+        [InlineData("'X'", TokenType.LiteralString, "X")]
+        [InlineData("'''X'''", TokenType.MultilineLiteralString, "X")]
+        [InlineData("\"X\"", TokenType.String, "X")]
+        [InlineData("\"\"\"X\"\"\"", TokenType.MultilineString, "X")]
+        public void Tokenize_WhenStringTokenGiven_RemovesTheStringCharsFromTheTokenValue(
+            string input, object expectedType, string expectedValue)
+        {
+            // Arrange
+            TokenType expectedTokenType = (TokenType)expectedType;
+            var tknizer = new Tokenizer(input.ToStream());
+
+            // Act
+            var tkn = tknizer.Tokens.PeekAt(0);
+
+            // Asset
+            tkn.type.Should().Be(expectedTokenType);
+            tkn.value.Should().Be(expectedValue);
+
+        }
+
         [Fact]
         public void TokizingAssignsLineAndColumnNumbersOneBased()
         {
@@ -247,10 +270,10 @@ namespace Nett.Tests.Internal.Parser
             get
             {
                 yield return new Token(TokenType.Integer, "0");
-                yield return new Token(TokenType.String, "\"X\"");
+                yield return new Token(TokenType.String, "X");
                 yield return new Token(TokenType.Float, "2.0");
                 yield return new Token(TokenType.Bool, "true");
-                yield return new Token(TokenType.LiteralString, "\'LS\'");
+                yield return new Token(TokenType.LiteralString, "LS");
             }
         }
 
@@ -396,7 +419,7 @@ namespace Nett.Tests.Internal.Parser
             t.Tokens.Consume().value.Should().Be("InlineTable");
             t.Tokens.Consume().value.Should().Be("=");
             t.Tokens.Consume().value.Should().Be("{");
-            t.Tokens.Consume().value.Should().Be("\"test\"");
+            t.Tokens.Consume().value.Should().Be("test");
             t.Tokens.Consume().value.Should().Be("=");
             t.Tokens.Consume().value.Should().Be("1");
             t.Tokens.Consume().value.Should().Be("}");
@@ -407,10 +430,22 @@ namespace Nett.Tests.Internal.Parser
             var sb = new StringBuilder();
             foreach (var tk in tokens)
             {
-                sb.Append(tk.value).Append(" ");
+                sb.Append(GetTokenString(tk)).Append(" ");
             }
 
             return sb.ToString();
+
+            string GetTokenString(Token t)
+            {
+                switch (t.type)
+                {
+                    case TokenType.String: return $"\"{t.value}\"";
+                    case TokenType.LiteralString: return $"'{t.value}'";
+                    case TokenType.MultilineString: return $"\"\"\"{t.value}\"\"\"";
+                    case TokenType.MultilineLiteralString: return $"'''{t.value}'''";
+                    default: return t.value;
+                }
+            }
         }
     }
 }

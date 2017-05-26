@@ -21,7 +21,7 @@
                 return MultilineLiteralStringMatcher.TryMatch(cs);
             }
 
-            sb.Append(cs.Consume());
+            cs.Consume();
 
             while (!cs.End && !cs.TryExpect(StringTag))
             {
@@ -34,7 +34,7 @@
             }
             else
             {
-                sb.Append(cs.Consume());
+                cs.Consume();
                 return new Token(TokenType.LiteralString, sb.ToString());
             }
         }

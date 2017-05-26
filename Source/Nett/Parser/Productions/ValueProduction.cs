@@ -81,9 +81,7 @@
 
             Debug.Assert(t.type == TokenType.LiteralString);
 
-            var s = t.value.TrimNChars(1);
-
-            return new TomlString(root, s, TomlString.TypeOfString.Literal);
+            return new TomlString(root, t.value, TomlString.TypeOfString.Literal);
         }
 
         private static TomlString ParseMultilineLiteralString(ITomlRoot root, LookaheadBuffer<Token> tokens)
@@ -91,13 +89,13 @@
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.MultilineLiteralString);
 
-            var s = t.value.TrimNChars(3);
+            string s = t.value;
 
-            // Trim newline following the """ tag immediate
+            // Trim newline following the """ tag immediately
             if (s.Length > 0 && s[0] == '\r') { s = s.Substring(1); }
             if (s.Length > 0 && s[0] == '\n') { s = s.Substring(1); }
 
-            return new TomlString(root, s, TomlString.TypeOfString.MultilineLiteral);
+            return new TomlString(root, t.value, TomlString.TypeOfString.MultilineLiteral);
         }
 
         private static TomlString ParseMultilineString(ITomlRoot root, LookaheadBuffer<Token> tokens)
@@ -105,7 +103,7 @@
             var t = tokens.Consume();
             Debug.Assert(t.type == TokenType.MultilineString);
 
-            var s = t.value.TrimNChars(3);
+            var s = t.value;
 
             // Trim newline following the """ tag immediate
             if (s.Length > 0 && s[0] == '\r') { s = s.Substring(1); }
@@ -127,7 +125,7 @@
                 throw Parser.CreateParseError(t, $"String '{t.value}' is invalid because it contains newlines.");
             }
 
-            var s = t.value.TrimNChars(1).Unescape(t);
+            var s = t.value.Unescape(t);
 
             return new TomlString(root, s, TomlString.TypeOfString.Normal);
         }
