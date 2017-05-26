@@ -70,18 +70,20 @@ namespace Nett.UnitTests
             written.Should().Be($"Ts = {expected}\r\n");
         }
 
-        [Fact(DisplayName = "Test that DateTime gets written in RFC3339 spec", Skip = "Testing this parse / tostring equivalence is somewhat hard.... :-(")]
-        public void WriteDateTime_WritesDatetimeInRFC339Spec()
+        [Fact]
+        public void DateTimeOffset_WhenReadFromRfc3339SpecWithSpecificOffset_GetsWrittenBackToFileWithThatOffsetAndNotTheCurrentOne()
         {
             // Arrange
-            var o = new DateTimeType();
+            var readContent = $"DT = {CreateWithOffsetDifferentFromCurrentMachineOffset()}";
+            var obj = Toml.ReadString<DateTimeOffsetType>(readContent);
 
             // Act
-            var written = Toml.WriteString(o);
+            var written = Toml.WriteString(obj);
 
             // Assert
-            written.Should().Be($"DT = {DateTimeType.Default}\r\n");
+            written.Trim().Should().Be(readContent);
         }
+
 
         public class TimespanType
         {
@@ -99,6 +101,12 @@ namespace Nett.UnitTests
             public DateTime DT { get; set; } = DateTime.Parse(Default);
         }
 
+        public class DateTimeOffsetType
+        {
+            public const string Default = "1979-05-27T00:32:00.999999-07:00";
+            public DateTimeOffset DT { get; set; } = DateTime.Parse(Default);
+        }
+
         public class FloatType
         {
             public float F { get; set; }
@@ -107,6 +115,14 @@ namespace Nett.UnitTests
         public class DoubleType
         {
             public double D { get; set; }
+        }
+
+        private static string CreateWithOffsetDifferentFromCurrentMachineOffset()
+        {
+            var machineOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            var newOffset = (int)machineOffset.TotalHours + 1;
+
+            return $"1979-05-27T08:01:01.999999{newOffset:+00;-00;+00}:00";
         }
     }
 }
