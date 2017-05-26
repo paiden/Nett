@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
-using Nett.UnitTests.Util;
+using Nett.Tests.Util;
 
 namespace Nett.Coma.Tests.Internal.Integration
 {

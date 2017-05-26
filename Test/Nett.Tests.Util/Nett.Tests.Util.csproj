@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}</ProjectGuid>
+    <ProjectGuid>{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nett.Coma.Tests.Internal</RootNamespace>
-    <AssemblyName>Nett.Coma.Tests.Internal</AssemblyName>
+    <RootNamespace>Nett.Tests.Util</RootNamespace>
+    <AssemblyName>Nett.Tests.Util</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,20 +28,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\..\Solutions\Nett\packages\FluentAssertions.4.14.0\lib\net40\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=4.6.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Nett\packages\FluentAssertions.4.6.1\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.14.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\..\Solutions\Nett\packages\FluentAssertions.4.14.0\lib\net40\FluentAssertions.Core.dll</HintPath>
+    <Reference Include="FluentAssertions.Core, Version=4.6.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Nett\packages\FluentAssertions.4.6.1\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\..\Solutions\Nett\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Solutions\Nett\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +47,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\Solutions\Nett\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
@@ -70,13 +67,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integration\ReloadOnExternalChangeFileConfigTests.cs" />
+    <Compile Include="AssertionExtensions.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="FFact.cs" />
+    <Compile Include="MTheory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Unit\FileConfigTests.cs" />
-    <Compile Include="Unit\LambdaExpressionExtensionTests.cs" />
-    <Compile Include="Unit\TomlTableExtensionsTests.cs" />
-    <Compile Include="Unit\TPathTests.cs" />
-    <Compile Include="Unit\TransactionUnitTests.cs" />
+    <Compile Include="Scenarios\ComaDocExampleScenario.cs" />
+    <Compile Include="Scenarios\MultiLevelTableScenario.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="TestData\TomlStrings.cs" />
+    <Compile Include="TestFileName.cs" />
+    <Compile Include="TestingConstants.cs" />
+    <Compile Include="MFact.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -90,16 +92,6 @@
       <Project>{11e1bd88-fab6-407d-b3ef-42a291d4aa14}</Project>
       <Name>Nett</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nett.Tests.Util\Nett.Tests.Util.csproj">
-      <Project>{43f48e90-2fa1-4dd7-a4cf-9eb6db078a76}</Project>
-      <Name>Nett.Tests.Util</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestData\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

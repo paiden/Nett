@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using FluentAssertions;
-using Nett.UnitTests.Util;
+using Nett.Tests.Util;
 using NSubstitute;
 
 namespace Nett.Coma.Tests.Unit
