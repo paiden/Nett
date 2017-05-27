@@ -1,23 +1,20 @@
 ﻿namespace Nett.Coma
 {
-    using System;
     using System.IO;
     using System.Security.Cryptography;
+    using Nett.Extensions;
 
     internal sealed class FileConfigStore : IConfigStore
     {
         private readonly string filePath;
+        private readonly TomlConfig config;
 
         private byte[] latestFileHash = null;
 
-        public FileConfigStore(string filePath)
-            : this(filePath, filePath)
+        public FileConfigStore(TomlConfig config, string filePath, string alias)
         {
-        }
-
-        public FileConfigStore(string filePath, string alias)
-        {
-            this.filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+            this.config = config.CheckNotNull(nameof(config));
+            this.filePath = filePath.CheckNotNull(nameof(config));
             this.Alias = alias;
         }
 

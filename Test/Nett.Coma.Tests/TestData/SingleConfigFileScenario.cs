@@ -22,7 +22,10 @@ namespace Nett.Coma.Tests.TestData
 
         public Config<ConfigContent> CreateConfig()
         {
-            return Config.Create(() => new ConfigContent(), this.File);
+            return Config.CreateAs()
+                .MappedToType(() => new ConfigContent())
+                .StoredAs(store => store.File(this.File))
+                .Initialize();
         }
 
         public ConfigContent ReadFile()

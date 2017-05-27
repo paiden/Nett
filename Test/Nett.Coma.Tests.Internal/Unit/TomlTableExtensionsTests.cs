@@ -49,7 +49,7 @@ namespace Nett.Coma.Tests.Unit
             TomlTable table = null;
 
             // Act
-            Action a = () => table.TransformToSourceTable(ConfigSource.CreateFileSource("x"));
+            Action a = () => table.TransformToSourceTable(new FileConfigStore(TomlConfig.DefaultInstance, "x", "x"));
 
             // Assert
             a.ShouldThrow<ArgumentNullException>().WithMessage("*table*");
@@ -61,7 +61,7 @@ namespace Nett.Coma.Tests.Unit
             using (var scenario = MultiLevelTableScenario.Setup())
             {
                 // Act
-                var src = ConfigSource.CreateFileSource("test");
+                var src = new FileConfigStore(TomlConfig.DefaultInstance, "test", "test");
                 var sourceTable = scenario.Table.TransformToSourceTable(src);
 
                 // Assert

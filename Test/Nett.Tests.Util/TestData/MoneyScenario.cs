@@ -7,6 +7,7 @@ namespace Nett.Tests.Util.TestData
     public sealed class MoneyScenario : IDisposable
     {
         public TestFileName File { get; }
+        public TomlConfig TmlConfig { get; }
 
         private MoneyScenario(string test)
         {
@@ -22,7 +23,11 @@ namespace Nett.Tests.Util.TestData
 
         public Config<Root> NewConfig()
         {
-            return Config.Create(() => new Root(), this.File);
+            return Config.CreateAs()
+                .MappedToType(() => new Root())
+                .StoredAs(store => store.File(this.File))
+                .UseTomlConfiguration(this.TmlConfig)
+                .Initialize();
         }
 
         private MoneyScenario CreateFileContents()

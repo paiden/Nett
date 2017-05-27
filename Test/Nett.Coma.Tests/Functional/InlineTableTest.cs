@@ -33,7 +33,10 @@ namespace Nett.Coma.Tests.Functional
                 };
 
                 // Act
-                var cfg = Config.Create(() => new Cfg(), ConfigSource.CreateFileSource(file));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new Cfg())
+                    .StoredAs(store => store.File(file))
+                    .Initialize();
                 cfg.Set(c => c.UserItems, toWrite);
 
                 // Assert
@@ -52,7 +55,10 @@ namespace Nett.Coma.Tests.Functional
                 File.WriteAllText(file, input);
 
                 // Act
-                var cfg = Config.Create(() => new Cfg(), ConfigSource.CreateFileSource(file));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new Cfg())
+                    .StoredAs(store => store.File(file))
+                    .Initialize();
                 var items = cfg.Get(c => c.UserItems);
 
                 // Assert

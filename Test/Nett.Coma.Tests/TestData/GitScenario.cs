@@ -46,10 +46,6 @@ EMail = ""test@user.com""";
             this.SystemFile = TestFileName.Create(testName, "system", GitConfig.Extension);
             this.UserFile = TestFileName.Create(testName, "user", GitConfig.Extension);
             this.RepoFile = TestFileName.Create(testName, "repo", GitConfig.Extension);
-
-            this.SystemFileSource = ConfigSource.CreateFileSource(this.SystemFile, SystemAlias);
-            this.UserFileSource = ConfigSource.CreateFileSource(this.UserFile, UserAlias);
-            this.RepoFileSource = ConfigSource.CreateFileSource(this.RepoFile, RepoAlias);
         }
 
         public string RepoAlias => "RepoAlias";
@@ -75,8 +71,13 @@ EMail = ""test@user.com""";
 
         public Config<GitConfig> CreateMergedFromDefaults()
         {
-            var source = ConfigSource.Merged(this.SystemFileSource, this.UserFileSource, this.RepoFileSource);
-            return Config.Create(() => new GitConfig(), source);
+            return Config.CreateAs()
+                .MappedToType(() => new GitConfig())
+                .StoredAs(store => store
+                    .File(this.SystemFile).AsSource(s => this.SystemFileSource = s)
+                    .MergeWith().File(this.UserFile).AsSource(s => this.UserFileSource = s)
+                    .MergeWith().File(this.RepoFile).AsSource(s => this.RepoFileSource = s))
+                .Initialize();
         }
 
         // Default System settings stored in all scopes

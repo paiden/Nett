@@ -47,9 +47,9 @@ namespace Nett.Coma.Tests.Functional
                 var s2 = config.GetSource(c => c.Core.IgnoreCase);
 
                 // Assert
-                s0.Alias.Should().Be(scenario.SystemAlias);
-                s1.Alias.Should().Be(scenario.UserAlias);
-                s2.Alias.Should().Be(scenario.RepoAlias);
+                s0.Should().BeSameAs(scenario.SystemFileSource);
+                s1.Should().BeSameAs(scenario.UserFileSource);
+                s2.Should().BeSameAs(scenario.RepoFileSource);
             }
         }
     }

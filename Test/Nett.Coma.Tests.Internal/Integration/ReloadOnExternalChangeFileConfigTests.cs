@@ -16,7 +16,7 @@ namespace Nett.Coma.Tests.Internal.Integration
             using (var fn = TestFileName.Create(nameof(Save_UpdatesInMemoryConfigSoNextLoadWillDeliverThatConfig), "file", Toml.FileExtension))
             {
                 // Arrange
-                var fc = new FileConfigStore(fn);
+                var fc = new FileConfigStore(TomlConfig.DefaultInstance, fn, fn);
                 var oc = new ReloadOnExternalChangeFileConfig(fc);
                 File.WriteAllText(fn, "X = 1");
                 oc.Load(); // At least one load needs to be done, otherwise a load will be done because not any data was loaded yet

@@ -38,31 +38,35 @@ UserName = ""Test""
 ");
 
             // Prepare sources for merging
-            var appSource = ConfigSource.CreateFileSource(appSettings);
-            var userSource = ConfigSource.CreateFileSource(userSettings);
-            var merged = ConfigSource.Merged(appSource, userSource); // order important here
+            IConfigSource appSource = null, userSource = null;
 
             // merge both TOML files into one settings object
-            var settings = Config.Create(() => new AppSettings(), merged);
+            var config = Config.CreateAs()
+                .MappedToType(() => new AppSettings())
+                .StoredAs(store => store
+                    .File(appSettings).AsSource(s => appSource = s)
+                    .MergeWith().File(userSettings).AsSource(s => userSource = s))
+                .UseTomlConfiguration(null)
+                .Initialize();
 
             // Read the settings
-            var oldTimeout = settings.Get(s => s.IdleTimeout);
-            var oldUserName = settings.Get(s => s.User.UserName);
+            var oldTimeout = config.Get(s => s.IdleTimeout);
+            var oldUserName = config.Get(s => s.User.UserName);
 
             // Save settings. When no override source is given, the system will save back to the file
             // where the setting was loaded from during the merge operation
-            settings.Set(s => s.User.UserName, oldUserName + "_New");
+            config.Set(s => s.User.UserName, oldUserName + "_New");
 
             // Save setting into user file. User setting will override app setting until the setting
             // gets cleared from the user file
-            settings.Set(s => s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), userSource);
+            config.Set(s => s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), userSource);
 
             // Now clear the user setting again, after that the app setting will be returned when accessing the setting again
-            settings.Clear(s => s.IdleTimeout, userSource);
+            config.Clear(s => s.IdleTimeout, userSource);
 
             // Now clear the setting without a scope, this will clear it from the currently active source.
             // In this case the setting will be cleared from both files => The setting will not be in any config anymore
-            settings.Clear(s => s.IdleTimeout);
+            config.Clear(s => s.IdleTimeout);
         }
     }
 }

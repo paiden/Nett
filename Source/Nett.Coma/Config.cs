@@ -6,35 +6,13 @@
     using Nett.Coma.Path;
     using Nett.Extensions;
 
-    public sealed class Config
+    public sealed partial class Config
     {
         private IMergeConfigStore persistable;
 
         internal Config(IMergeConfigStore persistable)
         {
             this.persistable = persistable.CheckNotNull(nameof(persistable));
-        }
-
-        public static Config<T> Create<T>(Func<T> createDefault, string filePath)
-            where T : class
-            => Create(createDefault, new MergeConfigStore(new List<IConfigStore>() { new FileConfigStore(filePath) }));
-
-        public static Config<T> Create<T>(Func<T> createDefault, params string[] filePaths)
-            where T : class
-        {
-            var store = new MergeConfigStore(filePaths.Select(fp => new FileConfigStore(fp)));
-            return Create(createDefault, store);
-        }
-
-        public static Config<T> Create<T>(Func<T> createDefault, IConfigSource source)
-            where T : class
-        {
-            switch (source)
-            {
-                case IMergeConfigStore merged: return CreateInternal(createDefault, merged);
-                case IConfigStore store: return CreateInternal(createDefault, CreateMergeStore(store));
-                default: throw new ArgumentException(nameof(source));
-            }
         }
 
         public TRet Get<TRet>(Func<TomlTable, TRet> getter)

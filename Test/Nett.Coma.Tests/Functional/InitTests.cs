@@ -22,7 +22,10 @@ namespace Nett.Coma.Tests
                 // Act
                 const int ExpectedIntValue = 3;
                 var cfg = new SingleLevelConfig() { IntValue = ExpectedIntValue };
-                Config.Create(() => cfg, fileName);
+                Config.CreateAs()
+                    .MappedToType(() => cfg)
+                    .StoredAs(store => store.File(fileName))
+                    .Initialize();
 
                 // Assert
                 File.Exists(fileName).Should().Be(true);
@@ -47,7 +50,12 @@ namespace Nett.Coma.Tests
                 CreateMergedTestAppConfig(out mainFile, out userFile);
 
                 // Act
-                var merged = Config.Create(() => new TestData.TestAppSettings(), mainFile, userFile);
+                var merged = Config.CreateAs()
+                    .MappedToType(() => new TestData.TestAppSettings())
+                    .StoredAs(store => store
+                        .File(mainFile)
+                        .MergeWith().File(userFile))
+                    .Initialize();
 
                 // Assert
                 merged.Get(c => c.BinDir).Should().Be(TestData.TestAppSettings.GlobalSettings.BinDir);
@@ -66,8 +74,10 @@ namespace Nett.Coma.Tests
             using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved)))
             {
                 // Arrange
-                var cfg = Config.Create(
-                    () => new SingleConfigFileScenario.ConfigContent(), ConfigSource.CreateFileSource(scenario.File));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new SingleConfigFileScenario.ConfigContent())
+                    .StoredAs(store => store.File(scenario.File))
+                    .Initialize();
 
                 // Act
                 cfg.Set(c => c.Sub.Z, 1);
@@ -83,9 +93,11 @@ namespace Nett.Coma.Tests
             using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved)))
             {
                 // Arrange
-                var src = ConfigSource.CreateFileSource(scenario.File);
-                var cfg = Config.Create(
-                    () => new SingleConfigFileScenario.ConfigContent(), src);
+                IConfigSource src = null;
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new SingleConfigFileScenario.ConfigContent())
+                    .StoredAs(store => store.File(scenario.File).AsSource(s => src = s))
+                    .Initialize();
 
                 // Act
                 cfg.Set(c => c.Sub.Z, 1, src);

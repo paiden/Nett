@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.Builder.cs" />
     <Compile Include="ConfigSource.cs" />
     <Compile Include="Extensions\LambdaExpressionExtensions.cs" />
     <Compile Include="IMergeConfigStore.cs" />

@@ -43,9 +43,10 @@ third = true
                 File.WriteAllText(fn, tml);
 
                 // Act
-                var userSrc = ConfigSource.CreateFileSource(fn);
-                var cfg = Config.Create(() => new AppSettings(), userSrc);
-
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new AppSettings())
+                    .StoredAs(store => store.File(fn))
+                    .Initialize();
                 var u = Toml.ReadString<AppSettings>(tml);
 
                 // Assert
