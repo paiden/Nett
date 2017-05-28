@@ -38,14 +38,15 @@ UserName = ""Test""
 ");
 
             // Prepare sources for merging
-            IConfigSource appSource = null, userSource = null;
+            const string userSourceName = "user";
+            const string appSourceName = "app";
 
             // merge both TOML files into one settings object
             var config = Config.CreateAs()
                 .MappedToType(() => new AppSettings())
                 .StoredAs(store => store
-                    .File(appSettings).AsSource(s => appSource = s)
-                    .MergeWith().File(userSettings).AsSource(s => userSource = s))
+                    .File(appSettings).AsSourceWithName(appSourceName)
+                    .MergeWith().File(userSettings).AsSourceWithName(userSourceName))
                 .UseTomlConfiguration(null)
                 .Initialize();
 
@@ -59,10 +60,10 @@ UserName = ""Test""
 
             // Save setting into user file. User setting will override app setting until the setting
             // gets cleared from the user file
-            config.Set(s => s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), userSource);
+            config.Set(s => s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), userSourceName);
 
             // Now clear the user setting again, after that the app setting will be returned when accessing the setting again
-            config.Clear(s => s.IdleTimeout, userSource);
+            config.Clear(s => s.IdleTimeout, userSourceName);
 
             // Now clear the setting without a scope, this will clear it from the currently active source.
             // In this case the setting will be cleared from both files => The setting will not be in any config anymore

@@ -23,7 +23,7 @@
 
         public IEnumerable<IConfigSource> Sources => this.stores;
 
-        public string Alias => throw new NotImplementedException();
+        public string Name => throw new NotImplementedException();
 
         public bool CanHandleSource(IConfigSource source) => this.stores.Any(c => c.CanHandleSource(source));
 

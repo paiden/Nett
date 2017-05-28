@@ -15,12 +15,12 @@
         {
             this.config = config.CheckNotNull(nameof(config));
             this.filePath = filePath.CheckNotNull(nameof(config));
-            this.Alias = alias;
+            this.Name = alias;
         }
 
-        public string Alias { get; }
+        public string Name { get; }
 
-        public bool CanHandleSource(IConfigSource source) => this.Alias == source.Alias;
+        public bool CanHandleSource(IConfigSource source) => this.Name == source.Name;
 
         public bool EnsureExists(TomlTable content)
         {

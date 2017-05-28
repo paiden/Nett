@@ -28,7 +28,7 @@
 
         public IEnumerable<IConfigSource> Sources => this.persistable.Sources;
 
-        public string Alias => this.persistable.Alias;
+        public string Name => this.persistable.Name;
 
         public static Transaction Start(IMergeConfigStore persistable, Action<IMergeConfigStore> onCloseTransactionCallback)
         {
@@ -86,12 +86,12 @@
         {
             public bool Equals(IConfigSource x, IConfigSource y)
             {
-                return x.Alias == y.Alias;
+                return x.Name == y.Name;
             }
 
             public int GetHashCode(IConfigSource obj)
             {
-                return obj.Alias.GetHashCode();
+                return obj.Name.GetHashCode();
             }
         }
     }

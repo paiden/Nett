@@ -23,7 +23,7 @@ namespace Nett.Coma.Tests.Functional
                 bool r = config.Clear(c => c.Core.Symlinks);
 
                 r.Should().Be(true);
-                config.GetSource(c => c.Core.Symlinks).Should().Be(scenario.UserFileSource);
+                config.GetSource(c => c.Core.Symlinks).Name.Should().Be(scenario.UserSourceName);
             }
         }
 
@@ -41,7 +41,7 @@ namespace Nett.Coma.Tests.Functional
                 bool r = config.Clear(c => c.Core.Symlinks); // removes it from user source
 
                 r.Should().Be(true);
-                config.GetSource(c => c.Core.Symlinks).Should().Be(scenario.SystemFileSource);
+                config.GetSource(c => c.Core.Symlinks).Name.Should().Be(scenario.SystemSourceName);
             }
         }
 
@@ -97,7 +97,7 @@ namespace Nett.Coma.Tests.Functional
                 tbl.ContainsKey(nameof(GitScenario.GitConfig.CoreConfig.Symlinks)).Should().Be(true);
 
                 // Act
-                var r = config.Clear(c => c.Core.Symlinks, scenario.UserFileSource);
+                var r = config.Clear(c => c.Core.Symlinks, scenario.UserSourceName);
 
                 // Assert
                 r.Should().Be(true);
@@ -114,10 +114,10 @@ namespace Nett.Coma.Tests.Functional
             {
                 // Arrange
                 var config = scenario.CreateMergedFromDefaults();
-                config.Clear(c => c.Core.Symlinks, scenario.UserFileSource);
+                config.Clear(c => c.Core.Symlinks, scenario.UserSourceName);
 
                 // Act
-                var r = config.Clear(c => c.Core.Symlinks, scenario.UserFileSource);
+                var r = config.Clear(c => c.Core.Symlinks, scenario.UserSourceName);
 
                 // Assert
                 r.Should().Be(false);

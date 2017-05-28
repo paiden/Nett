@@ -48,15 +48,15 @@ EMail = ""test@user.com""";
             this.RepoFile = TestFileName.Create(testName, "repo", GitConfig.Extension);
         }
 
-        public string RepoAlias => "RepoAlias";
+        public string RepoSourceName => "RepoAlias";
         public TestFileName RepoFile { get; }
-        public IConfigSource RepoFileSource { get; private set; }
-        public string SystemAlias => "System";
+        //public IConfigSource RepoFileSource { get; private set; }
+        public string SystemSourceName => "System";
         public TestFileName SystemFile { get; }
-        public IConfigSource SystemFileSource { get; private set; }
-        public string UserAlias => "User";
+        //public IConfigSource SystemFileSource { get; private set; }
+        public string UserSourceName => "User";
         public TestFileName UserFile { get; }
-        public IConfigSource UserFileSource { get; private set; }
+        //public IConfigSource UserFileSource { get; private set; }
 
         public static GitScenario Setup(string testName)
         {
@@ -74,9 +74,9 @@ EMail = ""test@user.com""";
             return Config.CreateAs()
                 .MappedToType(() => new GitConfig())
                 .StoredAs(store => store
-                    .File(this.SystemFile).AsSource(s => this.SystemFileSource = s)
-                    .MergeWith().File(this.UserFile).AsSource(s => this.UserFileSource = s)
-                    .MergeWith().File(this.RepoFile).AsSource(s => this.RepoFileSource = s))
+                    .File(this.SystemFile).AsSourceWithName(this.SystemSourceName)
+                    .MergeWith().File(this.UserFile).AsSourceWithName(this.UserSourceName)
+                    .MergeWith().File(this.RepoFile).AsSourceWithName(this.RepoSourceName))
                 .Initialize();
         }
 

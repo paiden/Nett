@@ -35,7 +35,7 @@ namespace Nett.Coma
 
         public interface IMergeStoreBuilder
         {
-            IMergeStoreBuilder AsSource(Action<IConfigSource> sourceCreatedCallback);
+            IMergeStoreBuilder AsSourceWithName(string name);
 
             IStoreBuilder MergeWith();
         }
@@ -47,26 +47,27 @@ namespace Nett.Coma
 
         private class StoreBuilder : IStoreBuilder, IMergeStoreBuilder
         {
-            private readonly List<Tuple<string, string, Action<IConfigSource>>> items
-                = new List<Tuple<string, string, Action<IConfigSource>>>();
+            private readonly List<SourceInfo> sourceInfos = new List<SourceInfo>();
 
-            IMergeStoreBuilder IMergeStoreBuilder.AsSource(Action<IConfigSource> sourceCreatedCallback)
+            IMergeStoreBuilder IMergeStoreBuilder.AsSourceWithName(string name)
             {
-                var item = this.items[this.items.Count - 1];
-                this.items[this.items.Count - 1] =
-                    new Tuple<string, string, Action<IConfigSource>>(item.Item1, item.Item2, sourceCreatedCallback);
+                var item = this.sourceInfos[this.sourceInfos.Count - 1];
+                this.sourceInfos[this.sourceInfos.Count - 1] = new SourceInfo()
+                {
+                    StoreFactory = item.StoreFactory,
+                    Name = name,
+                };
 
                 return this;
             }
 
             public IMergeConfigStore CreateStore(TomlConfig config, TomlTable content)
             {
-                List<IConfigStore> stores = new List<IConfigStore>(this.items.Count);
+                List<IConfigStore> stores = new List<IConfigStore>(this.sourceInfos.Count);
 
-                foreach (var i in this.items)
+                foreach (var i in this.sourceInfos)
                 {
-                    var store = new FileConfigStore(config, i.Item1, i.Item2);
-                    i.Item3(store);
+                    var store = i.StoreFactory(i, config);
                     stores.Add(store);
                 }
 
@@ -78,13 +79,24 @@ namespace Nett.Coma
 
             IMergeStoreBuilder IStoreBuilder.File(string filePath)
             {
-                this.items.Add(new Tuple<string, string, Action<IConfigSource>>(filePath, filePath, _ => { }));
+                this.sourceInfos.Add(new SourceInfo()
+                {
+                    StoreFactory = (srcInfo, cfg) => new FileConfigStore(cfg, filePath, srcInfo.Name),
+                    Name = filePath,
+                });
+
                 return this;
             }
 
             IStoreBuilder IMergeStoreBuilder.MergeWith()
             {
                 return this;
+            }
+
+            private struct SourceInfo
+            {
+                public Func<SourceInfo, TomlConfig, IConfigStore> StoreFactory;
+                public string Name;
             }
         }
 
