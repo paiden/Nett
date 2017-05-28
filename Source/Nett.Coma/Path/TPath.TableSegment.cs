@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Nett.Extensions;
 
 namespace Nett.Coma.Path
 {
@@ -7,9 +8,12 @@ namespace Nett.Coma.Path
     {
         private sealed class TableSegment : KeySegment
         {
-            public TableSegment(string key)
+            private readonly Type clrType;
+
+            public TableSegment(string key, Type clrType)
                 : base(TomlObjectType.Table, key)
             {
+                this.clrType = clrType.CheckNotNull(nameof(clrType));
             }
 
             public override TomlObject Apply(TomlObject obj, PathSettings settings = PathSettings.None)

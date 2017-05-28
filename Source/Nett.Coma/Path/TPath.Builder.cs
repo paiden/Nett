@@ -39,7 +39,7 @@ namespace Nett.Coma.Path
             private static ITPathSegment GetSegmentFromMemberExpression(MemberExpression expr, TomlConfig config)
             {
                 var targetType = GetTargetType(expr.Type, config);
-                return GetSegmentFromTargetType(targetType, expr.Member.Name);
+                return GetSegmentFromTargetType(targetType, expr.Type, expr.Member.Name);
             }
 
             private static TomlObjectType GetTargetType(Type memberType, TomlConfig config)
@@ -95,11 +95,11 @@ namespace Nett.Coma.Path
                 return TomlObjectType.Table;
             }
 
-            private static ITPathSegment GetSegmentFromTargetType(TomlObjectType targetType, string key)
+            private static ITPathSegment GetSegmentFromTargetType(TomlObjectType targetType, Type clrType, string key)
             {
                 switch (targetType)
                 {
-                    case TomlObjectType.Table: return new TableSegment(key);
+                    case TomlObjectType.Table: return new TableSegment(key, clrType);
                     case TomlObjectType.ArrayOfTables: return new TableArraySegment(key);
                     case TomlObjectType.Array: return new ArraySegment(key);
                     default: return new ValueSegment(targetType, key);
