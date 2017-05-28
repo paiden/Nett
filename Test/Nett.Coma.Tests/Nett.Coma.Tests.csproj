@@ -71,6 +71,7 @@
     <Compile Include="Functional\AutoConversions.cs" />
     <Compile Include="Functional\AutoSaveTests.cs" />
     <Compile Include="Functional\ClearSettingTests.cs" />
+    <Compile Include="Functional\ComaWithTomlConfigTests.cs" />
     <Compile Include="Functional\ConfigSourceTests.cs" />
     <Compile Include="Functional\InitTests.cs" />
     <Compile Include="Functional\InlineTableTest.cs" />

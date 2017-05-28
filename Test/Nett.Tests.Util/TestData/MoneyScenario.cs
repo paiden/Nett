@@ -1,23 +1,32 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using FluentAssertions;
 using Nett.Coma;
+
+using static System.FormattableString;
 
 namespace Nett.Tests.Util.TestData
 {
     public sealed class MoneyScenario : IDisposable
     {
-        public TestFileName File { get; }
+        public TestFileName FilePath { get; }
         public TomlConfig TmlConfig { get; }
 
         private MoneyScenario(string test)
         {
-            this.File = TestFileName.Create(test, "money", Toml.FileExtension);
+            this.FilePath = TestFileName.Create(test, "money", Toml.FileExtension);
+
+            this.TmlConfig = TomlConfig.Create(cfg => cfg
+                .ConfigureType<Money>(typeConfig => typeConfig
+                    .WithConversionFor<TomlString>(conversion => conversion
+                        .ToToml(m => m.ToString())
+                        .FromToml(s => Money.Parse(s.Value)))));
         }
 
         public static MoneyScenario Setup(string test)
         {
             var scenario = new MoneyScenario(test);
-            scenario.CreateFileContents();
             return scenario;
         }
 
@@ -25,16 +34,9 @@ namespace Nett.Tests.Util.TestData
         {
             return Config.CreateAs()
                 .MappedToType(() => new Root())
-                .StoredAs(store => store.File(this.File))
+                .StoredAs(store => store.File(this.FilePath))
                 .UseTomlConfiguration(this.TmlConfig)
                 .Initialize();
-        }
-
-        private MoneyScenario CreateFileContents()
-        {
-            Toml.WriteFile(new Root(), this.File);
-
-            return this;
         }
 
         public class Root
@@ -47,18 +49,33 @@ namespace Nett.Tests.Util.TestData
             public double Ammount { get; set; }
 
             public string Currency { get; set; }
+
+            public override string ToString() => Invariant($"{this.Ammount:0.00} {this.Currency}");
+
+            public static Money Parse(string s)
+            {
+                var split = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                return new Money() { Ammount = double.Parse(split[0], CultureInfo.InvariantCulture), Currency = split[1] };
+
+            }
         }
 
         public void Dispose()
         {
-            this.File.Dispose();
+            this.FilePath.Dispose();
         }
 
         public void AssertFileCurrencyIs(string c)
         {
-            var tml = Toml.ReadFile<Root>(this.File);
+            var tml = Toml.ReadFile<Root>(this.FilePath);
 
             tml.Money.Currency.Should().Be(c);
+        }
+
+        public void AssertInitiallyCreatedFileContainsCorrectMoney()
+        {
+            var content = File.ReadAllText(this.FilePath);
+            content.Should().Be("Money = \"1.00 EUR\"\r\n");
         }
     }
 }

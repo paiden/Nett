@@ -156,7 +156,7 @@ namespace Nett.Coma
 
             IConfigBuilder<T> IConfigBuilder<T>.UseTomlConfiguration(TomlConfig config)
             {
-                this.config = config;
+                this.config = config.CheckNotNull(nameof(config));
 
                 return this;
             }

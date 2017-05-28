@@ -42,7 +42,7 @@
         public TomlTable Load()
         {
             this.latestFileHash = ComputeHash(this.filePath);
-            return Toml.ReadFile(this.filePath);
+            return Toml.ReadFile(this.filePath, this.config);
         }
 
         public TomlTable LoadSourcesTable()
