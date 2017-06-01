@@ -67,7 +67,7 @@ namespace Nett.Tests.Util.TestData
 
         public void AssertFileCurrencyIs(string c)
         {
-            var tml = Toml.ReadFile<Root>(this.FilePath);
+            var tml = Toml.ReadFile<Root>(this.FilePath, this.TmlConfig);
 
             tml.Money.Currency.Should().Be(c);
         }
