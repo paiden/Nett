@@ -64,6 +64,89 @@ namespace Nett.Coma.Tests.Functional
             }
         }
 
+        [Fact]
+        public void ReadConfigPropertyAfterInit_WhenMultiLevelTypeHasConverterInSpecializedScope_ReadsItemFromSpecScope()
+        {
+            using (var main = TestFileName.Create("main", Toml.FileExtension))
+            using (var spec = TestFileName.Create("spec", Toml.FileExtension))
+            {
+                // Arrange
+                var tmlCfg = TomlConfig.Create(c => c
+                    .ConfigureType<MultiTableConverterObject>(tc => tc
+                        .WithConversionFor<TomlString>(conv => conv
+                            .ToToml(o => o.ToString())
+                            .FromToml(s => MultiTableConverterObject.Parse(s.Value)))));
+
+                Toml.WriteFile(Toml.Create(), main, tmlCfg); ;
+                Toml.WriteFile(Toml.Create(CreateWithUnitItem(2.0, "X")), spec, tmlCfg);
+
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new Root())
+                    .UseTomlConfiguration(tmlCfg)
+                    .StoredAs(s => s.File(main).AsSourceWithName("main")
+                        .MergeWith().File(spec).AsSourceWithName("spec"))
+                    .Initialize();
+
+                // Act
+                var val = cfg.Get(c => c.ConvertedItem.UnitItem.Unit);
+                var src = cfg.GetSource(c => c.ConvertedItem.UnitItem.Unit);
+
+                // Assert
+                val.Should().Be("X");
+                src.Name.Should().Be("spec");
+            }
+        }
+
+        [Fact]
+        public void SetProperty_InSpecializedScopeForConvertedMultiLevelType_WritesItBackToSpecScope()
+        {
+            using (var main = TestFileName.Create("main", Toml.FileExtension))
+            using (var spec = TestFileName.Create("spec", Toml.FileExtension))
+            {
+                // Arrange
+                var tmlCfg = TomlConfig.Create(c => c
+                    .ConfigureType<MultiTableConverterObject>(tc => tc
+                        .WithConversionFor<TomlString>(conv => conv
+                            .ToToml(o => o.ToString())
+                            .FromToml(s => MultiTableConverterObject.Parse(s.Value)))));
+
+                Toml.WriteFile(Toml.Create(), main, tmlCfg); ;
+                Toml.WriteFile(Toml.Create(CreateWithUnitItem(2.0, "X")), spec, tmlCfg);
+
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new Root())
+                    .UseTomlConfiguration(tmlCfg)
+                    .StoredAs(s => s.File(main).AsSourceWithName("main")
+                        .MergeWith().File(spec).AsSourceWithName("spec"))
+                    .Initialize();
+
+                // Act
+                cfg.Set(c => c.ConvertedItem.UnitItem.Unit, "EX");
+
+
+                // Assert
+                var root = Toml.ReadFile<Root>(spec, tmlCfg);
+                root.ConvertedItem.UnitItem.Unit.Should().Be("EX");
+            }
+        }
+
+        private Root CreateWithUnitItem(double value, string unit)
+        {
+            var r = new Root()
+            {
+                ConvertedItem = new MultiTableConverterObject()
+                {
+                    Value = value,
+                    UnitItem = new MultiTableConverterObject.SubItem()
+                    {
+                        Unit = unit,
+                    }
+                }
+            };
+
+            return r;
+        }
+
         public class Root
         {
             public MultiTableConverterObject ConvertedItem { get; set; } = new MultiTableConverterObject();
