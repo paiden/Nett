@@ -9,15 +9,18 @@ namespace Nett.Coma.Tests
     public sealed class ExternalChangeTests : TestsBase
     {
         [Fact(DisplayName = "External change: When file changed on disk the next property access will deliver that new value form the file.")]
-        public void NextRead_WhenConcfigValueChanged_DelversNewValue()
+        public void NextRead_WhenConfigValueChanged_DeliversNewValue()
         {
-            string filePath = nameof(this.NextRead_WhenConcfigValueChanged_DelversNewValue) + Guid.NewGuid() + Toml.FileExtension;
+            string filePath = nameof(this.NextRead_WhenConfigValueChanged_DeliversNewValue) + Guid.NewGuid() + Toml.FileExtension;
 
             try
             {
                 // Arrange
                 const int ExpectedNewValue = 1;
-                var m = Config.Create(() => new SingleLevelConfig(), filePath);
+                var m = Config.CreateAs()
+                    .MappedToType(() => new SingleLevelConfig())
+                    .StoredAs(store => store.File(filePath))
+                    .Initialize();
                 var afterInitialLoad = m.Get(cfg => cfg.IntValue);
                 ModifyFileOnDisk(filePath, cfg => cfg.IntValue = ExpectedNewValue);
 

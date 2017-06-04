@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Nett.Tests.Util
 {
@@ -17,7 +18,7 @@ namespace Nett.Tests.Util
 
         public static implicit operator string(TestFileName fn) => fn.fileName;
 
-        public static TestFileName Create(string test, string name, string extension)
+        public static TestFileName Create(string name, string extension, [CallerMemberName]string test = null)
         {
             var fn = $"{test}_{name}".TestRunUniqueName(extension);
             Directory.CreateDirectory(Path.GetDirectoryName(fn));

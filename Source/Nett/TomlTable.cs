@@ -70,6 +70,7 @@
                 this.AssertIntegrity();
                 this.CheckNotFrozen();
                 this.rows[new TomlKey(key)] = this.EnsureCorrectRoot(value);
+                this.OnRowValueSet(key);
             }
         }
 
@@ -280,6 +281,10 @@
         }
 
         internal override TomlObject WithRoot(ITomlRoot root) => this.TableWithRoot(root);
+
+        protected virtual void OnRowValueSet(string rowKey)
+        {
+        }
 
         private static void AddComments(TomlObject obj, PropertyInfo pi)
         {

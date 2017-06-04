@@ -4,8 +4,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using FluentAssertions;
-    using TestData;
     using global::Nett.Tests.Util;
+    using TestData;
     using Xunit;
 
     [ExcludeFromCodeCoverage]
@@ -25,7 +25,10 @@
                 var f = new SingleLevelConfig();
                 Toml.WriteFile(f, filePath);
                 var beforeChangeValue = f.IntValue;
-                var cfg = Config.Create(() => new SingleLevelConfig(), ConfigSource.CreateFileSource(filePath));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new SingleLevelConfig())
+                    .StoredAs(store => store.File(filePath))
+                    .Initialize();
 
                 // Act
                 cfg.Set(c => c.IntValue, ExpectedNewValue);
@@ -56,7 +59,13 @@
 
                 File.WriteAllText(f1, Pre);
                 File.WriteAllText(f2, Succ);
-                var c = Config.Create(() => new SingleLevelConfig(), f1, f2);
+                var c = Config.CreateAs()
+                    .MappedToType(() => new SingleLevelConfig())
+                    .StoredAs(store => store
+                        .File(f1)
+                        .MergeWith()
+                        .File(f2))
+                    .Initialize();
 
                 // Act
                 c.Set(cfg => cfg.StringValue, NewStringVal);
@@ -89,7 +98,13 @@
                 // Arrange
                 const string Changed = "ChangedUserName";
                 CreateMergedTestAppConfig(out mainFile, out userFile);
-                var cfg = Config.Create(() => new TestData.TestAppSettings(), mainFile, userFile);
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new TestData.TestAppSettings())
+                    .StoredAs(store => store
+                        .File(mainFile)
+                        .MergeWith()
+                        .File(userFile))
+                    .Initialize();
 
                 // Act
                 cfg.Set(c => c.User.UserName, Changed);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable SA1313
+
+using System;
 
 namespace Nett.Coma.Path
 {
@@ -13,10 +15,10 @@ namespace Nett.Coma.Path
                 this.index = index;
             }
 
-            public TomlObject Apply(TomlObject obj, PathSettings settings = PathSettings.None)
+            public TomlObject Apply(TomlObject obj, Func<TomlObject> _, PathSettings settings = PathSettings.None)
                 => this.ApplyIndex(obj, (err) => throw new InvalidOperationException(err));
 
-            public TomlObject TryApply(TomlObject obj, PathSettings settings = PathSettings.None)
+            public TomlObject TryApply(TomlObject obj, Func<TomlObject> __, PathSettings settings = PathSettings.None)
                 => this.ApplyIndex(obj, _ => null);
 
             public void SetValue(TomlObject target, TomlObject value, PathSettings settings)

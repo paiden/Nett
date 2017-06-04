@@ -14,9 +14,9 @@ namespace Nett.Coma.Path
 
         public interface ITPathSegment
         {
-            TomlObject Apply(TomlObject obj, PathSettings settings);
+            TomlObject Apply(TomlObject obj, Func<TomlObject> resolveParent, PathSettings settings);
 
-            TomlObject TryApply(TomlObject obj, PathSettings settings);
+            TomlObject TryApply(TomlObject obj, Func<TomlObject> resolveParent, PathSettings settings);
 
             void SetValue(TomlObject obj, TomlObject value, PathSettings settings);
         }

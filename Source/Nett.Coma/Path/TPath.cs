@@ -42,7 +42,7 @@ namespace Nett.Coma.Path
             if (this.IsRootPrefixPath) { return obj; }
 
             var po = this.prefixPath.Apply(obj, settings);
-            return this.segment.Apply(po, settings);
+            return this.segment.Apply(po, () => this.prefixPath?.prefixPath?.Apply(obj) ?? po, settings);
         }
 
         public TomlObject TryApply(TomlObject obj, PathSettings settings = PathSettings.None)
@@ -52,7 +52,7 @@ namespace Nett.Coma.Path
                 if (this.IsRootPrefixPath) { return obj; }
 
                 var po = this.prefixPath.TryApply(obj, settings);
-                return this.segment.TryApply(po, settings);
+                return this.segment.TryApply(po, () => this.prefixPath?.prefixPath?.Apply(obj) ?? po, settings);
             }
             catch
             {

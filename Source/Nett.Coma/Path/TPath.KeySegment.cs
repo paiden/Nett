@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable SA1313
+
+using System;
 
 namespace Nett.Coma.Path
 {
@@ -31,10 +33,10 @@ namespace Nett.Coma.Path
                 return tbl.Remove(this.key);
             }
 
-            public override TomlObject Apply(TomlObject obj, PathSettings settings)
+            public override TomlObject Apply(TomlObject obj, Func<TomlObject> _, PathSettings settings)
                 => this.ApplyKey(obj, this.ThrowWhenKeyNotFound, ThrowOnError, settings);
 
-            public override TomlObject TryApply(TomlObject obj, PathSettings settings)
+            public override TomlObject TryApply(TomlObject obj, Func<TomlObject> __, PathSettings settings)
                 => this.ApplyKey(obj, _ => null, ReturnDefaultOnError, settings);
 
             public override void SetValue(TomlObject target, TomlObject value, PathSettings settings)

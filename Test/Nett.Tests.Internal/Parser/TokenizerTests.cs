@@ -91,7 +91,7 @@ namespace Nett.Tests.Internal.Parser
         [Theory]
         [InlineData(@"""""", "")]
         [InlineData(@"""X""", "X")]
-        [InlineData("\"X\\\"\"", @"X\")]
+        [InlineData("\"X\\\"\"", "X\\\"")]
         public void TokenizeString(string token, string expected)
         {
             // Arrange
@@ -132,10 +132,9 @@ namespace Nett.Tests.Internal.Parser
 
         [Theory]
         [InlineData("''''''", "")]
-        [InlineData("'''X\\'''", @"X\\")]
+        [InlineData("'''X\\'''", @"X\")]
         [InlineData(@"'''
-2nd line'''", @"
-2ndline")]
+2nd line'''", @"2nd line")]
         public void TokenizeMultilineLiteralString(string token, string expected)
         {
             // Arrange
@@ -151,7 +150,7 @@ namespace Nett.Tests.Internal.Parser
 
         [Theory]
         [InlineData("\"\"\"\"\"\"", "")]
-        [InlineData("\"\"\"X\\\"\"\"\"", @"X\")]
+        [InlineData("\"\"\"X\\\"\"\"\"", "X\\\"")]
         [InlineData(@"""""""
 2nd line""""""", @"
 2nd line")]

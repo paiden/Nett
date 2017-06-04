@@ -11,7 +11,7 @@ namespace Nett.Coma.Tests.TestData
 
         private SingleConfigFileScenario(string test)
         {
-            this.File = TestFileName.Create(test, "conffile", Toml.FileExtension);
+            this.File = TestFileName.Create("conffile", Toml.FileExtension, test);
         }
 
         public static SingleConfigFileScenario Setup(string test)
@@ -22,7 +22,10 @@ namespace Nett.Coma.Tests.TestData
 
         public Config<ConfigContent> CreateConfig()
         {
-            return Config.Create(() => new ConfigContent(), this.File);
+            return Config.CreateAs()
+                .MappedToType(() => new ConfigContent())
+                .StoredAs(store => store.File(this.File))
+                .Initialize();
         }
 
         public ConfigContent ReadFile()

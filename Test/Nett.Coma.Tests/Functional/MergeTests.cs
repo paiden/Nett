@@ -29,10 +29,12 @@ namespace Nett.Coma.Tests.Functional
                 File.WriteAllText(f2, Config2);
 
                 // Act
-                var sources = ConfigSource.Merged(
-                    ConfigSource.CreateFileSource(f1),
-                    ConfigSource.CreateFileSource(f2));
-                var c = Config.Create(() => new SingleLevelConfig(), sources);
+                var c = Config.CreateAs()
+                    .MappedToType(() => new SingleLevelConfig())
+                    .StoredAs(store => store
+                        .File(f1)
+                        .MergeWith().File(f2))
+                    .Initialize();
 
                 // Assert
                 c.Get(cfg => cfg.IntValue).Should().Be(1);
@@ -48,17 +50,20 @@ namespace Nett.Coma.Tests.Functional
         [FFact(FuncLoadMergedConfig, "When same setting in both files the 'more local' setting will overwrite the 'more global' value")]
         public void LoadMergedConfig_LocalSettingOverwritesMoreGlobalSetting()
         {
-            string t = nameof(LoadMergedConfig_LocalSettingOverwritesMoreGlobalSetting);
-
-            using (var global = TestFileName.Create(t, "global", Toml.FileExtension))
-            using (var local = TestFileName.Create(t, "local", Toml.FileExtension))
+            using (var global = TestFileName.Create("global", Toml.FileExtension))
+            using (var local = TestFileName.Create("local", Toml.FileExtension))
             {
                 // Arrange
                 File.WriteAllText(global, Config1);
                 File.WriteAllText(local, Config1A);
 
                 // Act
-                var c = Config.Create(() => new SingleLevelConfig(), global, local);
+                var c = Config.CreateAs()
+                    .MappedToType(() => new SingleLevelConfig())
+                    .StoredAs(store => store
+                        .File(global)
+                        .MergeWith().File(local))
+                    .Initialize();
 
                 // Assert
                 c.Get(r => r.IntValue).Equals(2);
@@ -84,7 +89,12 @@ StringValue = 'succ'";
                 File.WriteAllText(f2, Succ);
 
                 // Act
-                var c = Config.Create(() => new SingleLevelConfig(), f1, f2);
+                var c = Config.CreateAs()
+                    .MappedToType(() => new SingleLevelConfig())
+                    .StoredAs(store => store
+                        .File(f1)
+                        .MergeWith().File(f2))
+                    .Initialize();
 
                 // Assert
                 c.Get(cfg => cfg.IntValue).Should().Be(1);
@@ -103,7 +113,13 @@ StringValue = 'succ'";
             using (var s = GitScenario.Setup(nameof(Merge_WhenUsingGitScenario_MergesConfigCorrectly)))
             {
                 // Act
-                var cfg = Config.Create(() => new GitScenario.GitConfig(), s.SystemFile, s.UserFile, s.RepoFile);
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new GitScenario.GitConfig())
+                    .StoredAs(store => store
+                        .File(s.SystemFile)
+                        .MergeWith().File(s.UserFile)
+                        .MergeWith().File(s.RepoFile))
+                    .Initialize();
 
                 // Assert
                 var x = cfg.Unmanaged();

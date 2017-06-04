@@ -19,7 +19,7 @@ namespace Nett.Coma.Tests.Functional
         [Fact]
         public void Write_WithInlineTableProperty_WritesThatTableAsInlineTable()
         {
-            using (var file = TestFileName.Create(nameof(Write_WithInlineTableProperty_WritesThatTableAsInlineTable), "Input", ".toml"))
+            using (var file = TestFileName.Create("Input", ".toml"))
             {
                 // Arrange
                 const string expected = @"UserItems = { X = true, Y = false }
@@ -33,7 +33,10 @@ namespace Nett.Coma.Tests.Functional
                 };
 
                 // Act
-                var cfg = Config.Create(() => new Cfg(), ConfigSource.CreateFileSource(file));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new Cfg())
+                    .StoredAs(store => store.File(file))
+                    .Initialize();
                 cfg.Set(c => c.UserItems, toWrite);
 
                 // Assert
@@ -45,14 +48,17 @@ namespace Nett.Coma.Tests.Functional
         [Fact]
         public void Read_WithInlineTableProperty_ReadsThatPropertyCorrectly()
         {
-            using (var file = TestFileName.Create(nameof(Read_WithInlineTableProperty_ReadsThatPropertyCorrectly), "input", ".toml"))
+            using (var file = TestFileName.Create("input", ".toml"))
             {
                 // Arrange
                 const string input = "UserItems = { 'X' = false, 'Y' = true }";
                 File.WriteAllText(file, input);
 
                 // Act
-                var cfg = Config.Create(() => new Cfg(), ConfigSource.CreateFileSource(file));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new Cfg())
+                    .StoredAs(store => store.File(file))
+                    .Initialize();
                 var items = cfg.Get(c => c.UserItems);
 
                 // Assert

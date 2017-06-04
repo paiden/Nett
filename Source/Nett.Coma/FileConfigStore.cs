@@ -1,29 +1,26 @@
 ﻿namespace Nett.Coma
 {
-    using System;
     using System.IO;
     using System.Security.Cryptography;
+    using Nett.Extensions;
 
     internal sealed class FileConfigStore : IConfigStore
     {
         private readonly string filePath;
+        private readonly TomlConfig config;
 
         private byte[] latestFileHash = null;
 
-        public FileConfigStore(string filePath)
-            : this(filePath, filePath)
+        public FileConfigStore(TomlConfig config, string filePath, string alias)
         {
+            this.config = config.CheckNotNull(nameof(config));
+            this.filePath = filePath.CheckNotNull(nameof(config));
+            this.Name = alias;
         }
 
-        public FileConfigStore(string filePath, string alias)
-        {
-            this.filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
-            this.Alias = alias;
-        }
+        public string Name { get; }
 
-        public string Alias { get; }
-
-        public bool CanHandleSource(IConfigSource source) => this.Alias == source.Alias;
+        public bool CanHandleSource(IConfigSource source) => this.Name == source.Name;
 
         public bool EnsureExists(TomlTable content)
         {
@@ -45,7 +42,7 @@
         public TomlTable Load()
         {
             this.latestFileHash = ComputeHash(this.filePath);
-            return Toml.ReadFile(this.filePath);
+            return Toml.ReadFile(this.filePath, this.config);
         }
 
         public TomlTable LoadSourcesTable()

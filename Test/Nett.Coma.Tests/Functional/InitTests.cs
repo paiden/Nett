@@ -22,7 +22,10 @@ namespace Nett.Coma.Tests
                 // Act
                 const int ExpectedIntValue = 3;
                 var cfg = new SingleLevelConfig() { IntValue = ExpectedIntValue };
-                Config.Create(() => cfg, fileName);
+                Config.CreateAs()
+                    .MappedToType(() => cfg)
+                    .StoredAs(store => store.File(fileName))
+                    .Initialize();
 
                 // Assert
                 File.Exists(fileName).Should().Be(true);
@@ -47,7 +50,12 @@ namespace Nett.Coma.Tests
                 CreateMergedTestAppConfig(out mainFile, out userFile);
 
                 // Act
-                var merged = Config.Create(() => new TestData.TestAppSettings(), mainFile, userFile);
+                var merged = Config.CreateAs()
+                    .MappedToType(() => new TestData.TestAppSettings())
+                    .StoredAs(store => store
+                        .File(mainFile)
+                        .MergeWith().File(userFile))
+                    .Initialize();
 
                 // Assert
                 merged.Get(c => c.BinDir).Should().Be(TestData.TestAppSettings.GlobalSettings.BinDir);
@@ -61,13 +69,40 @@ namespace Nett.Coma.Tests
         }
 
         [Fact]
+        public void Init_WhenMergeSourceIsUsedAndNoManualInitIsDone_BothFilesAreCreatedButOnlyTheFirstHasAllDefaultData()
+        {
+            using (var main = TestFileName.Create("main", Toml.FileExtension))
+            using (var user = TestFileName.Create("user", Toml.FileExtension))
+            {
+                // Act
+                var merged = Config.CreateAs()
+                    .MappedToType(() => new TestData.TestAppSettings())
+                    .StoredAs(store => store
+                        .File(main).MergeWith().File(user))
+                    .Initialize();
+
+                // Assert
+                File.Exists(main).Should().Be(true);
+                File.Exists(user).Should().Be(true);
+
+                var mainTbl = Toml.ReadFile(main);
+                var usertbl = Toml.ReadFile(user);
+
+                mainTbl.Count.Should().BeGreaterThan(0);
+                usertbl.Count.Should().Be(0);
+            }
+        }
+
+        [Fact]
         public void SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved()
         {
             using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved)))
             {
                 // Arrange
-                var cfg = Config.Create(
-                    () => new SingleConfigFileScenario.ConfigContent(), ConfigSource.CreateFileSource(scenario.File));
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new SingleConfigFileScenario.ConfigContent())
+                    .StoredAs(store => store.File(scenario.File))
+                    .Initialize();
 
                 // Act
                 cfg.Set(c => c.Sub.Z, 1);
@@ -83,12 +118,14 @@ namespace Nett.Coma.Tests
             using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved)))
             {
                 // Arrange
-                var src = ConfigSource.CreateFileSource(scenario.File);
-                var cfg = Config.Create(
-                    () => new SingleConfigFileScenario.ConfigContent(), src);
+                const string srcName = "src";
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new SingleConfigFileScenario.ConfigContent())
+                    .StoredAs(store => store.File(scenario.File).AsSourceWithName(srcName))
+                    .Initialize();
 
                 // Act
-                cfg.Set(c => c.Sub.Z, 1, src);
+                cfg.Set(c => c.Sub.Z, 1, srcName);
 
                 // Assert
                 File.ReadAllText(scenario.File).Should().Be("X = 1\r\nY = \"Y\"\r\n\r\n[Sub]\r\nZ = 1\r\n");
@@ -104,7 +141,7 @@ namespace Nett.Coma.Tests
                 var cfg = scenario.CreateMergedFromDefaults();
 
                 // Act
-                cfg.Set(c => c.Core.AutoClrf, true, scenario.UserFileSource);
+                cfg.Set(c => c.Core.AutoClrf, true, scenario.UserSourceName);
 
                 // Assert
                 File.ReadAllText(scenario.UserFile).Should().Be("\r\n[User]\r\nName = \"Test User\"\r\nEMail = \"test@user.com\"\r\n\r\n[Core]\r\nAutoClrf = true\r\n");

@@ -29,7 +29,7 @@ namespace Nett.Coma.Tests.Functional
         [Fact]
         public void Foo()
         {
-            using (var fn = TestFileName.Create(nameof(Foo), "input", ".toml"))
+            using (var fn = TestFileName.Create("input", ".toml"))
             {
                 // Arrange
                 const string tml = @"
@@ -43,9 +43,10 @@ third = true
                 File.WriteAllText(fn, tml);
 
                 // Act
-                var userSrc = ConfigSource.CreateFileSource(fn);
-                var cfg = Config.Create(() => new AppSettings(), userSrc);
-
+                var cfg = Config.CreateAs()
+                    .MappedToType(() => new AppSettings())
+                    .StoredAs(store => store.File(fn))
+                    .Initialize();
                 var u = Toml.ReadString<AppSettings>(tml);
 
                 // Assert

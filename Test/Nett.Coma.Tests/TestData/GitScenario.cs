@@ -43,24 +43,20 @@ EMail = ""test@user.com""";
 
         private GitScenario(string testName)
         {
-            this.SystemFile = TestFileName.Create(testName, "system", GitConfig.Extension);
-            this.UserFile = TestFileName.Create(testName, "user", GitConfig.Extension);
-            this.RepoFile = TestFileName.Create(testName, "repo", GitConfig.Extension);
-
-            this.SystemFileSource = ConfigSource.CreateFileSource(this.SystemFile, SystemAlias);
-            this.UserFileSource = ConfigSource.CreateFileSource(this.UserFile, UserAlias);
-            this.RepoFileSource = ConfigSource.CreateFileSource(this.RepoFile, RepoAlias);
+            this.SystemFile = TestFileName.Create("system", GitConfig.Extension, testName);
+            this.UserFile = TestFileName.Create("user", GitConfig.Extension, testName);
+            this.RepoFile = TestFileName.Create("repo", GitConfig.Extension, testName);
         }
 
-        public string RepoAlias => "RepoAlias";
+        public string RepoSourceName => "RepoAlias";
         public TestFileName RepoFile { get; }
-        public IConfigSource RepoFileSource { get; private set; }
-        public string SystemAlias => "System";
+        //public IConfigSource RepoFileSource { get; private set; }
+        public string SystemSourceName => "System";
         public TestFileName SystemFile { get; }
-        public IConfigSource SystemFileSource { get; private set; }
-        public string UserAlias => "User";
+        //public IConfigSource SystemFileSource { get; private set; }
+        public string UserSourceName => "User";
         public TestFileName UserFile { get; }
-        public IConfigSource UserFileSource { get; private set; }
+        //public IConfigSource UserFileSource { get; private set; }
 
         public static GitScenario Setup(string testName)
         {
@@ -75,8 +71,13 @@ EMail = ""test@user.com""";
 
         public Config<GitConfig> CreateMergedFromDefaults()
         {
-            var source = ConfigSource.Merged(this.SystemFileSource, this.UserFileSource, this.RepoFileSource);
-            return Config.Create(() => new GitConfig(), source);
+            return Config.CreateAs()
+                .MappedToType(() => new GitConfig())
+                .StoredAs(store => store
+                    .File(this.SystemFile).AsSourceWithName(this.SystemSourceName)
+                    .MergeWith().File(this.UserFile).AsSourceWithName(this.UserSourceName)
+                    .MergeWith().File(this.RepoFile).AsSourceWithName(this.RepoSourceName))
+                .Initialize();
         }
 
         // Default System settings stored in all scopes

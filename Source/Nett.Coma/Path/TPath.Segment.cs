@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable SA1313
+
+using System;
 
 namespace Nett.Coma.Path
 {
@@ -13,11 +15,11 @@ namespace Nett.Coma.Path
                 this.segmentType = segmentType;
             }
 
-            public abstract TomlObject Apply(TomlObject obj, PathSettings settings);
+            public abstract TomlObject Apply(TomlObject obj, Func<TomlObject> _, PathSettings settings);
 
             public abstract void SetValue(TomlObject target, TomlObject value, PathSettings settings);
 
-            public abstract TomlObject TryApply(TomlObject target, PathSettings settings);
+            public abstract TomlObject TryApply(TomlObject target, Func<TomlObject> _, PathSettings settings);
 
             protected TomlObject VerifyType(TomlObject obj, Func<string, TomlObject> onError, PathSettings settings)
             {

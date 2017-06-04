@@ -14,7 +14,7 @@
             this.persistable = persistable.CheckNotNull(nameof(persistable));
         }
 
-        public string Alias => this.persistable.Alias;
+        public string Name => this.persistable.Name;
 
         public bool CanHandleSource(IConfigSource source) => this.persistable.CanHandleSource(source);
 
