@@ -69,6 +69,31 @@ namespace Nett.Coma.Tests
         }
 
         [Fact]
+        public void Init_WhenMergeSourceIsUsedAndNoManualInitIsDone_BothFilesAreCreatedButOnlyTheFirstHasAllDefaultData()
+        {
+            using (var main = TestFileName.Create("main", Toml.FileExtension))
+            using (var user = TestFileName.Create("user", Toml.FileExtension))
+            {
+                // Act
+                var merged = Config.CreateAs()
+                    .MappedToType(() => new TestData.TestAppSettings())
+                    .StoredAs(store => store
+                        .File(main).MergeWith().File(user))
+                    .Initialize();
+
+                // Assert
+                File.Exists(main).Should().Be(true);
+                File.Exists(user).Should().Be(true);
+
+                var mainTbl = Toml.ReadFile(main);
+                var usertbl = Toml.ReadFile(user);
+
+                mainTbl.Count.Should().BeGreaterThan(0);
+                usertbl.Count.Should().Be(0);
+            }
+        }
+
+        [Fact]
         public void SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved()
         {
             using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFile_GetsCreatedAndSaved)))

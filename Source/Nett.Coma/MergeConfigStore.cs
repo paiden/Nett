@@ -31,7 +31,17 @@
         {
             Assert(this.stores.Count > 0, AssertAtLeastOneConfigMsg);
 
-            return this.stores.First().EnsureExists(content);
+            // Create broadest scope table
+            bool neededToCreate = false;
+            neededToCreate |= this.stores.First().EnsureExists(content);
+
+            // Initialize empty files for all other existing scopes
+            foreach (var s in this.stores.Skip(1))
+            {
+                neededToCreate |= s.EnsureExists(Toml.Create());
+            }
+
+            return neededToCreate;
         }
 
         public TomlTable Load() => this.MergeTables(c => c.Load());
