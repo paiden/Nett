@@ -50,10 +50,8 @@ namespace Nett.Coma.Tests.Functional
         [FFact(FuncLoadMergedConfig, "When same setting in both files the 'more local' setting will overwrite the 'more global' value")]
         public void LoadMergedConfig_LocalSettingOverwritesMoreGlobalSetting()
         {
-            string t = nameof(LoadMergedConfig_LocalSettingOverwritesMoreGlobalSetting);
-
-            using (var global = TestFileName.Create(t, "global", Toml.FileExtension))
-            using (var local = TestFileName.Create(t, "local", Toml.FileExtension))
+            using (var global = TestFileName.Create("global", Toml.FileExtension))
+            using (var local = TestFileName.Create("local", Toml.FileExtension))
             {
                 // Arrange
                 File.WriteAllText(global, Config1);

@@ -40,7 +40,7 @@ namespace Nett.Coma.Tests.Functional
         [Fact]
         public void SetConfigProperty_WhenMultiLevelTypeHasConverter_WritesTheSubPropertyCorrectly()
         {
-            using (var fn = TestFileName.Create(nameof(SetConfigProperty_WhenMultiLevelTypeHasConverter_WritesTheSubPropertyCorrectly), "file", Toml.FileExtension))
+            using (var fn = TestFileName.Create("file", Toml.FileExtension))
             {
                 // Arrange
                 var tmlCfg = TomlConfig.Create(c => c

@@ -15,7 +15,7 @@ namespace Nett.Tests.Util.TestData
 
         private MoneyScenario(string test)
         {
-            this.FilePath = TestFileName.Create(test, "money", Toml.FileExtension);
+            this.FilePath = TestFileName.Create("money", Toml.FileExtension, test);
 
             this.TmlConfig = TomlConfig.Create(cfg => cfg
                 .ConfigureType<Money>(typeConfig => typeConfig

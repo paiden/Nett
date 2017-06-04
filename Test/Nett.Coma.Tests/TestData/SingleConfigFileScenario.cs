@@ -11,7 +11,7 @@ namespace Nett.Coma.Tests.TestData
 
         private SingleConfigFileScenario(string test)
         {
-            this.File = TestFileName.Create(test, "conffile", Toml.FileExtension);
+            this.File = TestFileName.Create("conffile", Toml.FileExtension, test);
         }
 
         public static SingleConfigFileScenario Setup(string test)

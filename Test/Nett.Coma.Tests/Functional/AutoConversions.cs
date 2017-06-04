@@ -29,7 +29,7 @@ namespace Nett.Coma.Tests.Functional
         [Fact]
         public void Foo()
         {
-            using (var fn = TestFileName.Create(nameof(Foo), "input", ".toml"))
+            using (var fn = TestFileName.Create("input", ".toml"))
             {
                 // Arrange
                 const string tml = @"

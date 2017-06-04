@@ -11,8 +11,7 @@ namespace Nett.Coma.Tests.Unit
         [MFact(nameof(FileConfigStore), nameof(FileConfigStore.WasChangedExternally), "When file was not loaded will always return true")]
         public void WasChangedExternally_WhenFileWasNotLoadedAtLeastOnce_WillAlwaysReturnTrue()
         {
-            var t = nameof(WasChangedExternally_WhenThereWasNoModification_ReturnsFalse);
-            using (var file = TestFileName.Create(t, "x", Toml.FileExtension))
+            using (var file = TestFileName.Create("x", Toml.FileExtension))
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
@@ -31,8 +30,7 @@ namespace Nett.Coma.Tests.Unit
         [MFact(nameof(FileConfigStore), nameof(FileConfigStore.WasChangedExternally), "When there was no modification will return false")]
         public void WasChangedExternally_WhenThereWasNoModification_ReturnsFalse()
         {
-            var t = nameof(WasChangedExternally_WhenThereWasNoModification_ReturnsFalse);
-            using (var file = TestFileName.Create(t, "x", Toml.FileExtension))
+            using (var file = TestFileName.Create("x", Toml.FileExtension))
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
@@ -50,8 +48,7 @@ namespace Nett.Coma.Tests.Unit
         [MFact(nameof(FileConfigStore), nameof(FileConfigStore.WasChangedExternally), "When there was a modification will return true until changes were loaded")]
         public void WasChangedExternally_WhenFileWasModified_ReturnsTrueUntilLoadIsPerformed()
         {
-            var t = nameof(WasChangedExternally_WhenThereWasNoModification_ReturnsFalse);
-            using (var file = TestFileName.Create(t, "x", Toml.FileExtension))
+            using (var file = TestFileName.Create("x", Toml.FileExtension))
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");

@@ -43,9 +43,9 @@ EMail = ""test@user.com""";
 
         private GitScenario(string testName)
         {
-            this.SystemFile = TestFileName.Create(testName, "system", GitConfig.Extension);
-            this.UserFile = TestFileName.Create(testName, "user", GitConfig.Extension);
-            this.RepoFile = TestFileName.Create(testName, "repo", GitConfig.Extension);
+            this.SystemFile = TestFileName.Create("system", GitConfig.Extension, testName);
+            this.UserFile = TestFileName.Create("user", GitConfig.Extension, testName);
+            this.RepoFile = TestFileName.Create("repo", GitConfig.Extension, testName);
         }
 
         public string RepoSourceName => "RepoAlias";

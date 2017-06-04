@@ -13,7 +13,7 @@ namespace Nett.Coma.Tests.Internal.Integration
         [Description("There was a bug, where optimized file config didn't update the in memory table and so the next load delivered old stuff")]
         public void Save_UpdatesInMemoryConfigSoNextLoadWillDeliverThatConfig()
         {
-            using (var fn = TestFileName.Create(nameof(Save_UpdatesInMemoryConfigSoNextLoadWillDeliverThatConfig), "file", Toml.FileExtension))
+            using (var fn = TestFileName.Create("file", Toml.FileExtension))
             {
                 // Arrange
                 var fc = new FileConfigStore(TomlConfig.DefaultInstance, fn, fn);
