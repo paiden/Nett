@@ -80,7 +80,6 @@ namespace Nett.Coma.Path
             private readonly Type conversionTargetType;
             private readonly TomlTable parentTable;
             private readonly ITomlConverter converter;
-            private bool isInitialized = false;
 
             public ConversionMappingTableProxy(
                 string rowKey, TomlTable parentTable, Type clrObjectType, Type tomlType, TomlTable objTable, ITomlConverter converter)
@@ -94,19 +93,42 @@ namespace Nett.Coma.Path
 
                 foreach (var r in objTable.Rows)
                 {
-                    this.AddRow(new TomlKey(r.Key), r.Value);
+                    var toAdd = r.Value is TomlTable t ? new ProxySubTable(t, this) : r.Value;
+                    this.AddRow(new TomlKey(r.Key), toAdd);
                 }
-
-                this.isInitialized = true;
             }
 
-            protected override void OnRowValueSet(string rowKey)
+            protected override void OnRowValueSet(string _)
             {
-                if (this.isInitialized)
+                this.UpdateProxiedTable();
+            }
+
+            private void UpdateProxiedTable()
+            {
+                var obj = this.Get(this.clrObjectType);
+                this.parentTable[this.rowKey] =
+                    (TomlObject)this.converter.Convert(this.parentTable.Root, obj, this.conversionTargetType);
+            }
+
+            private class ProxySubTable : TomlTable
+            {
+                private ConversionMappingTableProxy root;
+
+                public ProxySubTable(TomlTable tbl, ConversionMappingTableProxy root)
+                    : base(tbl.Root)
                 {
-                    var obj = this.Get(this.clrObjectType);
-                    this.parentTable[this.rowKey] =
-                        (TomlObject)this.converter.Convert(this.parentTable.Root, obj, this.conversionTargetType);
+                    this.root = root;
+
+                    foreach (var r in tbl)
+                    {
+                        var toAdd = r.Value is TomlTable t ? new ProxySubTable(t, this.root) : r.Value;
+                        this.AddRow(new TomlKey(r.Key), toAdd);
+                    }
+                }
+
+                protected override void OnRowValueSet(string _)
+                {
+                    this.root.UpdateProxiedTable();
                 }
             }
         }
