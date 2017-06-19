@@ -74,7 +74,8 @@ function Invoke-ExpandedChecked {
     }
 }
 
-$msbuild = Join-Path ${env:ProgramFiles(x86)} ".\MSBuild\14.0\bin\msbuild.exe"
+$basePath = & .\Infrastructure\vswhere.exe -latest -property installationPath
+$msbuild = Join-Path $basePath  ".\MSBuild\15.0\bin\msbuild.exe"
 $buildItem = Join-Path -Path $PSScriptRoot -ChildPath Solutions\Nett\Nett.sln
 
 if (!(Test-Path $msbuild)) {
@@ -94,14 +95,14 @@ if(-not $disableStdBuild) {
 if($NuGetPackage) {
     $sne=""
     $packagesDir = Join-Path $PSScriptRoot -ChildPath .\Solutions\nett\packages
-    $snTool = (Get-ChildItem "$packagesDir\Brutal.Dev.StrongNameSigner*\**\StrongNameSigner.Console.Exe")[0].FullName
-    $srcNett = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration\Nett.dll")"
-    $srcComa = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett.Coma\bin\$configuration\Nett.Coma.dll")"
+    $snTool = Join-Path $PSScriptRoot -ChildPath Infrastructure\Signer\StrongNameSigner.Console.Exe
+    $srcNett = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration\net40\Nett.dll")"
+    $srcComa = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett.Coma\bin\$configuration\net40\Nett.Coma.dll")"
     if($strongName) {
         $sne = '.StrongNamed'
 
-        $dstNett = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration$sne\Nett.dll")"
-        $dstComa = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett.Coma\bin\$configuration$sne\Nett.Coma.dll")"
+        $dstNett = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration$sne\net40\Nett.dll")"
+        $dstComa = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett.Coma\bin\$configuration$sne\net40\Nett.Coma.dll")"
 
         New-Item -ItemType File -Path $dstNett -Force
         New-Item -ItemType File -Path $dstComa -Force

@@ -11,8 +11,8 @@
     <projectUrl>https://github.com/paiden/Nett</projectUrl>
   </metadata>
   <files>
-    <file src="Source\Nett\bin\$configuration$$SNE$\Nett.dll" target="lib\Net40" />
-    <file src="Source\Nett\bin\$configuration$\Nett.pdb" target="lib\Net40" />
+    <file src="Source\Nett\bin\$configuration$$SNE$\net40\Nett.dll" target="lib\Net40" />
+    <file src="Source\Nett\bin\$configuration$\net40\Nett.pdb" target="lib\Net40" />
     <file src="Source\Nett\**\*.cs" target="src\" />
   </files>
 </package>

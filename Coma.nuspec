@@ -14,8 +14,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Source\Nett.Coma\bin\$configuration$$SNE$\Nett.Coma.dll" target="lib\Net40" />
-    <file src="Source\Nett.Coma\bin\$configuration$\Nett.Coma.pdb" target="lib\Net40" />
+    <file src="Source\Nett.Coma\bin\$configuration$$SNE$\net40\Nett.Coma.dll" target="lib\Net40" />
+    <file src="Source\Nett.Coma\bin\$configuration$\net40\Nett.Coma.pdb" target="lib\Net40" />
     <file src="Source\Nett.Coma\**\*.cs" target="src\" />
   </files>
 </package>
