@@ -4,6 +4,7 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using Nett.Extensions;
     using Nett.Util;
     using Writer;
 
@@ -63,21 +64,52 @@
         /// <remarks>[!include[_](../specs/toml-create-remarks.md)]</remarks>
         public static TomlTable Create<T>(T obj, TomlSettings settings) => TomlTable.RootTable.From(settings, obj);
 
+        /// <summary>
+        /// Reads the TOML contents from some file and converts it to a CLR object.
+        /// </summary>
+        /// <typeparam name="T">The type of the CLR object.</typeparam>
+        /// <param name="filePath">The absolute or relative path to the file.</param>
+        /// <returns>A CLR object representing the TOML contents of the file.</returns>
+        /// <exception cref="ArgumentNullException">If *filePath* is **null**.</exception>
+        /// <remarks>Uses the default <see cref="TomlSettings"/></remarks>
         public static T ReadFile<T>(string filePath) => ReadFile<T>(filePath, TomlSettings.DefaultInstance);
 
+        /// <summary>
+        /// Reads the TOML contents from some file and converts it to a CLR object.
+        /// </summary>
+        /// <typeparam name="T">The type of the CLR object.</typeparam>
+        /// <param name="filePath">The absolute or relative path to the file.</param>
+        /// <param name="settings">The settings used to process the TOML content.</param>
+        /// <returns>A CLR object representing the TOML contents of the file.</returns>
+        /// <exception cref="ArgumentNullException">If *filePath* is **null**.</exception>
+        /// <exception cref="ArgumentNullException">If *settings* is **null**</exception>
         public static T ReadFile<T>(string filePath, TomlSettings settings)
         {
-            if (settings == null) { throw new ArgumentNullException(nameof(settings)); }
+            filePath.CheckNotNull(nameof(filePath));
+            settings.CheckNotNull(nameof(settings));
 
             var tt = ReadFile(filePath, settings);
             return tt.Get<T>();
         }
 
+        /// <summary>
+        /// Reads the TOML contents from some file and maps it into a TomlTable structure.
+        /// </summary>
+        /// <param name="filePath">The absolute or relative path to the file.</param>
+        /// <returns>A <see cref="TomlTable"/> corresponding to the file content.</returns>
+        /// <remarks>Uses the default TOML settings while processing the file.</remarks>
         public static TomlTable ReadFile(string filePath) => ReadFile(filePath, TomlSettings.DefaultInstance);
 
+        /// <summary>
+        /// Reads the TOML contents from some file and maps it into a TomlTable structure.
+        /// </summary>
+        /// <param name="filePath">The absolute or relative path to the file.</param>
+        /// <param name="settings">The settings used to process the TOML content.</param>
+        /// <returns>A <see cref="TomlTable"/> corresponding to the file content.<</returns>
         public static TomlTable ReadFile(string filePath, TomlSettings settings)
         {
-            if (settings == null) { throw new ArgumentNullException(nameof(settings)); }
+            filePath.CheckNotNull(nameof(filePath));
+            settings.CheckNotNull(nameof(settings));
 
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
