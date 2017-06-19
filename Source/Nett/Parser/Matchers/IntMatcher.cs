@@ -4,7 +4,7 @@
 
     internal static class IntMatcher
     {
-        const int BufferSize = 32; // 2^64 = +18_446_744_073_709_551_616 < 32 chars
+        private const int BufferSize = 32; // 2^64 = +18_446_744_073_709_551_616 < 32 chars
 
         internal static Token? TryMatch(CharBuffer cs)
         {
