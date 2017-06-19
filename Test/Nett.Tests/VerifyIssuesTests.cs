@@ -153,6 +153,21 @@ SomeValue = 5";
             parsed.Get<TomlTable>("Test").Get<TomlTable>("InlineTable").Get<int>("test").Should().Be(1);
         }
 
+        [Fact]
+        public void VerifyIssue30_ArrayWithClosingBracketOnNextLine_IsParsedCorrectly()
+        {
+            const string Tml = @"
+""foo"" = [
+    ""bar""
+]
+";
+
+            var a = Toml.ReadString(Tml).Get<string[]>("foo");
+
+            a.Length.Should().Be(1);
+            a[0].Should().Be("bar");
+        }
+
         public class WithUint
         {
             public uint Prop { get; set; } = 1;

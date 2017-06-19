@@ -66,9 +66,15 @@
             return this.Peek().type == tt;
         }
 
-        private Token ConsumeInternal()
+        public IDisposable UseIgnoreNewlinesContext()
         {
-            var t = this.Consume();
+            this.ConsumeAllNewlines();
+            return new AutoThrowAwayNewLinesContext(this);
+        }
+
+        public override Token Consume()
+        {
+            var t = base.Consume();
 
             if (this.autoThrowAwayNewlines)
             {

@@ -135,62 +135,62 @@
             TomlArray a;
 
             tokens.ExpectAndConsume(TokenType.LBrac);
-            tokens.ConsumeAllNewlines();
-
-            if (tokens.TryExpect(TokenType.RBrac))
+            using (tokens.UseIgnoreNewlinesContext())
             {
-                // Empty array handled inside this if, else part can assume the array has values
-                tokens.Consume();
-                return new TomlArray(root);
-            }
-            else
-            {
-                List<TomlValue> values = new List<TomlValue>();
-                var errPos = tokens.Peek();
-                var v = ParseTomlValue(root, tokens);
 
-                if (v == null)
+                if (tokens.TryExpect(TokenType.RBrac))
                 {
-                    throw Parser.CreateParseError(errPos, $"Array value is missing.");
+                    // Empty array handled inside this if, else part can assume the array has values
+                    tokens.Consume();
+                    return new TomlArray(root);
                 }
-
-                values.Add(v);
-
-                while (!tokens.TryExpect(TokenType.RBrac))
+                else
                 {
-                    if (!tokens.TryExpectAndConsume(TokenType.Comma))
+                    List<TomlValue> values = new List<TomlValue>();
+                    var errPos = tokens.Peek();
+                    var v = ParseTomlValue(root, tokens);
+
+                    if (v == null)
                     {
-                        throw Parser.CreateParseError(tokens.Peek(), "Array not closed.");
+                        throw Parser.CreateParseError(errPos, $"Array value is missing.");
                     }
 
-                    tokens.ConsumeAllNewlines();
-                    values.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                    values.Add(v);
 
-                    if (!tokens.TryExpect(TokenType.RBrac))
+                    while (!tokens.TryExpect(TokenType.RBrac))
                     {
-                        var et = tokens.Peek();
-                        v = ParseTomlValue(root, tokens);
-
-                        if (v == null)
+                        if (!tokens.TryExpectAndConsume(TokenType.Comma))
                         {
-                            throw Parser.CreateParseError(et, $"Array value is missing.");
+                            throw Parser.CreateParseError(tokens.Peek(), "Array not closed.");
                         }
 
-                        if (v.GetType() != values[0].GetType())
-                        {
-                            throw Parser.CreateParseError(et, $"Expected value of type '{values[0].ReadableTypeName}' but value of type '{v.ReadableTypeName}' was found.");
-                        }
+                        values.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
-                        values.Add(v);
-                        tokens.ConsumeAllNewlines();
+                        if (!tokens.TryExpect(TokenType.RBrac))
+                        {
+                            var et = tokens.Peek();
+                            v = ParseTomlValue(root, tokens);
+
+                            if (v == null)
+                            {
+                                throw Parser.CreateParseError(et, $"Array value is missing.");
+                            }
+
+                            if (v.GetType() != values[0].GetType())
+                            {
+                                throw Parser.CreateParseError(et, $"Expected value of type '{values[0].ReadableTypeName}' but value of type '{v.ReadableTypeName}' was found.");
+                            }
+
+                            values.Add(v);
+                        }
                     }
+
+                    a = new TomlArray(root, values.ToArray());
                 }
 
-                a = new TomlArray(root, values.ToArray());
+                a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                tokens.ExpectAndConsume(TokenType.RBrac);
             }
-
-            a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
-            tokens.ExpectAndConsume(TokenType.RBrac);
 
             return a;
         }
