@@ -8,7 +8,7 @@
 
         internal static Token? TryMatch(CharBuffer cs)
         {
-            StringBuilder sb = new StringBuilder(128);
+            StringBuilder sb = new StringBuilder(Constants.MatcherBufferSize);
             if (!cs.TryExpect(StringTag))
             {
                 return null;

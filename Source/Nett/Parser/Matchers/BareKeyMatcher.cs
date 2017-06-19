@@ -19,7 +19,7 @@
 
         private static Token? TryMatchInternal(StringBuilder alreadyMatched, CharBuffer cs)
         {
-            var sb = alreadyMatched ?? new StringBuilder(64);
+            var sb = alreadyMatched ?? new StringBuilder(Constants.MatcherBufferSize);
 
             while (!cs.End && cs.Peek().IsBareKeyChar())
             {

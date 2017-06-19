@@ -10,7 +10,7 @@
             else
             {
                 chars.Consume();
-                StringBuilder sb = new StringBuilder(64);
+                StringBuilder sb = new StringBuilder(Constants.MatcherBufferSize);
                 while (!chars.End && !chars.TryExpect('\r') && !chars.TryExpect('\n'))
                 {
                     sb.Append(chars.Consume());

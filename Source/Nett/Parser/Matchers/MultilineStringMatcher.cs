@@ -12,7 +12,7 @@
 
             var errPos = cs.FilePosition;
 
-            StringBuilder sb = new StringBuilder(64);
+            StringBuilder sb = new StringBuilder(Constants.MatcherBufferSize);
             cs.Consume(StringTag.Length);
 
             while (!cs.TryExpect(StringTag))

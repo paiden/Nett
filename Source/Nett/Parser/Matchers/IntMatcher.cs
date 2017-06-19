@@ -1,10 +1,11 @@
 ﻿namespace Nett.Parser.Matchers
 {
     using System.Text;
-    using Util;
 
     internal static class IntMatcher
     {
+        const int BufferSize = 32; // 2^64 = +18_446_744_073_709_551_616 < 32 chars
+
         internal static Token? TryMatch(CharBuffer cs)
         {
             bool hasPos = cs.TryExpect('+');
@@ -12,7 +13,7 @@
 
             if (hasSign || cs.TryExpectInRange('0', '9'))
             {
-                StringBuilder sb = new StringBuilder(16);
+                StringBuilder sb = new StringBuilder(BufferSize);
                 sb.Append(cs.Consume());
 
                 if (hasSign && !cs.TryExpectInRange('0', '9'))
