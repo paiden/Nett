@@ -98,7 +98,9 @@ namespace Nett.Coma.Path
                 }
             }
 
+#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
             protected override void OnRowValueSet(string _)
+#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
             {
                 this.UpdateProxiedTable();
             }
@@ -126,7 +128,9 @@ namespace Nett.Coma.Path
                     }
                 }
 
+#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
                 protected override void OnRowValueSet(string _)
+#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
                 {
                     this.root.UpdateProxiedTable();
                 }
