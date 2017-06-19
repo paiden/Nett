@@ -43,8 +43,8 @@ namespace Nett.Tests.Functional
                 { "X = [", ArrayValueIsMissing, 1, 6 },
                 { "X = [,]", ArrayValueIsMissing, 1, 6 },
                 { "X = [1, ,]", ArrayValueIsMissing, 1, 9 }, // Space is no token, so the ',' is the error position => 9 instead of 8
-                { "X = [1, 'X']", "*Expected value of type 'int' but value of type 'string' was found.", 1, 9 },
-                { "X = [1, 2, []", "*Expected value of type 'int' but value of type 'array' was found.", 1, 12 },
+                { "X = [1, 'X']", "*Expected array value of type 'int' but value of type 'string' was found.", 1, 9 },
+                { "X = [1, 2, []", "*Expected array value of type 'int' but value of type 'array' was found.", 1, 12 },
                 { "X = [[1, 2], []", ArrayNotClosed, 1, 16 },
                 { "X = [[1, 2], ['a', 'b']", ArrayNotClosed, 1, 24 },
                 { "X = [[1, 2]['a', 'b']]", ArrayNotClosed, 1, 12 },

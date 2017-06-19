@@ -240,7 +240,7 @@ namespace Nett.Tests
         public void ReadValidTomlUntyped_CommentsEverywere()
         {
             // Arrange
-            var toml = TomlStrings.Valid.CommentsEverywhereABNFCompatible;
+            var toml = TomlStrings.Valid.CommentsEverywhere;
 
             // Act
             var read = Toml.ReadString(toml);

@@ -45,11 +45,6 @@ t = true
 f = false
 ";
 
-            /// <summary>
-            /// For now I will not use this string for testing but a slightly simplified version. The reason is, that the ABNF created by the TOML initiator
-            /// says that this case is not allowed https://github.com/toml-lang/toml/blob/abnf/toml.abnf, at least when I didn't misinterpret it.
-            /// For now I will stick to the ABNF that says that comments are only allowed 'after' there was an array value. This case is in the CommentsEverywhereABNFCompatible member.
-            /// </summary>
             public const string CommentsEverywhere = @"
 # Top comment.
   # Top comment.
@@ -67,28 +62,6 @@ more = [ # Comment
   #
           # Evil.
 # Evil.
-  42, 42, # Comments within arrays are fun.
-  # What about multiple # comments?
-  # Can you handle it?
-  #
-          # Evil.
-# Evil.
-# ] Did I fool you?
-] # Hopefully not.
-";
-
-            public const string CommentsEverywhereABNFCompatible = @"
-# Top comment.
-  # Top comment.
-# Top comment.
-
-# [no-extraneous-groups-please]
-
-[group] # Comment
-answer = 42 # Comment
-# no-extraneous-keys-please = 999
-# Inbetween comment.
-more = [
   42, 42, # Comments within arrays are fun.
   # What about multiple # comments?
   # Can you handle it?

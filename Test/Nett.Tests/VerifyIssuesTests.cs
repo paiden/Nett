@@ -168,6 +168,23 @@ SomeValue = 5";
             a[0].Should().Be("bar");
         }
 
+        [Fact]
+        public void VerifyIssue30_WithCommentBeforeFirstValue_IsParsedCorrectly()
+        {
+            const string Tml = @"
+""foo"" = [
+    # Comment
+    ""bar"",
+]
+";
+
+            var a = Toml.ReadString(Tml).Get<string[]>("foo");
+
+            a.Length.Should().Be(1);
+            a[0].Should().Be("bar");
+        }
+
+
         public class WithUint
         {
             public uint Prop { get; set; } = 1;
