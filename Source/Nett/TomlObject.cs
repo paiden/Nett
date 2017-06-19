@@ -48,7 +48,7 @@
         internal static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi)
         {
             var t = val.GetType();
-            var converter = root.Config.TryGetToTomlConverter(t);
+            var converter = root.Settings.TryGetToTomlConverter(t);
 
             if (converter != null)
             {
@@ -56,7 +56,7 @@
             }
             else if (val as IDictionary != null)
             {
-                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Config.GetTableType(t));
+                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Settings.GetTableType(t));
             }
             else if (t != Types.StringType && (val as IEnumerable) != null)
             {
@@ -64,7 +64,7 @@
             }
             else
             {
-                var tableType = root.Config.GetTableType(t);
+                var tableType = root.Settings.GetTableType(t);
                 return TomlTable.CreateFromClass(root, val, tableType);
             }
         }
@@ -85,7 +85,7 @@
 
             if (et != null)
             {
-                var conv = root.Config.TryGetToTomlConverter(et);
+                var conv = root.Settings.TryGetToTomlConverter(et);
                 if (conv != null)
                 {
                     if (conv.CanConvertTo(typeof(TomlValue)))
@@ -106,7 +106,7 @@
                 else
                 {
                     return new TomlTableArray(root, e.Select((o) =>
-                        TomlTable.CreateFromClass(root, o, root.Config.GetTableType(et))));
+                        TomlTable.CreateFromClass(root, o, root.Settings.GetTableType(et))));
                 }
             }
 

@@ -66,7 +66,7 @@
         {
             if (this.GetType() == t) { return this; }
 
-            var converter = this.Root.Config.TryGetConverter(this.GetType(), t);
+            var converter = this.Root.Settings.TryGetConverter(this.GetType(), t);
             if (converter != null)
             {
                 return converter.Convert(this.Root, this, t);

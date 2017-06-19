@@ -6,17 +6,17 @@
 
     public partial class TomlTable
     {
-        internal static RootTable From<T>(TomlConfig config, T obj)
+        internal static RootTable From<T>(TomlSettings settings, T obj)
         {
-            if (config == null) { throw new ArgumentNullException(nameof(config)); }
+            if (settings == null) { throw new ArgumentNullException(nameof(settings)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
 
             var rt = obj as RootTable;
             if (rt != null) { return rt; }
 
-            var tt = new RootTable(config);
+            var tt = new RootTable(settings);
             var t = obj.GetType();
-            var props = config.GetSerializationProperties(t);
+            var props = settings.GetSerializationProperties(t);
             var allObjects = new List<Tuple<string, TomlObject>>();
 
             foreach (var p in props)
@@ -37,17 +37,17 @@
 
         internal sealed class RootTable : TomlTable, ITomlRoot
         {
-            private readonly TomlConfig config;
+            private readonly TomlSettings settings;
 
-            public RootTable(TomlConfig config)
+            public RootTable(TomlSettings settings)
                 : base(null)
             {
-                if (config == null) { throw new ArgumentNullException(nameof(config)); }
+                if (settings == null) { throw new ArgumentNullException(nameof(settings)); }
 
-                this.config = config;
+                this.settings = settings;
             }
 
-            TomlConfig ITomlRoot.Config => this.config;
+            TomlSettings ITomlRoot.Settings => this.settings;
         }
     }
 }

@@ -7,61 +7,61 @@
     using Util;
     using static System.Diagnostics.Debug;
 
-    public sealed partial class TomlConfig
+    public sealed partial class TomlSettings
     {
-        public interface IConfigureTypeBuilder<TCustom>
+        public interface ITypeSettingsBuilder<TCustom>
         {
-            IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> func);
+            ITypeSettingsBuilder<TCustom> CreateInstance(Func<TCustom> func);
 
-            IConfigureTypeBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor);
+            ITypeSettingsBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor);
 
-            IConfigureTypeBuilder<TCustom> TreatAsInlineTable();
+            ITypeSettingsBuilder<TCustom> TreatAsInlineTable();
 
-            IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv)
+            ITypeSettingsBuilder<TCustom> WithConversionFor<TToml>(Action<IConversionSettingsBuilder<TCustom, TToml>> conv)
                 where TToml : TomlObject;
         }
 
         public interface ITableKeyMappingBuilder
         {
-            ITomlConfigBuilder To<T>();
+            ITomlSettingsBuilder To<T>();
         }
 
-        public interface ITomlConfigBuilder
+        public interface ITomlSettingsBuilder
         {
-            ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets);
+            ITomlSettingsBuilder AllowImplicitConversions(ConversionSets sets);
 
-            ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch);
+            ITomlSettingsBuilder Apply(Action<ITomlSettingsBuilder> batch);
 
-            ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct);
+            ITomlSettingsBuilder ConfigureType<T>(Action<ITypeSettingsBuilder<T>> ct);
 
             ITableKeyMappingBuilder MapTableKey(string key);
         }
 
-        internal sealed class ConversionConfigurationBuilder<TCustom, TToml> : IConfigureConversionBuilder<TCustom, TToml>
+        internal sealed class ConversionSettingsBuilder<TCustom, TToml> : IConversionSettingsBuilder<TCustom, TToml>
             where TToml : TomlObject
         {
             private readonly List<ITomlConverter> converters;
 
-            public ConversionConfigurationBuilder(List<ITomlConverter> converters)
+            public ConversionSettingsBuilder(List<ITomlConverter> converters)
             {
                 Assert(converters != null);
 
                 this.converters = converters;
             }
 
-            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<ITomlRoot, TToml, TCustom> convert)
+            public IConversionSettingsBuilder<TCustom, TToml> FromToml(Func<ITomlRoot, TToml, TCustom> convert)
             {
                 this.AddConverter(new TomlConverter<TToml, TCustom>(convert));
                 return this;
             }
 
-            public IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
+            public IConversionSettingsBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert)
             {
                 this.AddConverterInternal(new TomlConverter<TToml, TCustom>((_, tToml) => convert(tToml)));
                 return this;
             }
 
-            public IConfigureConversionBuilder<TCustom, TToml> ToToml(Func<ITomlRoot, TCustom, TToml> convert)
+            public IConversionSettingsBuilder<TCustom, TToml> ToToml(Func<ITomlRoot, TCustom, TToml> convert)
             {
                 this.AddConverterInternal(new TomlConverter<TCustom, TToml>(convert));
                 return this;
@@ -77,59 +77,59 @@
 
         internal sealed class TableKeyMappingBuilder : ITableKeyMappingBuilder
         {
-            private readonly TomlConfig config;
-            private readonly ITomlConfigBuilder configBuilder;
+            private readonly TomlSettings settings;
+            private readonly ITomlSettingsBuilder configBuilder;
             private readonly string key;
 
-            public TableKeyMappingBuilder(TomlConfig config, ITomlConfigBuilder configBuilder, string key)
+            public TableKeyMappingBuilder(TomlSettings settings, ITomlSettingsBuilder configBuilder, string key)
             {
-                this.config = config;
+                this.settings = settings;
                 this.configBuilder = configBuilder;
                 this.key = key;
             }
 
-            public ITomlConfigBuilder To<T>()
+            public ITomlSettingsBuilder To<T>()
             {
-                this.config.tableKeyToTypeMappings[this.key] = typeof(T);
+                this.settings.tableKeyToTypeMappings[this.key] = typeof(T);
                 return this.configBuilder;
             }
         }
 
-        internal sealed class TomlConfigBuilder : ITomlConfigBuilder
+        internal sealed class TomlSettingsBuilder : ITomlSettingsBuilder
         {
-            private readonly TomlConfig config = new TomlConfig();
+            private readonly TomlSettings settings = new TomlSettings();
             private readonly List<ITomlConverter> userConverters = new List<ITomlConverter>();
 
             private ConversionSets allowedConversions;
 
-            public TomlConfigBuilder(TomlConfig config)
+            public TomlSettingsBuilder(TomlSettings settings)
             {
-                Assert(config != null);
+                Assert(settings != null);
 
-                this.config = config;
+                this.settings = settings;
                 this.AllowImplicitConversions(ConversionSets.Default);
             }
 
-            public ITomlConfigBuilder AllowImplicitConversions(ConversionSets sets)
+            public ITomlSettingsBuilder AllowImplicitConversions(ConversionSets sets)
             {
                 this.allowedConversions = sets;
                 return this;
             }
 
-            public ITomlConfigBuilder Apply(Action<ITomlConfigBuilder> batch)
+            public ITomlSettingsBuilder Apply(Action<ITomlSettingsBuilder> batch)
             {
                 batch(this);
                 return this;
             }
 
-            public ITomlConfigBuilder ConfigureType<T>(Action<IConfigureTypeBuilder<T>> ct)
+            public ITomlSettingsBuilder ConfigureType<T>(Action<ITypeSettingsBuilder<T>> ct)
             {
-                ct(new TypeConfigurationBuilder<T>(this.config, this.userConverters));
+                ct(new TypeSettingsBuilder<T>(this.settings, this.userConverters));
                 return this;
             }
 
             public ITableKeyMappingBuilder MapTableKey(string key) =>
-                new TableKeyMappingBuilder(this.config, this, key);
+                new TableKeyMappingBuilder(this.settings, this, key);
 
             public void SetupConverters()
             {
@@ -139,68 +139,68 @@
 
             public void SetupDefaultConverters()
             {
-                this.config.converters.AddRange(EquivalentTypeConverters);
+                this.settings.converters.AddRange(EquivalentTypeConverters);
 
                 if (this.allowedConversions.HasFlag(ConversionSets.NumericalSize))
                 {
-                    this.config.converters.AddRange(NumericalSize);
+                    this.settings.converters.AddRange(NumericalSize);
                 }
 
                 if (this.allowedConversions.HasFlag(ConversionSets.Serialize))
                 {
-                    this.config.converters.AddRange(SerializeConverters);
+                    this.settings.converters.AddRange(SerializeConverters);
                 }
 
                 if (this.allowedConversions.HasFlag(ConversionSets.NumericalType))
                 {
-                    this.config.converters.AddRange(NumercialType);
+                    this.settings.converters.AddRange(NumercialType);
                 }
             }
 
             private void SetupUserConverters()
             {
-                this.config.converters.AddRange(this.userConverters);
+                this.settings.converters.AddRange(this.userConverters);
             }
         }
 
-        internal sealed class TypeConfigurationBuilder<TCustom> : IConfigureTypeBuilder<TCustom>
+        internal sealed class TypeSettingsBuilder<TCustom> : ITypeSettingsBuilder<TCustom>
         {
-            private readonly TomlConfig config;
+            private readonly TomlSettings settings;
             private readonly List<ITomlConverter> converters;
 
-            public TypeConfigurationBuilder(TomlConfig config, List<ITomlConverter> converters)
+            public TypeSettingsBuilder(TomlSettings settings, List<ITomlConverter> converters)
             {
-                Assert(config != null);
+                Assert(settings != null);
                 Assert(converters != null);
 
-                this.config = config;
+                this.settings = settings;
                 this.converters = converters;
             }
 
-            public IConfigureTypeBuilder<TCustom> CreateInstance(Func<TCustom> activator)
+            public ITypeSettingsBuilder<TCustom> CreateInstance(Func<TCustom> activator)
             {
-                this.config.activators.Add(typeof(TCustom), () => activator());
+                this.settings.activators.Add(typeof(TCustom), () => activator());
                 return this;
             }
 
-            public IConfigureTypeBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor)
+            public ITypeSettingsBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor)
             {
-                var properties = this.config.ignoredProperties.AddIfNeeded(typeof(TCustom), def: new HashSet<string>());
+                var properties = this.settings.ignoredProperties.AddIfNeeded(typeof(TCustom), def: new HashSet<string>());
                 var propertyInfo = ReflectionUtil.GetPropertyInfo(accessor);
                 properties.Add(propertyInfo.Name);
                 return this;
             }
 
-            public IConfigureTypeBuilder<TCustom> TreatAsInlineTable()
+            public ITypeSettingsBuilder<TCustom> TreatAsInlineTable()
             {
-                this.config.inlineTableTypes.Add(typeof(TCustom));
+                this.settings.inlineTableTypes.Add(typeof(TCustom));
                 return this;
             }
 
-            public IConfigureTypeBuilder<TCustom> WithConversionFor<TToml>(Action<IConfigureConversionBuilder<TCustom, TToml>> conv)
+            public ITypeSettingsBuilder<TCustom> WithConversionFor<TToml>(Action<IConversionSettingsBuilder<TCustom, TToml>> conv)
                 where TToml : TomlObject
             {
-                conv(new ConversionConfigurationBuilder<TCustom, TToml>(this.converters));
+                conv(new ConversionSettingsBuilder<TCustom, TToml>(this.converters));
                 return this;
             }
         }

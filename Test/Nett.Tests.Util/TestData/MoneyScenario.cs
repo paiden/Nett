@@ -11,13 +11,13 @@ namespace Nett.Tests.Util.TestData
     public sealed class MoneyScenario : IDisposable
     {
         public TestFileName FilePath { get; }
-        public TomlConfig TmlConfig { get; }
+        public TomlSettings TmlConfig { get; }
 
         private MoneyScenario(string test)
         {
             this.FilePath = TestFileName.Create("money", Toml.FileExtension, test);
 
-            this.TmlConfig = TomlConfig.Create(cfg => cfg
+            this.TmlConfig = TomlSettings.Create(cfg => cfg
                 .ConfigureType<Money>(typeConfig => typeConfig
                     .WithConversionFor<TomlString>(conversion => conversion
                         .ToToml(m => m.ToString())

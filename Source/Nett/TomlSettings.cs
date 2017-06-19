@@ -13,9 +13,9 @@
         Append,
     }
 
-    public sealed partial class TomlConfig
+    public sealed partial class TomlSettings
     {
-        internal static readonly TomlConfig DefaultInstance = Create();
+        internal static readonly TomlSettings DefaultInstance = Create();
 
         private const BindingFlags PropBindingFlags = BindingFlags.Public | BindingFlags.Instance;
 
@@ -27,16 +27,16 @@
 
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
-        private TomlConfig()
+        private TomlSettings()
         {
         }
 
-        public static TomlConfig Create() => Create(_ => { });
+        public static TomlSettings Create() => Create(_ => { });
 
-        public static TomlConfig Create(Action<ITomlConfigBuilder> cfg)
+        public static TomlSettings Create(Action<ITomlSettingsBuilder> cfg)
         {
-            var config = new TomlConfig();
-            var builder = new TomlConfigBuilder(config);
+            var config = new TomlSettings();
+            var builder = new TomlSettingsBuilder(config);
             cfg(builder);
             builder.SetupConverters();
             return config;

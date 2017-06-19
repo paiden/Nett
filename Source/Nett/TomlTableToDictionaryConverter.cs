@@ -95,7 +95,7 @@
         {
             Type tableToTypeMappingTargetType;
 
-            if ((tableToTypeMappingTargetType = table.Root.Config.TryGetMappedType(this.currentKey, null)) != null)
+            if ((tableToTypeMappingTargetType = table.Root.Settings.TryGetMappedType(this.currentKey, null)) != null)
             {
                 this.table[this.currentKey] = table.Get(tableToTypeMappingTargetType);
             }

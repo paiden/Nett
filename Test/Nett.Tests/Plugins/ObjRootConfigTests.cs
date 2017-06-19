@@ -11,7 +11,7 @@ namespace Nett.Tests.Plugins
         public void ReadWhenMappingToTypeExistsPropertyGetSetToThatType()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .MapTableKey(ObjRootConfig.PluginConfigKey).To<SimplePluginConfig>());
 
             // Act
@@ -32,7 +32,7 @@ RootSetting = 1
 [PluginConfig.Ports]
 PortA = 1
 PortB = 2";
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .MapTableKey(ObjRootConfig.PluginConfigKey)
                 .To<PluginConfigWithIntDict>());
 

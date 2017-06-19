@@ -64,9 +64,9 @@
 
         public TomlObject Last() => this.Value[this.Value.Length - 1];
 
-        public IEnumerable<T> To<T>() => this.To<T>(TomlConfig.DefaultInstance);
+        public IEnumerable<T> To<T>() => this.To<T>(TomlSettings.DefaultInstance);
 
-        public IEnumerable<T> To<T>(TomlConfig config) => this.Value.Select((to) => to.Get<T>());
+        public IEnumerable<T> To<T>(TomlSettings settings) => this.Value.Select((to) => to.Get<T>());
 
         public override void Visit(ITomlObjectVisitor visitor)
         {

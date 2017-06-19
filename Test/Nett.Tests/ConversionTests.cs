@@ -15,7 +15,7 @@ namespace Nett.Tests
             // Arrange
             const int value = 10;
             const int expected = value * 2;
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<int>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .FromToml(ts => (int)ts.Value * 2))));
@@ -35,7 +35,7 @@ namespace Nett.Tests
             // Arrange
             const int value = 10;
             const int expected = value * 4;
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<int>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .FromToml(ts => (int)ts.Value * 2)))
@@ -56,7 +56,7 @@ namespace Nett.Tests
         public void ReadToml_WhenConfigHasConverter_ConverterGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<TestStruct>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .FromToml((m, ti) => new TestStruct() { Value = (int)ti.Value })
@@ -78,7 +78,7 @@ namespace Nett.Tests
         public void WriteToml_WhenConfigHasConverter_ConverterGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<TestStruct>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .FromToml((m, ti) => new TestStruct() { Value = (int)ti.Value })
@@ -101,7 +101,7 @@ namespace Nett.Tests
         public void RadToml_WithGenricConverters_CanFindCorrectConverter()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<IGeneric<string>>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
                         .FromToml((m, ts) => new GenericImpl<string>(ts.Value))
@@ -134,7 +134,7 @@ Foo3 = [""A""]";
         public void WriteToml_ConverterIsUsedAndConvertedPropertiesAreNotEvaluated()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<ClassWithTrowingProp>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
                         .ToToml(_ => "Yeah converter was used, and property not accessed")
@@ -155,7 +155,7 @@ Foo3 = [""A""]";
         public void WriteToml_WithListItemConverter_UsesConverter()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<GenProp<GenType>>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
                         .ToToml(_ => "Yeah converter was used.")
@@ -175,7 +175,7 @@ Foo3 = [""A""]";
         public void WriteToml_WithListItemConverterAndPropertyUsesInterface_UsesConverter()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<IGenProp<GenType>>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
                         .ToToml(_ => "Yeah converter was used.")
@@ -193,9 +193,9 @@ Foo3 = [""A""]";
 
 
 
-        private static TomlTable SetupConversionSetTest(TomlConfig.ConversionSets set, string tomlInput)
+        private static TomlTable SetupConversionSetTest(TomlSettings.ConversionSets set, string tomlInput)
         {
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .AllowImplicitConversions(set)
             );
 
@@ -238,7 +238,7 @@ Foo3 = [""A""]";
         public void ReadToml_Equivalent_AllowsConversionFromTomlIntToFloat(string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionSets.None, s);
+            var tbl = SetupConversionSetTest(TomlSettings.ConversionSets.None, s);
 
             Action a = () => read(tbl);
 
@@ -260,7 +260,7 @@ Foo3 = [""A""]";
             const string key = "x";
             const string value = "value";
             string tmlSrc = $"{key} = '{value}'";
-            var cfg = TomlConfig.Create(c => c
+            var cfg = TomlSettings.Create(c => c
                 .ConfigureType<char[]>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
                        .FromToml(s => s.Value.ToCharArray()))));
@@ -316,7 +316,7 @@ Foo3 = [""A""]";
         public void ReadToml_ExplicitDotNetImplicit_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
         {
             // Arrange
-            var tbl = SetupConversionSetTest(TomlConfig.ConversionSets.All, s);
+            var tbl = SetupConversionSetTest(TomlSettings.ConversionSets.All, s);
 
             // Act
             Action a = () => read(tbl);
@@ -340,8 +340,8 @@ Foo3 = [""A""]";
         public void ReadToml_WithAllConversionEnabled_AllowsConversionFromTomlIntToTomlFloat()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
-                .AllowImplicitConversions(TomlConfig.ConversionSets.All)
+            var config = TomlSettings.Create(cfg => cfg
+                .AllowImplicitConversions(TomlSettings.ConversionSets.All)
             );
 
             string abc = "SomeFloat = 1" + Environment.NewLine;
@@ -358,8 +358,8 @@ Foo3 = [""A""]";
         public void ReadToml_WithAllConversionEnabled_AllowsConversionFromTomlIntToDouble()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
-                .AllowImplicitConversions(TomlConfig.ConversionSets.All)
+            var config = TomlSettings.Create(cfg => cfg
+                .AllowImplicitConversions(TomlSettings.ConversionSets.All)
             );
 
             string abc = "SomeFloat = 1" + Environment.NewLine;
@@ -387,12 +387,12 @@ Foo3 = [""A""]";
         }
 
         [Theory(DisplayName = "Config sets 'Numerical*' cannot handle GUID / TOML string conversion automatically")]
-        [InlineData(TomlConfig.ConversionSets.NumericalSize)]
-        [InlineData(TomlConfig.ConversionSets.NumericalType)]
-        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlConfig.ConversionSets set)
+        [InlineData(TomlSettings.ConversionSets.NumericalSize)]
+        [InlineData(TomlSettings.ConversionSets.NumericalType)]
+        public void ReadToml_WhenConversionLevelBelowConvert_CannotConvertStringToGuidAutomatically(TomlSettings.ConversionSets set)
         {
             // Arrange
-            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(set));
+            var cfg = TomlSettings.Create(c => c.AllowImplicitConversions(set));
             Guid g = Guid.NewGuid();
             var read = Toml.ReadString($"g = '{g}'", cfg);
 
@@ -433,7 +433,7 @@ Foo3 = [""A""]";
         public void ReadToml_WhenAllConversionEnabled_CannotConvertBetweenIntAndFloatTypes()
         {
             // Arrange
-            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(TomlConfig.ConversionSets.All));
+            var cfg = TomlSettings.Create(c => c.AllowImplicitConversions(TomlSettings.ConversionSets.All));
             var read = Toml.ReadString($"i = 100", cfg);
 
             // Act
@@ -447,7 +447,7 @@ Foo3 = [""A""]";
         public void ReadToml_WhenAllConversionsEnabled_CannotConvertBetweenFloatAndIntTypes()
         {
             // Arrange
-            var cfg = TomlConfig.Create(c => c.AllowImplicitConversions(TomlConfig.ConversionSets.All));
+            var cfg = TomlSettings.Create(c => c.AllowImplicitConversions(TomlSettings.ConversionSets.All));
             var read = Toml.ReadString($"f = 100.0", cfg);
 
             // Act
@@ -462,7 +462,7 @@ Foo3 = [""A""]";
         public void AllTypeConversionSupportedByConverterApi()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<ConvertToAnyType>(ct => ct
                     .WithConversionFor<TomlInt>(conv => conv
                         .ToToml(a => 1))

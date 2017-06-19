@@ -9,7 +9,7 @@ namespace Nett.Tests.Functional
         [Fact]
         public void Write_WhenDictionaryValueTypeIsConfiguredAsInlineTable_ThatTypeIsWrittenAsAnInlineTable()
         {
-            var config = TomlConfig.Create(cfg =>
+            var config = TomlSettings.Create(cfg =>
                 cfg.ConfigureType<Item>(type =>
                     type.TreatAsInlineTable()));
 
@@ -21,7 +21,7 @@ namespace Nett.Tests.Functional
         [Fact]
         public void Write_WhenDictIsMarkedAsInline_WritesDictAsInlineAndItemsAutomaticallyAsNestedInlineTables()
         {
-            var config = TomlConfig.Create(cfg =>
+            var config = TomlSettings.Create(cfg =>
                 cfg.ConfigureType<Dictionary<string, Item>>(type =>
                     type.TreatAsInlineTable()));
 
@@ -33,7 +33,7 @@ namespace Nett.Tests.Functional
         [Fact]
         public void Write_WithEmptyInlineTableArray_WritesNothingToTheFile()
         {
-            var config = TomlConfig.Create(cfg =>
+            var config = TomlSettings.Create(cfg =>
                 cfg.ConfigureType<Item>(type =>
                     type.TreatAsInlineTable()));
 
@@ -45,7 +45,7 @@ namespace Nett.Tests.Functional
         [Fact]
         public void Write_WhenTblArrayValueTypeIsConfiguredAsInlineTable_ThatTypeIsWrittenAsAnInlineTable()
         {
-            var config = TomlConfig.Create(cfg =>
+            var config = TomlSettings.Create(cfg =>
                 cfg.ConfigureType<Item>(type =>
                     type.TreatAsInlineTable()));
 

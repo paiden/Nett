@@ -89,7 +89,7 @@ Setting = 1
         public void WhenTableKeyToClrMappingExistsThisTypeInsteadOfGenericStructureGetsRead()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .MapTableKey(SimplePluginConfig.Key).To<SimplePluginConfig>());
 
             // Act
@@ -113,7 +113,7 @@ Setting = """"
 [PluginConfigs.PluginConfigWithIntDict.Ports]
 PortA = 1
 PortB = 2";
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .MapTableKey(PluginConfigWithIntDict.Key)
                 .To<PluginConfigWithIntDict>());
 

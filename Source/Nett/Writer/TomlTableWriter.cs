@@ -7,11 +7,11 @@
 
     internal sealed partial class TomlTableWriter : TomlWriter
     {
-        public TomlTableWriter(FormattingStreamWriter writer, TomlConfig config)
-            : base(writer, config)
+        public TomlTableWriter(FormattingStreamWriter writer, TomlSettings settings)
+            : base(writer, settings)
         {
             Assert(writer != null);
-            Assert(config != null);
+            Assert(settings != null);
         }
 
         internal void WriteToml(TomlTable table)
@@ -82,7 +82,7 @@
 
         private void WriteTomlInlineTable(string parentKey, TomlKey key, TomlTable table)
         {
-            var inlineWriter = new TomlInlineTableWriter(this.writer, this.config);
+            var inlineWriter = new TomlInlineTableWriter(this.writer, this.settings);
             inlineWriter.WriteInlineTable(key, table);
         }
 
@@ -99,7 +99,7 @@
         {
             if (IsInlineTomlTableArray(tableArray))
             {
-                var inlineWriter = new TomlInlineTableWriter(this.writer, this.config);
+                var inlineWriter = new TomlInlineTableWriter(this.writer, this.settings);
                 inlineWriter.WriteTomlTableArray(key, tableArray);
             }
             else

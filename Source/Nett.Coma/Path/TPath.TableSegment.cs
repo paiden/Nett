@@ -55,10 +55,10 @@ namespace Nett.Coma.Path
 
             private TomlObject TryWrapInConvertProxy(TomlObject obj, Func<TomlObject> resolveParent)
             {
-                var conv = obj.Root.Config.TryGetToTomlConverter(this.clrType);
+                var conv = obj.Root.Settings.TryGetToTomlConverter(this.clrType);
                 if (conv != null)
                 {
-                    var convBack = obj.Root.Config.TryGetConverter(obj.GetType(), this.clrType);
+                    var convBack = obj.Root.Settings.TryGetConverter(obj.GetType(), this.clrType);
                     if (convBack != null)
                     {
                         var instance = convBack.Convert(obj.Root, obj, this.clrType);

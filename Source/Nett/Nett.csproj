@@ -95,7 +95,7 @@
     <Compile Include="StreamTomlSerializer.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TomlConfig.Builder.Conversion.cs">
-      <DependentUpon>TomlConfig.cs</DependentUpon>
+      <DependentUpon>TomlSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="TomlKey.cs" />
     <Compile Include="TomlObjectFactory.Add.cs" />
@@ -109,9 +109,9 @@
     <Compile Include="TomlComment.cs" />
     <Compile Include="TomlCommentAttribute.cs" />
     <Compile Include="TomlConfig.Builder.cs">
-      <DependentUpon>TomlConfig.cs</DependentUpon>
+      <DependentUpon>TomlSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="TomlConfig.cs" />
+    <Compile Include="TomlSettings.cs" />
     <Compile Include="TomlConverter.cs" />
     <Compile Include="TomlConverterBase.cs" />
     <Compile Include="TomlDateTime.cs" />

@@ -122,9 +122,9 @@
         {
             if (t == Types.TomlTableType) { return this; }
 
-            var result = this.Root.Config.GetActivatedInstance(t);
+            var result = this.Root.Settings.GetActivatedInstance(t);
 
-            var conv = this.Root.Config.TryGetConverter(Types.TomlTableType, t);
+            var conv = this.Root.Settings.TryGetConverter(Types.TomlTableType, t);
             if (conv != null)
             {
                 return conv.Convert(this.Root, this, t);
@@ -132,10 +132,10 @@
 
             foreach (var r in this.rows)
             {
-                var targetProperty = this.Root.Config.TryGetMappingProperty(result.GetType(), r.Key.Value);
+                var targetProperty = this.Root.Settings.TryGetMappingProperty(result.GetType(), r.Key.Value);
                 if (targetProperty != null)
                 {
-                    Type keyMapingTargetType = this.Root.Config.TryGetMappedType(r.Key.Value, targetProperty);
+                    Type keyMapingTargetType = this.Root.Settings.TryGetMappedType(r.Key.Value, targetProperty);
                     targetProperty.SetValue(result, r.Value.Get(keyMapingTargetType ?? targetProperty.PropertyType), null);
                 }
             }
@@ -201,7 +201,7 @@
 
             TomlTable tt = new TomlTable(root, tableType);
 
-            var props = root.Config.GetSerializationProperties(obj.GetType());
+            var props = root.Settings.GetSerializationProperties(obj.GetType());
             var allObjects = new List<Tuple<string, TomlObject>>();
 
             foreach (var p in props)

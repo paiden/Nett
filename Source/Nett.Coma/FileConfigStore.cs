@@ -7,14 +7,14 @@
     internal sealed class FileConfigStore : IConfigStore
     {
         private readonly string filePath;
-        private readonly TomlConfig config;
+        private readonly TomlSettings settings;
 
         private byte[] latestFileHash = null;
 
-        public FileConfigStore(TomlConfig config, string filePath, string alias)
+        public FileConfigStore(TomlSettings settings, string filePath, string alias)
         {
-            this.config = config.CheckNotNull(nameof(config));
-            this.filePath = filePath.CheckNotNull(nameof(config));
+            this.settings = settings.CheckNotNull(nameof(settings));
+            this.filePath = filePath.CheckNotNull(nameof(settings));
             this.Name = alias;
         }
 
@@ -42,7 +42,7 @@
         public TomlTable Load()
         {
             this.latestFileHash = ComputeHash(this.filePath);
-            return Toml.ReadFile(this.filePath, this.config);
+            return Toml.ReadFile(this.filePath, this.settings);
         }
 
         public TomlTable LoadSourcesTable()

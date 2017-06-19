@@ -7,15 +7,15 @@
 
     internal sealed class Parser
     {
-        private readonly TomlConfig config;
+        private readonly TomlSettings settings;
         private readonly Tokenizer tokenizer;
 
-        public Parser(Stream s, TomlConfig config)
+        public Parser(Stream s, TomlSettings settings)
         {
-            Assert(config != null);
+            Assert(settings != null);
 
             this.tokenizer = new Tokenizer(s);
-            this.config = config;
+            this.settings = settings;
         }
 
         private TokenBuffer Tokens => this.tokenizer.Tokens;
@@ -33,7 +33,7 @@
 
         private TomlTable Toml()
         {
-            var root = new TomlTable.RootTable(this.config) { IsDefined = true };
+            var root = new TomlTable.RootTable(this.settings) { IsDefined = true };
             TomlTable current = root;
 
             while (!this.Tokens.End)

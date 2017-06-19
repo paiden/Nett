@@ -43,7 +43,7 @@ namespace Nett.Coma.Tests.Functional
             using (var fn = TestFileName.Create("file", Toml.FileExtension))
             {
                 // Arrange
-                var tmlCfg = TomlConfig.Create(c => c
+                var tmlCfg = TomlSettings.Create(c => c
                     .ConfigureType<MultiTableConverterObject>(tc => tc
                         .WithConversionFor<TomlString>(conv => conv
                             .ToToml(o => o.ToString())
@@ -71,7 +71,7 @@ namespace Nett.Coma.Tests.Functional
             using (var spec = TestFileName.Create("spec", Toml.FileExtension))
             {
                 // Arrange
-                var tmlCfg = TomlConfig.Create(c => c
+                var tmlCfg = TomlSettings.Create(c => c
                     .ConfigureType<MultiTableConverterObject>(tc => tc
                         .WithConversionFor<TomlString>(conv => conv
                             .ToToml(o => o.ToString())
@@ -104,7 +104,7 @@ namespace Nett.Coma.Tests.Functional
             using (var spec = TestFileName.Create("spec", Toml.FileExtension))
             {
                 // Arrange
-                var tmlCfg = TomlConfig.Create(c => c
+                var tmlCfg = TomlSettings.Create(c => c
                     .ConfigureType<MultiTableConverterObject>(tc => tc
                         .WithConversionFor<TomlString>(conv => conv
                             .ToToml(o => o.ToString())

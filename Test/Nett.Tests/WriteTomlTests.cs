@@ -94,7 +94,7 @@ namespace Nett.Tests
                 Acp = new List<ArrayClassProp>() { new ArrayClassProp() { V = 666 } },
             };
 
-            var cfg = TomlConfig.Create(config => config
+            var cfg = TomlSettings.Create(config => config
                 .ConfigureType<ConvProp>(ct => ct
                     .WithConversionFor<TomlString>(conv => conv
                         .ToToml(cp => cp.Prop))));
@@ -141,7 +141,7 @@ TheBool = false
         [Fact]
         public void Write_WhenMarkedAsInlineTableInConfig_WritesTableAsInlineTable()
         {
-            var cfg = TomlConfig.Create(config => config
+            var cfg = TomlSettings.Create(config => config
                 .ConfigureType<TestClassA>(ct =>
                     ct.TreatAsInlineTable()
                 )

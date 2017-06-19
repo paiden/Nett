@@ -28,7 +28,7 @@ namespace Nett.Tests.Functional
         public void WriteObject_WhenPropertyIgnoredViaFluentApi_WillNotWriteThatAttribute()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<Table>(tc => tc
                     .IgnoreProperty(i => i.Y)));
 
@@ -45,7 +45,7 @@ namespace Nett.Tests.Functional
         public void WriteObject_WhenSubPropertyIgnoredViaFluentApi_WillNotWriteThatAttribute()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<Table>(tc => tc
                     .IgnoreProperty(i => i.Y)));
 
@@ -83,7 +83,7 @@ Y = {FileYValue}";
             // Act
             const int FileXValue = 5;
             const int FileYValue = 6;
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<Table>(tc => tc
                     .IgnoreProperty(i => i.X)));
             string src = $@"

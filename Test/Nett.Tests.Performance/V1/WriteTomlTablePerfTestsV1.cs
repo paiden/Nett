@@ -8,7 +8,7 @@
         private const string CounterName = "WriteTomlTableV1Counter";
 
         private static readonly TomlV1 tml = Toml.ReadString<TomlV1>(TomlSource.TomlV1);
-        private static readonly TomlTable sourceTable = TomlTable.From(TomlConfig.Create(), tml);
+        private static readonly TomlTable sourceTable = TomlTable.From(TomlSettings.Create(), tml);
 
         private Counter counter;
 

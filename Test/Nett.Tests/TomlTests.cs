@@ -206,7 +206,7 @@ namespace Nett.Tests.Internal
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(CreateFoo(), s, TomlConfig.Create());
+                Toml.WriteStream(CreateFoo(), s, TomlSettings.Create());
 
                 s.Position.Should().Be(0);
             }
@@ -217,7 +217,7 @@ namespace Nett.Tests.Internal
         {
             using (var s = new MemoryStream())
             {
-                Toml.WriteStream(CreateFoo(), s, TomlConfig.Create());
+                Toml.WriteStream(CreateFoo(), s, TomlSettings.Create());
                 var read = Toml.ReadStream<Foo>(s);
 
                 read.X.Should().Be(1);

@@ -8,8 +8,8 @@
     {
         private sealed class TomlInlineTableWriter : TomlWriter
         {
-            public TomlInlineTableWriter(FormattingStreamWriter writer, TomlConfig config)
-                : base(writer, config)
+            public TomlInlineTableWriter(FormattingStreamWriter writer, TomlSettings settings)
+                : base(writer, settings)
             {
             }
 

@@ -8,18 +8,18 @@
 
     internal abstract class TomlWriter
     {
-        protected readonly TomlConfig config;
+        protected readonly TomlSettings settings;
         protected readonly FormattingStreamWriter writer;
 
-        public TomlWriter(FormattingStreamWriter writer, TomlConfig config)
+        public TomlWriter(FormattingStreamWriter writer, TomlSettings settings)
         {
             this.writer = writer;
-            this.config = config;
+            this.settings = settings;
         }
 
         protected void WriteAppendComments(TomlObject obj)
         {
-            var append = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Append);
+            var append = obj.Comments.Where((c) => this.settings.GetCommentLocation(c) == TomlCommentLocation.Append);
             foreach (var a in append)
             {
                 this.writer.Write(" #");
@@ -63,7 +63,7 @@
 
         protected void WritePrependComments(TomlObject obj)
         {
-            var prepend = obj.Comments.Where((c) => this.config.GetCommentLocation(c) == TomlCommentLocation.Prepend);
+            var prepend = obj.Comments.Where((c) => this.settings.GetCommentLocation(c) == TomlCommentLocation.Prepend);
             foreach (var p in prepend)
             {
                 this.writer.Write('#');

@@ -13,7 +13,7 @@ namespace Nett.Coma
 
             IConfigBuilder StoredAs(Action<IStoreBuilder> storeBuilder);
 
-            IConfigBuilder UseTomlConfiguration(TomlConfig config);
+            IConfigBuilder UseTomlConfiguration(TomlSettings config);
 
             Config Initialize();
         }
@@ -23,7 +23,7 @@ namespace Nett.Coma
         {
             IConfigBuilder<T> StoredAs(Action<IStoreBuilder> storeBuilder);
 
-            IConfigBuilder<T> UseTomlConfiguration(TomlConfig config);
+            IConfigBuilder<T> UseTomlConfiguration(TomlSettings config);
 
             Config<T> Initialize();
         }
@@ -61,7 +61,7 @@ namespace Nett.Coma
                 return this;
             }
 
-            public IMergeConfigStore CreateStore(TomlConfig config, TomlTable content)
+            public IMergeConfigStore CreateStore(TomlSettings config, TomlTable content)
             {
                 List<IConfigStore> stores = new List<IConfigStore>(this.sourceInfos.Count);
 
@@ -95,14 +95,14 @@ namespace Nett.Coma
 
             private struct SourceInfo
             {
-                public Func<SourceInfo, TomlConfig, IConfigStore> StoreFactory;
+                public Func<SourceInfo, TomlSettings, IConfigStore> StoreFactory;
                 public string Name;
             }
         }
 
         private class ConfigBuilder : IConfigBuilder
         {
-            protected TomlConfig config = TomlConfig.DefaultInstance;
+            protected TomlSettings config = TomlSettings.DefaultInstance;
             protected StoreBuilder storeBuilder = new StoreBuilder();
 
             Config IConfigBuilder.Initialize()
@@ -124,7 +124,7 @@ namespace Nett.Coma
                 return this;
             }
 
-            IConfigBuilder IConfigBuilder.UseTomlConfiguration(TomlConfig config)
+            IConfigBuilder IConfigBuilder.UseTomlConfiguration(TomlSettings config)
             {
                 this.config = config.CheckNotNull(nameof(config));
 
@@ -154,7 +154,7 @@ namespace Nett.Coma
                 return this;
             }
 
-            IConfigBuilder<T> IConfigBuilder<T>.UseTomlConfiguration(TomlConfig config)
+            IConfigBuilder<T> IConfigBuilder<T>.UseTomlConfiguration(TomlSettings config)
             {
                 this.config = config.CheckNotNull(nameof(config));
 

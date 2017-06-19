@@ -10,7 +10,7 @@ namespace Nett.Tests
         public void WhenConfigHasActivator_ActivatorGetsUsed()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<IFoo>(ct => ct
                     .CreateInstance(() => new Foo())
                 )
@@ -28,7 +28,7 @@ namespace Nett.Tests
         public void WhenConfigShouldRunExternalConfig_ThisConfigGetsExecuted()
         {
             // Arrange
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .Apply(ExternalConfigurationBatch)
             );
             string toml = @"[Foo]";
@@ -40,7 +40,7 @@ namespace Nett.Tests
             Assert.IsType<Foo>(co.Foo);
         }
 
-        private static void ExternalConfigurationBatch(TomlConfig.ITomlConfigBuilder builder)
+        private static void ExternalConfigurationBatch(TomlSettings.ITomlSettingsBuilder builder)
         {
             builder
                 .ConfigureType<IFoo>(ct => ct

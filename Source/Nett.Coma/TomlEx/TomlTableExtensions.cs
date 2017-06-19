@@ -114,7 +114,7 @@
         {
             input.CheckNotNull(nameof(input));
 
-            TomlTable cloned = Toml.Create(input.Root.Config);
+            TomlTable cloned = Toml.Create(input.Root.Settings);
             cloned.TableType = input.TableType;
 
             foreach (var r in input.InternalRows)

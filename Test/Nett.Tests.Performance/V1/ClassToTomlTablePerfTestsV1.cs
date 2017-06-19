@@ -6,7 +6,7 @@
     {
         private const string CounterName = "ClrToTomlTable";
         private static readonly TomlV1 tml = Toml.ReadString<TomlV1>(TomlSource.TomlV1);
-        private static readonly TomlTable sourceTable = TomlTable.From(TomlConfig.Create(), tml);
+        private static readonly TomlTable sourceTable = TomlTable.From(TomlSettings.Create(), tml);
 
         private Counter counter;
 
@@ -25,7 +25,7 @@
         [CounterMeasurement(CounterName)]
         public void BenchmarkClrToTomlTable()
         {
-            var table = TomlTable.From(TomlConfig.Create(), tml);
+            var table = TomlTable.From(TomlSettings.Create(), tml);
             this.counter.Increment();
         }
     }

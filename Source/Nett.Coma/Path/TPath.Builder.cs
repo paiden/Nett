@@ -10,18 +10,18 @@ namespace Nett.Coma.Path
         {
             public static TPath Build(LambdaExpression expression)
             {
-                return Build(expression.Body, TomlConfig.DefaultInstance);
+                return Build(expression.Body, TomlSettings.DefaultInstance);
             }
 
-            private static TPath Build(Expression expression, TomlConfig config)
+            private static TPath Build(Expression expression, TomlSettings settings)
             {
                 switch (expression)
                 {
                     case MemberExpression me:
-                        var path = Build(me.Expression, config);
-                        return path / GetSegmentFromMemberExpression(me, config);
+                        var path = Build(me.Expression, settings);
+                        return path / GetSegmentFromMemberExpression(me, settings);
                     case BinaryExpression be:
-                        path = Build(be.Left, config);
+                        path = Build(be.Left, settings);
                         var seg = GetSegmentFromConstantExpression((ConstantExpression)be.Right);
                         return path / seg;
                     case ParameterExpression pe:
@@ -36,13 +36,13 @@ namespace Nett.Coma.Path
                 return new IndexSegment((int)ce.Value);
             }
 
-            private static ITPathSegment GetSegmentFromMemberExpression(MemberExpression expr, TomlConfig config)
+            private static ITPathSegment GetSegmentFromMemberExpression(MemberExpression expr, TomlSettings config)
             {
                 var targetType = GetTargetType(expr.Type, config);
                 return GetSegmentFromTargetType(targetType, expr.Type, expr.Member.Name);
             }
 
-            private static TomlObjectType GetTargetType(Type memberType, TomlConfig config)
+            private static TomlObjectType GetTargetType(Type memberType, TomlSettings settings)
             {
                 TomlObjectType GetTargetTypeFromArrayType()
                 {
@@ -71,13 +71,13 @@ namespace Nett.Coma.Path
 
                 TomlObjectType GetTargetTypeFromElementType(Type eleType)
                 {
-                    var tt = GetTargetType(eleType, config);
+                    var tt = GetTargetType(eleType, settings);
                     return tt == TomlObjectType.Table
                         ? TomlObjectType.ArrayOfTables
                         : TomlObjectType.Array;
                 }
 
-                var converter = config.TryGetToTomlConverter(memberType);
+                var converter = settings.TryGetToTomlConverter(memberType);
                 if (converter != null)
                 {
                     return converter.TomlTargetType.Value;

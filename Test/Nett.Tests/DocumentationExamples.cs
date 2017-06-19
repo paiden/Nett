@@ -162,7 +162,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             this.WriteTomlFile(fn);
 
             //In Documentation
-            var myConfig = TomlConfig.Create(cfg => cfg
+            var myConfig = TomlSettings.Create(cfg => cfg
                 .ConfigureType<ConfigurationWithDepdendency>(ct => ct
                     .CreateInstance(() => new ConfigurationWithDepdendency(new object()))));
 
@@ -179,7 +179,7 @@ ServerAddress = ""http://127.0.0.1:8080""
         public void HandleComputedType()
         {
             var c = new Computed();
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<Computed>(type => type
                     .IgnoreProperty(o => o.Z)));
 
@@ -202,7 +202,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             //            .ToToml(dec => (double)dec)
             //            .FromToml(tf => (decimal)tf.Value))));
 
-            var config = TomlConfig.Create(cfg => cfg
+            var config = TomlSettings.Create(cfg => cfg
                 .ConfigureType<Money>(type => type
                     .WithConversionFor<TomlString>(convert => convert
                         .ToToml(custom => custom.ToString())
@@ -216,7 +216,7 @@ ServerAddress = ""http://127.0.0.1:8080""
         [Fact]
         public void ActivateAll()
         {
-            var config = TomlConfig.Create(cfg => cfg.AllowImplicitConversions(TomlConfig.ConversionSets.All));
+            var config = TomlSettings.Create(cfg => cfg.AllowImplicitConversions(TomlSettings.ConversionSets.All));
             var tbl = Toml.ReadString("f = 0.99", config);
             var i = tbl.Get<int>("f");
 
@@ -226,7 +226,7 @@ ServerAddress = ""http://127.0.0.1:8080""
         [Fact]
         public void ActivateNone()
         {
-            var config = TomlConfig.Create(cfg => cfg.AllowImplicitConversions(TomlConfig.ConversionSets.None));
+            var config = TomlSettings.Create(cfg => cfg.AllowImplicitConversions(TomlSettings.ConversionSets.None));
             var tbl = Toml.ReadString("i = 1", config);
             // var i = tbl.Get<int>("i"); // Would throw InvalidOperationException as event cast from TomlInt to int is not allowed
             var i = tbl.Get<long>("i"); // Only this will work

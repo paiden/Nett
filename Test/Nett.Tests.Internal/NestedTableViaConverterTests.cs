@@ -31,7 +31,7 @@ Buzz = ""foofoo""
 CustomKey1 = ""CustomValue1""
 CustomKey2 = ""CustomValue2""";
 
-        private readonly TomlConfig config = TomlConfig.Create(cfg => cfg
+        private readonly TomlSettings config = TomlSettings.Create(cfg => cfg
             .ConfigureType<CustomDictionary>(ct => ct
                 .WithConversionFor<TomlTable>(conv => conv
                     .ToToml((CustomDictionary collection, TomlTable targetTable) =>

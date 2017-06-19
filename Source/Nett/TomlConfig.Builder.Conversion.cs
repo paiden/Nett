@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IConfigureConversionBuilder<TCustom, TToml>
+    public interface IConversionSettingsBuilder<TCustom, TToml>
         where TToml : TomlObject
     {
-        IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<ITomlRoot, TToml, TCustom> convert);
+        IConversionSettingsBuilder<TCustom, TToml> FromToml(Func<ITomlRoot, TToml, TCustom> convert);
 
-        IConfigureConversionBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
+        IConversionSettingsBuilder<TCustom, TToml> FromToml(Func<TToml, TCustom> convert);
     }
 
     /// <summary>
@@ -21,58 +21,58 @@
     /// </remarks>
     public static class ConversionBuilderExtensions
     {
-        public static IConfigureConversionBuilder<TCustom, TomlBool> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlBool> cb, Func<TCustom, bool> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlBool> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlBool> cb, Func<TCustom, bool> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlBool>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlBool>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlBool>((root, customValue) => new TomlBool(root, conv(customValue))));
             return cb;
         }
 
-        public static IConfigureConversionBuilder<TCustom, TomlInt> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlInt> cb, Func<TCustom, long> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlInt> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlInt> cb, Func<TCustom, long> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlInt>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlInt>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlInt>((root, customValue) => new TomlInt(root, conv(customValue))));
             return cb;
         }
 
-        public static IConfigureConversionBuilder<TCustom, TomlFloat> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlFloat> cb, Func<TCustom, double> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlFloat> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlFloat> cb, Func<TCustom, double> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlFloat>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlFloat>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlFloat>((root, customValue) => new TomlFloat(root, conv(customValue))));
             return cb;
         }
 
-        public static IConfigureConversionBuilder<TCustom, TomlString> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlString> cb, Func<TCustom, string> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlString> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlString> cb, Func<TCustom, string> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlString>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlString>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlString>((root, customValue) => new TomlString(root, conv(customValue))));
             return cb;
         }
 
-        public static IConfigureConversionBuilder<TCustom, TomlDateTime> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlDateTime> cb, Func<TCustom, DateTimeOffset> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlDateTime> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlDateTime> cb, Func<TCustom, DateTimeOffset> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlDateTime>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlDateTime>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlDateTime>((root, customValue) => new TomlDateTime(root, conv(customValue))));
             return cb;
         }
 
-        public static IConfigureConversionBuilder<TCustom, TomlTimeSpan> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlTimeSpan> cb, Func<TCustom, TimeSpan> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlTimeSpan> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlTimeSpan> cb, Func<TCustom, TimeSpan> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlTimeSpan>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlTimeSpan>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlTimeSpan>((root, customValue) => new TomlTimeSpan(root, conv(customValue))));
             return cb;
         }
 
-        public static IConfigureConversionBuilder<TCustom, TomlTable> ToToml<TCustom>(
-            this IConfigureConversionBuilder<TCustom, TomlTable> cb, Action<TCustom, TomlTable> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlTable> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlTable> cb, Action<TCustom, TomlTable> conv)
         {
-            ((TomlConfig.ConversionConfigurationBuilder<TCustom, TomlTable>)cb).AddConverter(
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlTable>)cb).AddConverter(
                 new TomlConverter<TCustom, TomlTable>((root, customValue) =>
                 {
                     var t = new TomlTable(root);
@@ -84,7 +84,7 @@
         }
     }
 
-    public sealed partial class TomlConfig
+    public sealed partial class TomlSettings
     {
         private static readonly List<ITomlConverter> NumercialType = new List<ITomlConverter>()
         {

@@ -2,6 +2,6 @@
 {
     public interface ITomlRoot
     {
-        TomlConfig Config { get; }
+        TomlSettings Settings { get; }
     }
 }
