@@ -18,6 +18,10 @@ namespace Nett
             visitor.Visit(this);
         }
 
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneIntFor(root);
+
+        internal TomlInt CloneIntFor(ITomlRoot root) => CopyComments(new TomlInt(root, this.Value), this);
+
         internal override TomlValue ValueWithRoot(ITomlRoot root) => this.IntWithRoot(root);
 
         internal override TomlObject WithRoot(ITomlRoot root) => this.IntWithRoot(root);

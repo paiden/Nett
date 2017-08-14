@@ -26,6 +26,11 @@
             throw new NotImplementedException();
         }
 
+        internal override TomlObject CloneFor(ITomlRoot root)
+        {
+            throw new NotSupportedException();
+        }
+
         internal override TomlObject WithRoot(ITomlRoot root)
         {
             root.CheckNotNull(nameof(root));

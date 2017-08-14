@@ -244,6 +244,20 @@
             return toAdd;
         }
 
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneTableFor(root);
+
+        internal TomlTable CloneTableFor(ITomlRoot root)
+        {
+            var tbl = new TomlTable(root, this.TableType);
+
+            foreach (var r in this.rows)
+            {
+                tbl.AddRow(r.Key, r.Value.CloneFor(root));
+            }
+
+            return tbl;
+        }
+
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {
             this.CheckNotFrozen();

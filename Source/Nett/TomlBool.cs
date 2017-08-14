@@ -1,4 +1,5 @@
-﻿using Nett.Extensions;
+﻿using System;
+using Nett.Extensions;
 
 namespace Nett
 {
@@ -17,6 +18,10 @@ namespace Nett
         {
             visitor.Visit(this);
         }
+
+        internal TomlBool CloneBoolFor(ITomlRoot root) => CopyComments(new TomlBool(root, this.Value), this);
+
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneBoolFor(root);
 
         internal override TomlValue ValueWithRoot(ITomlRoot root) => this.BoolWithRoot(root);
 

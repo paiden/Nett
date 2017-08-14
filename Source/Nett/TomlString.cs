@@ -32,6 +32,10 @@
             visitor.Visit(this);
         }
 
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneStringFor(root);
+
+        internal TomlString CloneStringFor(ITomlRoot root) => CopyComments(new TomlString(root, this.Value), this);
+
         internal override TomlValue ValueWithRoot(ITomlRoot root) => this.StringWithRoot(root);
 
         internal override TomlObject WithRoot(ITomlRoot root) => this.StringWithRoot(root);

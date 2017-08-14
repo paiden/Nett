@@ -73,6 +73,15 @@
             visitor.Visit(this);
         }
 
+        internal TomlArray CloneArrayFor(ITomlRoot root)
+        {
+            var copy = new TomlValue[this.Value.Length];
+            this.Value.CopyTo(copy, 0);
+            return CopyComments(new TomlArray(root, copy), this);
+        }
+
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneArrayFor(root);
+
         internal override TomlObject WithRoot(ITomlRoot root) => this.ArrayWithRoot(root);
 
         internal override TomlValue ValueWithRoot(ITomlRoot root) => this.ArrayWithRoot(root);

@@ -69,6 +69,8 @@
             }
         }
 
+        internal abstract TomlObject CloneFor(ITomlRoot root);
+
         internal virtual void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {
             if (src.Comments.Count > 0 || overwriteWithEmpty)
@@ -78,6 +80,13 @@
         }
 
         internal abstract TomlObject WithRoot(ITomlRoot root);
+
+        protected static T CopyComments<T>(T dst, TomlObject src)
+            where T : TomlObject
+        {
+            dst.Comments.AddRange(src.Comments);
+            return dst;
+        }
 
         private static TomlObject CreateArrayType(ITomlRoot root, IEnumerable e)
         {

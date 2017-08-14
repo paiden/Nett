@@ -19,6 +19,10 @@
             visitor.Visit(this);
         }
 
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneTimespanFor(root);
+
+        internal TomlTimeSpan CloneTimespanFor(ITomlRoot root) => CopyComments(new TomlTimeSpan(root, this.Value), this);
+
         internal override TomlValue ValueWithRoot(ITomlRoot root) => this.TimeSpanWithRoot(root);
 
         internal override TomlObject WithRoot(ITomlRoot root) => this.TimeSpanWithRoot(root);
