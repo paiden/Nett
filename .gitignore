@@ -19,3 +19,7 @@ obj
 packages
 PerfTestResults
 data
+
+#Docfx stuff
+*.manifest
+toc.yml
