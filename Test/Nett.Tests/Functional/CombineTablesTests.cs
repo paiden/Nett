@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -39,11 +40,11 @@ namespace Nett.Tests.Functional
 
             Dx = Toml.Create();
             Dx.AddValue("a", 1);
-            Dx.AddValue("c", 3);
+            Dx.AddValue("c", 3).Comments.Add(new TomlComment("xcc"));
 
             Dy = Toml.Create();
-            Dy.AddValue("b", 2);
-            Dy.AddValue("c", 4);
+            Dy.AddValue("b", 2).Comments.Add(new TomlComment("ybc"));
+            Dy.AddValue("c", 4).Comments.Add(new TomlComment("ycc"));
         }
 
         [Fact]
@@ -80,6 +81,51 @@ namespace Nett.Tests.Functional
             AssertYOnlyRowWasAddedTo(r);
             AssertSubTableNotTouched(r);
             AssertSameKeyNotTouched(r);
+        }
+
+        [Fact]
+        public static void Overwrite_XWithYIncludingAllComments_OverwritesCommendsWithSourceComments()
+        {
+            // Act
+            var r = TomlTable.Combine(op => op.Overwrite(Dx)
+                .With(Dy)
+                .IncludingAllComments()
+                .ForAllSourceRows());
+
+            // Assert
+            AssertCommentsAre(r["a"], new string[] { });
+            AssertCommentsAre(r["b"], "ybc");
+            AssertCommentsAre(r["c"], "ycc");
+        }
+
+        [Fact]
+        public static void Overwrite_XWithYIncludingCommentsIfTargetIsUncommented_OverwritesCommendsWithSourceComments()
+        {
+            // Act
+            var r = TomlTable.Combine(op => op.Overwrite(Dx)
+                .With(Dy)
+                .IncludingNewComments()
+                .ForAllSourceRows());
+
+            // Assert
+            AssertCommentsAre(r["a"], new string[] { });
+            AssertCommentsAre(r["b"], "ybc");
+            AssertCommentsAre(r["c"], "xcc");
+        }
+
+        [Fact]
+        public static void Overwrite_XWithYExcludingComments_KeepsOriginalComments()
+        {
+            // Act
+            var r = TomlTable.Combine(op => op.Overwrite(Dx)
+                .With(Dy)
+                .ExcludingComments()
+                .ForAllSourceRows());
+
+            // Assert
+            AssertCommentsAre(r["a"], new string[] { });
+            AssertCommentsAre(r["b"], new string[] { }); // Do not copy comment => still empty
+            AssertCommentsAre(r["c"], "xcc");
         }
 
         [Fact]
@@ -165,5 +211,11 @@ namespace Nett.Tests.Functional
 
         private static void AssertSubTableNotTouched(TomlTable r)
             => r.Get<TomlTable>(SubTableKey).Get<string>(SubTableValueKey).Should().Be(XSubTableVal);
+
+        private static void AssertCommentsAre(TomlObject o, params string[] comments)
+        {
+            var tc = comments.Select(c => new TomlComment(c));
+            o.Comments.Should().BeEquivalentTo(tc);
+        }
     }
 }

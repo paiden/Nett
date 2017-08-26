@@ -1,7 +1,12 @@
-﻿using Nett.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Nett.Extensions;
 
 namespace Nett
 {
+    using CommentsOp = Func<InputComments, IEnumerable<TomlComment>>;
+
     public interface ITableCombiner
     {
     }
@@ -13,7 +18,7 @@ namespace Nett
 
     public interface ISourceSelector
     {
-        IRowSelector With(TomlTable source);
+        ICommentOperationOrRowSelector With(TomlTable source);
     }
 
     public interface IRowSelector
@@ -25,9 +30,38 @@ namespace Nett
         ITableCombiner ForRowsOnlyInSource();
     }
 
+    public interface ICommentOperationOrRowSelector : IRowSelector
+    {
+        IRowSelector IncludingAllComments(bool append = false);
+
+        IRowSelector IncludingNewComments();
+
+        IRowSelector ExcludingComments();
+
+        IRowSelector IncludingComments(CommentsOp combiner);
+    }
+
+    internal interface ICommentsOperation
+    {
+        IEnumerable<TomlComment> Combine(IEnumerable<TomlComment> target, IEnumerable<TomlComment> source);
+    }
+
     internal interface ITableOperation : ITableCombiner
     {
         TomlTable Execute();
+    }
+
+    public struct InputComments
+    {
+        internal InputComments(IEnumerable<TomlComment> tgt, IEnumerable<TomlComment> src)
+        {
+            this.TargetComments = tgt;
+            this.SourceComments = src;
+        }
+
+        public IEnumerable<TomlComment> TargetComments { get; internal set; }
+
+        public IEnumerable<TomlComment> SourceComments { get; internal set; }
     }
 
     public partial class TomlTable
@@ -44,10 +78,24 @@ namespace Nett
             }
         }
 
-        internal sealed class OverwriteTableOperationBuilder : ISourceSelector, IRowSelector
+        internal sealed class OverwriteTableOperationBuilder : ISourceSelector, ICommentOperationOrRowSelector
         {
+            private static readonly CommentsOp IncludeAllCommentsAndReplace;
+            private static readonly CommentsOp IncludeAllCommentsAndAppend;
+            private static readonly CommentsOp IncludeNewComments;
+            private static readonly CommentsOp ExcludeComments;
+
             private readonly TomlTable target;
             private TomlTable source;
+            private Func<InputComments, IEnumerable<TomlComment>> commentsOp = IncludeAllCommentsAndReplace;
+
+            static OverwriteTableOperationBuilder()
+            {
+                IncludeAllCommentsAndReplace = i => i.SourceComments;
+                IncludeAllCommentsAndAppend = i => i.TargetComments.Union(i.SourceComments);
+                IncludeNewComments = i => i.TargetComments.Count() <= 0 ? i.SourceComments : i.TargetComments;
+                ExcludeComments = i => i.TargetComments;
+            }
 
             public OverwriteTableOperationBuilder(TomlTable target)
             {
@@ -55,18 +103,58 @@ namespace Nett
             }
 
             ITableCombiner IRowSelector.ForAllSourceRows()
-                => new OverwriteAllSourceRowsOperation(this.target, this.source);
+                => new OverwriteAllSourceRowsOperation(this.target, this.source, this.commentsOp);
 
             ITableCombiner IRowSelector.ForRowsOnlyInSource()
-                => new OverwriteSourceOnlyRowsOperation(this.target, this.source);
+                => new OverwriteSourceOnlyRowsOperation(this.target, this.source, this.commentsOp);
 
             ITableCombiner IRowSelector.ForAllTargetRows()
-                => new OverwriteAllTargetRowsOperation(this.target, this.source);
+                => new OverwriteAllTargetRowsOperation(this.target, this.source, this.commentsOp);
 
-            IRowSelector ISourceSelector.With(TomlTable source)
+            ICommentOperationOrRowSelector ISourceSelector.With(TomlTable source)
             {
                 this.source = source;
                 return this;
+            }
+
+            IRowSelector ICommentOperationOrRowSelector.IncludingAllComments(bool append)
+            {
+                this.commentsOp = append ? IncludeAllCommentsAndAppend : IncludeAllCommentsAndReplace;
+                return this;
+            }
+
+            IRowSelector ICommentOperationOrRowSelector.ExcludingComments()
+            {
+                this.commentsOp = ExcludeComments;
+                return this;
+            }
+
+            IRowSelector ICommentOperationOrRowSelector.IncludingNewComments()
+            {
+                this.commentsOp = IncludeNewComments;
+                return this;
+            }
+
+            IRowSelector ICommentOperationOrRowSelector.IncludingComments(CommentsOp combiner)
+            {
+                this.commentsOp = combiner.CheckNotNull(nameof(combiner));
+                return this;
+            }
+        }
+
+        internal sealed class IncludeAllCommentsOperation : ICommentsOperation
+        {
+            IEnumerable<TomlComment> ICommentsOperation.Combine(IEnumerable<TomlComment> target, IEnumerable<TomlComment> source)
+            {
+                return source;
+            }
+        }
+
+        internal sealed class ExcludeCommentsOperation : ICommentsOperation
+        {
+            IEnumerable<TomlComment> ICommentsOperation.Combine(IEnumerable<TomlComment> target, IEnumerable<TomlComment> source)
+            {
+                return target;
             }
         }
 
@@ -74,20 +162,42 @@ namespace Nett
         {
             protected readonly TomlTable target;
             protected readonly TomlTable source;
+            protected CommentsOp commentsOp;
 
-            public TableCombineOperation(TomlTable target, TomlTable source)
+            private static readonly IEnumerable<TomlComment> Empty = new List<TomlComment>();
+
+            public TableCombineOperation(
+                TomlTable target, TomlTable source, CommentsOp commentsOp)
             {
                 this.target = target.CheckNotNull(nameof(target));
                 this.source = source.CheckNotNull(nameof(source));
+                this.commentsOp = commentsOp.CheckNotNull(nameof(commentsOp));
             }
 
             public virtual TomlTable Execute() => this.target.CloneTableFor(this.target.Root);
+
+            protected IEnumerable<TomlComment> GetComments(TomlKey k)
+            {
+                var tgtComments = this.target.TryGetValue(k.Value, out var tgtVal) ? tgtVal.Comments : Empty;
+                var srcComments = this.source.TryGetValue(k.Value, out var srcVal) ? srcVal.Comments : Empty;
+                return this.commentsOp(new InputComments(tgtComments, srcComments));
+            }
+
+            protected TomlObject CloneWithComments(TomlKey key, TomlObject sourceValue, ITomlRoot root)
+            {
+                var comments = this.GetComments(key);
+                var cloned = sourceValue.CloneFor(root);
+                cloned.Comments.Clear();
+                cloned.Comments.AddRange(comments.ToList());
+                return cloned;
+            }
         }
 
         internal sealed class OverwriteAllSourceRowsOperation : TableCombineOperation
         {
-            public OverwriteAllSourceRowsOperation(TomlTable target, TomlTable source)
-                : base(target, source)
+            public OverwriteAllSourceRowsOperation(
+                TomlTable target, TomlTable source, CommentsOp commentsOp)
+                : base(target, source, commentsOp)
             {
             }
 
@@ -97,7 +207,7 @@ namespace Nett
 
                 foreach (var r in this.source.rows)
                 {
-                    combineResult.rows[r.Key] = r.Value.CloneFor(combineResult.Root);
+                    combineResult.rows[r.Key] = this.CloneWithComments(r.Key, r.Value, combineResult.Root);
                 }
 
                 return combineResult;
@@ -106,8 +216,8 @@ namespace Nett
 
         internal sealed class OverwriteAllTargetRowsOperation : TableCombineOperation
         {
-            public OverwriteAllTargetRowsOperation(TomlTable target, TomlTable source)
-                : base(target, source)
+            public OverwriteAllTargetRowsOperation(TomlTable target, TomlTable source, CommentsOp commentsOp)
+                : base(target, source, commentsOp)
             {
             }
 
@@ -115,11 +225,12 @@ namespace Nett
             {
                 var combineResult = base.Execute();
 
-                foreach (var tr in this.target.rows)
+                foreach (var targetRow in this.target.rows)
                 {
-                    if (this.source.rows.TryGetValue(tr.Key, out var sr))
+                    if (this.source.rows.TryGetValue(targetRow.Key, out var sourceValue))
                     {
-                        combineResult.rows[tr.Key] = sr.CloneFor(combineResult.Root);
+                        combineResult.rows[targetRow.Key] = this.CloneWithComments(
+                            targetRow.Key, sourceValue, combineResult.Root);
                     }
                 }
 
@@ -129,8 +240,8 @@ namespace Nett
 
         internal sealed class OverwriteSourceOnlyRowsOperation : TableCombineOperation
         {
-            public OverwriteSourceOnlyRowsOperation(TomlTable target, TomlTable source)
-                : base(target, source)
+            public OverwriteSourceOnlyRowsOperation(TomlTable target, TomlTable source, CommentsOp commentsOp)
+                : base(target, source, commentsOp)
             {
             }
 
@@ -138,11 +249,12 @@ namespace Nett
             {
                 var combineResult = base.Execute();
 
-                foreach (var sr in this.source.rows)
+                foreach (var sourceRow in this.source.rows)
                 {
-                    if (!combineResult.rows.ContainsKey(sr.Key))
+                    if (!combineResult.rows.ContainsKey(sourceRow.Key))
                     {
-                        combineResult.rows[sr.Key] = sr.Value.CloneFor(combineResult.Root);
+                        combineResult.rows[sourceRow.Key] = this.CloneWithComments(
+                            sourceRow.Key, sourceRow.Value, combineResult.Root);
                     }
                 }
 
