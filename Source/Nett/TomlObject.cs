@@ -23,21 +23,40 @@
 
     public abstract class TomlObject
     {
+        private List<TomlComment> comments;
+
         internal TomlObject(ITomlRoot root)
         {
             if (root == null && this.GetType() != typeof(TomlTable.RootTable)) { throw new ArgumentNullException(nameof(root)); }
 
             this.Root = root ?? (TomlTable.RootTable)this;
-            this.Comments = new List<TomlComment>();
+            this.comments = new List<TomlComment>();
         }
+
+        public IEnumerable<TomlComment> Comments => this.comments;
 
         public abstract string ReadableTypeName { get; }
 
         public abstract TomlObjectType TomlType { get; }
 
-        public List<TomlComment> Comments { get; private set; }
-
         internal ITomlRoot Root { get; }
+
+        public TomlObject AddComment(TomlComment comment)
+        {
+            this.comments.Add(comment);
+            return this;
+        }
+
+        public TomlObject AddComment(string text, CommentLocation locaction = CommentLocation.UseDefault)
+            => this.AddComment(new TomlComment(text, locaction));
+
+        public TomlObject AddComments(IEnumerable<TomlComment> comments)
+        {
+            this.comments.AddRange(comments);
+            return this;
+        }
+
+        public void ClearComments() => this.comments.Clear();
 
         public T Get<T>() => (T)this.Get(typeof(T));
 
@@ -73,9 +92,9 @@
 
         internal virtual void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {
-            if (src.Comments.Count > 0 || overwriteWithEmpty)
+            if (src.comments.Count > 0 || overwriteWithEmpty)
             {
-                this.Comments = new List<TomlComment>(src.Comments);
+                this.comments = new List<TomlComment>(src.comments);
             }
         }
 
@@ -84,7 +103,7 @@
         protected static T CopyComments<T>(T dst, TomlObject src)
             where T : TomlObject
         {
-            dst.Comments.AddRange(src.Comments);
+            dst.comments.AddRange(src.comments);
             return dst;
         }
 

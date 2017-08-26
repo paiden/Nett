@@ -147,7 +147,7 @@
                     // on the next write.
                     tokens.Consume();
                     a = new TomlArray(root);
-                    a.Comments.AddRange(prep);
+                    a.AddComments(prep);
                     return a;
                 }
                 else
@@ -156,7 +156,7 @@
 
                     // Parse first !required! array value
                     var v = ParseArrayValue();
-                    v.Comments.AddRange(prep);
+                    v.AddComments(prep);
                     values.Add(v);
 
                     while (!tokens.TryExpect(TokenType.RBrac))
@@ -168,7 +168,7 @@
 
                         // This comment is misplaced as we simply append it to the last value, but it does not belong to it
                         // Comments processing needs some tweaking/redesign in the future.
-                        v.Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                        v.AddComments(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
                         if (!tokens.TryExpect(TokenType.RBrac))
                         {
@@ -187,9 +187,9 @@
                     a = new TomlArray(root, values.ToArray());
                 }
 
-                a.Last().Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                a.Last().AddComments(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
                 tokens.ExpectAndConsume(TokenType.RBrac);
-                a.Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                a.AddComments(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
                 TomlValue ParseArrayValue()
                 {
@@ -201,8 +201,8 @@
                         throw Parser.CreateParseError(valueParseErrorPos, $"Array value is missing.");
                     }
 
-                    value.Comments.AddRange(prepComments);
-                    value.Comments.AddRange(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
+                    value.AddComments(prepComments);
+                    value.AddComments(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
 
                     return value;
                 }

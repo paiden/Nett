@@ -187,8 +187,8 @@ namespace Nett
             {
                 var comments = this.GetComments(key);
                 var cloned = sourceValue.CloneFor(root);
-                cloned.Comments.Clear();
-                cloned.Comments.AddRange(comments.ToList());
+                cloned.ClearComments();
+                cloned.AddComments(comments.ToList());
                 return cloned;
             }
         }

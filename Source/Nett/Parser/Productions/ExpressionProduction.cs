@@ -27,8 +27,8 @@
                 var addTo = GetTargetTable(root, arrayKeyChain, CreateImplicitelyType.Table);
                 var arr = GetExistingOrCreateAndAdd(addTo, arrayKeyChain.Last(), errorPosition: expressionToken);
 
-                arr.Comments.AddRange(preComments);
-                arr.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
+                arr.AddComments(preComments);
+                arr.AddComments(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
                 var newArrayEntry = new TomlTable(root);
                 arr.Add(newArrayEntry);
@@ -39,8 +39,8 @@
             if (tableKeyChain != null)
             {
                 var newTable = new TomlTable(root) { IsDefined = true };
-                newTable.Comments.AddRange(preComments);
-                newTable.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
+                newTable.AddComments(preComments);
+                newTable.AddComments(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
                 var addTo = GetTargetTable(root, tableKeyChain, CreateImplicitelyType.Table);
 
@@ -72,15 +72,15 @@
                 var kvp = KeyValuePairProduction.Apply(root, tokens);
                 if (kvp != null)
                 {
-                    kvp.Item2.Comments.AddRange(preComments);
-                    kvp.Item2.Comments.AddRange(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
+                    kvp.Item2.AddComments(preComments);
+                    kvp.Item2.AddComments(CommentProduction.TryParseAppendExpressionComments(expressionToken, tokens));
 
                     current.AddRow(kvp.Item1, kvp.Item2);
                     return current;
                 }
             }
 
-            root.Comments.AddRange(preComments);
+            root.AddComments(preComments);
 
             return null;
         }

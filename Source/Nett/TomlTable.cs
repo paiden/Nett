@@ -346,7 +346,7 @@
             var comments = pi.GetCustomAttributes(typeof(TomlCommentAttribute), false).Cast<TomlCommentAttribute>();
             foreach (var c in comments)
             {
-                obj.Comments.Add(new TomlComment(c.Comment, c.Location));
+                obj.AddComment(new TomlComment(c.Comment, c.Location));
             }
         }
 

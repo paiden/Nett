@@ -40,11 +40,11 @@ namespace Nett.Tests.Functional
 
             Dx = Toml.Create();
             Dx.AddValue("a", 1);
-            Dx.AddValue("c", 3).Comments.Add(new TomlComment("xcc"));
+            Dx.AddValue("c", 3).AddComment("xcc");
 
             Dy = Toml.Create();
-            Dy.AddValue("b", 2).Comments.Add(new TomlComment("ybc"));
-            Dy.AddValue("c", 4).Comments.Add(new TomlComment("ycc"));
+            Dy.AddValue("b", 2).AddComment("ybc");
+            Dy.AddValue("c", 4).AddComment("ycc");
         }
 
         [Fact]

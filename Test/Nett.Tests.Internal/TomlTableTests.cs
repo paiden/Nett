@@ -46,10 +46,10 @@ namespace Nett.Tests
             to.Get("F").Comments.Single().Text.Should().Be("from", "Because only source comment existed");
             to.Get("SubTable").Comments.Single().Text.Should().Be("from", "Because when both comments exist, source comment should overwrite target comment");
             to.Get<TomlTable>("SubTable").Get("A").Comments.Count().Should().Be(2);
-            to.Get<TomlTable>("SubTable").Get("A").Comments[0].Text.Should().Be("fa1");
-            to.Get<TomlTable>("SubTable").Get("A").Comments[0].Location.Should().Be(CommentLocation.Prepend);
-            to.Get<TomlTable>("SubTable").Get("A").Comments[1].Text.Should().Be("fa2");
-            to.Get<TomlTable>("SubTable").Get("A").Comments[1].Location.Should().Be(CommentLocation.Append);
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(0).Text.Should().Be("fa1");
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(0).Location.Should().Be(CommentLocation.Prepend);
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(1).Text.Should().Be("fa2");
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(1).Location.Should().Be(CommentLocation.Append);
         }
 
         [Fact]
@@ -64,10 +64,10 @@ namespace Nett.Tests
             to.Get("F").Comments.Single().Text.Should().Be("from", "Because only source comment existed");
             to.Get("SubTable").Comments.Single().Text.Should().Be("from", "Because when both comments exist, source comment should overwrite target comment");
             to.Get<TomlTable>("SubTable").Get("A").Comments.Count().Should().Be(2);
-            to.Get<TomlTable>("SubTable").Get("A").Comments[0].Text.Should().Be("fa1");
-            to.Get<TomlTable>("SubTable").Get("A").Comments[0].Location.Should().Be(CommentLocation.Prepend);
-            to.Get<TomlTable>("SubTable").Get("A").Comments[1].Text.Should().Be("fa2");
-            to.Get<TomlTable>("SubTable").Get("A").Comments[1].Location.Should().Be(CommentLocation.Append);
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(0).Text.Should().Be("fa1");
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(0).Location.Should().Be(CommentLocation.Prepend);
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(1).Text.Should().Be("fa2");
+            to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(1).Location.Should().Be(CommentLocation.Append);
         }
 
         private TomlTable CreateEmpty()
@@ -86,7 +86,7 @@ namespace Nett.Tests
         {
             var tt = Toml.Create();
             var i = tt.AddValue("r1", 1);
-            i.Comments.Add(new TomlComment(comment, CommentLocation.Prepend));
+            i.AddComment(new TomlComment(comment, CommentLocation.Prepend));
             return tt;
         }
 
@@ -106,11 +106,11 @@ namespace Nett.Tests
         {
             var t = this.CreateComplex();
             //t.Get("I").Comments.Add(new TomlComment("from", CommentLocation.Prepend));
-            t.Get("F").Comments.Add(new TomlComment("from", CommentLocation.Prepend));
-            t.Get("SubTable").Comments.Add(new TomlComment("from", CommentLocation.Prepend));
+            t.Get("F").AddComment(new TomlComment("from", CommentLocation.Prepend));
+            t.Get("SubTable").AddComment(new TomlComment("from", CommentLocation.Prepend));
 
-            t.Get<TomlTable>("SubTable").Get("A").Comments.Add(new TomlComment("fa1", CommentLocation.Prepend));
-            t.Get<TomlTable>("SubTable").Get("A").Comments.Add(new TomlComment("fa2", CommentLocation.Append));
+            t.Get<TomlTable>("SubTable").Get("A").AddComment(new TomlComment("fa1", CommentLocation.Prepend));
+            t.Get<TomlTable>("SubTable").Get("A").AddComment(new TomlComment("fa2", CommentLocation.Append));
 
             return t;
         }
@@ -118,9 +118,9 @@ namespace Nett.Tests
         private TomlTable CreateComplexTo()
         {
             var t = this.CreateComplex();
-            t.Get("I").Comments.Add(new TomlComment("to", CommentLocation.Prepend));
+            t.Get("I").AddComment(new TomlComment("to", CommentLocation.Prepend));
             //t.Get("F").Comments.Add(new TomlComment("to", CommentLocation.Prepend));
-            t.Get("SubTable").Comments.Add(new TomlComment("to", CommentLocation.Prepend));
+            t.Get("SubTable").AddComment(new TomlComment("to", CommentLocation.Prepend));
             return t;
         }
     }
