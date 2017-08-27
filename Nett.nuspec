@@ -13,6 +13,8 @@
   <files>
     <file src="Source\Nett\bin\$configuration$$SNE$\net40\Nett.dll" target="lib\Net40" />
     <file src="Source\Nett\bin\$configuration$\net40\Nett.pdb" target="lib\Net40" />
+    <file src="Source\Nett\bin\$configuration$$SNE$\netstandard2.0\Nett.dll" target="lib\netstandard2.0" />
+    <file src="Source\Nett\bin\$configuration$\netstandard2.0\Nett.pdb" target="lib\netstandard2.0" />
     <file src="Source\Nett\**\*.cs" target="src\" />
   </files>
 </package>

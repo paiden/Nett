@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Shared.targets" />
   <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
-    <NuspecFile>../../Nett.nuspec</NuspecFile>
+    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
     <AssemblyVersion>$(NettVersion)</AssemblyVersion>
     <InformationalVersion>$(NettVersion)</InformationalVersion>
     <FileVersion>$(NettVersion)</FileVersion>
