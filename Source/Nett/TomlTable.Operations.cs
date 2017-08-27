@@ -103,11 +103,6 @@ namespace Nett
         IRowSelector IncludingComments(CommentsOp combiner);
     }
 
-    internal interface ICommentsOperation
-    {
-        IEnumerable<TomlComment> Combine(IEnumerable<TomlComment> target, IEnumerable<TomlComment> source);
-    }
-
     internal interface ITableOperation : ITableCombiner
     {
         TomlTable Execute();
@@ -216,22 +211,6 @@ namespace Nett
             {
                 this.commentsOp = combiner.CheckNotNull(nameof(combiner));
                 return this;
-            }
-        }
-
-        internal sealed class IncludeAllCommentsOperation : ICommentsOperation
-        {
-            IEnumerable<TomlComment> ICommentsOperation.Combine(IEnumerable<TomlComment> target, IEnumerable<TomlComment> source)
-            {
-                return source;
-            }
-        }
-
-        internal sealed class ExcludeCommentsOperation : ICommentsOperation
-        {
-            IEnumerable<TomlComment> ICommentsOperation.Combine(IEnumerable<TomlComment> target, IEnumerable<TomlComment> source)
-            {
-                return target;
             }
         }
 
