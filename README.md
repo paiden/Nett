@@ -455,6 +455,12 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
+XXXX-XX-XX: **v0.8.0** *(TOML 0.4.0)*
+
+Nett:
++ Add API for combining TOML tables
+
+
 2017-06-21: **v0.7.0** *(TOML 0.4.0)*
 
 Nett: 
@@ -463,6 +469,7 @@ Nett:
 + Fix: Write key back to file with same type [#23](https://github.com/paiden/Nett/issues/23)
 + Fix: Parse errors caused by absent optional whitespace [#26](https://github.com/paiden/Nett/issues/26)
 + Fix: Various TOML array parser issues
+
 Coma:
 + Add: Settings can be moved between config scopes.
 
