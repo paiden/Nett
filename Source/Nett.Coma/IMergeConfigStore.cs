@@ -2,7 +2,7 @@
 
 namespace Nett.Coma
 {
-    internal interface IMergeConfigStore : IConfigStore
+    internal interface IMergeConfigStore : IConfigStoreWithSource
     {
         IEnumerable<IConfigSource> Sources { get; }
 

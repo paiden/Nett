@@ -136,7 +136,7 @@
         internal IConfigSource GetSource(string sourceName)
             => this.persistable.Sources.Single(s => s.Name == sourceName);
 
-        private static MergeConfigStore CreateMergeStore(IConfigStore store)
-                    => new MergeConfigStore(new List<IConfigStore>() { store });
+        private static MergeConfigStore CreateMergeStore(IConfigStoreWithSource store)
+                    => new MergeConfigStore(new List<IConfigStoreWithSource>() { store });
     }
 }

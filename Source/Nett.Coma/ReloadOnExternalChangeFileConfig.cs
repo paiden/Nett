@@ -2,7 +2,7 @@
 {
     using Nett.Extensions;
 
-    internal sealed class ReloadOnExternalChangeFileConfig : IConfigStore
+    internal sealed class ReloadOnExternalChangeFileConfig : IConfigStoreWithSource
     {
         private readonly FileConfigStore persistable;
 

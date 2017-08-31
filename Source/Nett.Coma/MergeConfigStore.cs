@@ -11,14 +11,14 @@
         private const string AssertAtLeastOneConfigMsg =
             "Constructor should check that there is a config and the configs should not get modified later on";
 
-        private readonly List<IConfigStore> stores;
+        private readonly List<IConfigStoreWithSource> stores;
 
-        public MergeConfigStore(IEnumerable<IConfigStore> configs)
+        public MergeConfigStore(IEnumerable<IConfigStoreWithSource> configs)
         {
             if (configs == null) { throw new ArgumentNullException(nameof(configs)); }
             if (configs.Count() <= 0) { throw new ArgumentException("There needs to be at least one config", nameof(configs)); }
 
-            this.stores = new List<IConfigStore>(configs);
+            this.stores = new List<IConfigStoreWithSource>(configs);
         }
 
         public IEnumerable<IConfigSource> Sources => this.stores;
@@ -49,7 +49,7 @@
         public TomlTable Load(IConfigSource source)
         {
 #pragma warning disable SA1312
-            IConfigStore _;
+            IConfigStoreWithSource _;
             return this.LoadInternal(source, out _);
 #pragma warning restore SA1312
         }
@@ -70,19 +70,19 @@
 
         public void Save(TomlTable table, IConfigSource source)
         {
-            IConfigStore cfg = this.stores.Single(c => c.CanHandleSource(source));
+            IConfigStoreWithSource cfg = this.stores.Single(c => c.CanHandleSource(source));
             cfg.Save(table);
         }
 
         public bool WasChangedExternally() => this.stores.Any(c => c.WasChangedExternally());
 
-        private TomlTable LoadInternal(IConfigSource source, out IConfigStore cfg)
+        private TomlTable LoadInternal(IConfigSource source, out IConfigStoreWithSource cfg)
         {
             cfg = this.stores.Single(c => c.CanHandleSource(source));
             return cfg.Load();
         }
 
-        private TomlTable MergeTables(Func<IConfigStore, TomlTable> loadSingle)
+        private TomlTable MergeTables(Func<IConfigStoreWithSource, TomlTable> loadSingle)
         {
             Assert(this.stores.Count > 0, AssertAtLeastOneConfigMsg);
 

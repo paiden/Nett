@@ -4,7 +4,7 @@
     using System.Security.Cryptography;
     using Nett.Extensions;
 
-    internal sealed class FileConfigStore : IConfigStore
+    internal sealed class FileConfigStore : IConfigStoreWithSource
     {
         private readonly string filePath;
         private readonly TomlSettings settings;

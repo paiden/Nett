@@ -63,7 +63,7 @@ namespace Nett.Coma
 
             public IMergeConfigStore CreateStore(TomlSettings config, TomlTable content)
             {
-                List<IConfigStore> stores = new List<IConfigStore>(this.sourceInfos.Count);
+                List<IConfigStoreWithSource> stores = new List<IConfigStoreWithSource>(this.sourceInfos.Count);
 
                 foreach (var i in this.sourceInfos)
                 {
@@ -95,7 +95,7 @@ namespace Nett.Coma
 
             private struct SourceInfo
             {
-                public Func<SourceInfo, TomlSettings, IConfigStore> StoreFactory;
+                public Func<SourceInfo, TomlSettings, IConfigStoreWithSource> StoreFactory;
                 public string Name;
             }
         }
