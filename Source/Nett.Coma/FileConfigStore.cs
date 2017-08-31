@@ -4,23 +4,19 @@
     using System.Security.Cryptography;
     using Nett.Extensions;
 
-    internal sealed class FileConfigStore : IConfigStoreWithSource
+    internal sealed class FileConfigStore : IConfigStore
     {
         private readonly string filePath;
         private readonly TomlSettings settings;
 
         private byte[] latestFileHash = null;
 
-        public FileConfigStore(TomlSettings settings, string filePath, string alias)
+        public FileConfigStore(TomlSettings settings, string filePath)
         {
             this.settings = settings.CheckNotNull(nameof(settings));
             this.filePath = filePath.CheckNotNull(nameof(settings));
-            this.Name = alias;
+
         }
-
-        public string Name { get; }
-
-        public bool CanHandleSource(IConfigSource source) => this.Name == source.Name;
 
         public bool EnsureExists(TomlTable content)
         {
@@ -45,14 +41,7 @@
             return Toml.ReadFile(this.filePath, this.settings);
         }
 
-        public TomlTable LoadSourcesTable()
-        {
-            var table = this.Load();
-            var sourcesTable = table.TransformToSourceTable(this);
-            return sourcesTable;
-        }
-
-        public TomlTable TransformToSourceTable(TomlTable toTransform) => toTransform.TransformToSourceTable(this);
+        //public TomlTable TransformToSourceTable(TomlTable toTransform) => toTransform.TransformToSourceTable(this);
 
         public void Save(TomlTable config)
         {

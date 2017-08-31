@@ -15,7 +15,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfigStore(TomlSettings.DefaultInstance, file, file);
+                var cfg = new FileConfigStore(TomlSettings.DefaultInstance, file);
 
                 // Act
                 var r1 = cfg.WasChangedExternally();
@@ -34,7 +34,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfigStore(TomlSettings.DefaultInstance, file, file);
+                var cfg = new FileConfigStore(TomlSettings.DefaultInstance, file);
                 cfg.Load();
 
                 // Act
@@ -52,7 +52,7 @@ namespace Nett.Coma.Tests.Unit
             {
                 // Arrange
                 File.WriteAllText(file, "x=0");
-                var cfg = new FileConfigStore(TomlSettings.DefaultInstance, file, file);
+                var cfg = new FileConfigStore(TomlSettings.DefaultInstance, file);
                 cfg.Load();
                 using (var sw = File.AppendText(file))
                 {

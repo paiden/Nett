@@ -31,6 +31,14 @@ namespace Nett.Coma
         public interface IStoreBuilder
         {
             IMergeStoreBuilder File(string filePath);
+
+            /// <summary>
+            /// Use a custom store implementation for this configuration.
+            /// </summary>
+            /// <param name="store">The store to use for the configuration.</param>
+            /// <returns>A builder object allowing to specify additional stores.</returns>
+            /// <exception cref="ArgumentNullException">if <i>store</i> is <b>null</b>.</exception>
+            IMergeStoreBuilder CustomStore(IConfigStore store);
         }
 
         public interface IMergeStoreBuilder
@@ -77,11 +85,21 @@ namespace Nett.Coma
                 return mergeStore;
             }
 
+            IMergeStoreBuilder IStoreBuilder.CustomStore(IConfigStore store)
+            {
+                this.sourceInfos.Add(new SourceInfo()
+                {
+                    StoreFactory = (srcInfo, cfg) => new ConfigStoreWithSource(store, srcInfo.Name),
+                });
+
+                return this;
+            }
+
             IMergeStoreBuilder IStoreBuilder.File(string filePath)
             {
                 this.sourceInfos.Add(new SourceInfo()
                 {
-                    StoreFactory = (srcInfo, cfg) => new FileConfigStore(cfg, filePath, srcInfo.Name),
+                    StoreFactory = (srcInfo, cfg) => new ConfigStoreWithSource(new FileConfigStore(cfg, filePath), srcInfo.Name),
                     Name = filePath,
                 });
 

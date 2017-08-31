@@ -3,11 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using Nett.Tests.Util;
+using Xunit;
 
 namespace Nett.Coma.Tests.Internal.Integration
 {
     [ExcludeFromCodeCoverage]
-    public sealed class ReloadOnExternalChangeFileConfigTests
+    public sealed class ConfigStoreWithSourceTests
     {
         [MFact(nameof(ConfigStoreWithSource), nameof(ConfigStoreWithSource.Save), "Updates in memory table")]
         [Description("There was a bug, where optimized file config didn't update the in memory table and so the next load delivered old stuff")]
@@ -28,6 +29,12 @@ namespace Nett.Coma.Tests.Internal.Integration
                 var readBack = oc.Load();
                 ((TomlInt)readBack["X"]).Value.Should().Be(2);
             }
+        }
+
+        [Fact]
+        public void Store_WhenUsingFileStoreAsCustomStore_WorksTheSameAsNormalFileStore()
+        {
+            var fs = new FileConfigStore(TomlSettings.DefaultInstance, )
         }
     }
 }
