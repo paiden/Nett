@@ -49,7 +49,7 @@ namespace Nett.Coma.Tests.Unit
             TomlTable table = null;
 
             // Act
-            Action a = () => table.TransformToSourceTable(new ConfigStoreWithSource(new FileConfigStore(TomlSettings.DefaultInstance, "x"), "x"));
+            Action a = () => table.TransformToSourceTable(new ConfigSource("x"));
 
             // Assert
             a.ShouldThrow<ArgumentNullException>().WithMessage("*table*");
@@ -61,13 +61,13 @@ namespace Nett.Coma.Tests.Unit
             using (var scenario = MultiLevelTableScenario.Setup())
             {
                 // Act
-                var src = new ConfigStoreWithSource(new FileConfigStore(TomlSettings.DefaultInstance, "test"), "test");
-                var sourceTable = scenario.Table.TransformToSourceTable(src);
+                var src = new ConfigSource("test");
+                var sourceTable = scenario.Table.TransformToSourceTable(new ConfigSource("test"));
 
                 // Assert
-                sourceTable.Get<IConfigSource>(nameof(scenario.Clr.X)).Should().BeSameAs(src);
+                sourceTable.Get<IConfigSource>(nameof(scenario.Clr.X)).Should().Be(src);
                 var sub = sourceTable.Get<TomlTable>(nameof(scenario.Clr.Sub));
-                sub.Get<IConfigSource>(nameof(scenario.Clr.Sub.Y)).Should().BeSameAs(src);
+                sub.Get<IConfigSource>(nameof(scenario.Clr.Sub.Y)).Should().Be(src);
             }
         }
 

@@ -12,15 +12,17 @@
         private TomlTable loaded = null;
         private TomlTable loadedSourcesTable = null;
 
-        public ConfigStoreWithSource(IConfigStore persistable, string name)
+        public ConfigStoreWithSource(IConfigSource source, IConfigStore persistable)
         {
+            this.Source = source.CheckNotNull(nameof(source));
             this.store = persistable.CheckNotNull(nameof(persistable));
-            this.Name = name;
         }
+
+        public IConfigSource Source { get; }
 
         public string Name { get; }
 
-        public bool CanHandleSource(IConfigSource source) => source.Name == this.Name;
+        public bool CanHandleSource(IConfigSource source) => this.Source.Name == source.Name;
 
         public bool EnsureExists(TomlTable content) => this.store.EnsureExists(content);
 
@@ -40,7 +42,7 @@
         {
             this.store.Save(content);
             this.loaded = content;
-            this.loadedSourcesTable = this.Load().TransformToSourceTable(this);
+            this.loadedSourcesTable = this.Load().TransformToSourceTable(this.Source);
             this.loadedSourcesTable.Freeze();
         }
 
@@ -51,7 +53,7 @@
             if (this.loaded == null || this.store.WasChangedExternally())
             {
                 this.loaded = this.store.Load();
-                this.loadedSourcesTable = this.loaded.TransformToSourceTable(this);
+                this.loadedSourcesTable = this.loaded.TransformToSourceTable(this.Source);
 
                 this.loaded.Freeze();
                 this.loadedSourcesTable.Freeze();

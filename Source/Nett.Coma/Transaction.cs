@@ -26,9 +26,11 @@
             this.onCloseTransactionCallback = onCloseTransactionCallback.CheckNotNull(nameof(onCloseTransactionCallback));
         }
 
-        public IEnumerable<IConfigSource> Sources => this.persistable.Sources;
+        public IConfigSource Source => this.persistable.Source;
 
-        public string Name => this.persistable.Name;
+        public IConfigSource RootSource => this.persistable.RootSource;
+
+        public IEnumerable<IConfigSource> Sources => this.persistable.Sources;
 
         public static Transaction Start(IMergeConfigStore persistable, Action<IMergeConfigStore> onCloseTransactionCallback)
         {

@@ -41,8 +41,10 @@
         bool WasChangedExternally();
     }
 
-    internal interface IConfigStoreWithSource : IConfigStore, IConfigSource
+    internal interface IConfigStoreWithSource : IConfigStore
     {
+        IConfigSource Source { get; }
+
         bool CanHandleSource(IConfigSource source);
 
         TomlTable LoadSourcesTable();

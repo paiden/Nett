@@ -4,6 +4,8 @@ namespace Nett.Coma
 {
     internal interface IMergeConfigStore : IConfigStoreWithSource
     {
+        IConfigSource RootSource { get; }
+
         IEnumerable<IConfigSource> Sources { get; }
 
         TomlTable Load(IConfigSource source);

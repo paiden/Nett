@@ -108,7 +108,7 @@
             bool notStoredInConfigYet = this.TryGetSource(path) == null;
             if (notStoredInConfigYet)
             {
-                this.Set(path, value, this.persistable.Sources.First());
+                this.Set(path, value, this.persistable.RootSource);
             }
             else
             {
@@ -132,9 +132,6 @@
             var source = path.TryApply(cfgTable) as TomlSource;
             return source?.Value;
         }
-
-        internal IConfigSource GetSource(string sourceName)
-            => this.persistable.Sources.Single(s => s.Name == sourceName);
 
         private static MergeConfigStore CreateMergeStore(IConfigStoreWithSource store)
                     => new MergeConfigStore(new List<IConfigStoreWithSource>() { store });

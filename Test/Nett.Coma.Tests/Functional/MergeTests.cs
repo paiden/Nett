@@ -31,9 +31,9 @@ namespace Nett.Coma.Tests.Functional
                 // Act
                 var c = Config.CreateAs()
                     .MappedToType(() => new SingleLevelConfig())
-                    .StoredAs(store => store
-                        .File(f1)
-                        .MergeWith().File(f2))
+                    .StoredAs(store =>
+                        store.File(f1).MergeWith(
+                            store.File(f2)))
                     .Initialize();
 
                 // Assert
@@ -60,9 +60,9 @@ namespace Nett.Coma.Tests.Functional
                 // Act
                 var c = Config.CreateAs()
                     .MappedToType(() => new SingleLevelConfig())
-                    .StoredAs(store => store
-                        .File(global)
-                        .MergeWith().File(local))
+                    .StoredAs(store =>
+                        store.File(global).MergeWith(
+                            store.File(local)))
                     .Initialize();
 
                 // Assert
@@ -91,9 +91,9 @@ StringValue = 'succ'";
                 // Act
                 var c = Config.CreateAs()
                     .MappedToType(() => new SingleLevelConfig())
-                    .StoredAs(store => store
-                        .File(f1)
-                        .MergeWith().File(f2))
+                    .StoredAs(store =>
+                        store.File(f1).MergeWith(
+                            store.File(f2)))
                     .Initialize();
 
                 // Assert
@@ -115,10 +115,10 @@ StringValue = 'succ'";
                 // Act
                 var cfg = Config.CreateAs()
                     .MappedToType(() => new GitScenario.GitConfig())
-                    .StoredAs(store => store
-                        .File(s.SystemFile)
-                        .MergeWith().File(s.UserFile)
-                        .MergeWith().File(s.RepoFile))
+                    .StoredAs(store =>
+                        store.File(s.SystemFile).MergeWith(
+                            store.File(s.UserFile).MergeWith(
+                               store.File(s.RepoFile))))
                     .Initialize();
 
                 // Assert

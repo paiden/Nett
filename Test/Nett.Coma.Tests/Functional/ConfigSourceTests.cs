@@ -22,7 +22,7 @@ namespace Nett.Coma.Tests.Functional
                 var newVal = !oldVal;
 
                 // Act
-                config.Set(c => c.Core.Symlinks, newVal, scenario.RepoSourceName);
+                config.Set(c => c.Core.Symlinks, newVal, scenario.RepoSource);
 
                 // Assert
                 var repoContent = Toml.ReadFile<GitScenario.GitConfig>(scenario.RepoFile);
@@ -47,9 +47,9 @@ namespace Nett.Coma.Tests.Functional
                 var s2 = config.GetSource(c => c.Core.IgnoreCase);
 
                 // Assert
-                s0.Name.Should().BeSameAs(scenario.SystemSourceName);
-                s1.Name.Should().BeSameAs(scenario.UserSourceName);
-                s2.Name.Should().BeSameAs(scenario.RepoSourceName);
+                s0.Should().BeSameAs(scenario.SystemSource);
+                s1.Should().BeSameAs(scenario.UserSource);
+                s2.Should().BeSameAs(scenario.RepoSource);
             }
         }
     }

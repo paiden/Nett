@@ -52,9 +52,9 @@ namespace Nett.Coma.Tests
                 // Act
                 var merged = Config.CreateAs()
                     .MappedToType(() => new TestData.TestAppSettings())
-                    .StoredAs(store => store
-                        .File(mainFile)
-                        .MergeWith().File(userFile))
+                    .StoredAs(store =>
+                        store.File(mainFile).MergeWith(
+                            store.File(userFile)))
                     .Initialize();
 
                 // Assert
@@ -77,8 +77,9 @@ namespace Nett.Coma.Tests
                 // Act
                 var merged = Config.CreateAs()
                     .MappedToType(() => new TestData.TestAppSettings())
-                    .StoredAs(store => store
-                        .File(main).MergeWith().File(user))
+                    .StoredAs(store =>
+                        store.File(main).MergeWith(
+                            store.File(user)))
                     .Initialize();
 
                 // Assert
@@ -118,14 +119,14 @@ namespace Nett.Coma.Tests
             using (var scenario = SingleConfigFileScenario.Setup(nameof(SaveSetting_WhenItDoesNotExistYetInConfigFileAndTargetExplicitelySpecified_GetsCreatedAndSaved)))
             {
                 // Arrange
-                const string srcName = "src";
+                IConfigSource src = null;
                 var cfg = Config.CreateAs()
                     .MappedToType(() => new SingleConfigFileScenario.ConfigContent())
-                    .StoredAs(store => store.File(scenario.File).AsSourceWithName(srcName))
+                    .StoredAs(store => store.File(scenario.File).AccessedBySource("main", out src))
                     .Initialize();
 
                 // Act
-                cfg.Set(c => c.Sub.Z, 1, srcName);
+                cfg.Set(c => c.Sub.Z, 1, src);
 
                 // Assert
                 File.ReadAllText(scenario.File).Should().Be("X = 1\r\nY = \"Y\"\r\n\r\n[Sub]\r\nZ = 1\r\n");
@@ -141,7 +142,7 @@ namespace Nett.Coma.Tests
                 var cfg = scenario.CreateMergedFromDefaults();
 
                 // Act
-                cfg.Set(c => c.Core.AutoClrf, true, scenario.UserSourceName);
+                cfg.Set(c => c.Core.AutoClrf, true, scenario.UserSource);
 
                 // Assert
                 File.ReadAllText(scenario.UserFile).Should().Be("\r\n[User]\r\nName = \"Test User\"\r\nEMail = \"test@user.com\"\r\n\r\n[Core]\r\nAutoClrf = true\r\n");

@@ -17,7 +17,7 @@ namespace Nett.Coma.Tests.Internal.Integration
             {
                 // Arrange
                 var fc = new FileConfigStore(TomlSettings.DefaultInstance, fn);
-                var oc = new ConfigStoreWithSource(fc, fn);
+                var oc = new ConfigStoreWithSource(new ConfigSource(fn), fc);
                 File.WriteAllText(fn, "X = 1");
                 oc.Load(); // At least one load needs to be done, otherwise a load will be done because not any data was loaded yet
 

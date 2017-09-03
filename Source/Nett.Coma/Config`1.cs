@@ -29,9 +29,6 @@
             return this.config.Clear(path);
         }
 
-        public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector, string sourceName)
-            => this.Clear(selector, this.config.GetSource(sourceName));
-
         public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector, IConfigSource source)
         {
             var path = selector.CheckNotNull(nameof(selector)).BuildTPath();
@@ -50,9 +47,6 @@
             var path = selector.BuildTPath();
             this.config.Set(path, value);
         }
-
-        public void Set<TProperty>(Expression<Func<T, TProperty>> selector, TProperty value, string targetSourceName)
-            => this.Set(selector, value, this.config.GetSource(targetSourceName));
 
         public void Set<TProperty>(Expression<Func<T, TProperty>> selector, TProperty value, IConfigSource target)
         {

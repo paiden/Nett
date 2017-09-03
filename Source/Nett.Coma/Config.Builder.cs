@@ -6,30 +6,83 @@ namespace Nett.Coma
 {
     public sealed partial class Config
     {
+        /// <summary>
+        /// Builder object to configure a untyped 'Coma' configuration.
+        /// </summary>
         public interface IConfigBuilder
         {
+            /// <summary>
+            /// Specifies the CLR type to that the configuration object should get mapped.
+            /// </summary>
+            /// <typeparam name="T">Type of the CLR object</typeparam>
+            /// <param name="createDefault">Func used to create a config object with it's defaults.</param>
+            /// <returns>A builder object that allows to setup the config system further.</returns>
             IConfigBuilder<T> MappedToType<T>(Func<T> createDefault)
                 where T : class;
 
+            /// <summary>
+            /// Used to define how the config should be persisted.
+            /// </summary>
+            /// <param name="storeBuilder">Action used to configure the store.</param>
+            /// <returns>A builder object that allows to setup the config system further.</returns>
             IConfigBuilder StoredAs(Action<IStoreBuilder> storeBuilder);
 
+            /// <summary>
+            /// Sets the TOML settings this config should use when reading &amp; serializing and deserializing its
+            /// contents to/from TOML.
+            /// </summary>
+            /// <param name="config">The settings to use.</param>
+            /// <returns>A builder object that allows to setup the config system further.</returns>
+            /// <exception cref="ArgumentNullException">If <i>config</i> is <b>null</b>.</exception>"
             IConfigBuilder UseTomlConfiguration(TomlSettings config);
 
+            /// <summary>
+            /// Finalizes the configuration and creates a new config object with the specified settings.
+            /// </summary>
+            /// <returns>The newly created config object.</returns>
             Config Initialize();
         }
 
+        /// <summary>
+        /// Builder object to configure a strongly typed 'Coma' configuration.
+        /// </summary>
+        /// <typeparam name="T">The type of the CLR object the config should get mapped to.</typeparam>
         public interface IConfigBuilder<T>
             where T : class
         {
+            /// <summary>
+            /// Used to define how the config should be persisted.
+            /// </summary>
+            /// <param name="storeBuilder">Action used to configure the store.</param>
+            /// <returns>A builder object that allows to setup the config system further.</returns>
             IConfigBuilder<T> StoredAs(Action<IStoreBuilder> storeBuilder);
 
+            /// <summary>
+            /// Sets the TOML settings this config should use when reading &amp; serializing and deserializing its
+            /// contents to/from TOML.
+            /// </summary>
+            /// <param name="config">The settings to use.</param>
+            /// <returns>A builder object that allows to setup the config system further.</returns>
+            /// <exception cref="ArgumentNullException">If <i>config</i> is <b>null</b>.</exception>"
             IConfigBuilder<T> UseTomlConfiguration(TomlSettings config);
 
+            /// <summary>
+            /// Finalizes the configuration and creates a new config object with the specified settings.
+            /// </summary>
+            /// <returns>The newly created config object.</returns>
             Config<T> Initialize();
         }
 
+        /// <summary>
+        /// Builder interface to specify a config store.
+        /// </summary>
         public interface IStoreBuilder
         {
+            /// <summary>
+            /// Store the config in this file.
+            /// </summary>
+            /// <param name="filePath">An absolute or relative path to the file where the config should be stored.</param>
+            /// <returns>A builder object allowing to specify additional stores.</returns>
             IMergeStoreBuilder File(string filePath);
 
             /// <summary>
@@ -41,13 +94,40 @@ namespace Nett.Coma
             IMergeStoreBuilder CustomStore(IConfigStore store);
         }
 
+        /// <summary>
+        /// Builder interface allowing to build merged config stores (config separated into multiple sources e.g. files)
+        /// </summary>
         public interface IMergeStoreBuilder
         {
-            IMergeStoreBuilder AsSourceWithName(string name);
+            /// <summary>
+            /// Give the previously defined store a name and retrieve it.
+            /// </summary>
+            /// <param name="name">The name the store should have.</param>
+            /// <param name="src">When this method returns, contains the source object with the given name.</param>
+            /// <returns>A builder object allowing to specify additional stores.</returns>
+            IMergeStoreBuilder AccessedBySource(string name, out IConfigSource src);
 
-            IStoreBuilder MergeWith();
+            /// <summary>
+            /// Merge previously defined store with another store to build up the config. This store will override the config
+            /// values of the previous store.
+            /// </summary>
+            /// <param name="builder">Builder object used to create the new store.</param>
+            /// <returns>A Builder object that allows to create stores.</returns>
+            IStoreBuilder MergeWith(IStoreBuilder builder);
+
+            /// <summary>
+            /// Merge previously defined store with another store to build up the config. This store will override the config
+            /// values of the previous store.
+            /// </summary>
+            /// <param name="builder">Builder object used to create the new store.</param>
+            /// <returns>A Builder object that allows to create stores.</returns>
+            IStoreBuilder MergeWith(IMergeStoreBuilder builder);
         }
 
+        /// <summary>
+        /// Returns a new builder object to configure and create a new 'Coma' configuration object.
+        /// </summary>
+        /// <returns>The new builder.</returns>
         public static IConfigBuilder CreateAs()
         {
             return new ConfigBuilder();
@@ -55,15 +135,18 @@ namespace Nett.Coma
 
         private class StoreBuilder : IStoreBuilder, IMergeStoreBuilder
         {
-            private readonly List<SourceInfo> sourceInfos = new List<SourceInfo>();
+            private readonly List<StoreFactoryInfo> sourceInfos = new List<StoreFactoryInfo>();
 
-            IMergeStoreBuilder IMergeStoreBuilder.AsSourceWithName(string name)
+            private StoreFactoryInfo LatestFactoryInfo => this.sourceInfos[this.sourceInfos.Count - 1];
+
+            public IMergeStoreBuilder AccessedBySource(string name, out IConfigSource src)
             {
-                var item = this.sourceInfos[this.sourceInfos.Count - 1];
-                this.sourceInfos[this.sourceInfos.Count - 1] = new SourceInfo()
+                StoreFactoryInfo latest = this.LatestFactoryInfo;
+                src = new ConfigSource(name);
+                this.sourceInfos[this.sourceInfos.Count - 1] = new StoreFactoryInfo()
                 {
-                    StoreFactory = item.StoreFactory,
-                    Name = name,
+                    StoreFactory = latest.StoreFactory,
+                    Source = src,
                 };
 
                 return this;
@@ -87,9 +170,10 @@ namespace Nett.Coma
 
             IMergeStoreBuilder IStoreBuilder.CustomStore(IConfigStore store)
             {
-                this.sourceInfos.Add(new SourceInfo()
+                this.sourceInfos.Add(new StoreFactoryInfo()
                 {
-                    StoreFactory = (srcInfo, cfg) => new ConfigStoreWithSource(store, srcInfo.Name),
+                    StoreFactory = (srcInfo, cfg) => new ConfigStoreWithSource(srcInfo.Source, store),
+                    Source = new ConfigSource(Guid.NewGuid().ToString()),
                 });
 
                 return this;
@@ -97,24 +181,30 @@ namespace Nett.Coma
 
             IMergeStoreBuilder IStoreBuilder.File(string filePath)
             {
-                this.sourceInfos.Add(new SourceInfo()
+                this.sourceInfos.Add(new StoreFactoryInfo()
                 {
-                    StoreFactory = (srcInfo, cfg) => new ConfigStoreWithSource(new FileConfigStore(cfg, filePath), srcInfo.Name),
-                    Name = filePath,
+                    StoreFactory = (srcInfo, cfg) => new ConfigStoreWithSource(
+                        srcInfo.Source, new FileConfigStore(cfg, filePath)),
+                    Source = new ConfigSource(filePath),
                 });
 
                 return this;
             }
 
-            IStoreBuilder IMergeStoreBuilder.MergeWith()
+            IStoreBuilder IMergeStoreBuilder.MergeWith(IStoreBuilder builder)
             {
                 return this;
             }
 
-            private struct SourceInfo
+            IStoreBuilder IMergeStoreBuilder.MergeWith(IMergeStoreBuilder builder)
             {
-                public Func<SourceInfo, TomlSettings, IConfigStoreWithSource> StoreFactory;
-                public string Name;
+                return this;
+            }
+
+            private struct StoreFactoryInfo
+            {
+                public Func<StoreFactoryInfo, TomlSettings, IConfigStoreWithSource> StoreFactory;
+                public IConfigSource Source;
             }
         }
 

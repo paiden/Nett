@@ -21,7 +21,11 @@
             this.stores = new List<IConfigStoreWithSource>(configs);
         }
 
-        public IEnumerable<IConfigSource> Sources => this.stores;
+        public IConfigSource Source => this.RootSource;
+
+        public IEnumerable<IConfigSource> Sources => this.stores.Select(s => s.Source);
+
+        public IConfigSource RootSource => this.stores.First().Source;
 
         public string Name => throw new NotImplementedException();
 

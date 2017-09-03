@@ -83,8 +83,9 @@ namespace Nett.Coma.Tests.Functional
                 var cfg = Config.CreateAs()
                     .MappedToType(() => new Root())
                     .UseTomlConfiguration(tmlCfg)
-                    .StoredAs(s => s.File(main).AsSourceWithName("main")
-                        .MergeWith().File(spec).AsSourceWithName("spec"))
+                    .StoredAs(s =>
+                        s.File(main).AccessedBySource("main", out var _).MergeWith(
+                            s.File(spec).AccessedBySource("spec", out var _)))
                     .Initialize();
 
                 // Act
@@ -116,8 +117,9 @@ namespace Nett.Coma.Tests.Functional
                 var cfg = Config.CreateAs()
                     .MappedToType(() => new Root())
                     .UseTomlConfiguration(tmlCfg)
-                    .StoredAs(s => s.File(main).AsSourceWithName("main")
-                        .MergeWith().File(spec).AsSourceWithName("spec"))
+                    .StoredAs(s => s
+                        .File(main).MergeWith(
+                            s.File(spec)))
                     .Initialize();
 
                 // Act

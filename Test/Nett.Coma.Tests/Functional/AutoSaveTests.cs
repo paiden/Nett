@@ -61,10 +61,9 @@
                 File.WriteAllText(f2, Succ);
                 var c = Config.CreateAs()
                     .MappedToType(() => new SingleLevelConfig())
-                    .StoredAs(store => store
-                        .File(f1)
-                        .MergeWith()
-                        .File(f2))
+                    .StoredAs(store =>
+                        store.File(f1).MergeWith(
+                            store.File(f2)))
                     .Initialize();
 
                 // Act
@@ -100,10 +99,9 @@
                 CreateMergedTestAppConfig(out mainFile, out userFile);
                 var cfg = Config.CreateAs()
                     .MappedToType(() => new TestData.TestAppSettings())
-                    .StoredAs(store => store
-                        .File(mainFile)
-                        .MergeWith()
-                        .File(userFile))
+                    .StoredAs(store =>
+                        store.File(mainFile).MergeWith(
+                            store.File(userFile)))
                     .Initialize();
 
                 // Act
