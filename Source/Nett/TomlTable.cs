@@ -49,15 +49,12 @@
 
         internal Dictionary<TomlKey, TomlObject> InternalRows => this.rows;
 
-        private IDictionary<string, TomlObject> AsDict => this;
-
-        TomlObject IDictionary<string, TomlObject>.this[string key]
+        public TomlObject this[string key]
         {
             get
             {
                 this.AssertIntegrity();
-                TomlObject val;
-                if (!this.rows.TryGetValue(new TomlKey(key), out val))
+                if (!this.rows.TryGetValue(new TomlKey(key), out var val))
                 {
                     throw new KeyNotFoundException(string.Format("No row with key '{0}' exists in this TOML table.", key));
                 }
@@ -67,17 +64,12 @@
 
             set
             {
+                value = value.Root == this.Root ? value : value.CloneFor(this.Root);
                 this.AssertIntegrity();
                 this.CheckNotFrozen();
                 this.rows[new TomlKey(key)] = this.EnsureCorrectRoot(value);
                 this.OnRowValueSet(key);
             }
-        }
-
-        public TomlObject this[string key]
-        {
-            get { return this.AsDict[key]; }
-            internal set { this.AsDict[key] = value; }
         }
 
         /// <summary>
