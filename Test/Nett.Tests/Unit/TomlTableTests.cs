@@ -11,6 +11,10 @@ namespace Nett.Tests.Unit
     [ExcludeFromCodeCoverage]
     public sealed class TomlTableTests
     {
+        public TomlTableTests()
+        { 
+        }
+
         [MFact(nameof(TomlTable), nameof(TomlTable.Freeze), "Freezes current table")]
         public void Freeze_FreezesCurrentTable()
         {
@@ -92,6 +96,6 @@ namespace Nett.Tests.Unit
                 // Assert
                 a.ShouldThrow<InvalidOperationException>().WithMessage("*frozen*");
             }
-        }
+        } 
     }
 }
