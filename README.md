@@ -457,10 +457,15 @@ config.Clear(s => s.IdleTimeout);
 
 XXXX-XX-XX: **v0.8.0**
 
+General: 
+
++ Add: .Net Standard 2.0 support
+
 Coma:
-Add: API to use custom store implementations for configurations.
-Add: API for combining TOML tables
-Change: The API to configure the config store once again.
+
++ Add: API to use custom store implementations for configurations.
++ Add: API for combining TOML tables
++ Change: The API to configure the config store once again.
 
 2017-06-21: **v0.7.0** *(TOML 0.4.0)*
 
