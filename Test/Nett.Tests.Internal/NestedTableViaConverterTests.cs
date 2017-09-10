@@ -38,7 +38,7 @@ CustomKey2 = ""CustomValue2""";
                     {
                         foreach (var kvp in collection.OrderBy(kvp => kvp.Key))
                         {
-                            targetTable.AddValue(kvp.Key, kvp.Value);
+                            targetTable.Add(kvp.Key, kvp.Value);
                         }
                     })
                     .FromToml((metaData, table) =>

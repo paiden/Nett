@@ -46,7 +46,7 @@ namespace Nett.Coma.Path
             {
                 if (settings.HasFlag(PathSettings.CreateTables) && obj is TomlTable tbl)
                 {
-                    var table = tbl.AddTable(this.key, tbl.CreateAttachedTable());
+                    var table = tbl.AddTomlObject(this.key, tbl.CreateEmptyAttachedTable());
                     return table;
                 }
 

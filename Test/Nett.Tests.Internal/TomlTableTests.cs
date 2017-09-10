@@ -78,14 +78,14 @@ namespace Nett.Tests
         private TomlTable CreateSingleProp()
         {
             var tt = Toml.Create();
-            tt.AddValue("r1", 1);
+            tt.Add("r1", (long)1);
             return tt;
         }
 
         private TomlTable CreateSingleProp(string comment)
         {
             var tt = Toml.Create();
-            var i = tt.AddValue("r1", 1);
+            var i = tt.Add("r1", (long)1);
             i.AddComment(new TomlComment(comment, CommentLocation.Prepend));
             return tt;
         }
@@ -93,11 +93,11 @@ namespace Nett.Tests
         private TomlTable CreateComplex()
         {
             var t = Toml.Create();
-            var tt = t.AddTable("SubTable");
-            t.AddValue("I", 1);
-            t.AddValue("F", 1.0);
+            var tt = t.AddTomlObject("SubTable", t.CreateEmptyAttachedTable());
+            t.Add("I", (long)1);
+            t.Add("F", 1.0);
 
-            tt.AddArray("A", new int[] { 1, 2, 3 });
+            tt.Add("A", new int[] { 1, 2, 3 });
 
             return t;
         }

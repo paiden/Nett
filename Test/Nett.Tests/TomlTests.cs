@@ -237,7 +237,7 @@ namespace Nett.Tests.Internal
         private static TomlTable CreateSimpleTomlAsTable(int x)
         {
             var tt = Toml.Create();
-            tt.AddValue("X", 1);
+            tt.Add("X", (long)1);
 
             return tt;
         }

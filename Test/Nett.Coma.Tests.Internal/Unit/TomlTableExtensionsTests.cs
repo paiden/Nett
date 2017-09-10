@@ -16,7 +16,7 @@ namespace Nett.Coma.Tests.Unit
         {
             // Arrange
             var tgtTable = Toml.Create();
-            tgtTable.AddValue("x", 0);
+            tgtTable.Add("x", (long)0);
             var fromTable = Toml.Create();
 
             // Act
@@ -33,7 +33,7 @@ namespace Nett.Coma.Tests.Unit
             // Arrange
             var targetTable = Toml.Create();
             var fromTable = Toml.Create();
-            fromTable.AddValue("x", 0);
+            fromTable.Add("x", (long)0);
 
             // Act
             targetTable.OverwriteWithValuesForSaveFrom(fromTable, addNewRows: false);

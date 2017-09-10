@@ -27,24 +27,24 @@ namespace Nett.Tests.Functional
         static CombineTablesTests()
         {
             X = Toml.Create();
-            X.AddValue(XKey, XVal);
-            X.AddValue(SameKey, XVal);
-            var xs = X.AddTable(SubTableKey);
-            xs.AddValue(SubTableValueKey, XSubTableVal);
+            X.Add(XKey, XVal);
+            X.Add(SameKey, XVal);
+            var xs = X.AddTomlObject(SubTableKey, Toml.Create());
+            xs.Add(SubTableValueKey, XSubTableVal);
 
             Y = Toml.Create();
-            Y.AddValue(YKey, YVal);
-            Y.AddValue(SameKey, YVal);
-            var ys = Y.AddTable(SubTableKey);
-            ys.AddValue(SubTableValueKey, YSubTableVal);
+            Y.Add(YKey, YVal);
+            Y.Add(SameKey, YVal);
+            var ys = Y.AddTomlObject(SubTableKey, X.CreateEmptyAttachedTable());
+            ys.Add(SubTableValueKey, YSubTableVal);
 
             Dx = Toml.Create();
-            Dx.AddValue("a", 1);
-            Dx.AddValue("c", 3).AddComment("xcc");
+            Dx.Add("a", (long)1);
+            Dx.Add("c", (long)3).AddComment("xcc");
 
             Dy = Toml.Create();
-            Dy.AddValue("b", 2).AddComment("ybc");
-            Dy.AddValue("c", 4).AddComment("ycc");
+            Dy.Add("b", (long)2).AddComment("ybc");
+            Dy.Add("c", (long)4).AddComment("ycc");
         }
 
         [Fact]

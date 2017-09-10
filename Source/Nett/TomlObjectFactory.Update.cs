@@ -7,22 +7,22 @@ namespace Nett
     {
         // Values
         public static TomlBool Update(this TomlTable table, string key, bool value)
-            => Update(table, key, table.CreateAttachedValue(value));
+            => Update(table, key, table.CreateAttached(value));
 
         public static TomlString Update(this TomlTable table, string key, string value)
-            => Update(table, key, table.CreateAttachedValue(value));
+            => Update(table, key, table.CreateAttached(value));
 
         public static TomlInt Update(this TomlTable table, string key, long value)
-            => Update(table, key, table.CreateAttachedValue(value));
+            => Update(table, key, table.CreateAttached(value));
 
         public static TomlFloat Update(this TomlTable table, string key, double value)
-            => Update(table, key, table.CreateAttachedValue(value));
+            => Update(table, key, table.CreateAttached(value));
 
         public static TomlDateTime Update(this TomlTable table, string key, DateTimeOffset value)
-            => Update(table, key, table.CreateAttachedValue(value));
+            => Update(table, key, table.CreateAttached(value));
 
         public static TomlTimeSpan Update(this TomlTable table, string key, TimeSpan value)
-            => Update(table, key, table.CreateAttachedValue(value));
+            => Update(table, key, table.CreateAttached(value));
 
         public static TomlTable Update(
             this TomlTable table, string key, object obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
@@ -30,31 +30,31 @@ namespace Nett
 
         // Arrays
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<bool> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<string> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<long> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<int> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<double> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<float> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<DateTimeOffset> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<DateTime> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<TimeSpan> array)
-            => Update(table, key, table.CreateAttachedArray(array));
+            => Update(table, key, table.CreateAttached(array));
 
         private static T Update<T>(TomlTable table, string key, T obj)
             where T : TomlObject

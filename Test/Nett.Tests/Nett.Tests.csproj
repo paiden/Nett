@@ -99,8 +99,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TomlConfigTests.cs" />
+    <Compile Include="Unit\TomlObjectFactory.Create.Tests.cs" />
     <Compile Include="Unit\TomlObjectFactory.Update.Tests.cs" />
-    <Compile Include="Unit\TomlObjectFactoryTests.cs" />
+    <Compile Include="Unit\TomlObjectFactory.Add.Tests.cs" />
     <Compile Include="Unit\TomlTableTests.cs" />
     <Compile Include="Unit\TomlTests.cs" />
     <Compile Include="VerifyIssuesTests.cs" />

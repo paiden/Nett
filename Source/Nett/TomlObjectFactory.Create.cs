@@ -6,110 +6,93 @@ namespace Nett
 {
     public static partial class TomlObjectFactory
     {
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource)
-            => new TomlArray(rootSource.Root);
+        // Values
+        public static TomlBool CreateAttached(this TomlObject rootSource, bool value)
+            => new TomlBool(rootSource.Root, value);
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<bool> values)
+        public static TomlString CreateAttached(this TomlObject rootSource, string value)
+            => new TomlString(rootSource.Root, value);
+
+        public static TomlInt CreateAttached(this TomlObject rootSource, long value)
+            => new TomlInt(rootSource.Root, value);
+
+        public static TomlFloat CreateAttached(this TomlObject rootSource, double value)
+            => new TomlFloat(rootSource.Root, value);
+
+        public static TomlTimeSpan CreateAttached(this TomlObject rootSource, TimeSpan value)
+            => new TomlTimeSpan(rootSource.Root, value);
+
+        public static TomlDateTime CreateAttached(this TomlObject rootSource, DateTimeOffset value)
+            => new TomlDateTime(rootSource.Root, value);
+
+        // Arrays
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<bool> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlBool(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<string> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<string> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlString(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<long> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<long> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlInt(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<int> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<int> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlInt(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<double> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<double> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlFloat(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<float> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<float> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlFloat(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<TimeSpan> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<TimeSpan> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlTimeSpan(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<DateTime> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<DateTime> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlDateTime(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<DateTimeOffset> values)
+        public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<DateTimeOffset> values)
             => new TomlArray(rootSource.Root, values.Select(v => new TomlDateTime(rootSource.Root, v)).ToArray());
 
-        public static TomlArray CreateAttachedArray(this TomlObject rootSource, IEnumerable<TomlValue> values)
-        {
-            var valArray = values.ToArray();
-            if (valArray.Any(v => v.Root != rootSource.Root))
-            {
-                throw new InvalidOperationException(
-                    "Cannot create array with values belonging to different TOML object graph root.");
-            }
-
-            return new TomlArray(rootSource.Root, valArray);
-        }
-
-        public static TomlTable CreateAttachedTable(
-            this TomlObject rootSource, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
-            => new TomlTable(rootSource.Root, type);
-
-        public static TomlTable CreateAttachedTableFromClass<T>(
-            this TomlObject rootSource, T obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
-            where T : class
+        // Table
+        public static TomlTable CreateAttached(
+            this TomlObject rootSource, object obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
         {
             if (obj is TomlObject)
             {
-                throw new InvalidOperationException(
-                    $"Can't create TOML table from object of type '{obj.GetType().FullName}'. " +
-                    "A TOML table can only be created from non TOML objects.");
+                throw new InvalidOperationException("A table can only be created from a non TOML object");
             }
 
             var t = TomlTable.CreateFromClass(rootSource.Root, obj, type);
             return t;
         }
 
-        public static TomlTable CreateAttachedTable(
-            this TomlObject rootSource,
-            IEnumerable<KeyValuePair<string, TomlObject>> rows,
-            TomlTable.TableTypes type = TomlTable.TableTypes.Default)
+        // Table Array
+        public static TomlTableArray CreateAttached(
+            this TomlObject rootSource, IEnumerable<object> obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
         {
-            var tbl = new TomlTable(rootSource.Root, type);
-
-            foreach (var kvp in rows)
+            foreach (var it in obj.Select((x, i) => new { Value = x, Index = i }))
             {
-                if (kvp.Value.Root != rootSource.Root)
+                if (it.Value is TomlObject to)
                 {
-                    throw new InvalidOperationException(
-                        "Cannot create table with rows belonging to a different TOML object graph root.");
+                    throw new InvalidOperationException("T table array can only be created from non TOML objects." +
+                        $"The object at element location '{it.Index}' is a TOML object of type '{to.ReadableTypeName}'.");
                 }
-
-                tbl.AddRow(new TomlKey(kvp.Key), kvp.Value);
             }
 
-            return tbl;
+            var tables = obj.Select(o => TomlTable.CreateFromClass(rootSource.Root, o, type));
+
+            return new TomlTableArray(rootSource.Root, tables);
         }
 
-        public static TomlBool CreateAttachedValue(this TomlObject rootSource, bool value)
-            => new TomlBool(rootSource.Root, value);
+        // Empty Structures
+        public static TomlArray CreateEmptyAttachedArray(this TomlObject rootSource)
+            => CreateAttached(rootSource, new bool[] { });
 
-        public static TomlString CreateAttachedValue(this TomlObject rootSource, string value)
-            => new TomlString(rootSource.Root, value);
+        public static TomlTableArray CreateEmptyAttachedTableArray(this TomlObject rootSource)
+            => CreateAttached(rootSource, new object[] { });
 
-        public static TomlInt CreateAttachedValue(this TomlObject rootSource, long value)
-            => new TomlInt(rootSource.Root, value);
-
-        public static TomlFloat CreateAttachedValue(this TomlObject rootSource, double value)
-            => new TomlFloat(rootSource.Root, value);
-
-        public static TomlTimeSpan CreateAttachedValue(this TomlObject rootSource, TimeSpan value)
-            => new TomlTimeSpan(rootSource.Root, value);
-
-        public static TomlDateTime CreateAttachedValue(this TomlObject rootSource, DateTimeOffset value)
-            => new TomlDateTime(rootSource.Root, value);
-
-        public static TomlTableArray CreateAttachedTableArray(this TomlObject rootSource)
-            => new TomlTableArray(rootSource.Root);
-
-        public static TomlTableArray CreateAttachedTableArray(this TomlObject rootSource, IEnumerable<TomlTable> tables)
-            => new TomlTableArray(rootSource.Root, tables);
+        public static TomlTable CreateEmptyAttachedTable(
+            this TomlObject rootSource, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
+            => CreateAttached(rootSource, new object());
     }
 }

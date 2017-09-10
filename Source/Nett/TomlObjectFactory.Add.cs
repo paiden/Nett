@@ -1,122 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
+using static System.Diagnostics.Debug;
 
 namespace Nett
 {
     public static partial class TomlObjectFactory
     {
-        public static TomlArray AddArray(this TomlTable table, string key, TomlArray a)
+        // Values
+        public static TomlBool Add(this TomlTable table, string key, bool value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(value));
+
+        public static TomlString Add(this TomlTable table, string key, string value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(value));
+
+        public static TomlInt Add(this TomlTable table, string key, long value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(value));
+
+        public static TomlInt Add(this TomlTable table, string key, int value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached((long)value));
+
+        public static TomlFloat Add(this TomlTable table, string key, double value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(value));
+
+        public static TomlFloat Add(this TomlTable table, string key, float value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached((double)value));
+
+        public static TomlDateTime Add(this TomlTable table, string key, DateTimeOffset value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(value));
+
+        public static TomlTimeSpan Add(this TomlTable table, string key, TimeSpan value)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(value));
+
+        // Arrays
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<bool> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<string> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<long> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<int> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<double> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<float> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<DateTimeOffset> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<DateTime> array)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(array));
+
+        public static TomlArray Add(this TomlTable table, string key, IEnumerable<TimeSpan> values)
+            => AddTomlObjectInternal(table, key, table.CreateAttached(values));
+
+        // Table
+        public static TomlTable Add(
+            this TomlTable table, string key, object obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
-            table.AddRow(new TomlKey(key), a);
-            return a;
-        }
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<bool> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<string> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<long> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<int> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<double> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<float> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<DateTimeOffset> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<DateTime> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlArray AddArray(this TomlTable table, string key, IEnumerable<TimeSpan> values)
-            => table.AddArray(key, table.CreateAttachedArray(values));
-
-        public static TomlTable AddTable(this TomlTable table, string key, TomlTable t)
-        {
-            table.AddRow(new TomlKey(key), t);
-            return t;
-        }
-
-        public static TomlTable AddTable(
-            this TomlTable table, string key, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
-            => table.AddTable(key, table.CreateAttachedTable(tableType));
-
-        public static TomlTable AddTable(
-            this TomlTable table,
-            string key,
-            IEnumerable<KeyValuePair<string, TomlObject>> rows,
-            TomlTable.TableTypes type = TomlTable.TableTypes.Default)
-            => table.AddTable(key, table.CreateAttachedTable(rows, type));
-
-        public static TomlTable AddTableFromClass<T>(
-                    this TomlTable table, string key, T obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
-                    where T : class
-            => table.AddTable(key, table.CreateAttachedTableFromClass(obj, tableType));
-
-        public static TomlTableArray AddTableArray(this TomlTable table, string key, TomlTableArray array)
-        {
-            if (array.Root != table.Root)
+            if (obj is TomlObject)
             {
-                throw new InvalidOperationException("Cannot add TOML table array to table because it belongs to a different graph root.");
+                throw new InvalidOperationException($"TOML objects must be added using method '{nameof(AddTomlObject)}'.");
             }
 
-            table.AddRow(new TomlKey(key), array);
-            return array;
+            return AddTomlObjectInternal(table, key, TomlTable.CreateFromClass(table.Root, obj, tableType));
         }
 
-        public static TomlTableArray AddTableArray(this TomlTable table, string key)
-            => table.AddTableArray(key, table.CreateAttachedTableArray());
-
-        public static TomlTableArray AddTableArray(this TomlTable table, string key, IEnumerable<TomlTable> tables)
-            => table.AddTableArray(key, table.CreateAttachedTableArray(tables));
-
-        public static TomlBool AddValue(this TomlTable table, string key, bool value)
+        // Table Array
+        public static TomlTableArray Add(
+            this TomlTable table,
+            string key,
+            IEnumerable<object> tableArray,
+            TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
-            var b = table.CreateAttachedValue(value);
-            table.AddRow(new TomlKey(key), b);
-            return b;
+            return AddTomlObjectInternal(table, key, table.CreateAttached(tableArray));
         }
 
-        public static TomlString AddValue(this TomlTable table, string key, string value)
-        {
-            var s = table.CreateAttachedValue(value);
-            table.AddRow(new TomlKey(key), table.CreateAttachedValue(value));
-            return s;
-        }
+        // The generic method needs a different name from the add methods, so that overload resolution with type casts
+        // chooses the correct method. Otherwise the overload resolution will pick this method instead of one of the
+        // Add methods above with the correct implicit cast. Instead the compiler will whine, that the type of the call
+        // does not conform to the type constraint T:TomlObject. Yes a stupid little compiler you are, choosing the wrong
+        // overload... tztz. E.g. if this method would also be called Add, the call tbl.Add("x", 1) would cause the compiler
+        // to chose this Add instead of the correct one - Add(string,long).
+        public static T AddTomlObject<T>(
+            this TomlTable table, string key, T obj)
+            where T : TomlObject
+            => AddTomlObjectInternal(table, key, obj.Root == table.Root ? obj : (T)obj.CloneFor(table.Root));
 
-        public static TomlInt AddValue(this TomlTable table, string key, long value)
+        // Internal
+        private static T AddTomlObjectInternal<T>(TomlTable table, string key, T o)
+            where T : TomlObject
         {
-            var i = table.CreateAttachedValue(value);
-            table.AddRow(new TomlKey(key), i);
-            return i;
-        }
-
-        public static TomlFloat AddValue(this TomlTable table, string key, double value)
-        {
-            var f = table.CreateAttachedValue(value);
-            table.AddRow(new TomlKey(key), f);
-            return f;
-        }
-
-        public static TomlDateTime AddValue(this TomlTable table, string key, DateTimeOffset dateTime)
-        {
-            var dt = table.CreateAttachedValue(dateTime);
-            table.AddRow(new TomlKey(key), dt);
-            return dt;
-        }
-
-        public static TomlTimeSpan AddValue(this TomlTable table, string key, TimeSpan timeSpan)
-        {
-            var ts = table.CreateAttachedValue(timeSpan);
-            table.AddRow(new TomlKey(key), ts);
-            return ts;
+            Assert(o.Root == table.Root);
+            table.AddRow(new TomlKey(key), o);
+            return o;
         }
     }
 }

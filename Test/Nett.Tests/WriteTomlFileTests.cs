@@ -56,7 +56,7 @@ namespace Nett.Tests
         {
             // Arrange
             var tt = Toml.Create();
-            tt.AddValue("TheFloat", 1.2);
+            tt.Add("TheFloat", 1.2);
 
             // Act
             Toml.WriteFile(tt, this.fn);

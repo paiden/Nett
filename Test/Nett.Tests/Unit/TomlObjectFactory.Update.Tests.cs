@@ -14,7 +14,7 @@ namespace Nett.Tests.Unit
         public TomlObjectFactoryUpdateTests()
         {
             this.updateThis = Toml.Create();
-            this.updateThis.AddValue("x", 1);
+            this.updateThis.Add("x", 1);
         }
 
         [Fact]
