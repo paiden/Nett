@@ -460,6 +460,11 @@ XXXX-XX-XX: **v0.8.0**
 General: 
 
 + Add: .Net Standard 2.0 support
++ Change: **Breaking** API changes creating / adding TOML objects in generic TOML
+
+Nett:
+
++ Add: API to allow updating of TomlTable's rows
 
 Coma:
 
