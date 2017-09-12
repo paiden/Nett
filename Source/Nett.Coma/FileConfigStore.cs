@@ -15,7 +15,6 @@
         {
             this.settings = settings.CheckNotNull(nameof(settings));
             this.filePath = filePath.CheckNotNull(nameof(settings));
-
         }
 
         public bool EnsureExists(TomlTable content)
@@ -40,8 +39,6 @@
             this.latestFileHash = ComputeHash(this.filePath);
             return Toml.ReadFile(this.filePath, this.settings);
         }
-
-        //public TomlTable TransformToSourceTable(TomlTable toTransform) => toTransform.TransformToSourceTable(this);
 
         public void Save(TomlTable config)
         {

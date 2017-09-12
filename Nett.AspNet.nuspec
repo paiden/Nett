@@ -1,0 +1,21 @@
+<package>
+  <metadata>
+    <version>$version$</version>
+    <id>Nett.AspNet</id>
+    <authors>paiden@outlook.com</authors>
+    <owners>paiden@outlook.com</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>TOML file integration for Asp.Net Core Configuration System.</description>
+    <tags>TOML Serialization Configuration ASP Asp.Net</tags>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/paiden/Nett</projectUrl>
+    <dependencies>
+      <dependency id="Nett" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Source\Nett.AspNet\bin\$configuration$$SNE$\netstandard2.0\Nett.AspNet.dll" target="lib\netstandard2.0" />
+    <file src="Source\Nett.AspNet\bin\$configuration$\netstandard2.0\Nett.AspNet.pdb" target="lib\netstandard2.0" />
+    <file src="Source\Nett.AspNet\**\*.cs" target="src\" />
+  </files>
+</package>

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett", "..\..\Source\Nett\Nett.csproj", "{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett", "..\..\Source\Nett\Nett.csproj", "{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E524EAFD-2545-4294-A49C-E05200F9363F}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\.gitignore = ..\..\.gitignore
 		..\..\build.ps1 = ..\..\build.ps1
 		..\..\Coma.nuspec = ..\..\Coma.nuspec
+		..\..\Nett.AspNet.nuspec = ..\..\Nett.AspNet.nuspec
 		..\..\Nett.nuspec = ..\..\Nett.nuspec
 		..\..\Infrastructure\Nett.ruleset = ..\..\Infrastructure\Nett.ruleset
 		..\..\README.md = ..\..\README.md
@@ -19,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{9A668C41-A34B-4E30-9D2A-B903C9D4985D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma", "..\..\Source\Nett.Coma\Nett.Coma.csproj", "{A453AF50-8154-4766-84DD-9DB71E38BE0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett.Coma", "..\..\Source\Nett.Coma\Nett.Coma.csproj", "{A453AF50-8154-4766-84DD-9DB71E38BE0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Coma.Tests.Internal", "..\..\Test\Nett.Coma.Tests.Internal\Nett.Coma.Tests.Internal.csproj", "{7AA9DF26-72E2-495F-B779-2C9D55AA9C44}"
 EndProject
@@ -34,6 +35,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Tests.Performance", "..\..\Test\Nett.Tests.Performance\Nett.Tests.Performance.csproj", "{57E5A8B7-F789-4E16-AFFA-A78F5B460861}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nett.Tests.Util", "..\..\Test\Nett.Tests.Util\Nett.Tests.Util.csproj", "{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett.AspNet.SystemTests", "..\..\Test\Nett.AspNet.SystemTests\Nett.AspNet.SystemTests.csproj", "{D2A875E3-B324-4125-BC76-10EE039AF9C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett.AspNet", "..\..\Source\Nett.AspNet\Nett.AspNet.csproj", "{B725009F-78A1-4587-9BAB-7DD09FF31DE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +82,14 @@ Global
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2A875E3-B324-4125-BC76-10EE039AF9C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2A875E3-B324-4125-BC76-10EE039AF9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2A875E3-B324-4125-BC76-10EE039AF9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2A875E3-B324-4125-BC76-10EE039AF9C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,5 +102,9 @@ Global
 		{914A6827-44CF-4E84-9A79-F6AB67FB6B20} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
+		{D2A875E3-B324-4125-BC76-10EE039AF9C9} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {103717AC-2FA6-462C-A42E-BAEA4AC47635}
 	EndGlobalSection
 EndGlobal

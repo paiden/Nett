@@ -460,7 +460,9 @@ XXXX-XX-XX: **v0.8.0**
 General: 
 
 + Add: .Net Standard 2.0 support
++ Add: Nett.AspNet package that integrates TOML into the Asp.Net Core configuration system
 + Change: **Breaking** API changes creating / adding TOML objects in generic TOML
++ Removed: Strong named packages
 
 Nett:
 

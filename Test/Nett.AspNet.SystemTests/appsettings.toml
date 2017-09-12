@@ -1,0 +1,6 @@
+﻿Option1 = "Hello From TOML"
+Option2 = 666
+
+[subsection]
+SubOption1 = "SubHello from TOML"
+SubOption2 = 333

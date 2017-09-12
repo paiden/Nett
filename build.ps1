@@ -96,6 +96,7 @@ if($NuGetPackage) {
     $v = $nugetPackageVersion.ToString()
     $nuspecNett = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec)`""
     $nuspecComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Coma.nuspec)`""
+    $aspNettComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.AspNet.nuspec)`""
     $props = "`"configuration=$configuration`""
 
     if($configuration -eq "Debug") { $v += '-debug' }
@@ -103,5 +104,6 @@ if($NuGetPackage) {
     New-Item -ItemType Directory -Path ngp -Force
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $v -Properties $props -OutputDirectory ngp}
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $v -Properties $props -OutputDirectory ngp}
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $aspNettComa -Version $v -Properties $props -OutputDirectory ngp}
 }
 
