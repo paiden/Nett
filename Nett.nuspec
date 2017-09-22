@@ -1,7 +1,7 @@
 <package>
   <metadata>
     <version>$version$</version>
-    <id>Nett$SNE$</id>
+    <id>Nett</id>
     <authors>paiden@outlook.com</authors>
     <owners>paiden@outlook.com</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

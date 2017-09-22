@@ -1,7 +1,7 @@
 <package>
   <metadata>
     <version>$version$</version>
-    <id>Nett.Coma$SNE$</id>
+    <id>Nett.Coma</id>
     <authors>paiden@outlook.com</authors>
     <owners>paiden@outlook.com</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,7 +10,7 @@
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/paiden/Nett</projectUrl>
     <dependencies>
-      <dependency id="Nett$SNE$" version="$version$" />
+      <dependency id="Nett" version="$version$" />
     </dependencies>
   </metadata>
   <files>

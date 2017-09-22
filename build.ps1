@@ -51,7 +51,7 @@ Param(
 
     # Set independent parameters
     [ValidateSet("Debug", "Release")]
-    [string]$configuration = "Debug",
+    [string]$configuration = "Release",
     [switch]$disableStdBuild,
 
 
@@ -93,40 +93,15 @@ if(-not $disableStdBuild) {
 }
 
 if($NuGetPackage) {
-    $sne=""
-    $packagesDir = Join-Path $PSScriptRoot -ChildPath .\Solutions\nett\packages
-    $snTool = Join-Path $PSScriptRoot -ChildPath Infrastructure\Signer\StrongNameSigner.Console.Exe
-    $srcNett = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration\net40\Nett.dll")"
-    $srcComa = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett.Coma\bin\$configuration\net40\Nett.Coma.dll")"
-    if($strongName) {
-        $sne = '.StrongNamed'
-
-        $dstNett = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett\bin\$configuration$sne\net40\Nett.dll")"
-        $dstComa = "$(Join-Path $PSScriptRoot -ChildPath "Source\Nett.Coma\bin\$configuration$sne\net40\Nett.Coma.dll")"
-
-        New-Item -ItemType File -Path $dstNett -Force
-        New-Item -ItemType File -Path $dstComa -Force
-        Copy-Item $srcNett -Destination $dstNett
-        Copy-Item $srcComa -Destination $dstComa
-
-        $devsnk = "`"$env:DEVSNK`""
-
-        # Escape the stuff
-        $dstNett = "`"$dstNett`""
-        $dstComa = "`"$dstComa`""
-
-        Invoke-ExpandedChecked { & $snTool -AssemblyFile $dstNett -KeyFile $devsnk }
-        Invoke-ExpandedChecked { & $snTool -AssemblyFile $dstComa -KeyFile $devsnk }
-    }
-
     $v = $nugetPackageVersion.ToString()
     $nuspecNett = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec)`""
     $nuspecComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Coma.nuspec)`""
-    $props = "`"$configuration;SNE=$sne`""
+    $props = "`"configuration=$configuration`""
+
     if($configuration -eq "Debug") { $v += '-debug' }
 
     New-Item -ItemType Directory -Path ngp -Force
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $v -Properties configuration=$props -OutputDirectory ngp}
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $v -Properties configuration=$props -OutputDirectory ngp}
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $v -Properties $props -OutputDirectory ngp}
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $v -Properties $props -OutputDirectory ngp}
 }
 
