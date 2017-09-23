@@ -467,6 +467,7 @@ General:
 Nett:
 
 + Add: API to allow updating of TomlTable's rows
++ Add: Dictionary can be serialized directly
 
 Coma:
 

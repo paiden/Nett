@@ -64,6 +64,9 @@
 
         public abstract void Visit(ITomlObjectVisitor visitor);
 
+        internal static TomlObject CreateFrom(ITomlRoot root, object val)
+            => CreateFrom(root, val, null);
+
         internal static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi)
         {
             var t = val.GetType();

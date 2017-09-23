@@ -1,8 +1,8 @@
 ﻿namespace Nett
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
 
     public partial class TomlTable
     {
@@ -11,28 +11,52 @@
             if (settings == null) { throw new ArgumentNullException(nameof(settings)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
 
-            var rt = obj as RootTable;
-            if (rt != null) { return rt; }
+            if ((object)obj is RootTable rt) { return rt; }
 
             var tt = new RootTable(settings);
-            var t = obj.GetType();
-            var props = settings.GetSerializationProperties(t);
-            var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach (var p in props)
+            if ((object)obj is IDictionary dict)
             {
-                object val = p.GetValue(obj, null);
-                if (val != null)
-                {
-                    TomlObject to = TomlObject.CreateFrom(tt, val, p);
-                    AddComments(to, p);
-                    allObjects.Add(Tuple.Create(p.Name, to));
-                }
+                CreateFromDictionary();
+            }
+            else
+            {
+                CreateFromCustomClrObject();
             }
 
-            tt.AddScopeTypesLast(allObjects);
-
             return tt;
+
+            void CreateFromDictionary()
+            {
+                var all = new List<Tuple<string, TomlObject>>();
+
+                foreach (DictionaryEntry r in dict)
+                {
+                    all.Add(Tuple.Create((string)r.Key, TomlObject.CreateFrom(tt, r.Value)));
+                }
+
+                tt.AddScopeTypesLast(all);
+            }
+
+            void CreateFromCustomClrObject()
+            {
+                var t = obj.GetType();
+                var props = settings.GetSerializationProperties(t);
+                var allObjects = new List<Tuple<string, TomlObject>>();
+
+                foreach (var p in props)
+                {
+                    object val = p.GetValue(obj, null);
+                    if (val != null)
+                    {
+                        TomlObject to = TomlObject.CreateFrom(tt, val, p);
+                        AddComments(to, p);
+                        allObjects.Add(Tuple.Create(p.Name, to));
+                    }
+                }
+
+                tt.AddScopeTypesLast(allObjects);
+            }
         }
 
         internal sealed class RootTable : TomlTable, ITomlRoot

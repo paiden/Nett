@@ -152,6 +152,35 @@ TheBool = false
             s.Should().Be("IntProp = 0\r\n");
         }
 
+        [Fact]
+        public void Write_WhenClrObjectIsDictionary_WritesCorrectToml()
+        {
+            // Arrange
+            Dictionary<string, object> d = new Dictionary<string, object>()
+            {
+                { "i", 1 },
+                { "s", "s" },
+                { "sub", new Dictionary<string, object>()
+                    {
+                        { "x", "2" }
+                    }
+                }
+            };
+
+            // Act
+            var s = Toml.WriteString(d);
+
+            // Assert
+            s.Trim().Should().Be(@"
+i = 1
+s = ""s""
+
+[sub]
+x = ""2""".Trim());
+        }
+
+
+
         private class TestClassA
         {
             public string StringProp { get; set; }

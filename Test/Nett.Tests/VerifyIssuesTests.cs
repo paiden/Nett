@@ -185,6 +185,23 @@ SomeValue = 5";
         }
 
 
+        [Fact]
+        public void VerifyIssue34_SerializeDictionary_WasFixed()
+        {
+            // Arrange
+            var d = new Dictionary<string, bool>()
+            {
+                {"Hello World!", true},
+            };
+
+
+            // Act
+            var s = Toml.WriteString(d);
+
+            // Assert
+            s.Trim().Should().Be(@"'Hello World!' = true".Trim());
+        }
+
         public class WithUint
         {
             public uint Prop { get; set; } = 1;

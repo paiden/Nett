@@ -262,7 +262,7 @@
 
             foreach (DictionaryEntry r in dict)
             {
-                var obj = TomlObject.CreateFrom(root, r.Value, null);
+                var obj = TomlObject.CreateFrom(root, r.Value);
                 tomlTable.AddRow(new TomlKey((string)r.Key), obj);
             }
 
