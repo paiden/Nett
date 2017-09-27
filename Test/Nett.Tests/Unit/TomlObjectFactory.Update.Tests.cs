@@ -169,14 +169,16 @@ namespace Nett.Tests.Unit
             this.updateThis.Get<List<DateTimeOffset>>("x").Should().Equal(newValue);
         }
 
-        [Fact(Skip = "There seems to be a bug with datetime. Enable if datetime issue is fixed / validated")]
+        [Fact]
         public void Update_WhenXSetToNewDateTimeArray_ChangesRowToThat()
         {
             // Act
-            var newValue = new List<DateTime>() { new DateTime(2000, 1, 1), new DateTime(2000, 2, 1) };
+            long ticks = new DateTime(2000, 1, 1).Ticks;
+            var newValue = new List<DateTime>() { new DateTime(ticks, DateTimeKind.Utc), new DateTime(ticks + 1, DateTimeKind.Utc) };
             this.updateThis.Update("x", newValue);
 
             // Assert
+            var val = this.updateThis.Get<List<DateTime>>("x");
             this.updateThis.Get<List<DateTime>>("x").Should().Equal(newValue);
         }
 
