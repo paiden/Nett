@@ -17,10 +17,9 @@ Install it via NuGet:
 
 
 
-|Package                | Nett | Nett.Coma |
-|-----------------------|------|-----------|
-| Standard              | [![NuGet](https://img.shields.io/nuget/v/Nett.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.Coma/) |
-| With Strong Name      | [![NuGet](https://img.shields.io/nuget/v/Nett.StrongNamed.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.StrongNamed/) | n/a |
+| Nett | Nett.Coma | Nett.AspNet |
+|------|-----------|-------------|
+| [![NuGet](https://img.shields.io/nuget/v/Nett.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.Coma/) | [![NuGet](https://img.shields.io/nuget/v/Nett.AspNet.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.AspNet/)
 
 All common 'TOML' operations are performed via the static class `Nett.Toml`. Although there are other
 types available from the library in general using that single type should be sufficient
