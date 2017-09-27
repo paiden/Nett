@@ -13,8 +13,8 @@
         /// tell the calling component the store exists already. Otherwise the implementation should create the store
         /// (e.g. write a new TOML file) and return <b>true</b>.
         /// </remarks>
-        /// <param name="content">The TOML content that should get stored./></param
-        /// <returns><b>true</b> if a new store was created, <b>false</b> if the store already existed./returns>
+        /// <param name="content">The TOML content that should get stored.</param>
+        /// <returns><b>true</b> if a new store was created, <b>false</b> if the store already existed.</returns>
         bool EnsureExists(TomlTable content);
 
         /// <summary>

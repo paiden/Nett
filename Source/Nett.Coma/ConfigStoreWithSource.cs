@@ -3,7 +3,7 @@
     using Nett.Extensions;
 
     /// <summary>
-    /// Combines source & store and optimized loading mechanisms.
+    /// Combines source &amp; store and optimized loading mechanisms.
     /// </summary>
     internal sealed class ConfigStoreWithSource : IConfigStoreWithSource
     {

@@ -105,7 +105,7 @@
         /// </summary>
         /// <param name="filePath">The absolute or relative path to the file.</param>
         /// <param name="settings">The settings used to process the TOML content.</param>
-        /// <returns>A <see cref="TomlTable"/> corresponding to the file content.<</returns>
+        /// <returns>A <see cref="TomlTable"/>corresponding to the file content.</returns>
         public static TomlTable ReadFile(string filePath, TomlSettings settings)
         {
             filePath.CheckNotNull(nameof(filePath));
