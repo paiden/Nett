@@ -16,6 +16,7 @@
   <files>
     <file src="Source\Nett.AspNet\bin\$configuration$$SNE$\netstandard2.0\Nett.AspNet.dll" target="lib\netstandard2.0" />
     <file src="Source\Nett.AspNet\bin\$configuration$\netstandard2.0\Nett.AspNet.pdb" target="lib\netstandard2.0" />
+    <file src="Source\Nett.AspNet\bin\$configuration$\netstandard2.0\Nett.AspNet.xml" target="lib\netstandard2.0" />
     <file src="Source\Nett.AspNet\**\*.cs" target="src\" />
   </files>
 </package>
