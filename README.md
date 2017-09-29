@@ -418,18 +418,15 @@ File.WriteAllText(userSettings,
 [User] 
 UserName = ""Test""
 ");
-
-// Prepare sources for merging
-const string userSourceName = "user";
-const string appSourceName = "app";
+IConfigSource appSource = null;
+IConfigSource userSource = null;
 
 // merge both TOML files into one settings object
 var config = Config.CreateAs()
     .MappedToType(() => new AppSettings())
     .StoredAs(store => store
-        .File(appSettings).AsSourceWithName(appSourceName)
-        .MergeWith().File(userSettings).AsSourceWithName(userSourceName))
-    .UseTomlConfiguration(null)
+        .File(appSettings).AccessedBySource("app", out appSource).MergeWith(
+            store.File(userSettings).AccessedBySource("user", out userSource)))
     .Initialize();
 
 // Read the settings
@@ -442,10 +439,10 @@ config.Set(s => s.User.UserName, oldUserName + "_New");
 
 // Save setting into user file. User setting will override app setting until the setting
 // gets cleared from the user file
-config.Set(s => s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), userSourceName);
+config.Set(s => s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), appSource);
 
 // Now clear the user setting again, after that the app setting will be returned when accessing the setting again
-config.Clear(s => s.IdleTimeout, userSourceName);
+config.Clear(s => s.IdleTimeout, userSource);
 
 // Now clear the setting without a scope, this will clear it from the currently active source.
 // In this case the setting will be cleared from both files => The setting will not be in any config anymore
@@ -454,7 +451,7 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-XXXX-XX-XX: **v0.8.0**
+**v0.8.0** --- 2017-09-29
 
 General: 
 
@@ -465,14 +462,14 @@ General:
 
 Nett:
 
-+ Add: API to allow updating of TomlTable's rows
++ Add: API for updating a TomlTable row
 + Add: Dictionary can be serialized directly
 
 Coma:
 
 + Add: API to use custom store implementations for configurations.
 + Add: API for combining TOML tables
-+ Change: The API to configure the config store once again.
++ Change: The coma configuration API 
 
 2017-06-21: **v0.7.0** *(TOML 0.4.0)*
 
