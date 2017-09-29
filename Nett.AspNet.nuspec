@@ -10,7 +10,7 @@
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/paiden/Nett</projectUrl>
     <dependencies>
-      <dependency id="Nett" version="$version$" />
+      <dependency id="Nett" version="0.8.0" />
     </dependencies>
   </metadata>
   <files>
