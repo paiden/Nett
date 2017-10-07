@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Nett.Tests.Util;
 using Xunit;
 
 namespace Nett.Tests
@@ -150,6 +151,36 @@ TheBool = false
             var s = Toml.WriteString(new TestClassA(), cfg);
 
             s.Should().Be("IntProp = 0\r\n");
+        }
+
+        [Fact]
+        public void Write_OrderABCreatedTable_WritesTableInThatOrder()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            tbl.Add("a", 1);
+            tbl.Add("b", 2);
+
+            // Act
+            var s = Toml.WriteString(tbl);
+
+            // Assert
+            s.ShouldBeSemanticallyEquivalentTo("a=1b=2");
+        }
+
+        [Fact]
+        public void Write_OrderBACreatedTable_WritesTableInThatOrder()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            tbl.Add("b", 2);
+            tbl.Add("a", 1);
+
+            // Act
+            var s = Toml.WriteString(tbl);
+
+            // Assert
+            s.ShouldBeSemanticallyEquivalentTo("b=2a=1");
         }
 
         [Fact]
