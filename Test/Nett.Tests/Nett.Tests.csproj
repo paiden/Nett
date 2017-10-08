@@ -78,6 +78,7 @@
     <Compile Include="Functional\ParserErrorMessageTests.cs" />
     <Compile Include="Functional\ReadInWriteOutTests.cs" />
     <Compile Include="Functional\InlineTableTests.Write.cs" />
+    <Compile Include="Functional\WriteNewFormattingTests.cs" />
     <Compile Include="Plugins\DictRootConfig.cs" />
     <Compile Include="Plugins\ObjRootConfig.cs" />
     <Compile Include="Plugins\PluginConfigWithIntDict.cs" />

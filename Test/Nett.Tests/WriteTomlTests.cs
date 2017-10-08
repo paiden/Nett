@@ -211,6 +211,21 @@ x = ""2""".Trim());
         }
 
 
+        [Fact]
+        public void DefaultSerialization_WritesPropertiesInClrDefinitionOrder()
+        {
+            // Act
+            var tml = Toml.WriteString(new CheckOrder());
+
+            // Assert
+            tml.ShouldBeSemanticallyEquivalentTo("B = 2A = 1");
+        }
+
+        private class CheckOrder
+        {
+            public int B { get; set; } = 2;
+            public int A { get; set; } = 1;
+        }
 
         private class TestClassA
         {
