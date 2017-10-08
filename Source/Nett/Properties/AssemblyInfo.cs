@@ -7,5 +7,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Nett.Tests.Internal")]
 [assembly: InternalsVisibleTo("Nett.Coma.Tests.Internal")]
 [assembly: InternalsVisibleTo("Nett.Coma")]
-[assembly: InternalsVisibleTo("Nett.Tests.Performance")]
+[assembly: InternalsVisibleTo("Nett.PerfTests")]
 [assembly: InternalsVisibleTo("Nett.AspNet")]
