@@ -1,5 +1,6 @@
 ﻿namespace Nett
 {
+    using System;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -9,9 +10,7 @@
 
     internal static class StringExtensions
     {
-        private static readonly int RegexOffset = @"\u".Length;
-        private static readonly Regex RegexUtf8Long = new Regex(@"\\U([0-9A-Fa-f]{8})", RegexOptions.Compiled);
-        private static readonly Regex RegexUtf8Short = new Regex(@"\\u([0-9A-Fa-f]{4})", RegexOptions.Compiled);
+        private static readonly Regex EscapedSequence = new Regex(@"\\(u[\da-fA-F]{4}|U[\da-fA-F]{8}|.)", RegexOptions.Compiled);
 
         public static bool EnsureDirectoryExists(this string s)
         {
@@ -68,46 +67,31 @@
 
         public static string Unescape(this string src, Token tkn)
         {
-            bool hasUnicodeSequences = false;
-            if (string.IsNullOrEmpty(src)) { return src; }
-
-            StringBuilder sb = new StringBuilder(src.Length);
-
-            for (int i = 0; i < src.Length; i++)
-            {
-                if (src[i] == '\\' && (i + 1 < src.Length))
+            return EscapedSequence.Replace(
+                src,
+                (m) =>
                 {
-                    switch (src[i + 1])
+                    string value = m.Value;
+                    if (value.Length == 2)
                     {
-                        case '\\': sb.Append(@"\"); break;
-                        case '"': sb.Append("\""); break;
-                        case 'b': sb.Append("\b"); break;
-                        case 'f': sb.Append("\f"); break;
-                        case 't': sb.Append("\t"); break;
-                        case 'n': sb.Append("\n"); break;
-                        case 'r': sb.Append("\r"); break;
-                        case 'u': goto case 'U';
-                        case 'U': hasUnicodeSequences = true; sb.Append(src[i]); sb.Append(src[i + 1]); break;
-                        default:
-                            throw Parser.Parser.CreateParseError(tkn, $"String '{src}' contains the invalid escape sequence '\\{src[i = 1]}'.");
+                        switch (value[1])
+                        {
+                            case '\\': return @"\";
+                            case '"': return "\"";
+                            case 'b': return "\b";
+                            case 'f': return "\f";
+                            case 't': return "\t";
+                            case 'n': return "\n";
+                            case 'r': return "\r";
+                            default:
+                                throw Parser.Parser.CreateParseError(tkn, $"String '{src}' contains the invalid escape sequence '\\{value[1]}'.");
+                        }
                     }
-
-                    i++;
-                }
-                else
-                {
-                    sb.Append(src[i]);
-                }
-            }
-
-            string result = sb.ToString();
-            if (hasUnicodeSequences)
-            {
-                result = RegexUtf8Long.Replace(result, (m) => char.ConvertFromUtf32(int.Parse(m.Value.Substring(RegexOffset), NumberStyles.HexNumber)));
-                result = RegexUtf8Short.Replace(result, (m) => ((char)int.Parse(m.Value.Substring(RegexOffset), NumberStyles.HexNumber)).ToString());
-            }
-
-            return result;
+                    else
+                    {
+                        return char.ConvertFromUtf32(int.Parse(value.Substring(2), NumberStyles.HexNumber));
+                    }
+                });
         }
     }
 }
