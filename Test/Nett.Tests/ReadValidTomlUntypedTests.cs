@@ -638,5 +638,13 @@ namespace Nett.Tests
             t.Get<string>("last").Should().Be("Preston-Werner");
             t.TableType.Should().Be(TomlTable.TableTypes.Inline);
         }
+
+        [Fact]
+        public void Read_StringWithEscapeSequences_UnescapesThemCorrectly()
+        {
+            var tml = Toml.ReadString(@"Test = ""\u0063 \\u0063""");
+
+            tml.Get<string>("Test").Should().Be(@"c \u0063");
+        }
     }
 }

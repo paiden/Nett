@@ -10,6 +10,7 @@ namespace Nett.Tests
         [InlineData(@"C:\\test.txt", @"C:\test.txt")]
         [InlineData(@"\u4000", "\u4000")]
         [InlineData(@"\U0010FFFF", "\U0010FFFF")]
+        [InlineData(@"\u0063 \\u0063", @"c \u0063")]
         public void Unescape(string src, string expected)
         {
             // Act
