@@ -321,11 +321,12 @@ trimmed in raw strings.
             Assert.Equal("c", a2.Get<string>(2));
         }
 
+        [Fact]
         public void Deserialize_Table_DeserializesCorrectly()
         {
             var parsed = Toml.ReadString(@"[table]");
 
-            Assert.Equal(1, parsed.Rows.Count());
+            Assert.Single(parsed.Rows);
             Assert.NotNull(parsed.Get<TomlTable>("table"));
         }
 
@@ -406,7 +407,7 @@ b = 1
 d = 2";
 
             var exc = Assert.Throws<Exception>(() => Toml.ReadString(toParse));
-            Assert.True(exc.Message.Contains("'a'"));
+            Assert.Contains("'a'", exc.Message);
         }
 
         [Fact]
@@ -434,7 +435,7 @@ color = ""gray""
             Assert.Equal("Hammer", t1.Get<string>("name"));
 
             var t2 = a[1];
-            Assert.Equal(0, t2.Rows.Count());
+            Assert.Empty(t2.Rows);
 
             var t3 = a[2];
             Assert.Equal("Nail", t3.Get<string>("name"));

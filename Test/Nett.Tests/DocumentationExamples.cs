@@ -112,7 +112,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             }
         }
 
-        //[Fact]
+        [Fact]
         public void ReadTomlFileTest()
         {
             string fn = this.NewFileName();
@@ -125,7 +125,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        //[Fact]
+        [Fact]
         public void ReadFileUntyped()
         {
             string fn = this.NewFileName();
@@ -139,7 +139,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        //[Fact]
+        [Fact]
         public void ReadNoDefaultConstructor_WhenNoActivatorRegistered_ThrowsInvalidOp()
         {
             string fn = this.NewFileName();
@@ -155,7 +155,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             a.ShouldThrow<InvalidOperationException>();
         }
 
-        //[Fact]
+        [Fact]
         public void ReadNoDefaultConstructor_WhenActivatorRegistered_ThrowsInvalidOp()
         {
             string fn = this.NewFileName();
@@ -175,7 +175,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        // [Fact]
+        [Fact]
         public void HandleComputedType()
         {
             var c = new Computed();
@@ -188,7 +188,7 @@ ServerAddress = ""http://127.0.0.1:8080""
 
         }
 
-        //[Fact]
+        [Fact]
         public void WriteGuidToml()
         {
             var obj = new TableContainingMoney()

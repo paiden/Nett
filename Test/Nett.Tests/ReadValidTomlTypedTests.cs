@@ -26,8 +26,8 @@ namespace Nett.Tests
             // Assert
             Assert.NotNull(read);
             Assert.NotNull(read.thevoid);
-            Assert.Equal(1, read.thevoid.Count);
-            Assert.Equal(0, read.thevoid[0].Count);
+            Assert.Single(read.thevoid);
+            Assert.Empty(read.thevoid[0]);
         }
 
         [Fact]

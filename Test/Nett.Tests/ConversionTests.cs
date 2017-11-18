@@ -313,7 +313,9 @@ Foo3 = [""A""]";
 
         [Theory(DisplayName = "Getting value when explicit .Net implicit conversions are activated only that conversions will work others will fail")]
         [MemberData(nameof(DotNetExplicitImplicitConversionsTestData))]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void ReadToml_ExplicitDotNetImplicit_AllowsConversionFromTomlIntToFloat(string id, string s, Func<TomlTable, object> read, bool shouldWork)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             // Arrange
             var tbl = SetupConversionSetTest(TomlSettings.ConversionSets.All, s);
@@ -457,9 +459,12 @@ Foo3 = [""A""]";
             r.Should().Be(100);
         }
 
+
         // This test doesn't test anything, it just checks that the conversion specialization extension methods
         // exist for all TOML primitives => compile error, something broke
+#pragma warning disable xUnit1013 // Public method should be marked as test
         public void AllTypeConversionSupportedByConverterApi()
+#pragma warning restore xUnit1013 // Public method should be marked as test
         {
             // Arrange
             var config = TomlSettings.Create(cfg => cfg

@@ -27,6 +27,7 @@ namespace Nett.Tests
             }
         }
 
+        [Fact]
         public void WriteFile_WithDefaultMergecommentsMode_CanWriteFileWhenTargetFileDoesntExistYet()
         {
             // Arrange

@@ -28,7 +28,7 @@ namespace Nett.Tests
 
             // Assert
             Assert.NotNull(read);
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(typeof(TomlArray), read["thevoid"].GetType());
             var rootArray = read["thevoid"].Get<TomlArray>();
             Assert.Equal(1, rootArray.Length);
@@ -207,7 +207,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(typeof(TomlTableArray), read["albums"].GetType());
             var arr = read.Get<TomlTableArray>("albums");
             Assert.Equal(2, arr.Count);
@@ -232,8 +232,8 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(true, read.Get<bool>("t"));
-            Assert.Equal(false, read.Get<bool>("f"));
+            Assert.True(read.Get<bool>("t"));
+            Assert.False(read.Get<bool>("f"));
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(0, read.Rows.Count());
+            Assert.Empty(read.Rows);
         }
 
         [Fact]
@@ -291,7 +291,7 @@ namespace Nett.Tests
             Assert.Equal(2, read.Rows.Count());
             Assert.Equal(DateTime.Parse("1987-07-05T17:45:00Z"), read.Get<DateTimeOffset>("best-day-ever"));
             var tt = (TomlTable)read["numtheory"];
-            Assert.Equal(false, tt.Get<bool>("boring"));
+            Assert.False(tt.Get<bool>("boring"));
             var ta = (TomlArray)tt["perfection"];
             Assert.Equal(3, ta.Length);
             Assert.Equal(6, ta.Get<int>(0));
@@ -351,7 +351,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<char>("answer"));
         }
 
@@ -380,7 +380,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(42, read.Get<int>("answer"));
         }
 
@@ -394,7 +394,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(42, read.Get<int>("a b"));
         }
 
@@ -408,7 +408,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(42, read.Get<int>("~!@$^&*()_+-`1234567890[]|/?><.,;:'"));
         }
 
@@ -521,7 +521,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal("", read.Get<string>("answer"));
         }
 
@@ -574,7 +574,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal("Glory Days", ((read.Get<TomlTable>("albums")).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
         }
 
@@ -603,7 +603,7 @@ namespace Nett.Tests
             var read = Toml.ReadString(toml);
 
             // Assert
-            Assert.Equal(1, read.Rows.Count());
+            Assert.Single(read.Rows);
             Assert.Equal(3, read.Get<TomlTableArray>("people").Count);
             var tt = read.Get<TomlTableArray>("people")[0];
             Assert.Equal("Bruce", tt.Get<string>("first_name"));

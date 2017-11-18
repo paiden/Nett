@@ -85,7 +85,9 @@ namespace Nett.Tests.Unit
 
         [Theory(DisplayName = "When table was frozen write operation throws InvalidOp")]
         [MemberData(nameof(OperationsThatFailWhenFrozen))]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void WriteOperation_WhenTableIsFrozen_Returns(string _, Action<TomlTable> action)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             using (var scenario = MultiLevelTableScenario.SetupFrozen())
             {

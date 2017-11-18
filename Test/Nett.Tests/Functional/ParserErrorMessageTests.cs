@@ -54,7 +54,9 @@ namespace Nett.Tests.Functional
 
         [Theory(DisplayName = "ErrMsg has correct pos")]
         [MemberData(nameof(InputData))]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public static void Parser_WhenInputIsInvalid_GeneratesErrorMessageWithLineAndColumn(string toml, string _, int line, int column)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             // Act
             Action a = () => Toml.ReadString(toml);
@@ -65,7 +67,9 @@ namespace Nett.Tests.Functional
 
         [Theory(DisplayName = "Useful ErrMsg")]
         [MemberData(nameof(InputData))]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public static void Parser_WhenInputIsInvalid_GeneratesSomewhatUsefulErrorMessage(string toml, string error, int _, int __)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             // Act
             Action a = () => Toml.ReadString(toml);

@@ -60,7 +60,7 @@ X = 0
             Assert.NotNull(read);
             Assert.NotNull(read.Tbl);
             Assert.NotNull(read.Tbl.Array);
-            Assert.Equal(1, read.Tbl.Array.Count);
+            Assert.Single(read.Tbl.Array);
             var r = read.Tbl.Array[0];
             Assert.Equal("test", r.A);
             Assert.NotNull(r.B);

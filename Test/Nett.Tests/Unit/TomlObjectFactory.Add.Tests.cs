@@ -11,7 +11,7 @@ namespace Nett.Tests.Unit
         private static readonly TimeSpan Ts = TimeSpan.FromSeconds(1.0);
         private static readonly DateTimeOffset Dto = DateTimeOffset.UtcNow;
 
-        public static IEnumerable<object> AddArrayTestData
+        public static IEnumerable<object[]> AddArrayTestData
         {
             get
             {
@@ -39,7 +39,7 @@ namespace Nett.Tests.Unit
             ((IEnumerable)x).Should().Equal((IEnumerable)expected);
         }
 
-        public static IEnumerable<object> AddValueTestData
+        public static IEnumerable<object[]> AddValueTestData
         {
             get
             {
