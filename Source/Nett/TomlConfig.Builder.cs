@@ -35,6 +35,8 @@
             ITomlSettingsBuilder ConfigureType<T>(Action<ITypeSettingsBuilder<T>> ct);
 
             ITableKeyMappingBuilder MapTableKey(string key);
+
+            ITomlSettingsBuilder UseDefaultStringType(TomlString.TypeOfString stringType);
         }
 
         internal sealed class ConversionSettingsBuilder<TCustom, TToml> : IConversionSettingsBuilder<TCustom, TToml>
@@ -119,6 +121,12 @@
             public ITomlSettingsBuilder Apply(Action<ITomlSettingsBuilder> batch)
             {
                 batch(this);
+                return this;
+            }
+
+            public ITomlSettingsBuilder UseDefaultStringType(TomlString.TypeOfString stringType)
+            {
+                this.settings.DefaultStringType = stringType;
                 return this;
             }
 

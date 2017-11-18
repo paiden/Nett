@@ -26,7 +26,7 @@ namespace Nett.Tests
         public void Escape(string src, string expected)
         {
             // Act
-            var escaped = src.Escape();
+            var escaped = src.Escape(TomlString.TypeOfString.Normal);
 
             // Assert
             Assert.Equal(expected, escaped);

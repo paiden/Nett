@@ -97,14 +97,7 @@
                 case TomlObjectType.Int: this.writer.Write(((TomlInt)obj).Value); break;
                 case TomlObjectType.DateTime: this.writer.Write(((TomlDateTime)obj).ToString()); break;
                 case TomlObjectType.TimeSpan: this.writer.Write(((TomlTimeSpan)obj).Value); break;
-                case TomlObjectType.String:
-                    {
-                        this.writer.Write('\"');
-                        this.writer.Write(((TomlString)obj).Value.Escape() ?? string.Empty);
-                        this.writer.Write('\"');
-                        break;
-                    }
-
+                case TomlObjectType.String: this.writer.Write(((TomlString)obj).QuotedAndEscapedValue()); break;
                 default:
                     Assert(false, "This method should only get called for simple TOML Types. Check invocation code.");
                     break;

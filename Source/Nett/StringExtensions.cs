@@ -1,6 +1,5 @@
 ﻿namespace Nett
 {
-    using System;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -29,22 +28,25 @@
             return true;
         }
 
-        public static string Escape(this string s)
+        public static string Escape(this string s, TomlString.TypeOfString type)
         {
-            if (string.IsNullOrEmpty(s)) { return s; }
+            if (string.IsNullOrEmpty(s) || type == TomlString.TypeOfString.Literal) { return s; }
+
+            bool isLiteral = (type & TomlString.TypeOfString.Literal) == TomlString.TypeOfString.Literal;
+            bool isMultiline = (type & TomlString.TypeOfString.Multiline) == TomlString.TypeOfString.Multiline;
 
             StringBuilder sb = new StringBuilder(s.Length * 2);
             for (int i = 0; i < s.Length; i++)
             {
                 switch (s[i])
                 {
-                    case '\\': sb.Append(@"\\"); break;
-                    case '"': sb.Append(@"\"""); break;
-                    case '\b': sb.Append(@"\b"); break;
-                    case '\f': sb.Append(@"\f"); break;
-                    case '\t': sb.Append(@"\t"); break;
-                    case '\n': sb.Append(@"\n"); break;
-                    case '\r': sb.Append(@"\r"); break;
+                    case '\\': sb.Append(isLiteral ? "\\" : @"\\"); break;
+                    case '"': sb.Append(isLiteral ? "\"" : @"\"""); break;
+                    case '\b': sb.Append(isLiteral ? "\b" : @"\b"); break;
+                    case '\f': sb.Append(isLiteral ? "\f" : @"\f"); break;
+                    case '\t': sb.Append(isLiteral ? "\t" : @"\t"); break;
+                    case '\n': sb.Append(isMultiline ? "\n" : @"\n"); break;
+                    case '\r': sb.Append(isMultiline ? "\r" : @"\r"); break;
                     default: sb.Append(s[i]); break;
                 }
             }

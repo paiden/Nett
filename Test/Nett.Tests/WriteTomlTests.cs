@@ -9,6 +9,32 @@ namespace Nett.Tests
     [ExcludeFromCodeCoverage]
     public class WriteTomlTests
     {
+        public static IEnumerable<object[]> WriteStringData
+        {
+            get
+            {
+                yield return new object[] { "X", "\"X\"" }; // Standard string
+                yield return new object[] { @"C:\path", @"'C:\path'" };  // Path should be literal
+                yield return new object[] { "X\r\nY", "\"\"\"X\r\nY\"\"\"" }; // Multiline
+                yield return new object[] { "C:\\\r\nD:\\", "'''C:\\\r\nD:\\'''" }; // Literal multiline
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(WriteStringData))]
+        public void Write_WithString_WritesWithOptimalTomlStringType(string input, string expected)
+        {
+            // Arrange
+            var t = Toml.Create();
+
+            // Act
+            t.Add("X", input);
+
+            // Assert
+            string s = Toml.WriteString(t);
+            s.Trim().Should().Be($"X = {expected}");
+        }
+
         [Fact(DisplayName = "Ensure writing floats works culture invariant")]
         public void Write_WithFloat_WritesCultureInvariant()
         {

@@ -30,7 +30,7 @@ namespace Nett.Tests.Functional
             var tml = Toml.WriteString(tbl);
 
             // Assert
-            tml.TrimEnd().Should().Be("[s]\r\nx = 2");
+            tml.TrimEnd().Should().Be("\r\n[s]\r\nX = 2");
         }
 
         [Fact]

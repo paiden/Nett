@@ -27,6 +27,8 @@
 
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
+        internal TomlString.TypeOfString DefaultStringType { get; private set; } = TomlString.TypeOfString.Auto;
+
         private TomlSettings()
         {
         }
