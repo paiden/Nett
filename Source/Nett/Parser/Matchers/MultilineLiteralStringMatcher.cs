@@ -1,7 +1,8 @@
-﻿namespace Nett.Parser.Matchers
-{
-    using System.Text;
+﻿using System.Text;
+using static System.Diagnostics.Debug;
 
+namespace Nett.Parser.Matchers
+{
     internal static class MultilineLiteralStringMatcher
     {
         private const string StringTag = "'''";
@@ -30,7 +31,18 @@
             }
             else
             {
-                cs.Consume(StringTag.Length);
+                StringBuilder closeSb = new StringBuilder(8);
+                while (cs.TryExpect("'"))
+                {
+                    closeSb.Append(cs.Consume());
+                }
+
+                Assert(
+                    closeSb.Length >= StringTag.Length,
+                    "Should be ensured by the while clause above, check the implementation.");
+
+                sb.Append(new string('\'', closeSb.Length - StringTag.Length));
+
                 return new Token(TokenType.MultilineLiteralString, sb.ToString());
             }
         }

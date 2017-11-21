@@ -107,6 +107,9 @@ namespace Nett.Tests
         [InlineData("str = \"\"\" \"\"\"", " ")]
         [InlineData("str = \"\"\"\r\n\"\"\"", "")]
         [InlineData("str = \"\"\"\r\nHello\r\nYou  \"\"\"", "Hello\r\nYou  ")]
+        [InlineData("str = ''''''", "")]
+        [InlineData("str = '''''''", "'")]
+        [InlineData("str = ''''''''", "''")]
         public void Deserialize_MString_ProducesCorrectresult(string src, string expected)
         {
             var parsed = Toml.ReadString(src);
