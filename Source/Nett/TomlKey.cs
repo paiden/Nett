@@ -46,7 +46,7 @@ namespace Nett
             switch (type)
             {
                 case KeyType.Bare: return this.Value;
-                case KeyType.Basic: return "\"" + this.Value.Escape(TomlString.TypeOfString.Normal) + "\"";
+                case KeyType.Basic: return "\"" + this.Value.Escape(TomlStringType.Basic) + "\"";
                 case KeyType.Literal: return "'" + this.Value + "'";
                 default: return this.Value;
             }

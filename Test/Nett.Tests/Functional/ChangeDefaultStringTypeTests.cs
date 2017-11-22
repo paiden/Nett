@@ -12,21 +12,21 @@ namespace Nett.Tests.Functional
             {
                 const string StdCase = "C:\\\r\n'";
 
-                yield return new object[] { TomlString.TypeOfString.Auto, StdCase, "'''C:\\\r\n''''" };
+                yield return new object[] { TomlStringType.Auto, StdCase, "'''C:\\\r\n''''" };
 
                 // The ' disallows literal no matter if the user sets it as the default string type, so fallback to
                 // 'closest' string type multiline literal string
-                yield return new object[] { TomlString.TypeOfString.Literal, StdCase, "'''C:\\\r\n''''" };
-                yield return new object[] { TomlString.TypeOfString.Literal, @"C:\'", @"'''C:\''''" };
-                yield return new object[] { TomlString.TypeOfString.Multiline, StdCase, "\"\"\"C:\\\\\r\n'\"\"\"" };
-                yield return new object[] { TomlString.TypeOfString.MultilineLiteral, StdCase, "'''C:\\\r\n''''" };
-                yield return new object[] { TomlString.TypeOfString.Normal, StdCase, "\"C:\\\\\\r\\n'\"" };
+                yield return new object[] { TomlStringType.Literal, StdCase, "'''C:\\\r\n''''" };
+                yield return new object[] { TomlStringType.Literal, @"C:\'", @"'''C:\''''" };
+                yield return new object[] { TomlStringType.Multiline, StdCase, "\"\"\"C:\\\\\r\n'\"\"\"" };
+                yield return new object[] { TomlStringType.MultilineLiteral, StdCase, "'''C:\\\r\n''''" };
+                yield return new object[] { TomlStringType.Basic, StdCase, "\"C:\\\\\\r\\n'\"" };
             }
         }
 
         [Theory]
         [MemberData(nameof(ChangeStringTypeData))]
-        public void ToToml_UsesDefaultStringTypeFromConfig(TomlString.TypeOfString t, string input, string expected)
+        public void ToToml_UsesDefaultStringTypeFromConfig(TomlStringType t, string input, string expected)
         {
             // Act
             var settings = TomlSettings.Create(sb => sb.UseDefaultStringType(t));

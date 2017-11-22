@@ -31,7 +31,7 @@
         {
         }
 
-        internal TomlString.TypeOfString DefaultStringType { get; private set; } = TomlString.TypeOfString.Auto;
+        internal TomlStringType DefaultStringType { get; private set; } = TomlStringType.Auto;
 
         public static TomlSettings Create() => Create(_ => { });
 

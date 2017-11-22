@@ -28,12 +28,12 @@
             return true;
         }
 
-        public static string Escape(this string s, TomlString.TypeOfString type)
+        public static string Escape(this string s, TomlStringType type)
         {
-            if (string.IsNullOrEmpty(s) || type == TomlString.TypeOfString.Literal) { return s; }
+            if (string.IsNullOrEmpty(s) || type == TomlStringType.Literal) { return s; }
 
-            bool isLiteral = (type & TomlString.TypeOfString.Literal) == TomlString.TypeOfString.Literal;
-            bool isMultiline = (type & TomlString.TypeOfString.Multiline) == TomlString.TypeOfString.Multiline;
+            bool isLiteral = (type & TomlStringType.Literal) == TomlStringType.Literal;
+            bool isMultiline = (type & TomlStringType.Multiline) == TomlStringType.Multiline;
 
             StringBuilder sb = new StringBuilder(s.Length * 2);
             for (int i = 0; i < s.Length; i++)

@@ -81,7 +81,7 @@
 
             Debug.Assert(t.type == TokenType.LiteralString);
 
-            return new TomlString(root, t.value, TomlString.TypeOfString.Literal);
+            return new TomlString(root, t.value, TomlStringType.Literal);
         }
 
         private static TomlString ParseMultilineLiteralString(ITomlRoot root, LookaheadBuffer<Token> tokens)
@@ -95,7 +95,7 @@
             if (s.Length > 0 && s[0] == '\r') { s = s.Substring(1); }
             if (s.Length > 0 && s[0] == '\n') { s = s.Substring(1); }
 
-            return new TomlString(root, t.value, TomlString.TypeOfString.MultilineLiteral);
+            return new TomlString(root, t.value, TomlStringType.MultilineLiteral);
         }
 
         private static TomlString ParseMultilineString(ITomlRoot root, LookaheadBuffer<Token> tokens)
@@ -111,7 +111,7 @@
 
             s = ReplaceDelimeterBackslash(s);
 
-            return new TomlString(root, s, TomlString.TypeOfString.Multiline);
+            return new TomlString(root, s, TomlStringType.Multiline);
         }
 
         private static TomlString ParseStringValue(ITomlRoot root, LookaheadBuffer<Token> tokens)
@@ -127,7 +127,7 @@
 
             var s = t.value.Unescape(t);
 
-            return new TomlString(root, s, TomlString.TypeOfString.Normal);
+            return new TomlString(root, s, TomlStringType.Basic);
         }
 
         private static TomlArray ParseTomlArray(ITomlRoot root, TokenBuffer tokens)

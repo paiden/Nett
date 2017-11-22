@@ -1,38 +1,38 @@
-﻿namespace Nett
+﻿using System;
+using System.Diagnostics;
+using Nett.Extensions;
+
+namespace Nett
 {
-    using System;
-    using System.Diagnostics;
-    using Extensions;
+    [Flags]
+    public enum TomlStringType
+    {
+        Auto = 0x0,
+        Basic = 0x01 << 0,
+        Literal = 0x01 << 1,
+        Multiline = 0x01 << 2,
+        MultilineLiteral = Literal | Multiline,
+    }
 
     [DebuggerDisplay("{Value}")]
     public sealed class TomlString : TomlValue<string>
     {
-        private readonly TypeOfString type = TypeOfString.Auto;
+        private readonly TomlStringType type = Nett.TomlStringType.Auto;
 
         internal TomlString(ITomlRoot root, string value)
             : this(root, value, root.Settings.DefaultStringType)
         {
         }
 
-        internal TomlString(ITomlRoot root, string value, TypeOfString type)
+        internal TomlString(ITomlRoot root, string value, TomlStringType type)
             : base(root, value)
         {
-            this.type = type == TypeOfString.Auto ? ChooseBestStringType(value) : type;
+            this.type = type == Nett.TomlStringType.Auto ? ChooseBestStringType(value) : type;
 
-            if (type == TypeOfString.Literal && !IsLiteralStringTypeValid(value))
+            if (type == Nett.TomlStringType.Literal && !IsLiteralStringTypeValid(value))
             {
-                this.type = TypeOfString.MultilineLiteral;
+                this.type = Nett.TomlStringType.MultilineLiteral;
             }
-        }
-
-        [Flags]
-        public enum TypeOfString
-        {
-            Auto = 0x0,
-            Normal = 0x01 << 0,
-            Literal = 0x01 << 1,
-            Multiline = 0x01 << 2,
-            MultilineLiteral = Literal | Multiline,
         }
 
         public override string ReadableTypeName => "string";
@@ -50,10 +50,10 @@
 
             switch (this.type)
             {
-                case TypeOfString.Normal: return $"\"{val}\"";
-                case TypeOfString.Multiline: return $"\"\"\"{val}\"\"\"";
-                case TypeOfString.Literal: return $"'{val}'";
-                case TypeOfString.MultilineLiteral: return $"'''{val}'''";
+                case Nett.TomlStringType.Basic: return $"\"{val}\"";
+                case Nett.TomlStringType.Multiline: return $"\"\"\"{val}\"\"\"";
+                case Nett.TomlStringType.Literal: return $"'{val}'";
+                case Nett.TomlStringType.MultilineLiteral: return $"'''{val}'''";
             }
 
             return $"\"{val}\"";
@@ -78,7 +78,7 @@
 
         private static bool IsMultilineLiteralStringTypeValid(string s) => s.Length <= 0 || s[s.Length - 1] != '\'';
 
-        private static TypeOfString ChooseBestStringType(string s)
+        private static TomlStringType ChooseBestStringType(string s)
         {
             bool foundBackslash = false;
             bool foundNewline = false;
@@ -89,10 +89,10 @@
                 foundNewline |= s[i] == '\n';
             }
 
-            if (foundBackslash && foundNewline) { return TypeOfString.MultilineLiteral; }
-            else if (foundBackslash) { return TypeOfString.Literal; }
-            else if (foundNewline) { return TypeOfString.Multiline; }
-            else { return TypeOfString.Normal; }
+            if (foundBackslash && foundNewline) { return Nett.TomlStringType.MultilineLiteral; }
+            else if (foundBackslash) { return Nett.TomlStringType.Literal; }
+            else if (foundNewline) { return Nett.TomlStringType.Multiline; }
+            else { return Nett.TomlStringType.Basic; }
         }
     }
 }
