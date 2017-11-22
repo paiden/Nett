@@ -27,11 +27,11 @@
 
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
-        internal TomlString.TypeOfString DefaultStringType { get; private set; } = TomlString.TypeOfString.Auto;
-
         private TomlSettings()
         {
         }
+
+        internal TomlString.TypeOfString DefaultStringType { get; private set; } = TomlString.TypeOfString.Auto;
 
         public static TomlSettings Create() => Create(_ => { });
 
