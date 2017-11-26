@@ -37,6 +37,13 @@
             ITableKeyMappingBuilder MapTableKey(string key);
 
             ITomlSettingsBuilder UseDefaultStringType(TomlStringType stringType);
+
+            ITomlSettingsBuilder ConfigureFormatting(Action<IFormattingSettingsBuilder> formatSettingsBuilder);
+        }
+
+        public interface IFormattingSettingsBuilder
+        {
+            IFormattingSettingsBuilder UseKeyValueAlignment(AlignmentMode alignmentMode);
         }
 
         internal sealed class ConversionSettingsBuilder<TCustom, TToml> : IConversionSettingsBuilder<TCustom, TToml>
@@ -136,6 +143,12 @@
                 return this;
             }
 
+            public ITomlSettingsBuilder ConfigureFormatting(Action<IFormattingSettingsBuilder> configureFormatting)
+            {
+                configureFormatting(new FormattingSettingsBuilder(this.settings.formattingSettings));
+                return this;
+            }
+
             public ITableKeyMappingBuilder MapTableKey(string key) =>
                 new TableKeyMappingBuilder(this.settings, this, key);
 
@@ -209,6 +222,22 @@
                 where TToml : TomlObject
             {
                 conv(new ConversionSettingsBuilder<TCustom, TToml>(this.converters));
+                return this;
+            }
+        }
+
+        internal sealed class FormattingSettingsBuilder : IFormattingSettingsBuilder
+        {
+            private readonly FormattingSettings formattingSettings;
+
+            public FormattingSettingsBuilder(FormattingSettings formattingSettings)
+            {
+                this.formattingSettings = formattingSettings.CheckNotNull(nameof(formattingSettings));
+            }
+
+            public IFormattingSettingsBuilder UseKeyValueAlignment(AlignmentMode alignmentMode)
+            {
+                this.formattingSettings.AlignmentMode = alignmentMode;
                 return this;
             }
         }

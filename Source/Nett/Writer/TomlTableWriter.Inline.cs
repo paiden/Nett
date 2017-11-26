@@ -85,7 +85,7 @@
                 }
                 else
                 {
-                    this.WriteKeyedValue(r);
+                    this.WriteKeyedValue(r, alignColumn: 0);
                 }
             }
         }

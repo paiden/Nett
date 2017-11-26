@@ -1,10 +1,10 @@
-﻿namespace Nett.Writer
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using Nett.Util;
-    using static System.Diagnostics.Debug;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Nett.Util;
+using static System.Diagnostics.Debug;
 
+namespace Nett.Writer
+{
     internal sealed partial class TomlTableWriter : TomlWriter
     {
         public TomlTableWriter(FormattingStreamWriter writer, TomlSettings settings)
@@ -26,10 +26,10 @@
         private static bool IsInlineTomlTableArray(TomlTableArray a)
             => a.Items.Any(t => t.TableType == TomlTable.TableTypes.Inline);
 
-        private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row)
+        private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row, int alignColumn)
         {
             this.WritePrependComments(row.Value);
-            this.WriteKeyedValue(row);
+            this.WriteKeyedValue(row, alignColumn);
             this.WriteAppendComments(row.Value);
         }
 
@@ -42,9 +42,10 @@
             this.writer.WriteLine();
             this.WriteAppendComments(table);
 
+            int alignColumn = this.settings.GetKeyValueAlignColumn(table);
             foreach (var r in table.InternalRows)
             {
-                this.WriteTableRow(CombineKey(parentKey, key), r);
+                this.WriteTableRow(CombineKey(parentKey, key), r, alignColumn);
             }
         }
 
@@ -55,7 +56,7 @@
             this.WriteAppendComments(array);
         }
 
-        private void WriteTableRow(string parentKey, KeyValuePair<TomlKey, TomlObject> r)
+        private void WriteTableRow(string parentKey, KeyValuePair<TomlKey, TomlObject> r, int alignColumn)
         {
             this.WritePrependNewlines(r.Value);
 
@@ -65,7 +66,7 @@
             {
                 this.WriteTomlTableArray(parentKey, r.Key, (TomlTableArray)r.Value);
             }
-            else { this.WriteKeyedValueWithComments(r); }
+            else { this.WriteKeyedValueWithComments(r, alignColumn); }
 
             this.WriteAppendNewlines(r.Value);
         }
@@ -73,10 +74,11 @@
         private void WriteTableRows(string parentKey, TomlTable table)
         {
             Assert(table != null);
+            int alignColumn = this.settings.GetKeyValueAlignColumn(table);
 
             foreach (var r in table.InternalRows)
             {
-                this.WriteTableRow(parentKey, r);
+                this.WriteTableRow(parentKey, r, alignColumn);
             }
         }
 

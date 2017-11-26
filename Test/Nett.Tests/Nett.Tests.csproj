@@ -73,6 +73,7 @@
     <Compile Include="EnumConversionTests.cs" />
     <Compile Include="Functional\ChangeDefaultStringTypeTests.cs" />
     <Compile Include="Functional\CombineTablesTests.cs" />
+    <Compile Include="Functional\FormattingSettingsTests.cs" />
     <Compile Include="Functional\IgnorePropertyTests.cs" />
     <Compile Include="Functional\InlineTableTests.cs" />
     <Compile Include="Functional\InlineTableTests.Read.cs" />

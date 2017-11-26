@@ -25,6 +25,8 @@
         private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
         private readonly Dictionary<Type, HashSet<string>> ignoredProperties = new Dictionary<Type, HashSet<string>>();
 
+        private readonly FormattingSettings formattingSettings = new FormattingSettings();
+
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
         private TomlSettings()
@@ -78,6 +80,9 @@
                 default: return this.defaultCommentLocation;
             }
         }
+
+        internal int GetKeyValueAlignColumn(TomlTable table)
+            => this.formattingSettings.GetKeyValueAlignColumn(table);
 
         internal TomlTable.TableTypes GetTableType(Type valType)
         {

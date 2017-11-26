@@ -54,9 +54,14 @@
             this.writer.Write(']');
         }
 
-        protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp)
+        protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp, int alignColumn)
         {
             this.writer.Write(kvp.Key.ToString());
+
+            int spacesToInsert = alignColumn - kvp.Key.Value.Length;
+
+            for (int i = 0; i < spacesToInsert; i++) { this.writer.Write(" "); }
+
             this.writer.Write(" = ");
             this.WriteValue(kvp.Value);
         }
