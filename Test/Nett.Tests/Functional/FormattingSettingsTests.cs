@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 using static Nett.TomlSettings;
@@ -20,6 +21,12 @@ namespace Nett.Tests.Functional
 
                 public Connection Primary { get; set; } = new Connection();
                 public Connection Fallback { get; set; } = new Connection();
+
+                public List<Connection> MostRecent { get; set; } = new List<Connection>()
+                {
+                    new Connection() { Port = 4 },
+                    new Connection() { Port = 5 },
+                };
 
                 public class Connection
                 {
@@ -70,6 +77,13 @@ Port    = 1234
 Timeout = 00:01:00 #This is an appended comment.
 Port    = 1234
 
+[[MA.MostRecent]]
+Timeout = 00:01:00 #This is an appended comment.
+Port    = 4
+[[MA.MostRecent]]
+Timeout = 00:01:00 #This is an appended comment.
+Port    = 5
+
 [MB]
 IP = '127.0.0.1'
 
@@ -80,6 +94,13 @@ Port    = 1234
 [MB.Fallback]
 Timeout = 00:01:00 #This is an appended comment.
 Port    = 1234
+
+[[MB.MostRecent]]
+Timeout = 00:01:00 #This is an appended comment.
+Port    = 4
+[[MB.MostRecent]]
+Timeout = 00:01:00 #This is an appended comment.
+Port    = 5
 
 [CA]
 Name     = 'ClientX'
@@ -121,6 +142,13 @@ Port     = 1234
 Timeout  = 00:01:00 #This is an appended comment.
 Port     = 1234
 
+[[MA.MostRecent]]
+Timeout  = 00:01:00 #This is an appended comment.
+Port     = 4
+[[MA.MostRecent]]
+Timeout  = 00:01:00 #This is an appended comment.
+Port     = 5
+
 [MB]
 IP       = '127.0.0.1'
 
@@ -131,6 +159,13 @@ Port     = 1234
 [MB.Fallback]
 Timeout  = 00:01:00 #This is an appended comment.
 Port     = 1234
+
+[[MB.MostRecent]]
+Timeout  = 00:01:00 #This is an appended comment.
+Port     = 4
+[[MB.MostRecent]]
+Timeout  = 00:01:00 #This is an appended comment.
+Port     = 5
 
 [CA]
 Name     = 'ClientX'
