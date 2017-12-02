@@ -17,7 +17,7 @@ namespace Nett.Writer
         internal void WriteToml(TomlTable table)
         {
             const string rootParentKey = "";
-            this.WriteTableRows(rootParentKey, table);
+            this.WriteTableRows(rootParentKey, table, level: -1);
             this.writer.Flush();
         }
 
@@ -26,16 +26,17 @@ namespace Nett.Writer
         private static bool IsInlineTomlTableArray(TomlTableArray a)
             => a.Items.Any(t => t.TableType == TomlTable.TableTypes.Inline);
 
-        private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row, int alignColumn)
+        private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row, int alignColumn, int level)
         {
             this.WritePrependComments(row.Value);
-            this.WriteKeyedValue(row, alignColumn);
+            this.WriteKeyedValue(row, alignColumn, level);
             this.WriteAppendComments(row.Value);
         }
 
-        private void WriteNormalTomlTable(string parentKey, TomlKey key, TomlTable table)
+        private void WriteNormalTomlTable(string parentKey, TomlKey key, TomlTable table, int level)
         {
             this.WritePrependComments(table);
+            this.writer.Write(this.settings.GetIndentString(level));
             this.writer.Write('[');
             this.writer.Write(parentKey + key);
             this.writer.Write(']');
@@ -45,7 +46,7 @@ namespace Nett.Writer
             int alignColumn = this.settings.GetKeyValueAlignColumn(table);
             foreach (var r in table.InternalRows)
             {
-                this.WriteTableRow(CombineKey(parentKey, key), r, alignColumn);
+                this.WriteTableRow(CombineKey(parentKey, key), r, alignColumn, level);
             }
         }
 
@@ -56,29 +57,35 @@ namespace Nett.Writer
             this.WriteAppendComments(array);
         }
 
-        private void WriteTableRow(string parentKey, KeyValuePair<TomlKey, TomlObject> r, int alignColumn)
+        private void WriteTableRow(string parentKey, KeyValuePair<TomlKey, TomlObject> r, int alignColumn, int level)
         {
             this.WritePrependNewlines(r.Value);
 
-            if (r.Value.TomlType == TomlObjectType.Array) { this.WriteTomlArrayWithComments(r.Key, (TomlArray)r.Value); }
-            else if (r.Value.TomlType == TomlObjectType.Table) { this.WriteTomlTable(parentKey, r.Key, (TomlTable)r.Value); }
+            if (r.Value.TomlType == TomlObjectType.Array)
+            {
+                this.WriteTomlArrayWithComments(r.Key, (TomlArray)r.Value);
+            }
+            else if (r.Value.TomlType == TomlObjectType.Table)
+            {
+                this.WriteTomlTable(parentKey, r.Key, (TomlTable)r.Value, level + 1);
+            }
             else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
             {
-                this.WriteTomlTableArray(parentKey, r.Key, (TomlTableArray)r.Value);
+                this.WriteTomlTableArray(parentKey, r.Key, (TomlTableArray)r.Value, level + 1);
             }
-            else { this.WriteKeyedValueWithComments(r, alignColumn); }
+            else { this.WriteKeyedValueWithComments(r, alignColumn, level); }
 
             this.WriteAppendNewlines(r.Value);
         }
 
-        private void WriteTableRows(string parentKey, TomlTable table)
+        private void WriteTableRows(string parentKey, TomlTable table, int level)
         {
             Assert(table != null);
             int alignColumn = this.settings.GetKeyValueAlignColumn(table);
 
             foreach (var r in table.InternalRows)
             {
-                this.WriteTableRow(parentKey, r, alignColumn);
+                this.WriteTableRow(parentKey, r, alignColumn, level);
             }
         }
 
@@ -88,16 +95,16 @@ namespace Nett.Writer
             inlineWriter.WriteInlineTable(key, table);
         }
 
-        private void WriteTomlTable(string parentKey, TomlKey key, TomlTable table)
+        private void WriteTomlTable(string parentKey, TomlKey key, TomlTable table, int level)
         {
             switch (table.TableType)
             {
-                case TomlTable.TableTypes.Default: this.WriteNormalTomlTable(parentKey, key, table); break;
+                case TomlTable.TableTypes.Default: this.WriteNormalTomlTable(parentKey, key, table, level); break;
                 case TomlTable.TableTypes.Inline: this.WriteTomlInlineTable(parentKey, key, table); break;
             }
         }
 
-        private void WriteTomlTableArray(string parentKey, TomlKey key, TomlTableArray tableArray)
+        private void WriteTomlTableArray(string parentKey, TomlKey key, TomlTableArray tableArray, int level)
         {
             if (IsInlineTomlTableArray(tableArray))
             {
@@ -110,12 +117,13 @@ namespace Nett.Writer
 
                 foreach (var t in tableArray.Items)
                 {
+                    this.writer.Write(this.settings.GetIndentString(level));
                     this.writer.Write("[[");
                     this.writer.Write(parentKey + key.ToString());
                     this.writer.Write("]]");
                     this.writer.WriteLine();
                     this.WriteAppendComments(tableArray);
-                    this.WriteTableRows(CombineKey(parentKey, key), t);
+                    this.WriteTableRows(CombineKey(parentKey, key), t, level);
                 }
             }
         }

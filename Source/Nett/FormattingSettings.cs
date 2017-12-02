@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using static System.Math;
+
 namespace Nett
 {
     public enum AlignmentMode
@@ -13,6 +15,10 @@ namespace Nett
     internal sealed class FormattingSettings
     {
         public AlignmentMode AlignmentMode { private get; set; }
+
+        public int TableIndent { private get; set; }
+
+        public string GetIndentString(int level) => new string(' ', this.TableIndent * Max(0, level));
 
         internal int GetKeyValueAlignColumn(TomlTable table)
         {

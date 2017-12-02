@@ -84,6 +84,8 @@
         internal int GetKeyValueAlignColumn(TomlTable table)
             => this.formattingSettings.GetKeyValueAlignColumn(table);
 
+        internal string GetIndentString(int level) => this.formattingSettings.GetIndentString(level);
+
         internal TomlTable.TableTypes GetTableType(Type valType)
         {
             if (this.inlineTableTypes.Contains(valType)

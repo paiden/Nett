@@ -44,6 +44,8 @@
         public interface IFormattingSettingsBuilder
         {
             IFormattingSettingsBuilder UseKeyValueAlignment(AlignmentMode alignmentMode);
+
+            IFormattingSettingsBuilder IndentTablesBy(int indent);
         }
 
         internal sealed class ConversionSettingsBuilder<TCustom, TToml> : IConversionSettingsBuilder<TCustom, TToml>
@@ -238,6 +240,12 @@
             public IFormattingSettingsBuilder UseKeyValueAlignment(AlignmentMode alignmentMode)
             {
                 this.formattingSettings.AlignmentMode = alignmentMode;
+                return this;
+            }
+
+            public IFormattingSettingsBuilder IndentTablesBy(int indent)
+            {
+                this.formattingSettings.TableIndent = indent;
                 return this;
             }
         }

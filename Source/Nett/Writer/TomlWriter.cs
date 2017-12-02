@@ -54,8 +54,9 @@
             this.writer.Write(']');
         }
 
-        protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp, int alignColumn)
+        protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp, int alignColumn, int level)
         {
+            this.writer.Write(this.settings.GetIndentString(level));
             this.writer.Write(kvp.Key.ToString());
 
             int spacesToInsert = alignColumn - kvp.Key.Value.Length;

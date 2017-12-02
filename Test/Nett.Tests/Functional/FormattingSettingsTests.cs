@@ -182,6 +182,136 @@ Priority = 100
             s.Should().Be(expected);
         }
 
+        [Fact]
+        public void WriteToml_UsingTableIndentationOf4_SubTalesGetIndentedCorrectly()
+        {
+            // Arrange
+            var settings = TomlSettings.Create(cfg => cfg
+                .Apply(CommonConfig)
+                .ConfigureFormatting(fmt => fmt
+                    .IndentTablesBy(4)));
+
+            // Act
+            var s = Toml.WriteString(new Settings(), settings);
+
+            // Assert
+            const string expected = @"
+[MA]
+IP = '127.0.0.1'
+
+    [MA.Primary]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 1234
+
+    [MA.Fallback]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 1234
+
+    [[MA.MostRecent]]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 4
+    [[MA.MostRecent]]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 5
+
+[MB]
+IP = '127.0.0.1'
+
+    [MB.Primary]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 1234
+
+    [MB.Fallback]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 1234
+
+    [[MB.MostRecent]]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 4
+    [[MB.MostRecent]]
+    Timeout = 00:01:00 #This is an appended comment.
+    Port = 5
+
+[CA]
+Name = 'ClientX'
+#This is a prepended comment.
+#What does a second comment do?
+Priority = 100
+
+[CB]
+Name = 'ClientX'
+#This is a prepended comment.
+#What does a second comment do?
+Priority = 100
+";
+            s.Should().Be(expected);
+        }
+
+        [Fact]
+        public void WriteToml_UsingTableIndentationOf2_SubTalesGetIndentedCorrectly()
+        {
+            // Arrange
+            var settings = TomlSettings.Create(cfg => cfg
+                .Apply(CommonConfig)
+                .ConfigureFormatting(fmt => fmt
+                    .IndentTablesBy(2)));
+
+            // Act
+            var s = Toml.WriteString(new Settings(), settings);
+
+            // Assert
+            const string expected = @"
+[MA]
+IP = '127.0.0.1'
+
+  [MA.Primary]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 1234
+
+  [MA.Fallback]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 1234
+
+  [[MA.MostRecent]]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 4
+  [[MA.MostRecent]]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 5
+
+[MB]
+IP = '127.0.0.1'
+
+  [MB.Primary]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 1234
+
+  [MB.Fallback]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 1234
+
+  [[MB.MostRecent]]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 4
+  [[MB.MostRecent]]
+  Timeout = 00:01:00 #This is an appended comment.
+  Port = 5
+
+[CA]
+Name = 'ClientX'
+#This is a prepended comment.
+#What does a second comment do?
+Priority = 100
+
+[CB]
+Name = 'ClientX'
+#This is a prepended comment.
+#What does a second comment do?
+Priority = 100
+";
+            s.Should().Be(expected);
+        }
+
         private static void CommonConfig(ITomlSettingsBuilder builder)
         {
             builder.UseDefaultStringType(TomlStringType.Literal);
