@@ -145,7 +145,8 @@ namespace Nett.Coma.Tests
                 cfg.Set(c => c.Core.AutoClrf, true, scenario.UserSource);
 
                 // Assert
-                File.ReadAllText(scenario.UserFile).Should().Be("\r\n[User]\r\nName = \"Test User\"\r\nEMail = \"test@user.com\"\r\n\r\n[Core]\r\nAutoClrf = true\r\n");
+                File.ReadAllText(scenario.UserFile).ShouldBeSemanticallyEquivalentTo(
+                    "[User]Name = \"Test User\"\r\nEMail = \"test@user.com\"[Core]AutoClrf = true");
             }
         }
     }

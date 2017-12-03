@@ -14,9 +14,9 @@ namespace Nett
 
     internal sealed class FormattingSettings
     {
-        public AlignmentMode AlignmentMode { private get; set; }
+        public AlignmentMode AlignmentMode { private get; set; } = AlignmentMode.Block;
 
-        public int TableIndent { private get; set; }
+        public int TableIndent { private get; set; } = 4;
 
         public string GetIndentString(int level) => new string(' ', this.TableIndent * Max(0, level));
 
@@ -31,9 +31,12 @@ namespace Nett
 
             int GetBlockColumn()
             {
-                return table.Rows.Max(r => r.Value.TomlType ==
-                    TomlObjectType.Table || r.Value.TomlType == TomlObjectType.ArrayOfTables
-                    ? 0 : r.Key.Length);
+                return table.Rows
+                    .Select(r => r.Value.TomlType == TomlObjectType.Table || r.Value.TomlType == TomlObjectType.ArrayOfTables
+                        ? 0
+                        : r.Key.Length)
+                    .DefaultIfEmpty()
+                    .Max();
             }
 
             int GetGlobalTableColumn(TomlTable t) => GetGlobalRowsColumn(t.InternalRows);

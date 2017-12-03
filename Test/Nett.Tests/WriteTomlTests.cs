@@ -143,7 +143,7 @@ V = 666
             var s = Toml.WriteString(tc, cfg);
 
             // Assert
-            Assert.Equal(exp.Trim(), s.Trim());
+            s.ShouldBeSemanticallyEquivalentTo(exp);
         }
 
         [Fact]
@@ -151,7 +151,7 @@ V = 666
         {
             var s = Toml.WriteString(new WithBoolProperty());
 
-            s.Should().Be(
+            s.ShouldBeSemanticallyEquivalentTo(
                 @"TheInt = 0
 TheBool = false
 ");
