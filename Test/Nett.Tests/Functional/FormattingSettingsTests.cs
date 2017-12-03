@@ -90,21 +90,21 @@ MaxClients = 123
 IP = '127.0.0.1'
 
     [MA.Primary]
-#SC.
+    #SC.
     Address = 'http://primary.com'
     Port    = 1234
 
     [MA.Fallback]
-#SC.
+    #SC.
     Address = 'file://netsharefallbackfile.txt'
     Port    = 1234
 
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address = 'http://mr1.com'
     Port    = 4
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address = 'htt://mostrecent2.com/subpage/crash'
     Port    = 5
 
@@ -112,21 +112,21 @@ IP = '127.0.0.1'
 IP = '127.0.0.1'
 
     [MB.Primary]
-#SC.
+    #SC.
     Address = 'http://primary.com'
     Port    = 1234
 
     [MB.Fallback]
-#SC.
+    #SC.
     Address = 'file://netsharefallbackfile.txt'
     Port    = 1234
 
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address = 'http://mr1.com'
     Port    = 4
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address = 'htt://mostrecent2.com/subpage/crash'
     Port    = 5
 
@@ -172,21 +172,21 @@ MaxClients = 123
 IP = '127.0.0.1'
 
     [MA.Primary]
-#SC.
+    #SC.
     Address = 'http://primary.com'
     Port    = 1234
 
     [MA.Fallback]
-#SC.
+    #SC.
     Address = 'file://netsharefallbackfile.txt'
     Port    = 1234
 
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address = 'http://mr1.com'
     Port    = 4
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address = 'htt://mostrecent2.com/subpage/crash'
     Port    = 5
 
@@ -194,21 +194,21 @@ IP = '127.0.0.1'
 IP = '127.0.0.1'
 
     [MB.Primary]
-#SC.
+    #SC.
     Address = 'http://primary.com'
     Port    = 1234
 
     [MB.Fallback]
-#SC.
+    #SC.
     Address = 'file://netsharefallbackfile.txt'
     Port    = 1234
 
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address = 'http://mr1.com'
     Port    = 4
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address = 'htt://mostrecent2.com/subpage/crash'
     Port    = 5
 
@@ -254,21 +254,21 @@ MaxClients = 123
 IP         = '127.0.0.1'
 
     [MA.Primary]
-#SC.
+    #SC.
     Address    = 'http://primary.com'
     Port       = 1234
 
     [MA.Fallback]
-#SC.
+    #SC.
     Address    = 'file://netsharefallbackfile.txt'
     Port       = 1234
 
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address    = 'http://mr1.com'
     Port       = 4
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address    = 'htt://mostrecent2.com/subpage/crash'
     Port       = 5
 
@@ -276,21 +276,21 @@ IP         = '127.0.0.1'
 IP         = '127.0.0.1'
 
     [MB.Primary]
-#SC.
+    #SC.
     Address    = 'http://primary.com'
     Port       = 1234
 
     [MB.Fallback]
-#SC.
+    #SC.
     Address    = 'file://netsharefallbackfile.txt'
     Port       = 1234
 
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address    = 'http://mr1.com'
     Port       = 4
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address    = 'htt://mostrecent2.com/subpage/crash'
     Port       = 5
 
@@ -336,21 +336,21 @@ MaxClients = 123
 IP = '127.0.0.1'
 
     [MA.Primary]
-#SC.
+    #SC.
     Address = 'http://primary.com'
     Port    = 1234
 
     [MA.Fallback]
-#SC.
+    #SC.
     Address = 'file://netsharefallbackfile.txt'
     Port    = 1234
 
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address = 'http://mr1.com'
     Port    = 4
     [[MA.MostRecent]]
-#SC.
+    #SC.
     Address = 'htt://mostrecent2.com/subpage/crash'
     Port    = 5
 
@@ -358,21 +358,21 @@ IP = '127.0.0.1'
 IP = '127.0.0.1'
 
     [MB.Primary]
-#SC.
+    #SC.
     Address = 'http://primary.com'
     Port    = 1234
 
     [MB.Fallback]
-#SC.
+    #SC.
     Address = 'file://netsharefallbackfile.txt'
     Port    = 1234
 
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address = 'http://mr1.com'
     Port    = 4
     [[MB.MostRecent]]
-#SC.
+    #SC.
     Address = 'htt://mostrecent2.com/subpage/crash'
     Port    = 5
 
@@ -418,21 +418,21 @@ MaxClients = 123
 IP = '127.0.0.1'
 
   [MA.Primary]
-#SC.
+  #SC.
   Address = 'http://primary.com'
   Port    = 1234
 
   [MA.Fallback]
-#SC.
+  #SC.
   Address = 'file://netsharefallbackfile.txt'
   Port    = 1234
 
   [[MA.MostRecent]]
-#SC.
+  #SC.
   Address = 'http://mr1.com'
   Port    = 4
   [[MA.MostRecent]]
-#SC.
+  #SC.
   Address = 'htt://mostrecent2.com/subpage/crash'
   Port    = 5
 
@@ -440,21 +440,21 @@ IP = '127.0.0.1'
 IP = '127.0.0.1'
 
   [MB.Primary]
-#SC.
+  #SC.
   Address = 'http://primary.com'
   Port    = 1234
 
   [MB.Fallback]
-#SC.
+  #SC.
   Address = 'file://netsharefallbackfile.txt'
   Port    = 1234
 
   [[MB.MostRecent]]
-#SC.
+  #SC.
   Address = 'http://mr1.com'
   Port    = 4
   [[MB.MostRecent]]
-#SC.
+  #SC.
   Address = 'htt://mostrecent2.com/subpage/crash'
   Port    = 5
 

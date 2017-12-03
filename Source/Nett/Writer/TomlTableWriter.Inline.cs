@@ -13,9 +13,9 @@
             {
             }
 
-            public void WriteInlineTable(TomlKey key, TomlTable table)
+            public void WriteInlineTable(TomlKey key, TomlTable table, int level)
             {
-                this.WritePrependComments(table);
+                this.WritePrependComments(table, level);
 
                 this.writer.Write(key.ToString());
                 this.writer.Write(" = ");
@@ -24,9 +24,9 @@
                 this.WriteAppendComments(table);
             }
 
-            public void WriteTomlTableArray(TomlKey key, TomlTableArray tableArray)
+            public void WriteTomlTableArray(TomlKey key, TomlTableArray tableArray, int level)
             {
-                this.WritePrependComments(tableArray);
+                this.WritePrependComments(tableArray, level);
 
                 const string assignment = " = [ ";
                 this.writer.Write(key.ToString());
@@ -77,11 +77,11 @@
                 }
                 else if (r.Value.TomlType == TomlObjectType.Table)
                 {
-                    this.WriteInlineTable(r.Key, (TomlTable)r.Value);
+                    this.WriteInlineTable(r.Key, (TomlTable)r.Value, level: 0);
                 }
                 else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
-                    this.WriteTomlTableArray(r.Key, (TomlTableArray)r.Value);
+                    this.WriteTomlTableArray(r.Key, (TomlTableArray)r.Value, level: 0);
                 }
                 else
                 {

@@ -28,14 +28,14 @@ namespace Nett.Writer
 
         private void WriteKeyedValueWithComments(KeyValuePair<TomlKey, TomlObject> row, int alignColumn, int level)
         {
-            this.WritePrependComments(row.Value);
+            this.WritePrependComments(row.Value, level);
             this.WriteKeyedValue(row, alignColumn, level);
             this.WriteAppendComments(row.Value);
         }
 
         private void WriteNormalTomlTable(string parentKey, TomlKey key, TomlTable table, int level)
         {
-            this.WritePrependComments(table);
+            this.WritePrependComments(table, level);
             this.writer.Write(this.settings.GetIndentString(level));
             this.writer.Write('[');
             this.writer.Write(parentKey + key);
@@ -50,9 +50,9 @@ namespace Nett.Writer
             }
         }
 
-        private void WriteTomlArrayWithComments(TomlKey key, TomlArray array)
+        private void WriteTomlArrayWithComments(TomlKey key, TomlArray array, int level)
         {
-            this.WritePrependComments(array);
+            this.WritePrependComments(array, level);
             this.WriteArray(key, array);
             this.WriteAppendComments(array);
         }
@@ -63,7 +63,7 @@ namespace Nett.Writer
 
             if (r.Value.TomlType == TomlObjectType.Array)
             {
-                this.WriteTomlArrayWithComments(r.Key, (TomlArray)r.Value);
+                this.WriteTomlArrayWithComments(r.Key, (TomlArray)r.Value, level);
             }
             else if (r.Value.TomlType == TomlObjectType.Table)
             {
@@ -89,10 +89,10 @@ namespace Nett.Writer
             }
         }
 
-        private void WriteTomlInlineTable(string parentKey, TomlKey key, TomlTable table)
+        private void WriteTomlInlineTable(string parentKey, TomlKey key, TomlTable table, int level)
         {
             var inlineWriter = new TomlInlineTableWriter(this.writer, this.settings);
-            inlineWriter.WriteInlineTable(key, table);
+            inlineWriter.WriteInlineTable(key, table, level);
         }
 
         private void WriteTomlTable(string parentKey, TomlKey key, TomlTable table, int level)
@@ -100,7 +100,7 @@ namespace Nett.Writer
             switch (table.TableType)
             {
                 case TomlTable.TableTypes.Default: this.WriteNormalTomlTable(parentKey, key, table, level); break;
-                case TomlTable.TableTypes.Inline: this.WriteTomlInlineTable(parentKey, key, table); break;
+                case TomlTable.TableTypes.Inline: this.WriteTomlInlineTable(parentKey, key, table, level); break;
             }
         }
 
@@ -109,11 +109,11 @@ namespace Nett.Writer
             if (IsInlineTomlTableArray(tableArray))
             {
                 var inlineWriter = new TomlInlineTableWriter(this.writer, this.settings);
-                inlineWriter.WriteTomlTableArray(key, tableArray);
+                inlineWriter.WriteTomlTableArray(key, tableArray, level);
             }
             else
             {
-                this.WritePrependComments(tableArray);
+                this.WritePrependComments(tableArray, level);
 
                 foreach (var t in tableArray.Items)
                 {
