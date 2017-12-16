@@ -473,6 +473,98 @@ Priority = 100
             s.Should().Be(expected);
         }
 
+        [Fact]
+        public void WriteToml_WhenUsing2LinesTableSacing_TomlGetsWrittenWith2LinesSapcing()
+        {
+            // Arrange
+            var settings = TomlSettings.Create(cfg => cfg
+                .Apply(CommonConfig)
+                .ConfigureFormatting(fmt => fmt
+                    .UseTableSpacingOf(2)));
+
+            // Act
+            var s = Toml.WriteString(new Settings(), settings);
+
+            // Assert
+            const string expected = @"#Group
+Group      = 'A'
+#This is a root setting
+SytemName  = 'TestSystem'
+#Unique system Id
+Id         = 3939
+#Short system alias
+Alias      = 'Test'
+MaxClients = 123
+
+
+[MA]
+IP = '127.0.0.1'
+
+
+    [MA.Primary]
+    #SC.
+    Address = 'http://primary.com'
+    Port    = 1234
+
+
+    [MA.Fallback]
+    #SC.
+    Address = 'file://netsharefallbackfile.txt'
+    Port    = 1234
+
+
+    [[MA.MostRecent]]
+    #SC.
+    Address = 'http://mr1.com'
+    Port    = 4
+    [[MA.MostRecent]]
+    #SC.
+    Address = 'htt://mostrecent2.com/subpage/crash'
+    Port    = 5
+
+
+[MB]
+IP = '127.0.0.1'
+
+
+    [MB.Primary]
+    #SC.
+    Address = 'http://primary.com'
+    Port    = 1234
+
+
+    [MB.Fallback]
+    #SC.
+    Address = 'file://netsharefallbackfile.txt'
+    Port    = 1234
+
+
+    [[MB.MostRecent]]
+    #SC.
+    Address = 'http://mr1.com'
+    Port    = 4
+    [[MB.MostRecent]]
+    #SC.
+    Address = 'htt://mostrecent2.com/subpage/crash'
+    Port    = 5
+
+
+[CA]
+Name     = 'ClientX'
+#This is a super comment.
+#What does a second comment do?
+Priority = 100
+
+
+[CB]
+Name     = 'ClientX'
+#This is a super comment.
+#What does a second comment do?
+Priority = 100
+";
+            s.Should().Be(expected);
+        }
+
         private static void CommonConfig(ITomlSettingsBuilder builder)
         {
             builder.UseDefaultStringType(TomlStringType.Literal);

@@ -86,6 +86,8 @@
 
         internal string GetIndentString(int level) => this.formattingSettings.GetIndentString(level);
 
+        internal int TableSpacing => this.formattingSettings.TableSpacing;
+
         internal TomlTable.TableTypes GetTableType(Type valType)
         {
             if (this.inlineTableTypes.Contains(valType)

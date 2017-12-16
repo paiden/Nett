@@ -31,9 +31,9 @@ Items = { X = true, Y = false }
 
         public class InlineArrayAttributeOnItem
         {
-            public const string TowItemsSerialized = @"
-Items = [ { SVal = ""X"", BVal = true, IVal = 1 },
+            public const string TowItemsSerialized = @"Items = [ { SVal = ""X"", BVal = true, IVal = 1 },
           { SVal = ""Y"", BVal = false, IVal = 2 } ]
+
 ";
 
             public static readonly InlineArrayAttributeOnItem TwoItems = new InlineArrayAttributeOnItem()
@@ -71,10 +71,11 @@ Second = { SVal = ""Y"", BVal = false, IVal = 2 }
         {
             // An empty table array writes nothing to the file
             public const string ExpectedEmpty = @"
+
 ";
-            public const string ExpectedTwoItems = @"
-TblArray = [ { SVal = ""X"", BVal = true, IVal = 1 },
+            public const string ExpectedTwoItems = @"TblArray = [ { SVal = ""X"", BVal = true, IVal = 1 },
              { SVal = ""Y"", BVal = false, IVal = 2 } ]
+
 ";
 
             public static readonly InlineArray Empty = new InlineArray();

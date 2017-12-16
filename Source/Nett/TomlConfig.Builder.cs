@@ -46,6 +46,8 @@
             IFormattingSettingsBuilder UseKeyValueAlignment(AlignmentMode alignmentMode);
 
             IFormattingSettingsBuilder IndentTablesBy(int indent);
+
+            IFormattingSettingsBuilder UseTableSpacingOf(int lines);
         }
 
         internal sealed class ConversionSettingsBuilder<TCustom, TToml> : IConversionSettingsBuilder<TCustom, TToml>
@@ -246,6 +248,12 @@
             public IFormattingSettingsBuilder IndentTablesBy(int indent)
             {
                 this.formattingSettings.TableIndent = indent;
+                return this;
+            }
+
+            public IFormattingSettingsBuilder UseTableSpacingOf(int lines)
+            {
+                this.formattingSettings.TableSpacing = lines;
                 return this;
             }
         }

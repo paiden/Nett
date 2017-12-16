@@ -47,7 +47,7 @@ namespace Nett.Tests
             Toml.WriteFile(tt, "test123.toml");
 
             // Assert
-            s.Should().Be("TheFloat = 1.2\r\n");
+            s.ShouldBeSemanticallyEquivalentTo("TheFloat = 1.2");
         }
 
         [Fact]

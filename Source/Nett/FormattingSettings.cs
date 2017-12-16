@@ -18,6 +18,8 @@ namespace Nett
 
         public int TableIndent { private get; set; } = 4;
 
+        public int TableSpacing { get; set; } = 1;
+
         public string GetIndentString(int level) => new string(' ', this.TableIndent * Max(0, level));
 
         internal int GetKeyValueAlignColumn(TomlTable table)
