@@ -10,34 +10,39 @@ namespace Nett
     internal static class ClrToTomlTableConverter
     {
         public static TomlTable.RootTable Convert(object obj, TomlSettings settings)
-            => (TomlTable.RootTable)ConvertInternal(obj, settings, null);
+            => (TomlTable.RootTable)ConvertInternal(obj, settings, null, new CyclicReferenceDetector());
 
         public static TomlObject Convert(object obj, ITomlRoot root)
-            => ConvertInternal(obj, root.Settings, root);
+            => ConvertInternal(obj, root.Settings, root, new CyclicReferenceDetector());
 
-        private static TomlObject ConvertInternal(object obj, TomlSettings settings, ITomlRoot root)
+        private static TomlObject ConvertInternal(
+            object obj, TomlSettings settings, ITomlRoot root, CyclicReferenceDetector cycleDetector)
         {
             var objType = obj.GetType();
 
-            var converter = settings.TryGetToTomlConverter(objType);
-            if (root != null && converter != null)
+            using (cycleDetector.CheckedPush(obj))
             {
-                return (TomlObject)converter.Convert(root, obj, Types.TomlObjectType);
-            }
-            else if (obj is IEnumerable enumerable && IsTomlArrayEnumerable())
-            {
-                return ConvertArrayType(root, enumerable);
-            }
-            else
-            {
-                return ConvertComplexType(obj, root, settings);
+                var converter = settings.TryGetToTomlConverter(objType);
+                if (root != null && converter != null)
+                {
+                    return (TomlObject)converter.Convert(root, obj, Types.TomlObjectType);
+                }
+                else if (obj is IEnumerable enumerable && IsTomlArrayEnumerable())
+                {
+                    return ConvertArrayType(root, enumerable, cycleDetector);
+                }
+                else
+                {
+                    return ConvertComplexType(obj, root, settings, cycleDetector);
+                }
             }
 
             bool IsTomlArrayEnumerable() =>
                 objType != Types.StringType && !Types.DictType.IsAssignableFrom(objType);
         }
 
-        private static TomlTable ConvertComplexType(object obj, ITomlRoot root, TomlSettings settings)
+        private static TomlTable ConvertComplexType(
+            object obj, ITomlRoot root, TomlSettings settings, CyclicReferenceDetector cycleDetector)
         {
             var tbl = InitTable(ref root, settings, obj.GetType());
 
@@ -45,11 +50,11 @@ namespace Nett
 
             if (obj is IDictionary dict)
             {
-                rows = ConvertDictionary(dict, root);
+                rows = ConvertDictionary(dict, root, cycleDetector);
             }
             else
             {
-                rows = ConvertCustomClass(obj, root);
+                rows = ConvertCustomClass(obj, root, cycleDetector);
             }
 
             AddScopeTypesLast(rows, tbl);
@@ -64,19 +69,21 @@ namespace Nett
             return table;
         }
 
-        private static List<Tuple<string, TomlObject>> ConvertDictionary(IDictionary dict, ITomlRoot root)
+        private static List<Tuple<string, TomlObject>> ConvertDictionary(
+            IDictionary dict, ITomlRoot root, CyclicReferenceDetector cycleDetector)
         {
             var rows = new List<Tuple<string, TomlObject>>();
 
             foreach (DictionaryEntry de in dict)
             {
-                rows.Add(Tuple.Create((string)de.Key, ConvertInternal(de.Value, root.Settings, root)));
+                rows.Add(Tuple.Create((string)de.Key, ConvertInternal(de.Value, root.Settings, root, cycleDetector)));
             }
 
             return rows;
         }
 
-        private static List<Tuple<string, TomlObject>> ConvertCustomClass(object obj, ITomlRoot root)
+        private static List<Tuple<string, TomlObject>> ConvertCustomClass(
+            object obj, ITomlRoot root, CyclicReferenceDetector cycleDetector)
         {
             var rows = new List<Tuple<string, TomlObject>>();
             var props = root.Settings.GetSerializationProperties(obj.GetType());
@@ -86,7 +93,7 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = ConvertInternal(val, root.Settings, root);
+                    TomlObject to = ConvertInternal(val, root.Settings, root, cycleDetector);
                     AddComments(to, p);
                     rows.Add(Tuple.Create(p.Name, to));
                 }
@@ -95,7 +102,7 @@ namespace Nett
             return rows;
         }
 
-        private static TomlObject ConvertArrayType(ITomlRoot root, IEnumerable e)
+        private static TomlObject ConvertArrayType(ITomlRoot root, IEnumerable e, CyclicReferenceDetector cycleDetector)
         {
             var et = e.GetElementType();
 
@@ -122,7 +129,7 @@ namespace Nett
                 else
                 {
                     return new TomlTableArray(root, e.Select((o) =>
-                        TomlTable.CreateFromClass(root, o, root.Settings.GetTableType(et))));
+                        (TomlTable)ConvertInternal(o, root.Settings, root, cycleDetector)));
                 }
             }
 
@@ -153,5 +160,31 @@ namespace Nett
 
         private static bool ScopeCreatingType(TomlObject obj) =>
                    obj.TomlType == TomlObjectType.Table || obj.TomlType == TomlObjectType.ArrayOfTables;
+
+        private sealed class CyclicReferenceDetector
+        {
+            private readonly Stack<object> activeParents = new Stack<object>();
+
+            public IDisposable CheckedPush(object obj)
+            {
+                if (this.activeParents.Any(p => p == obj))
+                {
+                    throw new InvalidOperationException("Cyclic reference detected.");
+                }
+
+                this.activeParents.Push(obj);
+
+                return new PopOnDispose(this);
+            }
+
+            private sealed class PopOnDispose : IDisposable
+            {
+                private readonly CyclicReferenceDetector detector;
+
+                public PopOnDispose(CyclicReferenceDetector detector) => this.detector = detector;
+
+                public void Dispose() => this.detector.activeParents.Pop();
+            }
+        }
     }
 }
