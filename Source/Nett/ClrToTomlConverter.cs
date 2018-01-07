@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Nett.Exceptions;
 using Nett.LinqExtensions;
 
 namespace Nett
@@ -76,7 +77,14 @@ namespace Nett
 
             foreach (DictionaryEntry de in dict)
             {
-                rows.Add(Tuple.Create((string)de.Key, ConvertInternal(de.Value, root.Settings, root, cycleDetector)));
+                try
+                {
+                    rows.Add(Tuple.Create((string)de.Key, ConvertInternal(de.Value, root.Settings, root, cycleDetector)));
+                }
+                catch (CircularReferenceException)
+                {
+                    throw new InvalidOperationException($"A circular reference was detected for key '{de.Key}'.");
+                }
             }
 
             return rows;
@@ -93,9 +101,18 @@ namespace Nett
                 object val = p.GetValue(obj, null);
                 if (val != null)
                 {
-                    TomlObject to = ConvertInternal(val, root.Settings, root, cycleDetector);
-                    AddComments(to, p);
-                    rows.Add(Tuple.Create(p.Name, to));
+                    try
+                    {
+                        TomlObject to = ConvertInternal(val, root.Settings, root, cycleDetector);
+                        AddComments(to, p);
+                        rows.Add(Tuple.Create(p.Name, to));
+                    }
+                    catch (CircularReferenceException)
+                    {
+                        throw new InvalidOperationException(
+                            $"A circular reference was detected for property " +
+                            $"'{p.Name}' of Type '{obj.GetType().FullName}'.");
+                    }
                 }
             }
 
@@ -169,7 +186,7 @@ namespace Nett
             {
                 if (this.activeParents.Any(p => p == obj))
                 {
-                    throw new InvalidOperationException("Cyclic reference detected.");
+                    throw new CircularReferenceException("Cyclic reference detected.");
                 }
 
                 this.activeParents.Push(obj);
