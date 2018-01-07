@@ -232,41 +232,7 @@ namespace Nett
             if (root == null) { throw new ArgumentNullException(nameof(root)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
 
-            TomlTable tt = new TomlTable(root, tableType);
-
-            var props = root.Settings.GetSerializationProperties(obj.GetType());
-            var allObjects = new List<Tuple<string, TomlObject>>();
-
-            foreach (var p in props)
-            {
-                object val = p.GetValue(obj, null);
-                if (val != null)
-                {
-                    TomlObject to = TomlObject.CreateFrom(root, val, p);
-                    AddComments(to, p);
-                    allObjects.Add(Tuple.Create(p.Name, to));
-                }
-            }
-
-            tt.AddScopeTypesLast(allObjects);
-
-            return tt;
-        }
-
-        internal static TomlTable CreateFromDictionary(ITomlRoot root, IDictionary dict, TableTypes tableType)
-        {
-            if (root == null) { throw new ArgumentNullException(nameof(root)); }
-            if (dict == null) { throw new ArgumentNullException(nameof(dict)); }
-
-            var tomlTable = new TomlTable(root, tableType);
-
-            foreach (DictionaryEntry r in dict)
-            {
-                var obj = TomlObject.CreateFrom(root, r.Value);
-                tomlTable.AddRow(new TomlKey((string)r.Key), obj);
-            }
-
-            return tomlTable;
+            return (TomlTable)ClrToTomlTableConverter.Convert(obj, root);
         }
 
         internal TomlObject AddRow(TomlKey key, TomlObject value)
@@ -331,16 +297,7 @@ namespace Nett
 
         protected virtual void OnRowValueSet(string rowKey)
         {
-        }
-
-        private static void AddComments(TomlObject obj, PropertyInfo pi)
-        {
-            var comments = pi.GetCustomAttributes(typeof(TomlCommentAttribute), false).Cast<TomlCommentAttribute>();
-            foreach (var c in comments)
-            {
-                obj.AddComment(new TomlComment(c.Comment, c.Location));
-            }
-        }
+        } 
 
         private static bool ScopeCreatingType(TomlObject obj) =>
             obj.TomlType == TomlObjectType.Table || obj.TomlType == TomlObjectType.ArrayOfTables;

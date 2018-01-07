@@ -112,7 +112,7 @@
             }
             else
             {
-                this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)));
+                this.Set(tbl => path.SetValue(tbl, ClrToTomlTableConverter.Convert(value, tbl.Root)));
             }
         }
 
@@ -121,7 +121,7 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value, null)), source);
+            this.Set(tbl => path.SetValue(tbl, ClrToTomlTableConverter.Convert(value, tbl.Root)), source);
         }
 
         internal IConfigSource TryGetSource(TPath path)
