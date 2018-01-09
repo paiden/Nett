@@ -77,13 +77,17 @@ namespace Nett
 
             foreach (DictionaryEntry de in dict)
             {
-                try
+                using (cycleDetector.PushPathSegment((string)de.Key))
                 {
-                    rows.Add(Tuple.Create((string)de.Key, ConvertInternal(de.Value, root.Settings, root, cycleDetector)));
-                }
-                catch (CircularReferenceException)
-                {
-                    throw new InvalidOperationException($"A circular reference was detected for key '{de.Key}'.");
+                    try
+                    {
+                        rows.Add(Tuple.Create((string)de.Key, ConvertInternal(de.Value, root.Settings, root, cycleDetector)));
+                    }
+                    catch (CircularReferenceException)
+                    {
+                        throw new InvalidOperationException(
+                            $"A circular reference was detected for key '{de.Key}' using path '{cycleDetector.Path}'.");
+                    }
                 }
             }
 
@@ -98,20 +102,23 @@ namespace Nett
 
             foreach (var p in props)
             {
-                object val = p.GetValue(obj, null);
-                if (val != null)
+                using (cycleDetector.PushPathSegment(p.Name))
                 {
-                    try
+                    object val = p.GetValue(obj, null);
+                    if (val != null)
                     {
-                        TomlObject to = ConvertInternal(val, root.Settings, root, cycleDetector);
-                        AddComments(to, p);
-                        rows.Add(Tuple.Create(p.Name, to));
-                    }
-                    catch (CircularReferenceException)
-                    {
-                        throw new InvalidOperationException(
-                            $"A circular reference was detected for property " +
-                            $"'{p.Name}' of Type '{obj.GetType().FullName}'.");
+                        try
+                        {
+                            TomlObject to = ConvertInternal(val, root.Settings, root, cycleDetector);
+                            AddComments(to, p);
+                            rows.Add(Tuple.Create(p.Name, to));
+                        }
+                        catch (CircularReferenceException)
+                        {
+                            throw new InvalidOperationException(
+                                $"A circular reference was detected for property " +
+                                $"'{p.Name}' of Type '{obj.GetType().FullName}' using Path '{cycleDetector.Path}'.");
+                        }
                     }
                 }
             }
@@ -182,6 +189,10 @@ namespace Nett
         {
             private readonly Stack<object> activeParents = new Stack<object>();
 
+            private readonly Stack<string> pathSegments = new Stack<string>();
+
+            public string Path => string.Join(".", this.pathSegments.Reverse().Take(this.pathSegments.Count() - 1));
+
             public IDisposable CheckedPush(object obj)
             {
                 if (this.activeParents.Any(p => p == obj))
@@ -191,16 +202,25 @@ namespace Nett
 
                 this.activeParents.Push(obj);
 
-                return new PopOnDispose(this);
+                return new ExecOnDispose(() => this.activeParents.Pop());
             }
 
-            private sealed class PopOnDispose : IDisposable
+            public IDisposable PushPathSegment(string segment)
             {
-                private readonly CyclicReferenceDetector detector;
+                this.pathSegments.Push(segment);
+                return new ExecOnDispose(() => this.pathSegments.Pop());
+            }
 
-                public PopOnDispose(CyclicReferenceDetector detector) => this.detector = detector;
+            private sealed class ExecOnDispose : IDisposable
+            {
+                private readonly Action toExec;
 
-                public void Dispose() => this.detector.activeParents.Pop();
+                public ExecOnDispose(Action toExec)
+                {
+                    this.toExec = toExec;
+                }
+
+                public void Dispose() => this.toExec();
             }
         }
     }
