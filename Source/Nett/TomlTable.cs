@@ -36,8 +36,16 @@
 
         public override string ReadableTypeName => "table";
 
-        public IEnumerable<KeyValuePair<string, TomlObject>> Rows => this.rows.Select(
-            r => new KeyValuePair<string, TomlObject>(r.Key.Value, r.Value));
+        public IEnumerable<KeyValuePair<string, TomlObject>> Rows
+        {
+            get
+            {
+                var all = this.rows.Select(kvp => new KeyValuePair<string, TomlObject>(kvp.Key.Value, kvp.Value));
+                var nonscoping = all.Where(kvp => !ScopeCreatingType(kvp.Value));
+                var scoping = all.Where(kvp => ScopeCreatingType(kvp.Value));
+                return nonscoping.Concat(scoping);
+            }
+        }
 
         public TableTypes TableType { get; internal set; }
 
@@ -47,7 +55,15 @@
 
         internal bool IsDefined { get; set; }
 
-        internal Dictionary<TomlKey, TomlObject> InternalRows => this.rows;
+        internal IEnumerable<KeyValuePair<TomlKey, TomlObject>> InternalRows
+        {
+            get
+            {
+                var nonscoping = this.rows.Where(kvp => !ScopeCreatingType(kvp.Value));
+                var scoping = this.rows.Where(kvp => ScopeCreatingType(kvp.Value));
+                return nonscoping.Concat(scoping);
+            }
+        }
 
         public TomlObject this[string key]
         {
@@ -244,11 +260,9 @@
                 {
                     TomlObject to = TomlObject.CreateFrom(root, val, p);
                     AddComments(to, p);
-                    allObjects.Add(Tuple.Create(p.Name, to));
+                    tt.AddRow(new TomlKey(p.Name), to);
                 }
             }
-
-            tt.AddScopeTypesLast(allObjects);
 
             return tt;
         }
@@ -311,6 +325,11 @@
             }
         }
 
+        internal void SetRow(TomlKey key, TomlObject value)
+        {
+            this.rows[key] = value;
+        }
+
         internal TomlObject TryGetValue(TomlKey key) => this.TryGetValue(key.Value);
 
         internal TomlTable TableWithRoot(ITomlRoot root)
@@ -344,19 +363,6 @@
 
         private static bool ScopeCreatingType(TomlObject obj) =>
             obj.TomlType == TomlObjectType.Table || obj.TomlType == TomlObjectType.ArrayOfTables;
-
-        private void AddScopeTypesLast(List<Tuple<string, TomlObject>> allObjects)
-        {
-            foreach (var a in allObjects.Where(o => !ScopeCreatingType(o.Item2)))
-            {
-                this.AddRow(new TomlKey(a.Item1), a.Item2);
-            }
-
-            foreach (var a in allObjects.Where(o => ScopeCreatingType(o.Item2)))
-            {
-                this.AddRow(new TomlKey(a.Item1), a.Item2);
-            }
-        }
 
         [Conditional(Constants.Debug)]
         private void AssertIntegrity()

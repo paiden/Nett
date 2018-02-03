@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
 
     public partial class TomlTable
     {
@@ -28,21 +27,16 @@
 
             void CreateFromDictionary()
             {
-                var all = new List<Tuple<string, TomlObject>>();
-
                 foreach (DictionaryEntry r in dict)
                 {
-                    all.Add(Tuple.Create((string)r.Key, TomlObject.CreateFrom(tt, r.Value)));
+                    tt.AddRow(new TomlKey((string)r.Key), TomlObject.CreateFrom(tt, r.Value));
                 }
-
-                tt.AddScopeTypesLast(all);
             }
 
             void CreateFromCustomClrObject()
             {
                 var t = obj.GetType();
                 var props = settings.GetSerializationProperties(t);
-                var allObjects = new List<Tuple<string, TomlObject>>();
 
                 foreach (var p in props)
                 {
@@ -51,11 +45,9 @@
                     {
                         TomlObject to = TomlObject.CreateFrom(tt, val, p);
                         AddComments(to, p);
-                        allObjects.Add(Tuple.Create(p.Name, to));
+                        tt.AddRow(new TomlKey(p.Name), to);
                     }
                 }
-
-                tt.AddScopeTypesLast(allObjects);
             }
         }
 
