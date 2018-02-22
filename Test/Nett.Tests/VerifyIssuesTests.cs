@@ -202,6 +202,45 @@ SomeValue = 5";
             s.Trim().Should().Be(@"'Hello World!' = true".Trim());
         }
 
+        [Fact]
+        public void VerifyIssue42_SerializedIntoWrongTable_WasFixed()
+        {
+            var tbl = Toml.Create();
+            tbl.Add("root1", 1);    // These three keys added at root level
+            tbl.Add("root2", 2);
+            tbl.Add("root3", 3);
+
+            var t2 = tbl.AddTomlObject("Level2", Toml.Create());
+            t2.Add("second1", "x");
+            t2.Add("second2", "y");
+
+            tbl.Add("root4", 4);    // Added at root level but spuriously written into [Level2.Level3]
+
+            var t3 = t2.AddTomlObject("Level3", Toml.Create());
+            t3.Add("third1", "a");
+            t3.Add("third2", "b");
+
+            t2.Add("second3", "z"); // Added to [Level2] but spuriously written into [Level2.Level3]
+            tbl.Add("root5", 5);    // Added at root level but spuriously written into [Level2.Level3]
+
+            var result = Toml.WriteString(tbl);
+            result.Trim().Should().Be(@"
+root1 = 1
+root2 = 2
+root3 = 3
+root4 = 4
+root5 = 5
+
+[Level2]
+second1 = ""x""
+second2 = ""y""
+second3 = ""z""
+
+    [Level2.Level3]
+    third1 = ""a""
+    third2 = ""b""".Trim());
+        }
+
         public class WithUint
         {
             public uint Prop { get; set; } = 1;

@@ -43,9 +43,11 @@ namespace Nett
 
             int GetGlobalTableColumn(TomlTable t) => GetGlobalRowsColumn(t.InternalRows);
 
-            int GetGlobalTableArrayColumn(TomlTableArray tableArray) => tableArray.Items.Select(i => GetGlobalTableColumn(i)).Max();
+            int GetGlobalTableArrayColumn(TomlTableArray tableArray)
+                => tableArray.Items.Select(i => GetGlobalTableColumn(i)).Max();
 
-            int GetGlobalRowsColumn(Dictionary<TomlKey, TomlObject> rows) => rows.Select(r => GetGlobalRowColumn(r)).Max();
+            int GetGlobalRowsColumn(IEnumerable<KeyValuePair<TomlKey, TomlObject>> rows)
+                => rows.Select(r => GetGlobalRowColumn(r)).Max();
 
             int GetGlobalRowColumn(KeyValuePair<TomlKey, TomlObject> row)
             {

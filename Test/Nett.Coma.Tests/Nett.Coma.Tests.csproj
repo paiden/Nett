@@ -75,6 +75,7 @@
     <Compile Include="Functional\InlineTableTest.cs" />
     <Compile Include="Functional\MergeTests.cs" />
     <Compile Include="Functional\TransactionTests.cs" />
+    <Compile Include="Issues\Issue41Tests.cs" />
     <Compile Include="SingleLevelConfig.cs" />
     <Compile Include="Functional\ExternalChangeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -110,6 +111,7 @@
   <ItemGroup>
     <Analyzer Include="..\..\Solutions\Nett\packages\xunit.analyzers.0.7.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

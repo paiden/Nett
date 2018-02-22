@@ -61,7 +61,7 @@ namespace Nett
         {
             if (table.TryGetValue(key, out var _))
             {
-                table.InternalRows[new TomlKey(key)] = obj;
+                table.SetRow(new TomlKey(key), obj);
                 return obj;
             }
             else
