@@ -29,13 +29,13 @@ namespace Nett.Tests.Functional
             X = Toml.Create();
             X.Add(XKey, XVal);
             X.Add(SameKey, XVal);
-            var xs = X.AddTomlObject(SubTableKey, Toml.Create());
+            var xs = X.Add(SubTableKey, Toml.Create());
             xs.Add(SubTableValueKey, XSubTableVal);
 
             Y = Toml.Create();
             Y.Add(YKey, YVal);
             Y.Add(SameKey, YVal);
-            var ys = Y.AddTomlObject(SubTableKey, X.CreateEmptyAttachedTable());
+            var ys = Y.Add(SubTableKey, X.CreateEmptyAttachedTable());
             ys.Add(SubTableValueKey, YSubTableVal);
 
             Dx = Toml.Create();

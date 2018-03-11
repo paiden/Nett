@@ -93,11 +93,11 @@ namespace Nett.Tests
         private TomlTable CreateComplex()
         {
             var t = Toml.Create();
-            var tt = t.AddTomlObject("SubTable", t.CreateEmptyAttachedTable());
+            var tt = t.Add("SubTable", t.CreateEmptyAttachedTable());
             t.Add("I", (long)1);
             t.Add("F", 1.0);
 
-            tt.Add("A", new int[] { 1, 2, 3 });
+            tt.Add("A", (System.Collections.Generic.IEnumerable<int>)(new int[] { 1, 2, 3 }));
 
             return t;
         }

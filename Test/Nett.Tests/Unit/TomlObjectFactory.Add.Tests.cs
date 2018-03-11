@@ -15,15 +15,15 @@ namespace Nett.Tests.Unit
         {
             get
             {
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new bool[] { true, false })), new bool[] { true, false } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new string[] { "X", "Y" })), new string[] { "X", "Y" } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new long[] { 1L, 0L })), new long[] { 1L, 0L } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new int[] { 1, 0 })), new long[] { 1, 0 } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new double[] { 1.0, 0.0 })), new double[] { 1.0, 0.0 } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new float[] { 1.0f, 0.0f })), new float[] { 1.0f, 0.0f } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new DateTimeOffset[] { Dto, Dto })), new DateTimeOffset[] { Dto, Dto } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new DateTime[] { Dto.UtcDateTime, Dto.UtcDateTime })), new DateTime[] { Dto.UtcDateTime, Dto.UtcDateTime } };
-                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, new TimeSpan[] { Ts, Ts })), new TimeSpan[] { Ts, Ts } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<bool>)(new bool[] { true, false }))), new bool[] { true, false } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<string>)(new string[] { "X", "Y" }))), new string[] { "X", "Y" } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<long>)(new long[] { 1L, 0L }))), new long[] { 1L, 0L } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<int>)(new int[] { 1, 0 }))), new long[] { 1, 0 } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<double>)(new double[] { 1.0, 0.0 }))), new double[] { 1.0, 0.0 } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<float>)(new float[] { 1.0f, 0.0f }))), new float[] { 1.0f, 0.0f } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<DateTimeOffset>)(new DateTimeOffset[] { Dto, Dto }))), new DateTimeOffset[] { Dto, Dto } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<DateTime>)(new DateTime[] { Dto.UtcDateTime, Dto.UtcDateTime }))), new DateTime[] { Dto.UtcDateTime, Dto.UtcDateTime } };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (IEnumerable<TimeSpan>)(new TimeSpan[] { Ts, Ts }))), new TimeSpan[] { Ts, Ts } };
             }
         }
 
@@ -51,6 +51,7 @@ namespace Nett.Tests.Unit
                 yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, 1.0f)), 1.0 };
                 yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, Dto)), Dto };
                 yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, Ts)), Ts };
+                yield return new object[] { new Action<string, TomlTable>((k, t) => t.Add(k, (char)1)), 1L };
             }
         }
 
@@ -67,11 +68,32 @@ namespace Nett.Tests.Unit
         }
 
         [Fact]
+        public void Add_WithSturctEnumerable_CreatesResultTableArray()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            var items = new List<TestStruct>()
+            {
+                new TestStruct() {Y = 1},
+                new TestStruct() {Y = 2},
+            };
+
+            // Act
+            var arr = tbl.Add("x", items);
+
+            // assert
+            tbl["x"].Should().BeOfType<TomlTableArray>()
+                .Which.Count.Should().Be(2);
+            arr[0].Get<TestStruct>().Y.Should().Be(1);
+            arr[1].Get<TestStruct>().Y.Should().Be(2);
+        }
+
+        [Fact]
         public void AddTable_WhenNoArgumentsPassed_AddsEmptyTable()
         {
             var tbl = Toml.Create();
 
-            var newTbl = tbl.AddTomlObject("x", Toml.Create());
+            var newTbl = tbl.Add("x", Toml.Create());
 
             tbl["x"].Should().BeOfType<TomlTable>()
                 .Which.Count.Should().Be(0);
@@ -94,7 +116,7 @@ namespace Nett.Tests.Unit
         {
             var tbl = Toml.Create();
 
-            var newTbl = tbl.AddTomlObject("x", tbl.CreateEmptyAttachedTableArray());
+            var newTbl = tbl.Add("x", tbl.CreateEmptyAttachedTableArray());
 
             tbl["x"].Should().BeOfType<TomlTableArray>()
                 .Which.Count.Should().Be(0);
@@ -117,7 +139,7 @@ namespace Nett.Tests.Unit
             var tbl = Toml.Create();
             var diffRoot = Toml.Create().CreateEmptyAttachedTableArray();
 
-            var newArray = tbl.AddTomlObject("x", diffRoot);
+            var newArray = tbl.Add("x", diffRoot);
 
             newArray.Should().NotBeSameAs(diffRoot);
         }
@@ -142,18 +164,9 @@ namespace Nett.Tests.Unit
             a.ShouldThrow<InvalidOperationException>();
         }
 
-        [Fact]
-        public void Add_WhenTomlObjectIsPassed_ThrowsInalidOperation()
+        private class TestStruct
         {
-            // Arrange
-            var tbl = Toml.Create();
-            var obj = tbl.CreateAttached((long)1);
-
-            // Act
-            Action a = () => tbl.Add("x", obj);
-
-            // Assert
-            a.ShouldThrow<InvalidOperationException>(because: "another method has to be used to add TOML objects to a table.");
+            public int Y { get; set; }
         }
 
         private class TestObj

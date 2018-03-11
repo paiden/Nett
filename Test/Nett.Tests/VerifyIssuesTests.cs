@@ -210,13 +210,13 @@ SomeValue = 5";
             tbl.Add("root2", 2);
             tbl.Add("root3", 3);
 
-            var t2 = tbl.AddTomlObject("Level2", Toml.Create());
+            var t2 = tbl.Add("Level2", Toml.Create());
             t2.Add("second1", "x");
             t2.Add("second2", "y");
 
             tbl.Add("root4", 4);    // Added at root level but spuriously written into [Level2.Level3]
 
-            var t3 = t2.AddTomlObject("Level3", Toml.Create());
+            var t3 = t2.Add("Level3", Toml.Create());
             t3.Add("third1", "a");
             t3.Add("third2", "b");
 

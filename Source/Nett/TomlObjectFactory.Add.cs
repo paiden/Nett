@@ -63,11 +63,6 @@ namespace Nett
         public static TomlTable Add(
             this TomlTable table, string key, object obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
-            if (obj is TomlObject)
-            {
-                throw new InvalidOperationException($"TOML objects must be added using method '{nameof(AddTomlObject)}'.");
-            }
-
             return AddTomlObjectInternal(table, key, TomlTable.CreateFromClass(table.Root, obj, tableType));
         }
 
@@ -81,16 +76,12 @@ namespace Nett
             return AddTomlObjectInternal(table, key, table.CreateAttached(tableArray));
         }
 
-        // The generic method needs a different name from the add methods, so that overload resolution with type casts
-        // chooses the correct method. Otherwise the overload resolution will pick this method instead of one of the
-        // Add methods above with the correct implicit cast. Instead the compiler will whine, that the type of the call
-        // does not conform to the type constraint T:TomlObject. Yes a stupid little compiler you are, choosing the wrong
-        // overload... tztz. E.g. if this method would also be called Add, the call tbl.Add("x", 1) would cause the compiler
-        // to chose this Add instead of the correct one - Add(string,long).
-        public static T AddTomlObject<T>(
-            this TomlTable table, string key, T obj)
+#pragma warning disable SA1313 // Parameter names must begin with lower-case letter
+        public static T Add<T>(
+            this TomlTable table, string key, T obj, RequireTomlObject<T> _ = null)
             where T : TomlObject
             => AddTomlObjectInternal(table, key, obj.Root == table.Root ? obj : (T)obj.CloneFor(table.Root));
+#pragma warning restore SA1313 // Parameter names must begin with lower-case letter
 
         // Internal
         private static T AddTomlObjectInternal<T>(TomlTable table, string key, T o)
@@ -100,5 +91,9 @@ namespace Nett
             table.AddRow(new TomlKey(key), o);
             return o;
         }
+
+        public class RequireTomlObject<T>
+            where T : TomlObject
+        { }
     }
 }
