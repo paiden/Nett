@@ -101,6 +101,7 @@
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TomlConfigTests.cs" />
     <Compile Include="Unit\TomlObjectFactory.Create.Tests.cs" />
+    <Compile Include="Unit\TomlObjectFactory.Tests.cs" />
     <Compile Include="Unit\TomlObjectFactory.Update.Tests.cs" />
     <Compile Include="Unit\TomlObjectFactory.Add.Tests.cs" />
     <Compile Include="Unit\TomlTableTests.cs" />

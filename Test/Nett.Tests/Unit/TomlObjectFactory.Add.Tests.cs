@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Nett.Tests.Unit
 {
-    public sealed class TomlObjectFactoryTests
+    public sealed partial class TomlObjectFactoryTests
     {
         private static readonly TimeSpan Ts = TimeSpan.FromSeconds(1.0);
         private static readonly DateTimeOffset Dto = DateTimeOffset.UtcNow;
@@ -68,27 +68,6 @@ namespace Nett.Tests.Unit
         }
 
         [Fact]
-        public void Add_WithSturctEnumerable_CreatesResultTableArray()
-        {
-            // Arrange
-            var tbl = Toml.Create();
-            var items = new List<TestStruct>()
-            {
-                new TestStruct() {Y = 1},
-                new TestStruct() {Y = 2},
-            };
-
-            // Act
-            var arr = tbl.Add("x", items);
-
-            // assert
-            tbl["x"].Should().BeOfType<TomlTableArray>()
-                .Which.Count.Should().Be(2);
-            arr[0].Get<TestStruct>().Y.Should().Be(1);
-            arr[1].Get<TestStruct>().Y.Should().Be(2);
-        }
-
-        [Fact]
         public void AddTable_WhenNoArgumentsPassed_AddsEmptyTable()
         {
             var tbl = Toml.Create();
@@ -101,15 +80,75 @@ namespace Nett.Tests.Unit
 
 
         [Fact]
-        public void AddTable_WhenCLRObjectIsPassed_AddsCorrespondingTable()
+        public void Add_WithFooClass_AddsTable()
         {
+            // Arrange
             var tbl = Toml.Create();
 
-            var newTbl = tbl.Add("x", new TestObj());
+            // Act
+            var newTbl = tbl.Add("x", FooClass.Foo1);
 
-            tbl["x"].Should().BeOfType<TomlTable>()
-                .Which.Get<int>("Y").Should().Be(1);
+            // Assert
+            FooClass.Foo1.AssertIs(tbl["x"]);
+            FooClass.Foo1.AssertIs(newTbl);
         }
+
+        [Fact]
+        public void Add_WithFooDict_AddsTable()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+
+            // Act
+            var newTbl = tbl.Add("x", FooDict.Dict1);
+
+            // Assert
+            FooDict.Dict1.AssertIs(tbl["x"]);
+            FooDict.Dict1.AssertIs(newTbl);
+        }
+
+
+        [Fact]
+        public void Add_WithFooStruct_AddsTable()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+
+            // Act
+            var newTbl = tbl.Add("x", FooStruct.Foo1);
+
+            // Assert
+            FooStruct.Foo1.AssertIs(tbl["x"]);
+            FooStruct.Foo1.AssertIs(newTbl);
+        }
+
+        [Fact]
+        public void Add_WithFooClassListSource_AddsTableArray()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+
+            // Act
+            var newTbl = tbl.Add("x", FooClassList.List1);
+
+            // Assert
+            FooClassList.List1.AssertIs(newTbl);
+            FooClassList.List1.AssertIs(tbl["x"]);
+        }
+
+        [Fact]
+        public void Add_WithFooStructListSource_AddsTableArray()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+
+            // Act
+            var newTbl = tbl.Add("x", FooClassList.List1);
+
+            // Assert
+            FooClassList.List1.AssertIs(newTbl);
+        }
+
 
         [Fact]
         public void AddTableArray_WhenNoArgsPassed_AddsEmptyTableArray()
@@ -157,21 +196,19 @@ namespace Nett.Tests.Unit
         [Fact]
         public void CreateTableFromClass_WhenGivenObjectIsTomlObject_ThrowsInvalidOp()
         {
+            // Arrange
             var tbl = Toml.Create();
 
+            // Act
             Action a = () => tbl.CreateAttached(Toml.Create());
 
-            a.ShouldThrow<InvalidOperationException>();
+            // Assert
+            a.ShouldThrow<ArgumentException>();
         }
 
         private class TestStruct
         {
             public int Y { get; set; }
-        }
-
-        private class TestObj
-        {
-            public int Y { get; set; } = 1;
         }
     }
 }

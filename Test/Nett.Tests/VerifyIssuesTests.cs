@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
@@ -240,6 +241,35 @@ second3 = ""z""
 third1 = ""a""
 third2 = ""b""".Trim());
         }
+
+        [Fact]
+        public void VerifyIssue44_UpdateTomlTableArrayRow_WasFixed()
+        {
+            // Arrange
+            var tb = Toml.Create();
+            var tList = new List<TestTable>();
+            tList.Add(new TestTable("first", DateTimeOffset.MaxValue));
+            tb.Add("test", tList);
+            tList.Add(new TestTable("second", DateTimeOffset.MinValue));
+
+            // Act
+            var ta = tb.Update("test", tList);
+
+            // Assert
+            tb["test"].Should().BeOfType<TomlTableArray>();
+            ta[0].Get<TestTable>().timestamp.Should().Be(DateTimeOffset.MaxValue);
+            ta[1].Get<TestTable>().timestamp.Should().Be(DateTimeOffset.MinValue);
+        }
+
+        public class TestTable
+        {
+            public string label { get; set; }
+            public DateTimeOffset timestamp { get; set; }
+
+            public TestTable(string l, DateTimeOffset t) { label = l; timestamp = t; }
+            public TestTable() { }
+        };
+
 
         public class WithUint
         {

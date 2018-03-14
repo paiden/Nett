@@ -60,20 +60,27 @@ namespace Nett
             => AddTomlObjectInternal(table, key, table.CreateAttached(values));
 
         // Table
+        public static TomlTable Add<T>(
+            this TomlTable table,
+            string key,
+            IDictionary<string, T> tableData,
+            TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
+            => AddTomlObjectInternal(table, key, CreateAttached(table, tableData, tableType));
+
         public static TomlTable Add(
             this TomlTable table, string key, object obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
-            return AddTomlObjectInternal(table, key, TomlTable.CreateFromClass(table.Root, obj, tableType));
+            return AddTomlObjectInternal(table, key, TomlTable.CreateFromComplexObject(table.Root, obj, tableType));
         }
 
         // Table Array
-        public static TomlTableArray Add(
+        public static TomlTableArray Add<T>(
             this TomlTable table,
             string key,
-            IEnumerable<object> tableArray,
+            IEnumerable<T> tableArray,
             TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
-            return AddTomlObjectInternal(table, key, table.CreateAttached(tableArray));
+            return AddTomlObjectInternal(table, key, table.CreateAttached(tableArray, tableType));
         }
 
 #pragma warning disable SA1313 // Parameter names must begin with lower-case letter

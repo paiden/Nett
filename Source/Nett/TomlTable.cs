@@ -242,8 +242,7 @@
             visitor.Visit(this);
         }
 
-        internal static TomlTable CreateFromClass<T>(ITomlRoot root, T obj, TableTypes tableType)
-            where T : class
+        internal static TomlTable CreateFromComplexObject<T>(ITomlRoot root, T obj, TableTypes tableType)
         {
             if (root == null) { throw new ArgumentNullException(nameof(root)); }
             if (obj == null) { throw new ArgumentNullException(nameof(obj)); }
@@ -265,6 +264,22 @@
             }
 
             return tt;
+        }
+
+        internal static TomlTable CreateFromDictionary<T>(ITomlRoot root, IDictionary<string, T> dict, TableTypes tableType)
+        {
+            if (root == null) { throw new ArgumentNullException(nameof(root)); }
+            if (dict == null) { throw new ArgumentNullException(nameof(dict)); }
+
+            var tomlTable = new TomlTable(root, tableType);
+
+            foreach (var kvp in dict)
+            {
+                var obj = TomlObject.CreateFrom(root, kvp.Value);
+                tomlTable.AddRow(new TomlKey(kvp.Key), obj);
+            }
+
+            return tomlTable;
         }
 
         internal static TomlTable CreateFromDictionary(ITomlRoot root, IDictionary dict, TableTypes tableType)

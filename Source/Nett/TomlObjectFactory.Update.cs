@@ -24,9 +24,26 @@ namespace Nett
         public static TomlTimeSpan Update(this TomlTable table, string key, TimeSpan value)
             => Update(table, key, table.CreateAttached(value));
 
+        // Table
+        public static TomlTable Update<T>(
+            this TomlTable table,
+            string key,
+            IDictionary<string, T> tableData,
+            TomlTable.TableTypes type = TomlTable.TableTypes.Default)
+            => Update(table, key, CreateAttached(table, tableData, type));
+
         public static TomlTable Update(
             this TomlTable table, string key, object obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
-            => Update(table, key, TomlTable.CreateFromClass(table.Root, obj, type));
+            => Update(table, key, CreateAttached(table, obj, type));
+
+        // Table Array
+        public static TomlTableArray Update<T>(
+            this TomlTable table, string key, IEnumerable<T> items, TomlTable.TableTypes type = TomlTable.TableTypes.Default)
+        {
+            TomlTableArray tblArray = CreateAttached(table, items, type);
+            table[key] = tblArray;
+            return tblArray;
+        }
 
         // Arrays
         public static TomlArray Update(this TomlTable table, string key, IEnumerable<bool> array)

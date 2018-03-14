@@ -7,16 +7,8 @@ using Xunit;
 namespace Nett.Tests.Unit
 {
     [ExcludeFromCodeCoverage]
-    public class TomlObjectFactoryUpdateTests
+    public sealed partial class TomlObjectFactoryTests
     {
-        private TomlTable updateThis;
-
-        public TomlObjectFactoryUpdateTests()
-        {
-            this.updateThis = Toml.Create();
-            this.updateThis.Add("x", 1);
-        }
-
         [Fact]
         public void Update_WhenKeyDoesntExist_ThrowInvalidOperation()
         {
@@ -194,14 +186,13 @@ namespace Nett.Tests.Unit
         }
 
         [Fact]
-        public void Update_WhenXSetToNewObject_ChangesRowToThat()
+        public void Update_WithFooClassListSource_UpdatesToTableArray()
         {
             // Act
-            var newValue = new Foo();
-            this.updateThis.Update("x", newValue);
+            var ta = this.updateThis.Update("x", FooClassList.List1);
 
             // Assert
-            this.updateThis.Get<Foo>("x").Should().Be(newValue);
+            FooClassList.List1.AssertIs(this.updateThis["x"]);
         }
 
         [Fact]
@@ -215,19 +206,55 @@ namespace Nett.Tests.Unit
             this.updateThis.Get<FooStruct>("x").Should().Be(newValue);
         }
 
-        private struct FooStruct
+        [Fact]
+        public void Update_WithFooClass_UpdatesToTable()
         {
-            private int x;
-            public int X { get => this.x; set => this.x = value; }
+            // Act
+            this.updateThis.Update("x", FooClass.Foo1);
+
+            // Assert
+            FooClass.Foo1.AssertIs(this.updateThis["x"]);
         }
 
-        private class Foo
+        [Fact]
+        public void Update_WithFooStruct_UpdatesToTable()
         {
-            public int X { get; set; } = 1;
+            // Act
+            this.updateThis.Update("x", FooStruct.Foo1);
 
-            public override bool Equals(object obj) => ((Foo)obj).X == this.X;
+            // Assert
+            FooStruct.Foo1.AssertIs(this.updateThis["x"]);
+        }
 
-            public override int GetHashCode() => this.X;
+        [Fact]
+        public void Update_WithFooDict_UpdatesToTable()
+        {
+            // Act
+            var u = this.updateThis.Update("x", FooDict.Dict1);
+
+            // Assert
+            FooDict.Dict1.AssertIs(this.updateThis["x"]);
+            FooDict.Dict1.AssertIs(u);
+        }
+
+        [Fact]
+        public void Update_WithFooClassList_UpdatesToTableArray()
+        {
+            // Act
+            var ta = this.updateThis.Update("x", FooClassList.List1);
+
+            // Assert
+            FooClassList.List1.AssertIs(this.updateThis["x"]);
+        }
+
+        [Fact]
+        public void Update_WithFooStructList_UpdatesToTableArray()
+        {
+            // Act
+            var ta = this.updateThis.Update("x", FooStructList.List1);
+
+            // Assert
+            FooStructList.List1.AssertIs(this.updateThis["x"]);
         }
     }
 }

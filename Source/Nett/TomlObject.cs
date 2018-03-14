@@ -87,7 +87,7 @@
             else
             {
                 var tableType = root.Settings.GetTableType(t);
-                return TomlTable.CreateFromClass(root, val, tableType);
+                return TomlTable.CreateFromComplexObject(root, val, tableType);
             }
         }
 
@@ -137,7 +137,7 @@
                 else
                 {
                     return new TomlTableArray(root, e.Select((o) =>
-                        TomlTable.CreateFromClass(root, o, root.Settings.GetTableType(et))));
+                        TomlTable.CreateFromComplexObject(root, o, root.Settings.GetTableType(et))));
                 }
             }
 

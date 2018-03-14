@@ -451,6 +451,12 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
+**v0.8.1** --- XXXX-XX-XX
+
+Nett:
+
++ Fix: Updating of TomlTables with TableArrayTypes [#44](https://github.com/paiden/Nett/issues/44)
+
 **v0.8.0** --- 2017-09-29
 
 General: 
