@@ -6,10 +6,10 @@
     [DebuggerDisplay("{Value}")]
     public sealed class TomlString : TomlValue<string>
     {
-        private readonly TypeOfString type = TypeOfString.Default;
+        private readonly TypeOfString type;
 
         internal TomlString(ITomlRoot root, string value, TypeOfString type = TypeOfString.Default)
-            : base(root, value)
+            : base(root, TrimFirstNewline(type, value))
         {
             this.type = type;
         }
@@ -45,6 +45,13 @@
             root.CheckNotNull(nameof(root));
 
             return new TomlString(root, this.Value, this.type);
+        }
+
+        private static string TrimFirstNewline(TypeOfString type, string input)
+        {
+            return type == TypeOfString.Multiline || type == TypeOfString.MultilineLiteral
+                ? input.TrimStart(new char[] { '\r' }).TrimStart(new char[] { '\n' })
+                : input;
         }
     }
 }

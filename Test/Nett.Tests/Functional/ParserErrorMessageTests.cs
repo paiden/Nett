@@ -6,7 +6,7 @@ namespace Nett.Tests.Functional
 {
     public sealed class ParserErrorMessageTests
     {
-        private const string NoSpecificErrorMessage = "";
+        private const string NoSpecificErrorMessage = "*";
         private const string KeyMissingError = "*Key is missing.";
         private const string ValueMissingError = "*Value is missing.";
         private const string StringNotClosedError = "*String not closed.";
@@ -16,18 +16,19 @@ namespace Nett.Tests.Functional
         private const string FloatMissingExponent = "*Exponent of float is missing.";
         private const string FailedToReadInteger = "*Failed to read integer.*";
 
-        public static TheoryData<string, string, int, int> InputData =
+
+        public static TheoryData<string, string, int, int> InputData { get; } =
             new TheoryData<string, string, int, int>
             {
-                { "1.0", "*Failed to parse key because unexpected token '1.0' was found.", 1, 1 },
-                { "X = 2.", FloatFractionMissign, 1, 7 },
-                { "X = 2.X", FloatFractionMissign, 1, 7 },
-                { "X = 2.1X", "*Failed to read float because fraction '1X' is invalid.", 1, 7 },
-                { "X = 2e", FloatMissingExponent, 1, 7 },
-                { "X = 2e-", FailedToReadInteger, 1, 8 },
-                { "X = 2e-1X", "*Failed to read float because exponent '-1X' is invalid.", 1, 7 },
-                //{ "X = 2e01", "Integer is invalid because of leading '0'.", 1, 7 }, // Leading zero not allowed in E-part (currently not working because of bug, will be fixed separately)
-                { "X = 2eX", FloatMissingExponent, 1, 7 },
+                { "1.0", NoSpecificErrorMessage, 1, 2 },
+                { "X = 2.", FloatFractionMissign, 1, 5 },
+                { "X = 2.X", FloatFractionMissign, 1, 5 },
+                { "X = 2.1X", "Float fraction contains unexpected 'X'.", 1, 5 },
+                { "X = 2e", FloatMissingExponent, 1, 5 },
+                { "X = 2e-", FloatMissingExponent, 1, 5 },
+                { "X = 2e-1X", "Float exponent contains unexpected 'X'.", 1, 5 },
+                { "X = 2e01", "Exponent is invalid because of leading '0'.", 1, 5 },
+                { "X = 2eX", FloatMissingExponent, 1, 5 },
                 { "X = ", ValueMissingError, 1, 5 },
                 { "X = \r\n", ValueMissingError, 1, 5 },
                 { "X = \r", ValueMissingError, 1, 6 }, // \r is a omitted char, and after that EOF will cause error => 5 + 1
@@ -39,7 +40,7 @@ namespace Nett.Tests.Functional
                 { "X = 'Hello", StringNotClosedError, 1, 5 },
                 { "X = '''Hello \r\n\r\n", StringNotClosedError, 1, 5 },
                 { "X = \"\"\"Hello \r\n\r\n", StringNotClosedError, 1, 5 },
-                { "X = \"\r\n\"", "*is invalid because it contains newlines.", 1, 5 },
+                { "X = \"\r\n\"", "Single line string contains newlines.", 1, 5 },
                 { "X = [", ArrayValueIsMissing, 1, 6 },
                 { "X = [,]", ArrayValueIsMissing, 1, 6 },
                 { "X = [1, ,]", ArrayValueIsMissing, 1, 9 }, // Space is no token, so the ',' is the error position => 9 instead of 8
@@ -52,7 +53,7 @@ namespace Nett.Tests.Functional
                 { "[X]A", "Expected newline after table specifier. Token of type 'BareKey' with value 'A' on same line.", 1, 4 },
             };
 
-        [Theory(DisplayName = "ErrMsg has correct pos")]
+        [Theory]
         [MemberData(nameof(InputData))]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public static void Parser_WhenInputIsInvalid_GeneratesErrorMessageWithLineAndColumn(string toml, string _, int line, int column)
@@ -65,7 +66,7 @@ namespace Nett.Tests.Functional
             a.ShouldThrow<Exception>().WithMessage($"Line {line}, Column {column}:*");
         }
 
-        [Theory(DisplayName = "Useful ErrMsg")]
+        [Theory]
         [MemberData(nameof(InputData))]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public static void Parser_WhenInputIsInvalid_GeneratesSomewhatUsefulErrorMessage(string toml, string error, int _, int __)

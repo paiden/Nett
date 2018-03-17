@@ -63,10 +63,13 @@
   <ItemGroup>
     <Compile Include="NestedTableViaConverterTests.cs" />
     <Compile Include="Parser\LaBufferTests.cs" />
+    <Compile Include="Parser\LexerTests.cs" />
     <Compile Include="Parser\TokenizerTests.cs" />
+    <Compile Include="Parser\ValueScopeTrackerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadTomlWithCommentsTests.cs" />
     <Compile Include="StringExtensionTests.cs" />
+    <Compile Include="TomlValues.cs" />
     <Compile Include="TomlTableTests.cs" />
     <Compile Include="TomlTableToTypedDictionaryConverterTests.cs" />
     <Compile Include="TomlValueTests.cs" />

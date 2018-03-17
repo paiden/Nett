@@ -83,5 +83,6 @@
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1649" Action="None" />
     <Rule Id="SA1652" Action="None" />
+    <Rule Id="SA1313" Action="None" /> <!-- As long as it does not ignore _,__,___ only varnames everywhere this rule is .... -->
   </Rules>
 </RuleSet>

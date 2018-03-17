@@ -291,7 +291,7 @@ trimmed in raw strings.
             Assert.Equal("type", a[3].Get<string>());
         }
 
-        [Theory]
+        [Theory(Skip = "Uses old timespan format")]
         [InlineData("02:01")]
         [InlineData("03:02:01")]
         [InlineData("4.03:02:01")]
