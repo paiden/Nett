@@ -4,8 +4,10 @@
     {
         public static TomlTableArray TryApply(ITomlRoot root, TokenBuffer tokens)
         {
-            if (!tokens.TryExpectAt(0, TokenType.LBrac)) { return null; }
-            if (!tokens.TryExpectAt(1, TokenType.LCurly)) { return null; }
+            int pos = 0;
+            if (!tokens.TryExpectAt(pos++, TokenType.LBrac)) { return null; }
+            while (tokens.TryExpectAt(pos, TokenType.NewLine)) { pos++; }
+            if (!tokens.TryExpectAt(pos++, TokenType.LCurly)) { return null; }
 
             return Apply(root, tokens);
         }
