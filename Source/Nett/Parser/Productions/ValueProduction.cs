@@ -148,6 +148,7 @@
                     tokens.Consume();
                     a = new TomlArray(root);
                     a.AddComments(prep);
+                    a.AddComments(CommentProduction.TryParseComments(tokens, CommentLocation.Append));
                     return a;
                 }
                 else

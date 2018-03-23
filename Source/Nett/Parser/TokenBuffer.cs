@@ -148,6 +148,11 @@
                 while (this.TryExpectAndConsume(TokenType.NewLine)) { }
             }
 
+            public void ConsumeAllNewlinesAndComments()
+            {
+                while (this.TryExpectAndConsume(TokenType.NewLine) || this.TryExpectAndConsume(TokenType.Comment)) { }
+            }
+
             public void MakeItReal()
             {
                 this.CheckBufferPosition();
