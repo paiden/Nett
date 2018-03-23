@@ -424,6 +424,46 @@ namespace Nett.Tests.Internal.Parser
             t.Tokens.Consume().value.Should().Be("}");
         }
 
+        [Fact]
+        public void Tokenize_ImaginaryContext()
+        {
+            // Act
+            var tokens = new Tokenizer(TomlStrings.Valid.InlineTableNoSpaces.ToStream()).Tokens;
+            var ictx = tokens.GetImaginaryContext();
+
+            // Assert
+            ictx.ConsumeAllNewlines();
+
+            ictx.Consume().value.Should().Be("[");
+            tokens.Peek().value.Should().Be("<NewLine>");
+
+            ictx.MakeItReal();
+
+            ictx.Peek().value.Should().Be("Test");
+            tokens.Peek().value.Should().Be("Test");
+
+            ictx.MakeItReal(); // should do nothing
+
+            ictx.Peek().value.Should().Be("Test");
+            tokens.Peek().value.Should().Be("Test");
+
+            tokens.Consume();
+
+#if DEBUG
+            new Action(() => ictx.Consume()).ShouldThrow<InvalidOperationException>();
+#endif
+
+            tokens.Consume().value.Should().Be("]");
+            tokens.Consume().value.Should().Be("<NewLine>");
+            tokens.Consume().value.Should().Be("InlineTable");
+            tokens.Consume().value.Should().Be("=");
+            tokens.Consume().value.Should().Be("{");
+            tokens.Consume().value.Should().Be("test");
+            tokens.Consume().value.Should().Be("=");
+            tokens.Consume().value.Should().Be("1");
+            tokens.Consume().value.Should().Be("}");
+        }
+
         private static string TokensToString(IEnumerable<Token> tokens)
         {
             var sb = new StringBuilder();

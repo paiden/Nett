@@ -7,8 +7,8 @@
     internal abstract class LookaheadBuffer<T>
         where T : struct
     {
-        private readonly T[] buffer;
         private readonly Func<T?> read;
+        private T[] buffer;
 
         private int readIndex = 0;
         private int writeIndex = -1;
@@ -65,13 +65,20 @@
 
         public T PeekAt(int la)
         {
-            if (la > this.buffer.Length - 1)
+            if (la > this.ItemsAvailable - 1)
             {
-                throw new ArgumentOutOfRangeException($"Argument {nameof(la)} with value '{la}' is out of the valid range '[0 - {this.buffer.Length - 1}']");
+                if (la > this.buffer.Length - 1)
+                {
+                    this.GrowBuffer(la + 1);
+                }
+
+                if (la > this.ItemsAvailable - 1)
+                {
+                    throw new ArgumentOutOfRangeException($"Argument {nameof(la)} with value '{la}' is out of the valid range '[0 - {this.ItemsAvailable - 1}']");
+                }
             }
 
-            var index = (this.readIndex + la) % this.buffer.Length;
-            return this.buffer[index];
+            return this.PeekAtInternal(la);
         }
 
         public bool TryExpect(T expected)
@@ -85,6 +92,43 @@
 
             var laVal = this.PeekAt(la);
             return object.Equals(laVal, expected);
+        }
+
+        private void GrowBuffer(int minLength)
+        {
+            var newBuffer = new T[Math.Max(minLength, this.buffer.Length * 2)];
+            int i = 0;
+            while (i < newBuffer.Length)
+            {
+                T val;
+                if (i < this.ItemsAvailable)
+                {
+                    val = this.PeekAtInternal(i);
+                }
+                else
+                {
+                    var r = this.read();
+                    if (!r.HasValue)
+                    {
+                        break;
+                    }
+
+                    val = r.Value;
+                }
+
+                newBuffer[i++] = val;
+            }
+
+            this.buffer = newBuffer;
+            this.readIndex = 0;
+            this.writeIndex = i - 1;
+            this.ItemsAvailable = i;
+        }
+
+        private T PeekAtInternal(int la)
+        {
+            var index = (this.readIndex + la) % this.buffer.Length;
+            return this.buffer[index];
         }
 
         private void IncIndex(ref int index)
