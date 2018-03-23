@@ -4,18 +4,24 @@
     {
         public static TomlTableArray TryApply(ITomlRoot root, TokenBuffer tokens)
         {
-            int pos = 0;
-            if (!tokens.TryExpectAt(pos++, TokenType.LBrac)) { return null; }
-            while (tokens.TryExpectAt(pos, TokenType.NewLine)) { pos++; }
-            if (!tokens.TryExpectAt(pos++, TokenType.LCurly)) { return null; }
+            var ictx = tokens.GetImaginaryContext();
 
-            return Apply(root, tokens);
+            if (!ictx.TryExpectAndConsume(TokenType.LBrac)) { return null; }
+            ictx.ConsumeAllNewlines();
+            if (!ictx.TryExpect(TokenType.LCurly)) { return null; }
+
+            ictx.MakeItReal();
+
+            return Apply(root, tokens, true);
         }
 
-        private static TomlTableArray Apply(ITomlRoot root, TokenBuffer tokens)
+        private static TomlTableArray Apply(ITomlRoot root, TokenBuffer tokens, bool withoutLBrac = false)
         {
-            tokens.ExpectAndConsume(TokenType.LBrac);
-            tokens.ConsumeAllNewlines();
+            if (!withoutLBrac)
+            {
+                tokens.ExpectAndConsume(TokenType.LBrac);
+                tokens.ConsumeAllNewlines();
+            }
 
             var arr = new TomlTableArray(root);
             TomlTable tbl = null;

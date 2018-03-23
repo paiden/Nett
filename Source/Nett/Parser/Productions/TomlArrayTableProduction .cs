@@ -19,8 +19,10 @@
 
         public static IList<TomlKey> TryApply(TokenBuffer tokens)
         {
-            if (!tokens.TryExpectAt(0, TokenType.LBrac)) { return null; }
-            if (!tokens.TryExpectAt(1, TokenType.LBrac)) { return null; }
+            var ictx = tokens.GetImaginaryContext();
+
+            if (!ictx.TryExpectAndConsume(TokenType.LBrac)) { return null; }
+            if (!ictx.TryExpectAndConsume(TokenType.LBrac)) { return null; }
 
             return Apply(tokens);
         }

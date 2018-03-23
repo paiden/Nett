@@ -84,6 +84,63 @@
             return t;
         }
 
+        public ImaginaryContext GetImaginaryContext()
+        {
+            return new ImaginaryContext(this);
+        }
+
+        public struct ImaginaryContext
+        {
+            private readonly TokenBuffer buffer;
+
+            private int position;
+
+            public ImaginaryContext(TokenBuffer buffer)
+            {
+                this.buffer = buffer;
+                this.position = 0;
+            }
+
+            public bool TryExpect(TokenType tt)
+            {
+                return this.buffer.TryExpectAt(this.position, tt);
+            }
+
+            public bool TryExpectAt(int la, TokenType tt)
+            {
+                return this.buffer.TryExpectAt(this.position + la, tt);
+            }
+
+            public Token Consume()
+            {
+                return this.buffer.PeekAt(this.position++);
+            }
+
+            public bool TryExpectAndConsume(TokenType tt)
+            {
+                var r = this.TryExpect(tt);
+                if (r)
+                {
+                    this.position++;
+                }
+
+                return r;
+            }
+
+            public void ConsumeAllNewlines()
+            {
+                while (this.TryExpectAndConsume(TokenType.NewLine)) { }
+            }
+
+            public void MakeItReal()
+            {
+                while (this.position-- > 0)
+                {
+                    this.buffer.Consume();
+                }
+            }
+        }
+
         private class AutoThrowAwayNewLinesContext : IDisposable
         {
             private readonly TokenBuffer buffer;
