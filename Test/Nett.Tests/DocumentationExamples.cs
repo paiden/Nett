@@ -75,7 +75,7 @@ namespace Nett.Tests
         private string exp = @"EnableDebug = true
 
 [Server]
-Timeout = 00:01:00
+Timeout = 1m
 
 
 [Client]

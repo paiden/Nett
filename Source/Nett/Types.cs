@@ -16,7 +16,7 @@
         public static readonly Type TomlIntType = typeof(TomlInt);
         public static readonly Type TomlFloatType = typeof(TomlFloat);
         public static readonly Type TomlDateTimeType = typeof(TomlDateTime);
-        public static readonly Type TomlTimeSpanType = typeof(TomlTimeSpan);
+        public static readonly Type TomlTimeSpanType = typeof(TomlDuration);
         public static readonly Type TomlTableType = typeof(TomlTable);
         public static readonly Type TomlValueType = typeof(TomlValue);
         public static readonly Type TomlTableArrayType = typeof(TomlTableArray);

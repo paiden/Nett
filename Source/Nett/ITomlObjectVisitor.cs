@@ -14,7 +14,7 @@
 
         void Visit(TomlString s);
 
-        void Visit(TomlTimeSpan ts);
+        void Visit(TomlDuration ts);
 
         void Visit(TomlDateTime dt);
 

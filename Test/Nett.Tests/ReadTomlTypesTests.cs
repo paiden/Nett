@@ -291,18 +291,27 @@ trimmed in raw strings.
             Assert.Equal("type", a[3].Get<string>());
         }
 
+        public static TheoryData<string, TimeSpan> DurationParseData
+            => new TheoryData<string, TimeSpan>()
+            {
+                { "2m1s", TimeSpan.Parse("00:02:01") },
+                { "3h2m1s", TimeSpan.Parse("03:02:01") },
+                { "4d3h2m1s", TimeSpan.Parse("4.03:02:01") },
+                { "4d3h2m1s1ms", TimeSpan.Parse("4.03:02:01.001") },
+                { "-4d3h2m1s1ms", -TimeSpan.Parse("4.03:02:01.001") },
+                { "0.5d0.5h0.5m0.5s", TimeSpan.Parse("12:30:30.5") },
+                { "1_0h2_0.5m6_0s", TimeSpan.Parse("10:21:30") },
+            };
+
         [Theory]
-        [InlineData("02:01")]
-        [InlineData("03:02:01")]
-        [InlineData("4.03:02:01")]
-        [InlineData("4.03:02:01.001")]
-        public void Deserialize_WithTimepsanInAllSupportedFormats_DeserializesCorrectly(string timespan)
+        [MemberData(nameof(DurationParseData))]
+        public void Deserialize_WithTimepsanInAllSupportedFormats_DeserializesCorrectly(string timespan, TimeSpan expected)
         {
             var parsed = Toml.ReadString($"a = {timespan}");
 
             var a = parsed.Get<TimeSpan>("a");
 
-            Assert.Equal(TimeSpan.Parse(timespan), a);
+            a.Should().Be(expected);
         }
 
         [Fact]

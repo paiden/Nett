@@ -41,7 +41,7 @@ namespace Nett.AspNet
                     case TomlInt i: sv = i.Value.ToString(CultureInfo.InvariantCulture); break;
                     case TomlFloat f: sv = f.Value.ToString(CultureInfo.InvariantCulture); break;
                     case TomlDateTime dt: sv = dt.Value.ToString(CultureInfo.InvariantCulture); break;
-                    case TomlTimeSpan ts: sv = ts.Value.ToString(); break;
+                    case TomlDuration ts: sv = ts.Value.ToString(); break;
                     default: throw new InvalidOperationException("Unexpected");
                 }
 

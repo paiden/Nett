@@ -66,7 +66,7 @@ This will write the following content to your hard disk:
 EnableDebug = true
 
 [Server]
-Timeout = 00:01:00
+Timeout = 1m
 
 
 [Client]
@@ -451,11 +451,14 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-**v0.8.1** --- XXXX-XX-XX
+**v0.9.0** --- XXXX-XX-XX
 
 Nett:
 
++ **Breaking** Change: Rename TomlTimeSpan to TomlDuration
++ **Breaking** Change: TomlDuration uses Go-Like duration format as described in [Toml/#514](https://github.com/toml-lang/toml/issues/514)
 + Fix: Updating of TomlTables with TableArrayTypes [#44](https://github.com/paiden/Nett/issues/44)
+
 
 **v0.8.0** --- 2017-09-29
 
@@ -463,7 +466,7 @@ General:
 
 + Add: .Net Standard 2.0 support
 + Add: Nett.AspNet package that integrates TOML into the Asp.Net Core configuration system
-+ Change: **Breaking** API changes creating / adding TOML objects in generic TOML
++ **Breaking** Change: API changes creating / adding TOML objects in generic TOML
 + Removed: Strong named packages
 
 Nett:

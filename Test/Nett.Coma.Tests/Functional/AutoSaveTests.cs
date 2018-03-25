@@ -86,7 +86,7 @@
             }
         }
 
-        [FFact(FuncSaveMergedConfig, "When value in sub table is changed, that value gets saved back into the correct originator source.")]
+        [Fact]
         public void SaveMergedConfig_WhenValueInSubTableIsChanged_ValueGetsSavedBackToOriginatorFile()
         {
             string mainFile = null;
