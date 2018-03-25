@@ -453,14 +453,15 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-**v0.9.0** --- XXXX-XX-XX
+**v0.9.0** --- 2018-03-25
 
 Nett:
 
 + **Breaking** Change: Rename TomlTimeSpan to TomlDuration
 + **Breaking** Change: TomlDuration uses Go-Like duration format as described in [Toml/#514](https://github.com/toml-lang/toml/issues/514)
 + Fix: Updating of TomlTables with TableArrayTypes [#44](https://github.com/paiden/Nett/issues/44)
-
++ Fix: Table rows written into wrong section [#42](https://github.com/paiden/Nett/issues/42)
++ Fix: NotImplementedException when using table arrays [#41](https://github.com/paiden/Nett/issues/41)
 
 **v0.8.0** --- 2017-09-29
 
