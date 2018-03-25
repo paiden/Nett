@@ -7,6 +7,10 @@ namespace Nett.Parser
     {
         private const int StartLexDuration = -1;
         private const int InvalidDurationUnit = 100;
+        private const string ErrStringNotClosed = "String not closed.";
+        private const string ErrNewlineInString = "Single line string contains newlines.";
+        private const string ErrFractionMissing = "Fraction of float is missing.";
+
         private static readonly List<Func<char, char, bool>> DurationUnitsOrdered
             = new List<Func<char, char, bool>>()
             {
@@ -17,10 +21,6 @@ namespace Nett.Parser
                 (x, y) => x == 'm' && y == 's',
                 (x, y) => x == 'u' && y == 's',
             };
-
-        private const string ErrStringNotClosed = "String not closed.";
-        private const string ErrNewlineInString = "Single line string contains newlines.";
-        private const string ErrFractionMissing = "Fraction of float is missing.";
 
         private readonly LexInput input;
         private readonly List<Token> lexed = new List<Token>();

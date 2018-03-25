@@ -47,7 +47,7 @@ namespace Nett.Parser
 
         private void PopScope(TokenType t)
         {
-            if (this.rvalueStack.Peek().Item1 == Complement(t))
+            if (this.rvalueStack.Peek().Item1 == this.Complement(t))
             {
                 this.rvalueStack.Pop();
                 this.PopAssignmentRValueScope();

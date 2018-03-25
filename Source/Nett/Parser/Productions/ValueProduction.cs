@@ -1,15 +1,13 @@
-﻿namespace Nett.Parser.Productions
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 
+namespace Nett.Parser.Productions
+{
     internal static class ValueProduction
     {
-        private delegate bool ParseIntDelegate(string input, out long parsed);
-
         private static readonly char[] WhitspaceCharSet =
         {
             '\u0009', '\u000A', '\u000B', '\u000D', '\u0020', '\u0085', '\u00A0',
@@ -17,6 +15,8 @@
             '\u2007', '\u2008', '\u2009', '\u200A', '\u2028', '\u2029', '\u202F', '\u205F',
             '\u3000',
         };
+
+        private delegate bool ParseIntDelegate(string input, out long parsed);
 
         public static TomlObject Apply(ITomlRoot root, TokenBuffer tokens)
         {

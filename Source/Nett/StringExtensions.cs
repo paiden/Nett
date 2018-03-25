@@ -6,7 +6,6 @@ using Nett.Parser;
 
 namespace Nett
 {
-
     internal static class StringExtensions
     {
         private static readonly Regex EscapedSequence = new Regex(@"\\(u[\da-fA-F]{4}|U[\da-fA-F]{8}|.)", RegexOptions.Compiled);

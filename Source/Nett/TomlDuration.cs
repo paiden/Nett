@@ -104,6 +104,5 @@ namespace Nett
             TimeSpan ToTimeSpan(long ticksPer)
                 => TimeSpan.FromTicks((long)(double.Parse(value, CultureInfo.InvariantCulture) * ticksPer));
         }
-
     }
 }

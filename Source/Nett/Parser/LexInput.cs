@@ -84,13 +84,6 @@ namespace Nett.Parser
             });
         }
 
-        internal IEnumerable<Token> EmitUnknown(string errorHint)
-        {
-            for (char c = this.Consume(); !c.IsTokenSepChar(); c = this.Consume()) { /* consume loop */ }
-
-            return this.EmitInternal(Token.Unknown(this.PeekEmit(), errorHint, this.tokenLine, this.tokenCol));
-        }
-
         public char Consume()
         {
             char c = this.Advance();
@@ -109,6 +102,13 @@ namespace Nett.Parser
             {
                 this.Advance();
             }
+        }
+
+        internal IEnumerable<Token> EmitUnknown(string errorHint)
+        {
+            for (char c = this.Consume(); !c.IsTokenSepChar(); c = this.Consume()) { /* consume loop */ }
+
+            return this.EmitInternal(Token.Unknown(this.PeekEmit(), errorHint, this.tokenLine, this.tokenCol));
         }
 
         private char Advance()
