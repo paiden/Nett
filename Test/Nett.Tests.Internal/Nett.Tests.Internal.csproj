@@ -64,7 +64,6 @@
     <Compile Include="NestedTableViaConverterTests.cs" />
     <Compile Include="Parser\LaBufferTests.cs" />
     <Compile Include="Parser\LexerTests.cs" />
-    <Compile Include="Parser\TokenizerTests.cs" />
     <Compile Include="Parser\ValueScopeTrackerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadTomlWithCommentsTests.cs" />

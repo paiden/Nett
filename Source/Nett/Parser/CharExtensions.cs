@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Nett.Parser.Matchers
+namespace Nett.Parser
 {
     internal static class CharExtensions
     {

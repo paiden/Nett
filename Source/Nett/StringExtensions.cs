@@ -1,12 +1,11 @@
-﻿namespace Nett
+﻿using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
+using Nett.Parser;
+
+namespace Nett
 {
-    using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Nett.Parser;
-    using Nett.Parser.Matchers;
 
     internal static class StringExtensions
     {
