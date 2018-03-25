@@ -70,6 +70,24 @@ more = [ # Comment
 # Evil.
 # ] Did I fool you?
 ] # Hopefully not.
+
+emptyArr1 = [ ] # End
+
+emptyArr2 = [ # Comment
+
+    #Comment
+
+] # End
+
+questions = [ # Comment
+ # Comment
+
+    { question = '*', answer = 42 }, # Comments within inline table arrays are also fun.
+    # Comment
+
+    # Comment
+] # End
+# Comment
 ";
 
             public const string DateTime = "bestdayever = 1987-07-05T17:45:00Z";

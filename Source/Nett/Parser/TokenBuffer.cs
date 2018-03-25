@@ -5,6 +5,7 @@
     internal sealed class TokenBuffer : LookaheadBuffer<Token>
     {
         private bool autoThrowAwayNewlines = false;
+        private int position = 0;
 
         public TokenBuffer(Func<Token?> read, int lookAhead)
             : base(read, lookAhead)
@@ -75,6 +76,7 @@
         public override Token Consume()
         {
             var t = base.Consume();
+            this.position++;
 
             if (this.autoThrowAwayNewlines)
             {
@@ -82,6 +84,94 @@
             }
 
             return t;
+        }
+
+        public ImaginaryContext GetImaginaryContext()
+        {
+            return new ImaginaryContext(this);
+        }
+
+        public struct ImaginaryContext
+        {
+            private readonly TokenBuffer buffer;
+            private int bufferPosition;
+            private int position;
+
+            public ImaginaryContext(TokenBuffer buffer)
+            {
+                this.buffer = buffer;
+                this.bufferPosition = buffer.position;
+                this.position = 0;
+            }
+
+            public Token Peek()
+            {
+                return this.PeekAt(0);
+            }
+
+            public Token PeekAt(int la)
+            {
+                this.CheckBufferPosition();
+                return this.buffer.PeekAt(this.position + la);
+            }
+
+            public bool TryExpect(TokenType tt)
+            {
+                return this.TryExpectAt(0, tt);
+            }
+
+            public bool TryExpectAt(int la, TokenType tt)
+            {
+                this.CheckBufferPosition();
+                return this.buffer.TryExpectAt(this.position + la, tt);
+            }
+
+            public Token Consume()
+            {
+                this.CheckBufferPosition();
+                return this.buffer.PeekAt(this.position++);
+            }
+
+            public bool TryExpectAndConsume(TokenType tt)
+            {
+                var r = this.TryExpect(tt);
+                if (r)
+                {
+                    this.position++;
+                }
+
+                return r;
+            }
+
+            public void ConsumeAllNewlines()
+            {
+                while (this.TryExpectAndConsume(TokenType.NewLine)) { }
+            }
+
+            public void ConsumeAllNewlinesAndComments()
+            {
+                while (this.TryExpectAndConsume(TokenType.NewLine) || this.TryExpectAndConsume(TokenType.Comment)) { }
+            }
+
+            public void MakeItReal()
+            {
+                this.CheckBufferPosition();
+                for (; this.position > 0; this.position--)
+                {
+                    this.buffer.Consume();
+                }
+
+                this.bufferPosition = this.buffer.position;
+            }
+
+            [System.Diagnostics.Conditional("DEBUG")]
+            private void CheckBufferPosition()
+            {
+                if (this.buffer.position != this.bufferPosition)
+                {
+                    throw new InvalidOperationException("Position of TokenBuffer have been moved.");
+                }
+            }
         }
 
         private class AutoThrowAwayNewLinesContext : IDisposable
