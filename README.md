@@ -2,14 +2,16 @@
 Nett is a library that helps to read and write [TOML](https://github.com/toml-lang/toml) files in .Net.
 
 # Differences to original TOML spec
-* 'Nett' also allows you to specify timespan values. Timespan currently isn't supported in the original
-'TOML' spec. The following TimeSpan formats are supported:
+* 'Nett' also allows you to specify duration values. Duration currently isn't supported in the original
+'TOML' spec. A Go-like duration format is supported (units have to be ordered large to small
+and can occur 1 time at most).
+Examples:
 
-+ hh:mm
-+ hh:mm:ss
-+ hh:mm:ss.ff
-+ dd.hh:mm:ss
-+ dd.hh:mm:ss.ff
++ 2_500d
++ 0.5d2h3m
++ 1d2h3m4s5ms
++ -2h30m
++ 400m2000s
 
 # Getting Started
 
