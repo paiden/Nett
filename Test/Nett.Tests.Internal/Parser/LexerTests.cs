@@ -180,6 +180,24 @@ namespace Nett.Tests.Internal.Parser
         }
 
         [Theory]
+        [InlineData("07:32:00")]
+        [InlineData("00:32:00.999999")]
+        [InlineData("11:01:59")]
+        public void Lex_LocalTimeTime_ProducesCorrectTokens(string token)
+        {
+            // Arrange
+            var l = CreateValueLexer(token);
+
+            // Act
+            var r = l.Lex();
+
+            // Assert
+            r.Skip(2)
+                .AssertNextTokenIs(TokenType.LocalTime, token)
+                .AssertNoMoreTokens();
+        }
+
+        [Theory]
         [InlineData("'X'", TokenType.LiteralString, "X")]
         [InlineData("'''X'''", TokenType.MultilineLiteralString, "X")]
         [InlineData("\"X\"", TokenType.String, "X")]

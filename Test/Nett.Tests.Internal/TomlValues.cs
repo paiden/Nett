@@ -22,7 +22,7 @@ namespace Nett.Tests.Util.TestData
                 int mllt = (int)TokenType.MultilineLiteralString;
 
                 int dt = (int)TokenType.Date;
-                int tt = (int)TokenType.Time;
+                int tt = (int)TokenType.LocalTime;
                 int dtt = (int)TokenType.DateTime;
                 int tst = (int)TokenType.Duration;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
@@ -51,6 +52,53 @@ namespace Nett.Tests
         public void Deserilaize_IntWihtLeadingZeros_Fails(string toParse)
         {
             Assert.Throws<Exception>(() => Toml.ReadString(toParse));
+        }
+
+        [Theory]
+        [InlineData("a = 0xDEADBEEF", "DEADBEEF")]
+        [InlineData("a = 0xdeadbeef", "deadbeef")]
+        [InlineData("a = 0xdead_beef", "deadbeef")]
+        public void Deserialize_HexInt_DeliversCorrectTomlInt(string src, string expected)
+        {
+            // Arrange
+            long.TryParse(expected, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out long expectedVal);
+
+            // Act
+            var parsed = Toml.ReadString(src);
+
+            // Assert
+            parsed.Get<long>("a").Should().Be(expectedVal);
+        }
+
+        [Theory]
+        [InlineData("a = 0o000012_34567", "01234567")]
+        [InlineData("a = 0o75_5 ", "755")]
+        public void Deserialize_OctInt_DeliversCorrectTomlInt(string src, string expected)
+        {
+            // Arrange
+            long expectedVal = Convert.ToInt64(expected, 8);
+
+            // Act
+            var parsed = Toml.ReadString(src);
+
+            // Assert
+            parsed.Get<long>("a").Should().Be(expectedVal);
+        }
+
+        [Theory]
+        [InlineData("a = 0b1111_0000_1111_0101", "1111000011110101")]
+        [InlineData("a = 0b1_0_1_0_1_0_1_0 ", "10101010")]
+        [InlineData("a = 0b0000", "0")]
+        public void Deserialize_BinInt_DeliversCorrectTomlInt(string src, string expected)
+        {
+            // Arrange
+            long expectedVal = Convert.ToInt64(expected, 2);
+
+            // Act
+            var parsed = Toml.ReadString(src);
+
+            // Assert
+            parsed.Get<long>("a").Should().Be(expectedVal);
         }
 
         [Fact]
@@ -173,21 +221,29 @@ trimmed in raw strings.
         }
 
         [Theory]
-        [InlineData("d = +1.0", 1.0)]
-        [InlineData("d = 2.5", 2.5)]
-        [InlineData("d = 3.1415", 3.1415)]
-        [InlineData("d = -0.0101", -0.0101)]
-        [InlineData("d = 5e+22", 5e+22)]
-        [InlineData("d = 1e6", 1e6)]
-        [InlineData("d = -2E-2", -2E-2)]
-        [InlineData("d = 6.626e-34", 6.626e-34)]
-        [InlineData("d = 9_223_617.445_991_228_313", 9223617.445991228313)]
-        [InlineData("d = 1e1_00", 1e100)]
+        [InlineData("+1.0", 1.0)]
+        [InlineData("2.5", 2.5)]
+        [InlineData("3.1415", 3.1415)]
+        [InlineData("-0.0101", -0.0101)]
+        [InlineData("5e+22", 5e+22)]
+        [InlineData("1e6", 1e6)]
+        [InlineData("-2E-2", -2E-2)]
+        [InlineData("6.626e-34", 6.626e-34)]
+        [InlineData("9_223_617.445_991_228_313", 9223617.445991228313)]
+        [InlineData("1e1_00", 1e100)]
+        [InlineData("inf", double.PositiveInfinity)]
+        [InlineData("+inf", double.PositiveInfinity)]
+        [InlineData("-inf", double.NegativeInfinity)]
+        [InlineData("nan", double.NaN)]
+        [InlineData("+nan", double.NaN)]
+        [InlineData("-nan", -double.NaN)]
         public void Deserialize_FloatKeyValuePair_ProducesCorrectResult(string src, double expected)
         {
-            var parsed = Toml.ReadString(src);
+            // Act
+            var parsed = Toml.ReadString($"x={src}");
 
-            Assert.Equal(expected, parsed.Get<double>("d"), 8); // Note double in C# can provide precision to 14th decimal. Don't know why TOML would like to have 15 digit precision.
+            // Assert
+            parsed.Get<double>("x").Should().Be(expected);
         }
 
         [Theory]
@@ -198,10 +254,12 @@ trimmed in raw strings.
         [InlineData("d = 01e6")]
         [InlineData("d = -02E-2")]
         [InlineData("d = 06.626e-34")]
-        public void Deserialize_FloatWihtLeadingZeros_ThrowsExcption(string src)
+        public void Deserialize_FloatWithLeadingZeros_ThrowsExcption(string src)
         {
             var exc = Assert.Throws<Exception>(() => Toml.ReadString(src));
         }
+
+
 
         [Theory]
         //[InlineData("b = true", true)]
@@ -214,22 +272,46 @@ trimmed in raw strings.
 
 
         [Theory]
-        [InlineData("d = 1979-05-27", "1979-05-27T00:00:00")]
-        [InlineData("d = 1979-05-27T00:32:00.999999", "1979-05-27T00:32:00.999999")]
-        [InlineData("d = 1979-05-27T07:32:00", "1979-05-27T07:32:00")]
-        [InlineData("d = 1979-05-27T07:32:00Z", "1979-05-27T07:32:00Z")]
-        [InlineData("d = 1979-05-27T00:32:00-07:00", "1979-05-27T00:32:00-07:00")]
-        [InlineData("d = 1979-05-27T00:32:00+07:00", "1979-05-27T00:32:00+07:00")]
-        [InlineData("d = 1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
-        [InlineData("d = 1979-05-27T00:32:00.999999+07:00", "1979-05-27T00:32:00.999999+07:00")]
-        [InlineData("d = 2000-01-01T00:00:00+01:00", "2000-01-01T00:00:00+01:00")]
-        public void Deserialize_DatetTime_DeseriaizesCorrectly(string src, string expectedDate)
+        [InlineData("1979-05-27", "1979-05-27T00:00:00")]
+        [InlineData("1979-05-27T00:32:00.999999", "1979-05-27T00:32:00.999999")]
+        [InlineData("1979-05-27T07:32:00", "1979-05-27T07:32:00")]
+        [InlineData("1979-05-27T07:32:00Z", "1979-05-27T07:32:00Z")]
+        [InlineData("1979-05-27T00:32:00-07:00", "1979-05-27T00:32:00-07:00")]
+        [InlineData("1979-05-27T00:32:00+07:00", "1979-05-27T00:32:00+07:00")]
+        [InlineData("1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
+        [InlineData("1979-05-27T00:32:00.999999+07:00", "1979-05-27T00:32:00.999999+07:00")]
+        [InlineData("2000-01-01T00:00:00+01:00", "2000-01-01T00:00:00+01:00")]
+        public void Deserialize_DateTime_DeseriaizesCorrectly(string src, string expectedDate)
         {
+            // Arrange
             var date = DateTimeOffset.Parse(expectedDate);
 
-            var parsed = Toml.ReadString(src);
+            // Act
+            var parsed = Toml.ReadString($"x={src}");
 
-            Assert.Equal(date, parsed["d"].Get<DateTimeOffset>());
+            // Assert
+            Assert.Equal(date, parsed["x"].Get<DateTimeOffset>());
+        }
+
+        public static TheoryData<string> LocalTimeData
+            => new TheoryData<string>()
+            {
+                { "07:32:00" },
+                { "00:32:00.999999"},
+            };
+
+        [Theory]
+        [MemberData(nameof(LocalTimeData))]
+        public void Deserialize_LocalTime_DeserializesCorrectly(string src)
+        {
+            // Arrange
+            var date = DateTimeOffset.Parse($"0001-01-02T{src}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+
+            // Act
+            var parsed = Toml.ReadString($"x={src}");
+
+            // Assert
+            parsed["x"].Get<DateTimeOffset>().Should().Be(date);
         }
 
         [Fact]

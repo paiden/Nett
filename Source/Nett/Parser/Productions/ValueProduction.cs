@@ -8,6 +8,8 @@
 
     internal static class ValueProduction
     {
+        private delegate bool ParseIntDelegate(string input, out long parsed);
+
         private static readonly char[] WhitspaceCharSet =
         {
             '\u0009', '\u000A', '\u000B', '\u000D', '\u0020', '\u0085', '\u00A0',
@@ -216,34 +218,42 @@
         {
             var floatToken = tokens.Consume();
 
-            var check = floatToken.value;
-            int startToCheckForZeros = check[0] == '+' || check[0] == '-' ? 1 : 0;
-
-            if (check[startToCheckForZeros] == '0' && check[startToCheckForZeros + 1] != '.')
+            switch (floatToken.value)
             {
-                throw new Exception($"Failed to parse TOML float with '{floatToken.value}' because it has  a leading '0' which is not allowed by the TOML specification.");
+                case "nan":
+                case "+nan": return new TomlFloat(root, double.NaN);
+                case "-nan": return new TomlFloat(root, -double.NaN);
+                case "inf":
+                case "+inf": return new TomlFloat(root, double.PositiveInfinity);
+                case "-inf": return new TomlFloat(root, double.NegativeInfinity);
+                default:
+                    return new TomlFloat(
+                        root,
+                        double.Parse(floatToken.value.Replace("_", string.Empty), CultureInfo.InvariantCulture));
             }
-
-            return new TomlFloat(root, double.Parse(floatToken.value.Replace("_", string.Empty), CultureInfo.InvariantCulture));
         }
 
-        private static TomlInt ParseTomlInt(ITomlRoot root, LookaheadBuffer<Token> tokens)
+        private static TomlInt ParseTomlInt(ITomlRoot root, LookaheadBuffer<Token> tokens, ParseIntDelegate parseDelegate)
         {
             var token = tokens.Consume();
 
-            if (token.value.Length > 1 && token.value[0] == '0')
+            if (!parseDelegate(token.value.Replace("_", string.Empty), out long value))
             {
-                throw new Exception($"Failed to parse TOML int with '{token.value}' because it has  a leading '0' which is not allowed by the TOML specification.");
+                throw new Exception($"Failed to parse TOML int with '{token.value}'.");
             }
 
-            return new TomlInt(root, long.Parse(token.value.Replace("_", string.Empty)));
+            return new TomlInt(root, value);
         }
 
         private static TomlValue ParseTomlValue(ITomlRoot root, TokenBuffer tokens)
         {
-            if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(root, tokens); }
+            if (tokens.TryExpect(TokenType.Integer)) { return ParseTomlInt(root, tokens, long.TryParse); }
+            else if (tokens.TryExpect(TokenType.HexInteger)) { return ParseTomlInt(root, tokens, TryParseHexInt); }
+            else if (tokens.TryExpect(TokenType.OctalInteger)) { return ParseTomlInt(root, tokens, TryParseOctInt); }
+            else if (tokens.TryExpect(TokenType.BinaryInteger)) { return ParseTomlInt(root, tokens, TryParseBinInt); }
             else if (tokens.TryExpect(TokenType.Float)) { return ParseTomlFloat(root, tokens); }
             else if (tokens.TryExpect(TokenType.DateTime)) { return TomlDateTime.Parse(root, tokens.Consume().value); }
+            else if (tokens.TryExpect(TokenType.LocalTime)) { return ParseLocalDateTime(root, tokens.Consume().value); }
             else if (tokens.TryExpect(TokenType.Duration)) { return TomlDuration.Parse(root, tokens.Consume().value); }
             else if (tokens.TryExpect(TokenType.String)) { return ParseStringValue(root, tokens); }
             else if (tokens.TryExpect(TokenType.LiteralString)) { return ParseLiteralString(root, tokens); }
@@ -253,6 +263,36 @@
             else if (tokens.TryExpect(TokenType.LBrac)) { return ParseTomlArray(root, tokens); }
 
             return null;
+        }
+
+        private static bool TryParseHexInt(string input, out long value)
+            => TryParseWithBase(input, out value, 16);
+
+        private static bool TryParseOctInt(string input, out long value)
+            => TryParseWithBase(input, out value, 8);
+
+        private static bool TryParseBinInt(string input, out long value)
+            => TryParseWithBase(input, out value, 2);
+
+        private static TomlDateTime ParseLocalDateTime(ITomlRoot root, string input)
+        {
+            DateTimeOffset offset = DateTimeOffset.Parse(
+                $"0001-01-02T{input}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+            return new TomlDateTime(root, offset);
+        }
+
+        private static bool TryParseWithBase(string input, out long value, int numBase)
+        {
+            try
+            {
+                value = Convert.ToInt64(input.Substring(2), numBase);
+                return true;
+            }
+            catch
+            {
+                value = 0;
+                return false;
+            }
         }
 
         private static string ReplaceDelimeterBackslash(string source)

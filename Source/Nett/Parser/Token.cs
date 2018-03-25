@@ -32,7 +32,7 @@
         MultilineString,
         MultilineLiteralString,
         Date,
-        Time,
+        LocalTime,
         DateTime,
         Duration,
     }

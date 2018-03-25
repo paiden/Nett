@@ -105,7 +105,7 @@ namespace Nett.Parser
             else if (this.TryLexStringRValue("-nan")) { this.Accept(TokenType.Float); }
             else if (this.TryLexStringRValue("nan")) { this.Accept(TokenType.Float); }
             else if (c == '=') { this.Accept(TokenType.Assign, this.Consume); }
-            else if (c == '+' || c == '-') { this.EnterState(this.LexIntNumber); }
+            else if (c == '+' || c == '-') { this.EnterState(this.LexIntNumberFirstDigit); }
             else if (c == '0') { this.EnterState(this.LexLeadingZeroRemainder); }
             else if (c.InRange('1', '9')) { this.EnterState(this.LexIntAll); }
             else if (c == '\"') { this.EnterState(this.LexBasicString, label: this.SkipChar); }
@@ -140,6 +140,11 @@ namespace Nett.Parser
             else if (c == '.') { this.EnterState(this.LexFloatFractionFirstDigit); }
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Integer); }
             else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
+            else if (c.IsDigit() && this.la == ':')
+            {
+                this.Consume();
+                this.LexLocalTime(TokenType.Unknown);
+            }
             else { this.Fail(); }
         }
 
@@ -154,10 +159,17 @@ namespace Nett.Parser
                 this.Consume();
                 this.LexLocalDate();
             }
-            else if (c == ':') { this.LexLocalTime(TokenType.Duration); }
+            else if (c == ':') { this.LexLocalTime(TokenType.LocalTime); }
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Integer); }
             else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
             else { this.Fail(); }
+        }
+
+        private void LexIntNumberFirstDigit(char c)
+        {
+            if (c == '0' && this.la.IsDigit()) { this.Fail("Leading zeros are not allowed."); }
+            else if (c.IsDigit()) { this.EnterState(this.LexIntNumber); }
+            else { this.Fail("Encountered unexpected '{c}'."); }
         }
 
         private void LexIntNumber(char c)
@@ -224,7 +236,7 @@ namespace Nett.Parser
                 this.Expect(c => c.IsDigit());
             }
 
-            this.Accept(first != TokenType.Unknown ? first : TokenType.Duration);
+            this.Accept(first != TokenType.Unknown ? first : TokenType.LocalTime);
         }
 
         private void LexHex(char c)
