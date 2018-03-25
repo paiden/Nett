@@ -38,7 +38,7 @@ namespace Nett.Coma.Tests
             }
         }
 
-        [Fact(Skip = "Uses old timespan format")]
+        [Fact]
         public void MergingConfig_LoadsSettingsFromCorrectSource()
         {
             string mainFile = null;
@@ -68,7 +68,7 @@ namespace Nett.Coma.Tests
             }
         }
 
-        [Fact(Skip = "Uses old timespan format")]
+        [Fact]
         public void Init_WhenMergeSourceIsUsedAndNoManualInitIsDone_BothFilesAreCreatedButOnlyTheFirstHasAllDefaultData()
         {
             using (var main = TestFileName.Create("main", Toml.FileExtension))

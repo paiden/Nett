@@ -34,7 +34,7 @@
         Date,
         Time,
         DateTime,
-        Timespan,
+        Duration,
     }
 
     [DebuggerDisplay("{value}:{type}")]

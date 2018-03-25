@@ -28,7 +28,7 @@ namespace Nett
         public static TomlDateTime Add(this TomlTable table, string key, DateTimeOffset value)
             => AddTomlObjectInternal(table, key, table.CreateAttached(value));
 
-        public static TomlTimeSpan Add(this TomlTable table, string key, TimeSpan value)
+        public static TomlDuration Add(this TomlTable table, string key, TimeSpan value)
             => AddTomlObjectInternal(table, key, table.CreateAttached(value));
 
         // Arrays

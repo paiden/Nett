@@ -24,7 +24,7 @@ namespace Nett.Tests.Util.TestData
                 int dt = (int)TokenType.Date;
                 int tt = (int)TokenType.Time;
                 int dtt = (int)TokenType.DateTime;
-                int tst = (int)TokenType.Timespan;
+                int tst = (int)TokenType.Duration;
 
                 return new TheoryData<string, int>
                 {

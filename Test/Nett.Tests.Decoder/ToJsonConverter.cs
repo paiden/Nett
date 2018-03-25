@@ -21,7 +21,7 @@ namespace Nett.TestDecoder
         void ITomlObjectVisitor.Visit(TomlBool b) =>
             sb.Append("{").Append("\"type\":\"bool\", \"value\":\"").Append(b.Value ? "true" : "false").Append("\"}");
 
-        void ITomlObjectVisitor.Visit(TomlTimeSpan ts) =>
+        void ITomlObjectVisitor.Visit(TomlDuration ts) =>
             sb.Append("{").Append("\"type\":\"timespan\", \"value\":\"").Append(ts.Value).Append("\"}");
 
         void ITomlObjectVisitor.Visit(TomlArray a)

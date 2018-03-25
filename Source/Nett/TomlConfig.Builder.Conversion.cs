@@ -61,11 +61,11 @@
             return cb;
         }
 
-        public static IConversionSettingsBuilder<TCustom, TomlTimeSpan> ToToml<TCustom>(
-            this IConversionSettingsBuilder<TCustom, TomlTimeSpan> cb, Func<TCustom, TimeSpan> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlDuration> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlDuration> cb, Func<TCustom, TimeSpan> conv)
         {
-            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlTimeSpan>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlTimeSpan>((root, customValue) => new TomlTimeSpan(root, conv(customValue))));
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlDuration>)cb).AddConverter(
+                new TomlConverter<TCustom, TomlDuration>((root, customValue) => new TomlDuration(root, conv(customValue))));
             return cb;
         }
 
@@ -146,7 +146,7 @@
         .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlString, string>((m, c) => new TomlString(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlDateTime, DateTimeOffset>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value)
-        .AddBidirectionalConverter<TomlTimeSpan, TimeSpan>((m, c) => new TomlTimeSpan(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlDuration, TimeSpan>((m, c) => new TomlDuration(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlBool, bool>((m, c) => new TomlBool(m, c), (m, t) => t.Value);
 
         private static readonly List<ITomlConverter> SerializeConverters = new List<ITomlConverter>()

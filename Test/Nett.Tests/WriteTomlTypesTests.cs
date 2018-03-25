@@ -57,11 +57,13 @@ namespace Nett.Tests
         }
 
         [Theory]
-        [InlineData("02:01", "02:01:00")]
-        [InlineData("03:02:01", "03:02:01")]
-        [InlineData("4.03:02:01", "4.03:02:01")]
-        [InlineData("4.03:02:01.001", "4.03:02:01.0010000")]
-        public void WriteTimespan_WritesTheTimepspansInCultureInvariantFormat(string span, string expected)
+        [InlineData("02:01", "2h1m")]
+        [InlineData("03:02:01", "3h2m1s")]
+        [InlineData("4.03:02:01", "4d3h2m1s")]
+        [InlineData("4.03:02:01.001", "4d3h2m1s1ms")]
+        [InlineData("00:00", "0ms")]
+        [InlineData("-02:01", "-2h1m")] 
+        public void WriteTimespan_WritesTheTimepspansInGoLikeFormat(string span, string expected)
         {
             var t = new TimespanType() { Ts = TimeSpan.Parse(span) };
 

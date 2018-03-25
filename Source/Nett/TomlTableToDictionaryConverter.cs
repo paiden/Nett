@@ -57,7 +57,7 @@
 
         void ITomlObjectVisitor.Visit(TomlBool b) => this.table[this.currentKey] = b.Value;
 
-        void ITomlObjectVisitor.Visit(TomlTimeSpan ts) => this.table[this.currentKey] = ts.Value;
+        void ITomlObjectVisitor.Visit(TomlDuration ts) => this.table[this.currentKey] = ts.Value;
 
         void ITomlObjectVisitor.Visit(TomlArray a)
         {
@@ -114,7 +114,7 @@
 
             public void Visit(TomlBool b) => this.Item = b.Value;
 
-            public void Visit(TomlTimeSpan ts) => this.Item = ts.Value;
+            public void Visit(TomlDuration ts) => this.Item = ts.Value;
 
             public void Visit(TomlArray a)
             {

@@ -86,7 +86,7 @@
             }
         }
 
-        [Fact(Skip = "Uses old timespan")]
+        [Fact]
         public void SaveMergedConfig_WhenValueInSubTableIsChanged_ValueGetsSavedBackToOriginatorFile()
         {
             string mainFile = null;

@@ -179,23 +179,6 @@ namespace Nett.Tests.Internal.Parser
                 .AssertNoMoreTokens();
         }
 
-        [Theory(Skip = "Legacy re-implement after refactoring")]
-        [InlineData("0.01:02:03.4")]
-        [InlineData("-0.01:02:03.4")]
-        public void Lex_WithTimespanInput_ProducesCorrectTokens(string token)
-        {
-            // Arrange
-            var l = CreateValueLexer(token);
-
-            // Act
-            var r = l.Lex();
-
-            // Assert
-            r.Skip(2)
-                .AssertNextTokenIs(TokenType.Timespan, token)
-                .AssertNoMoreTokens();
-        }
-
         [Theory]
         [InlineData("'X'", TokenType.LiteralString, "X")]
         [InlineData("'''X'''", TokenType.MultilineLiteralString, "X")]
@@ -218,6 +201,7 @@ namespace Nett.Tests.Internal.Parser
         }
 
         [Theory]
+        [InlineData("0m")]
         [InlineData("1us")]
         [InlineData("1ms")]
         [InlineData("1s")]
@@ -229,14 +213,15 @@ namespace Nett.Tests.Internal.Parser
         [InlineData("0.1s")]
         [InlineData("0.1m")]
         [InlineData("0.1h")]
-        [InlineData("0.1")]
+        [InlineData("0.1d")]
         [InlineData("1d2h3m4s5ms6us")]
         [InlineData("-2.0d3.0h4.0m5.0s6.0ms7.0us")]
-        [InlineData("1d2.0h3m4.0s5ms6.0us")] 
+        [InlineData("1d2.0h3m4.0s5ms6.0us")]
+        [InlineData("1_0h2_0.5m6_0s")]
         public void Lex_ValidDateTimeValue_ProducesCorrectTokens(string input)
         {
             // Arrange
-            TokenType expectedTokenType = TokenType.Timespan;
+            TokenType expectedTokenType = TokenType.Duration;
             var l = CreateValueLexer(input);
 
             // Act
@@ -537,6 +522,27 @@ namespace Nett.Tests.Internal.Parser
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNoMoreTokens();
+        }
+
+        [Theory]
+        [InlineData("m")]
+        [InlineData("0dm")]
+        [InlineData("1m1d")]
+        [InlineData("1_m")]
+        [InlineData("1__1m")]
+        [InlineData("1m1")]
+        public void Lex_InvalidDateTimeValue_ProducesUnknownToken(string input)
+        {
+            // Arrange
+            var l = CreateValueLexer(input);
+
+            // Act
+            var r = l.Lex();
+
+            // Asset
+            r.Skip(2)
+                .AssertNextTokenIs(TokenType.Unknown, input)
                 .AssertNoMoreTokens();
         }
 

@@ -75,7 +75,7 @@ namespace Nett.Tests
         private string exp = @"EnableDebug = true
 
 [Server]
-Timeout = 00:01:00
+Timeout = 1m
 
 
 [Client]
@@ -112,7 +112,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             }
         }
 
-        [Fact(Skip = "Uses old timespan format")]
+        [Fact]
         public void ReadTomlFileTest()
         {
             string fn = this.NewFileName();
@@ -125,7 +125,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             config.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        [Fact(Skip = "Uses old timespan format")]
+        [Fact]
         public void ReadFileUntyped()
         {
             string fn = this.NewFileName();
@@ -139,7 +139,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             timeout.Should().Be(TimeSpan.FromMinutes(1));
         }
 
-        [Fact(Skip = "Uses old timespan format")]
+        [Fact]
         public void ReadNoDefaultConstructor_WhenNoActivatorRegistered_ThrowsInvalidOp()
         {
             string fn = this.NewFileName();
@@ -155,7 +155,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             a.ShouldThrow<InvalidOperationException>();
         }
 
-        [Fact(Skip = "Uses old timespan format")]
+        [Fact]
         public void ReadNoDefaultConstructor_WhenActivatorRegistered_ThrowsInvalidOp()
         {
             string fn = this.NewFileName();

@@ -196,7 +196,7 @@ namespace Nett.Tests.Internal.Parser
             var tkn = t.Tokens.PeekAt(0);
 
             // Assert
-            tkn.type.Should().Be(TokenType.Timespan);
+            tkn.type.Should().Be(TokenType.Duration);
             tkn.value.Should().Be(token);
         }
 

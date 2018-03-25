@@ -6,6 +6,19 @@ namespace Nett.Parser
 {
     internal sealed class Lexer
     {
+        private const int StartLexDuration = -1;
+        private const int InvalidDurationUnit = 100;
+        private static readonly List<Func<char, char, bool>> DurationUnitsOrdered
+            = new List<Func<char, char, bool>>()
+            {
+                (x, y) => x == 'd',
+                (x, y) => x == 'h',
+                (x, y) => x == 'm' && y != 's',
+                (x, y) => x == 's',
+                (x, y) => x == 'm' && y == 's',
+                (x, y) => x == 'u' && y == 's',
+            };
+
         private const string ErrStringNotClosed = "String not closed.";
         private const string ErrNewlineInString = "Single line string contains newlines.";
         private const string ErrFractionMissing = "Fraction of float is missing.";
@@ -127,6 +140,7 @@ namespace Nett.Parser
             else if (c == 'b' && this.la.IsBinChar()) { this.EnterState(this.LexBinaryNumber); }
             else if (c == '.') { this.EnterState(this.LexFloatFractionFirstDigit); }
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Integer); }
+            else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
             else { this.Fail(); }
         }
 
@@ -141,8 +155,9 @@ namespace Nett.Parser
                 this.Consume();
                 this.LexLocalDate();
             }
-            else if (c == ':') { this.LexLocalTime(TokenType.Timespan); }
+            else if (c == ':') { this.LexLocalTime(TokenType.Duration); }
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Integer); }
+            else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
             else { this.Fail(); }
         }
 
@@ -153,6 +168,7 @@ namespace Nett.Parser
             else if (c == '.' && this.la.IsDigit()) { this.EnterState(this.LexFloatFraction); }
             else if (c.IsExponent()) { this.EnterState(this.LexFloatExponentFirstDigitOrSign); }
             else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
+            else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
             else { this.Fail(); }
         }
 
@@ -209,7 +225,7 @@ namespace Nett.Parser
                 this.Expect(c => c.IsDigit());
             }
 
-            this.Accept(first != TokenType.Unknown ? first : TokenType.Timespan);
+            this.Accept(first != TokenType.Unknown ? first : TokenType.Duration);
         }
 
         private void LexHex(char c)
@@ -241,6 +257,7 @@ namespace Nett.Parser
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Float); }
             else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
             else if (c.IsExponent()) { this.EnterState(this.LexFloatExponentFirstDigitOrSign); }
+            else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
             else { this.Fail($"Float fraction contains unexpected '{c}'."); }
         }
 
@@ -304,12 +321,63 @@ namespace Nett.Parser
             else { this.Continue(); }
         }
 
+        private bool IsDurationUnit(char x, char y, int preIndex, out int nextIndex)
+        {
+            nextIndex = InvalidDurationUnit;
+
+            for (int i = preIndex + 1; i < DurationUnitsOrdered.Count; i++)
+            {
+                if (DurationUnitsOrdered[i](x, y))
+                {
+                    nextIndex = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void LexComment(char c)
         {
             if (c.Is('\r', '\n', LexInput.EofChar))
             {
                 this.Accept(TokenType.Comment);
             }
+        }
+
+        private void LexDurationIntNumberFirstDigit(char c, int prevUnit)
+        {
+            if (c.IsDigit()) { this.EnterState(sc => this.LexDurationIntNumber(sc, prevUnit)); }
+            else if (c.IsTokenSepChar()) { this.Accept(TokenType.Duration); }
+            else { this.Fail($"Duration segment needs to start with a number '0' - '9' but '{c}' was found instead."); }
+        }
+
+        private void LexDurationIntNumber(char c, int prevUnit)
+        {
+            if (c.IsDigit()) { this.Continue(); }
+            else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
+            else if (c == '.' && this.la.IsDigit()) { this.EnterState(sc => this.LexDurationFloatNumber(sc, prevUnit)); }
+            else if (this.IsDurationUnit(c, this.la, prevUnit, out int curUnit)) { this.EnterNextDurationState(curUnit); }
+            else { this.Fail($"Duration segment encountered unexpected '{c}'."); }
+        }
+
+        private void LexDurationFloatNumber(char c, int prevUnit)
+        {
+            if (c.IsDigit()) { this.Continue(); }
+            else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
+            else if (c == '.' && this.la.IsDigit()) { this.EnterState(sc => this.LexDurationFloatNumber(sc, prevUnit)); }
+            else if (this.IsDurationUnit(c, this.la, prevUnit, out int curUnit)) { this.EnterNextDurationState(curUnit); }
+            else { this.Fail($"Duration segment encountered unexpected '{c}'."); }
+        }
+
+        private void EnterNextDurationState(int curUnit)
+        {
+            if (Is2CharUnit()) { this.Consume(); }
+
+            this.EnterState(c => this.LexDurationIntNumberFirstDigit(c, curUnit));
+
+            bool Is2CharUnit()
+                => curUnit == 4 || curUnit == 5;
         }
 
         private void EnterState(Action<char> state)

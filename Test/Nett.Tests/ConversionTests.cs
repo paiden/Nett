@@ -479,7 +479,7 @@ Foo3 = [""A""]";
                         .ToToml(a => 1.0))
                     .WithConversionFor<TomlDateTime>(conv => conv
                         .ToToml(a => DateTimeOffset.MaxValue))
-                    .WithConversionFor<TomlTimeSpan>(conv => conv
+                    .WithConversionFor<TomlDuration>(conv => conv
                         .ToToml(a => TimeSpan.MaxValue))));
         }
 

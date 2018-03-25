@@ -34,7 +34,7 @@
 
             if (cs.TokenDone())
             {
-                return new Token(TokenType.Timespan, sb.ToString());
+                return new Token(TokenType.Duration, sb.ToString());
             }
             else
             {
