@@ -4,7 +4,7 @@ namespace Nett.Parser
 {
     internal static class CharExtensions
     {
-        private static readonly char[] WhitspaceCharSet =
+        internal static readonly char[] WhitspaceCharSet =
         {
             '\u0009', '\u000A', '\u000B', '\u000D', '\u0020', '\u0085', '\u00A0',
             '\u1680', '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006',
@@ -58,7 +58,7 @@ namespace Nett.Parser
 
         public static bool IsTokenSepChar(this char c)
             => c == ' ' || c == '\t' || c == '=' || c == ']' || c == ','
-                || c == '}' || c == '\r' || c == '\n' || c == LexInput.EofChar;
+                || c == '}' || c == '\r' || c == '\n' || c == '#' || c == LexInput.EofChar;
 
         public static bool IsWhitespaceChar(this char c)
             => WhitspaceCharSet.Contains(c);

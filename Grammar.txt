@@ -1,0 +1,30 @@
+n... newline
+
+S -> E EN                   first(S) = {c, eps}             follow(S) = {$}
+EN -> n X                   first(R) = {n, eps}             follow(R) = {$}
+X -> E R | eps
+E -> c | [T C | K=V C      first(E) = {c, [, k}            follow(E) = {c, n, eps, $}
+T -> TS | [TA
+TS -> K]
+TA -> K]]
+V -> v | [A | {I            first(V) = {v, [, {}            follow(V) = {n}
+C -> c | eps
+K -> ks KS | kq KS          first(K) = {ks, kq}             follow(K) = {], =, .}
+KS -> . K | eps             first(KR) = {.}                 follow(KR) = {], =}
+
+A -> AI]
+AI -> V AS | eps                                               follow(A) = {]}
+AS -> , AI | eps
+
+I -> II]
+II -> k=V IN | eps
+IN -> , II | eps
+
+
+
+E -> [T C
+
+
+
+
+

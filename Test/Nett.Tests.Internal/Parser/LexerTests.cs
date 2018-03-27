@@ -14,13 +14,14 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithSimpleKeyInput_ProducesCorrectTokens()
         {
             // Arrange
-            var l = CreateLexer("key");
+            Lexer l = CreateLexer("key");
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.AssertNextTokenIs(TokenType.BareKey, "key", 1, 1)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -33,14 +34,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithValidIntegers_ProducesIntegerToken(string input)
         {
             // Arrange
-            var l = CreateValueLexer(input);
+            Lexer l = CreateValueLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Integer, input)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -57,14 +59,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithValidFloatInput_ProducesFloatToken(string input)
         {
             // Arrange
-            var l = CreateValueLexer(input);
+            Lexer l = CreateValueLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Float, input)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -74,14 +77,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithBoolInput_ProducesBoolTokens(string token)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Bool, token)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -92,14 +96,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithStringInput_ProducesCorrectTokens(string token, string expected)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.String, expected)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -110,14 +115,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithLiteralStringInput_ProducesCorrectTokens(string token, string expected)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.LiteralString, expected)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -130,14 +136,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithMultilineLiteralStringInput_ProducesCorrectTokens(string token, string expected)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.MultilineLiteralString, expected)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -150,14 +157,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithMultilineStringInput_ProducesCorrectTokens(string token, string expected)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.MultilineString, expected)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -168,14 +176,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithDateTimeOffsetInput_ProducesCorrectTokens(string token)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.DateTime, token)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -186,14 +195,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_LocalTimeTime_ProducesCorrectTokens(string token)
         {
             // Arrange
-            var l = CreateValueLexer(token);
+            Lexer l = CreateValueLexer(token);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.LocalTime, token)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -207,14 +217,15 @@ namespace Nett.Tests.Internal.Parser
         {
             // Arrange
             TokenType expectedTokenType = (TokenType)expectedType;
-            var l = CreateValueLexer(input);
+            Lexer l = CreateValueLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Asset
             r.Skip(2)
                 .AssertNextTokenIs(expectedTokenType, expectedValue)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -240,14 +251,15 @@ namespace Nett.Tests.Internal.Parser
         {
             // Arrange
             TokenType expectedTokenType = TokenType.Duration;
-            var l = CreateValueLexer(input);
+            Lexer l = CreateValueLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Asset
             r.Skip(2)
                 .AssertNextTokenIs(expectedTokenType, input)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -257,10 +269,10 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_WithComment_ProducesCommentTokensWithoutCommentChar(string input)
         {
             // Arrange
-            var l = CreateLexer(input);
+            Lexer l = CreateLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.AssertNextTokenIs(TokenType.Comment, input.Substring(1));
@@ -270,27 +282,63 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_TableKey_ProducesCorrectTokens()
         {
             // Arrange
-            var lexer = CreateLexer("[key]");
+            Lexer lexer = CreateLexer("[key]");
 
             // Act
-            var tokens = lexer.Lex();
+            List<Token> tokens = lexer.Lex();
 
             // Assert
             tokens
                 .AssertNextTokenIs(TokenType.LBrac, "[", 1, 1)
                 .AssertNextTokenIs(TokenType.BareKey, "key", 1, 2)
                 .AssertNextTokenIs(TokenType.RBrac, "]", 1, 5)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
+        }
+
+        [Theory]
+        [InlineData("\"a.value\"", "a.value", TokenType.DoubleQuotedKey)]
+        public void Lex_WithQuotedKeys_ProducesCorrectTokens(string key, string expectedKey, object expectedKeyTokenTypeUntyped)
+        {
+            // Arrange
+            TokenType expectedKeyTokenType = (TokenType)expectedKeyTokenTypeUntyped;
+            Lexer lexer = CreateLexer($"{key}=1");
+
+            // Act
+            List<Token> tokens = lexer.Lex();
+
+            // Assert
+            tokens
+                .AssertNextTokenIs(expectedKeyTokenType, expectedKey, 1, 1)
+                .AssertNextTokenIs(TokenType.Assign, "=")
+                .AssertNextTokenIs(TokenType.Integer, "1")
+                .AssertNextTokenIs(TokenType.Eof)
+                .AssertNoMoreTokens();
+        }
+
+        [Fact]
+        public void Lex_KeyValuePairWithQuotedContainingSpace_ProducesCorrectTokens()
+        {
+            // Arrange
+            Lexer lexer = CreateLexer("\"x a\" = 1");
+
+            // Act
+            List<Token> tokens = lexer.Lex();
+
+            // Assert
+            tokens.AssertNextTokenIs(TokenType.DoubleQuotedKey, "x a", 1, 1)
+                .AssertNextTokenIs(TokenType.Assign, "=", 1, 7)
+                .AssertNextTokenIs(TokenType.Integer, "1", 1, 9);
         }
 
         [Fact]
         public void Lex_KeyValuePair_ProducesCorrectTokens()
         {
             // Arrange
-            var lexer = CreateLexer("x = 1");
+            Lexer lexer = CreateLexer("x = 1");
 
             // Act
-            var tokens = lexer.Lex();
+            List<Token> tokens = lexer.Lex();
 
             // Assert
             tokens.AssertNextTokenIs(TokenType.BareKey, "x", 1, 1)
@@ -302,10 +350,10 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_IntArray_ProducesCorrectTokens()
         {
             // Arrange
-            var lexer = CreateLexer("x = [1, 2, 3]");
+            Lexer lexer = CreateLexer("x = [1, 2, 3]");
 
             // Act
-            var tokens = lexer.Lex();
+            List<Token> tokens = lexer.Lex();
 
             // Assert
             tokens.AssertNextTokenIs(TokenType.BareKey, "x")
@@ -317,6 +365,7 @@ namespace Nett.Tests.Internal.Parser
                 .AssertNextTokenIs(TokenType.Comma, ",")
                 .AssertNextTokenIs(TokenType.Integer, "3")
                 .AssertNextTokenIs(TokenType.RBrac, "]")
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -324,10 +373,10 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InlineTableWithArray_ProducesCorrectTokens()
         {
             // Arrange
-            var l = CreateLexer("p = { x = [1], y = 2, z = 3 },");
+            Lexer l = CreateLexer("p = { x = [1], y = 2, z = 3 },");
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.AssertTokensAre(
@@ -348,7 +397,8 @@ namespace Nett.Tests.Internal.Parser
                 TokenType.Assign,
                 TokenType.Integer,
                 TokenType.RCurly,
-                TokenType.Comma);
+                TokenType.Comma,
+                TokenType.Eof);
 
         }
 
@@ -356,15 +406,16 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_NewlinesInput_ProducesCorrectTokens()
         {
             // Arrange
-            var l = CreateLexer("\r\n   \r\n   \n");
+            Lexer l = CreateLexer("\r\n   \r\n   \n");
 
             // Act
-            var t = l.Lex();
+            List<Token> t = l.Lex();
 
             // Assert
             t.AssertNextTokenIs(TokenType.NewLine)
                 .AssertNextTokenIs(TokenType.NewLine)
                 .AssertNextTokenIs(TokenType.NewLine)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -373,15 +424,33 @@ namespace Nett.Tests.Internal.Parser
         {
             // Arrange
             const string input = "[A]";
-            var l = CreateLexer(input);
+            Lexer l = CreateLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.AssertNextTokenIs(TokenType.LBrac)
                 .AssertNextTokenIs(TokenType.BareKey)
                 .AssertNextTokenIs(TokenType.RBrac);
+        }
+
+        [Fact]
+        public void Lex_WithNewLineInInput_ProducesCorrectTokens()
+        {
+            // Arrange
+            const string input = "X = \r\n";
+            var l = CreateLexer(input);
+
+            // Act
+            var t = l.Lex();
+
+            // Assert
+            t.AssertNextTokenIs(TokenType.BareKey)
+                .AssertNextTokenIs(TokenType.Assign)
+                .AssertNextTokenIs(TokenType.NewLine)
+                .AssertNextTokenIs(TokenType.Eof)
+                .AssertNoMoreTokens();
         }
 
         [Fact]
@@ -389,17 +458,19 @@ namespace Nett.Tests.Internal.Parser
         {
             // Arrange
             const string input = "[A.B]";
-            var l = CreateLexer(input);
+            Lexer l = CreateLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.AssertNextTokenIs(TokenType.LBrac)
                 .AssertNextTokenIs(TokenType.BareKey)
                 .AssertNextTokenIs(TokenType.Dot)
                 .AssertNextTokenIs(TokenType.BareKey)
-                .AssertNextTokenIs(TokenType.RBrac);
+                .AssertNextTokenIs(TokenType.RBrac)
+                .AssertNextTokenIs(TokenType.Eof)
+                .AssertNoMoreTokens();
         }
 
         [Fact]
@@ -407,19 +478,24 @@ namespace Nett.Tests.Internal.Parser
         {
             // Arrange
             const string input = "A = { 'X' = false, 'Y' = true }";
-            var l = CreateLexer(input);
+            Lexer l = CreateLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
-            r.Skip(3)
-                .AssertNextTokenIs(TokenType.LiteralString)
+            r.AssertNextTokenIs(TokenType.BareKey)
+                .AssertNextTokenIs(TokenType.Assign)
+                .AssertNextTokenIs(TokenType.LCurly)
+                .AssertNextTokenIs(TokenType.SingleQuotedKey)
                 .AssertNextTokenIs(TokenType.Assign)
                 .AssertNextTokenIs(TokenType.Bool)
                 .AssertNextTokenIs(TokenType.Comma)
-                .AssertNextTokenIs(TokenType.LiteralString)
-                .Skip(3)
+                .AssertNextTokenIs(TokenType.SingleQuotedKey)
+                .AssertNextTokenIs(TokenType.Assign)
+                .AssertNextTokenIs(TokenType.Bool)
+                .AssertNextTokenIs(TokenType.RCurly)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -430,14 +506,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InvalidValueTokens_ProducesUnknownTokensAsResult(string tkn)
         {
             // Arrange
-            var l = CreateValueLexer(tkn);
+            Lexer l = CreateValueLexer(tkn);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -450,14 +527,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InvalidHexIntTokens_ProducesUnknownTokensAsResult(string tkn)
         {
             // Arrange
-            var l = CreateValueLexer(tkn);
+            Lexer l = CreateValueLexer(tkn);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -470,14 +548,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InvalidBinIntTokens_ProducesUnknownTokensAsResult(string tkn)
         {
             // Arrange
-            var l = CreateValueLexer(tkn);
+            Lexer l = CreateValueLexer(tkn);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -490,14 +569,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InvalidOctalIntTokens_ProducesUnknownTokensAsResult(string tkn)
         {
             // Arrange
-            var l = CreateValueLexer(tkn);
+            Lexer l = CreateValueLexer(tkn);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -515,14 +595,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InvalidFloatTokens_ProducesUnknownTokensAsResult(string tkn)
         {
             // Arrange
-            var l = CreateValueLexer(tkn);
+            Lexer l = CreateValueLexer(tkn);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -532,14 +613,15 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_UnclosedMLineStrings_ProducesUnknownTokensAsResult(string tkn)
         {
             // Arrange
-            var l = CreateValueLexer(tkn);
+            Lexer l = CreateValueLexer(tkn);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Assert
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }
 
@@ -553,15 +635,31 @@ namespace Nett.Tests.Internal.Parser
         public void Lex_InvalidDateTimeValue_ProducesUnknownToken(string input)
         {
             // Arrange
-            var l = CreateValueLexer(input);
+            Lexer l = CreateValueLexer(input);
 
             // Act
-            var r = l.Lex();
+            List<Token> r = l.Lex();
 
             // Asset
             r.Skip(2)
                 .AssertNextTokenIs(TokenType.Unknown, input)
+                .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
+        }
+
+        [Theory]
+        [InlineData("x = 100#C")]
+        [InlineData("x = 100 #C")]
+        public void Lex_WhenCommentApppendedWithoutSpace_ProducesFinalCommentToken(string input)
+        {
+            // Arrange
+            Lexer l = CreateLexer(input);
+
+            // Act
+            List<Token> r = l.Lex();
+
+            // Asset
+            r.Skip(3).First().Type.Should().Be(TokenType.Comment);
         }
 
         private static Lexer CreateValueLexer(string valueToken)
@@ -575,7 +673,7 @@ namespace Nett.Tests.Internal.Parser
     {
         public static void AssertTokensAre(this IEnumerable<Token> tokens, params TokenType[] types)
         {
-            foreach (var t in types)
+            foreach (TokenType t in types)
             {
                 tokens = tokens.AssertNextTokenIs(t);
             }
@@ -588,7 +686,7 @@ namespace Nett.Tests.Internal.Parser
         {
             tokens.Should().NotBeEmpty($"a token with type '{type}' is expected");
 
-            tokens.First().type.Should().Be(type);
+            tokens.First().Type.Should().Be(type);
 
             return tokens.Skip(1);
         }
@@ -597,8 +695,8 @@ namespace Nett.Tests.Internal.Parser
         {
             tokens.Should().NotBeEmpty($"a token with type '{type}' and value '{value}' is expected");
 
-            tokens.First().type.Should().Be(type);
-            tokens.First().value.Should().Be(value);
+            tokens.First().Type.Should().Be(type);
+            tokens.First().Value.Should().Be(value);
 
             return tokens.Skip(1);
         }
@@ -607,10 +705,9 @@ namespace Nett.Tests.Internal.Parser
         {
             tokens.Should().NotBeEmpty($"a token with type '{type}' and value '{value}' is expected");
 
-            tokens.First().type.Should().Be(type);
-            tokens.First().value.Should().Be(value);
-            tokens.First().line.Should().Be(line);
-            tokens.First().col.Should().Be(col);
+            tokens.First().Type.Should().Be(type);
+            tokens.First().Value.Should().Be(value);
+            tokens.First().Location.Equals(new SourceLocation(line, col));
 
             return tokens.Skip(1);
         }

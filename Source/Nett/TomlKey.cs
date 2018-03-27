@@ -1,4 +1,5 @@
 ﻿using System;
+using Nett.Parser;
 
 namespace Nett
 {
@@ -39,7 +40,7 @@ namespace Nett
 
         public override string ToString()
         {
-            var type = this.Type == KeyType.Undefined
+            KeyType type = this.Type == KeyType.Undefined
                 ? AutoClassify(this.Value)
                 : this.Type;
 
@@ -49,6 +50,17 @@ namespace Nett
                 case KeyType.Basic: return "\"" + this.Value.Escape() + "\"";
                 case KeyType.Literal: return "'" + this.Value + "'";
                 default: return this.Value;
+            }
+        }
+
+        internal static TomlKey FromToken(Token tkn)
+        {
+            switch (tkn.Type)
+            {
+                case TokenType.BareKey: return new TomlKey(tkn.Value, KeyType.Bare);
+                case TokenType.SingleQuotedKey: return new TomlKey(tkn.Value, KeyType.Literal);
+                case TokenType.DoubleQuotedKey: return new TomlKey(tkn.Value, KeyType.Basic);
+                default: throw new InvalidOperationException($"Cannot create Key from token '{tkn}'.");
             }
         }
 

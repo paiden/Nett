@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
+using Nett.Parser;
 using Xunit;
 
 namespace Nett.Tests
@@ -32,7 +33,7 @@ namespace Nett.Tests
         [Fact]
         public void Deserialize_WithMultipleSignBeforeNumber_FailsToParse()
         {
-            Assert.Throws<Exception>(() => Toml.ReadString("key = --0"));
+            Assert.Throws<ParseException>(() => Toml.ReadString("key = --0"));
         }
 
         [Theory]
@@ -51,7 +52,7 @@ namespace Nett.Tests
         [InlineData("Key = 0_1")]
         public void Deserilaize_IntWihtLeadingZeros_Fails(string toParse)
         {
-            Assert.Throws<Exception>(() => Toml.ReadString(toParse));
+            Assert.Throws<ParseException>(() => Toml.ReadString(toParse));
         }
 
         [Theory]
@@ -125,7 +126,7 @@ namespace Nett.Tests
         [Fact]
         public void Deseriailze_SingleLineStringWithNewLine_FailsToDeserialize()
         {
-            Assert.Throws<Exception>(() => Toml.ReadString("str = \"\r\n\""));
+            Assert.Throws<ParseException>(() => Toml.ReadString("str = \"\r\n\""));
         }
 
         [Theory]
@@ -165,14 +166,13 @@ namespace Nett.Tests
             Assert.Equal(expected, parsed.Get<string>("str"));
         }
 
-        const string Case1 = @"str = """"""
+        private const string Case1 = @"str = """"""
 The quick brown \
 
 
    fox jumps over \
         the lazy dog.""""""";
-
-        const string Case2 = @"str = """"""\
+        private const string Case2 = @"str = """"""\
        The quick brown \
        fox jumps over \
        the lazy dog.\
@@ -256,7 +256,7 @@ trimmed in raw strings.
         [InlineData("d = 06.626e-34")]
         public void Deserialize_FloatWithLeadingZeros_ThrowsExcption(string src)
         {
-            var exc = Assert.Throws<Exception>(() => Toml.ReadString(src));
+            var exc = Assert.Throws<ParseException>(() => Toml.ReadString(src));
         }
 
 
@@ -281,6 +281,7 @@ trimmed in raw strings.
         [InlineData("1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
         [InlineData("1979-05-27T00:32:00.999999+07:00", "1979-05-27T00:32:00.999999+07:00")]
         [InlineData("2000-01-01T00:00:00+01:00", "2000-01-01T00:00:00+01:00")]
+        [InlineData("07:32:00", "0001-01-01T07:32:00+00:00")]
         public void Deserialize_DateTime_DeseriaizesCorrectly(string src, string expectedDate)
         {
             // Arrange
@@ -305,7 +306,7 @@ trimmed in raw strings.
         public void Deserialize_LocalTime_DeserializesCorrectly(string src)
         {
             // Arrange
-            var date = DateTimeOffset.Parse($"0001-01-02T{src}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+            var date = DateTimeOffset.Parse($"0001-01-01T{src}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
             // Act
             var parsed = Toml.ReadString($"x={src}");
@@ -500,7 +501,7 @@ b = 1
 [a]
 d = 2";
 
-            var exc = Assert.Throws<Exception>(() => Toml.ReadString(toParse));
+            var exc = Assert.Throws<InvalidOperationException>(() => Toml.ReadString(toParse));
             Assert.Contains("'a'", exc.Message);
         }
 

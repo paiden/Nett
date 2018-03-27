@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nett.Parser
 {
@@ -10,6 +11,7 @@ namespace Nett.Parser
         private const string ErrStringNotClosed = "String not closed.";
         private const string ErrNewlineInString = "Single line string contains newlines.";
         private const string ErrFractionMissing = "Fraction of float is missing.";
+
 
         private static readonly List<Func<char, char, bool>> DurationUnitsOrdered
             = new List<Func<char, char, bool>>()
@@ -46,6 +48,9 @@ namespace Nett.Parser
         private static TokenType GetStringType(char t)
             => t == '\'' ? TokenType.LiteralString : TokenType.String;
 
+        private static string ErrLexNum(char c)
+            => $"Encountered unexpected character '{c}' while reading a number.";
+
         private void LexAllInput()
         {
             this.la = this.Peek(1);
@@ -67,6 +72,11 @@ namespace Nett.Parser
             }
 
             this.lexerState(LexInput.EofChar);
+
+            if (this.lexed.Last().Type != TokenType.Eof)
+            {
+                this.lexerState(LexInput.EofChar);
+            }
         }
 
         private void LexLValue(char c)
@@ -80,18 +90,30 @@ namespace Nett.Parser
             else if (c == '\r') { this.SkipChar(); }
             else if (c == '\n') { this.Accept(TokenType.NewLine, this.Consume); }
             else if (c == '#') { this.EnterState(this.LexComment, this.SkipChar); }
-            else if (c == '\"') { this.EnterState(this.LexBasicString, label: this.SkipChar); }
-            else if (c == '\'') { this.EnterState(this.LexLiteralString, label: this.SkipChar); }
-            else if (c == LexInput.EofChar) { this.SkipChar(); }
+            else if (c == '\"') { this.EnterState(this.LexDoubleQuotedKey, label: this.SkipChar); }
+            else if (c == '\'') { this.EnterState(this.LexSingleQuotedKey, label: this.SkipChar); }
+            else if (c == LexInput.EofChar) { this.Accept(TokenType.Eof); }
             else if (c.IsBareKeyChar()) { this.EnterState(this.LexBareKey); }
-            else { this.Fail(); }
+            else { this.Fail($"Encountered unexpected char '{c}' while lexing LValue"); }
         }
 
         private void LexBareKey(char c)
         {
             if (c.IsBareKeyChar()) { this.Continue(); }
             else if (c == '.' || c.IsTokenSepChar()) { this.Accept(TokenType.BareKey); }
-            else { this.Fail(); }
+            else { this.Fail($"Encountered unexpected char '{c}' while lexing key"); }
+        }
+
+        private void LexDoubleQuotedKey(char c)
+        {
+            if (c == '"') { this.Accept(TokenType.DoubleQuotedKey, this.SkipChar); }
+            else { this.Continue(); }
+        }
+
+        private void LexSingleQuotedKey(char c)
+        {
+            if (c == '\'') { this.Accept(TokenType.SingleQuotedKey, this.SkipChar); }
+            else { this.Continue(); }
         }
 
         private void LexRValue(char c)
@@ -118,7 +140,8 @@ namespace Nett.Parser
             else if (c == '}') { this.Accept(TokenType.RCurly, this.Consume); }
             else if (c == ',') { this.Accept(TokenType.Comma, this.Consume); }
             else if (c == '#') { this.EnterState(this.LexComment, label: this.SkipChar); }
-            else { this.Fail(); }
+            else if (c == LexInput.EofChar) { this.Accept(TokenType.Eof); }
+            else { this.Fail($"Encountered unexpected char '{c}' while lexing RValue"); }
         }
 
         private bool TryLexStringRValue(string value)
@@ -145,7 +168,7 @@ namespace Nett.Parser
                 this.Consume();
                 this.LexLocalTime(TokenType.Unknown);
             }
-            else { this.Fail(); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexIntAll(char c)
@@ -162,14 +185,14 @@ namespace Nett.Parser
             else if (c == ':') { this.LexLocalTime(TokenType.LocalTime); }
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Integer); }
             else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
-            else { this.Fail(); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexIntNumberFirstDigit(char c)
         {
             if (c == '0' && this.la.IsDigit()) { this.Fail("Leading zeros are not allowed."); }
             else if (c.IsDigit()) { this.EnterState(this.LexIntNumber); }
-            else { this.Fail("Encountered unexpected '{c}'."); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexIntNumber(char c)
@@ -180,7 +203,7 @@ namespace Nett.Parser
             else if (c.IsExponent()) { this.EnterState(this.LexFloatExponentFirstDigitOrSign); }
             else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
             else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
-            else { this.Fail(); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexLocalDate()
@@ -253,13 +276,13 @@ namespace Nett.Parser
             if (isSysDigit(c)) { this.Continue(); }
             else if (c.IsTokenSepChar()) { this.Accept(sysType); }
             else if (c == '_' && isSysDigit(this.la)) { this.Continue(); }
-            else { this.Fail(); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexFloatFractionFirstDigit(char c)
         {
             if (c.IsDigit()) { this.EnterState(this.LexFloatFraction); }
-            else { this.Fail(ErrFractionMissing); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexFloatFraction(char c)
@@ -269,7 +292,7 @@ namespace Nett.Parser
             else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
             else if (c.IsExponent()) { this.EnterState(this.LexFloatExponentFirstDigitOrSign); }
             else if (this.IsDurationUnit(c, this.la, StartLexDuration, out int next)) { this.EnterNextDurationState(next); }
-            else { this.Fail($"Float fraction contains unexpected '{c}'."); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexFloatExponentFirstDigitOrSign(char c)
@@ -277,7 +300,7 @@ namespace Nett.Parser
             if (c.Is('+', '-') && this.la.IsDigit()) { this.EnterState(this.LexFloatExponent); }
             else if (c == '0' && this.la.IsDigit()) { this.Fail("Exponent is invalid because of leading '0'."); }
             else if (c.IsDigit()) { this.EnterState(this.LexFloatExponent); }
-            else { this.Fail("Exponent of float is missing."); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexFloatExponent(char c)
@@ -285,7 +308,7 @@ namespace Nett.Parser
             if (c.IsDigit()) { this.Continue(); }
             else if (c == '_' && this.la.IsDigit()) { this.Continue(); }
             else if (c.IsTokenSepChar()) { this.Accept(TokenType.Float); }
-            else { this.Fail($"Float exponent contains unexpected '{c}'."); }
+            else { this.Fail(ErrLexNum(c)); }
         }
 
         private void LexBasicString(char c)
@@ -333,7 +356,7 @@ namespace Nett.Parser
                 this.SkipChar(3);
                 this.Accept(GetMultilineStringType(t));
             }
-            else if (c == LexInput.EofChar) { this.Fail("String not closed."); }
+            else if (c == LexInput.EofChar) { this.Fail(ErrStringNotClosed); }
             else { this.Continue(); }
         }
 

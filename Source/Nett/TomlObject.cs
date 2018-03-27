@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Reflection;
     using LinqExtensions;
+    using Nett.Parser.Nodes;
 
     [Flags]
     public enum TomlObjectType
@@ -63,6 +64,33 @@
         public abstract object Get(Type t);
 
         public abstract void Visit(ITomlObjectVisitor visitor);
+
+        internal TomlObject AddComments(IHasComments n)
+        {
+            this.AddPreComments(n);
+            this.AddAppComment(n);
+            return this;
+        }
+
+        internal TomlObject AddPreComments(IHasPrependComments source)
+        {
+            foreach (var c in source.PreComments)
+            {
+                this.AddComment(c.Value, CommentLocation.Prepend);
+            }
+
+            return this;
+        }
+
+        internal TomlObject AddAppComment(IHasAppendComment source)
+        {
+            if (source.AppComment != null)
+            {
+                this.AddComment(source.AppComment.Value, CommentLocation.Append);
+            }
+
+            return this;
+        }
 
         internal static TomlObject CreateFrom(ITomlRoot root, object val)
             => CreateFrom(root, val, null, val.GetType());

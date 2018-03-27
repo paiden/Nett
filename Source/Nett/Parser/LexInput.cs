@@ -77,11 +77,7 @@ namespace Nett.Parser
 
         public IEnumerable<Token> Emit(TokenType type)
         {
-            return this.EmitInternal(new Token(type, this.PeekEmit())
-            {
-                line = this.tokenLine,
-                col = this.tokenCol,
-            });
+            return this.EmitInternal(new Token(type, this.PeekEmit(), this.SrcLocation));
         }
 
         public char Consume()
@@ -108,8 +104,11 @@ namespace Nett.Parser
         {
             for (char c = this.Consume(); !c.IsTokenSepChar(); c = this.Consume()) { /* consume loop */ }
 
-            return this.EmitInternal(Token.Unknown(this.PeekEmit(), errorHint, this.tokenLine, this.tokenCol));
+            return this.EmitInternal(Token.Unknown(this.PeekEmit(), errorHint, this.SrcLocation));
         }
+
+        private SourceLocation SrcLocation
+            => new SourceLocation(this.tokenLine, this.tokenCol);
 
         private char Advance()
         {
@@ -134,7 +133,7 @@ namespace Nett.Parser
             }
 
             this.emitBuffer.Clear();
-            this.scopeTracker.Emit(mainToken.type);
+            this.scopeTracker.Emit(mainToken.Type);
             this.SetTokenStartLocation();
         }
 
@@ -153,7 +152,7 @@ namespace Nett.Parser
                 if (c == '\n')
                 {
                     int offset = this.index > 0 && this.input[this.index - 1] == '\r' ? -1 : 0;
-                    yield return Token.NewLine(this.line, this.column + offset);
+                    yield return Token.NewLine(new SourceLocation(this.line, this.column + offset));
                 }
 
                 this.Consume();

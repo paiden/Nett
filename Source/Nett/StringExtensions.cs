@@ -82,7 +82,7 @@ namespace Nett
                             case 'n': return "\n";
                             case 'r': return "\r";
                             default:
-                                throw Parser.Parser.CreateParseError(tkn, $"String '{src}' contains the invalid escape sequence '\\{value[1]}'.");
+                                throw ParseException.TokenError(tkn, $"String '{src}' contains the invalid escape sequence '\\{value[1]}'.");
                         }
                     }
                     else

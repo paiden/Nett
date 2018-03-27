@@ -32,6 +32,9 @@
 
         internal abstract TomlValue ValueWithRoot(ITomlRoot root);
 
+        protected static string CleanupNumberInputString(string input, int sub = 0)
+            => input.Substring(sub).Replace("_", string.Empty).ToLowerInvariant();
+
         private static bool IsFloatType(Type t) => t == DoubleType || t == FloatType;
 
         private static bool IsIntegerType(Type t)

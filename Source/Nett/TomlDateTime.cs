@@ -4,12 +4,18 @@
     using System.Diagnostics;
     using System.Globalization;
     using Extensions;
+    using Nett.Parser;
 
     public sealed class TomlDateTime : TomlValue<DateTimeOffset>
     {
         private static readonly string[] ParseFormats = new string[]
         {
             "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ssZ", "yyyy-MM-ddTHH:mm:ss.FFFFFFK", "yyyy-MM-ddTHH:mm:ss.FFFFFFZ", "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ss.FFFFFF", "yyyy-MM-dd",
+        };
+
+        private static readonly string[] LocalParseFormats = new string[]
+        {
+            "yyyy-MM-ddTHH:mm:ss", "yyyy-MM-ddTHH:mm:ss.FFFFFF",
         };
 
         internal TomlDateTime(ITomlRoot root, DateTimeOffset value)
@@ -32,6 +38,15 @@
         {
             Debug.Assert(s != null);
             var value = DateTimeOffset.ParseExact(s, ParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            return new TomlDateTime(root, value);
+        }
+
+        internal static TomlDateTime FromLocal(ITomlRoot root, Token tkn)
+        {
+            Debug.Assert(tkn.Type == TokenType.LocalTime);
+
+            var i = $"0001-01-01T{tkn.Value}";
+            var value = DateTimeOffset.ParseExact(i, LocalParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             return new TomlDateTime(root, value);
         }
 

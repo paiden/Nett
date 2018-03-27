@@ -1,7 +1,8 @@
 ﻿namespace Nett.Parser
 {
     using System.Diagnostics;
-    using System.Text;
+    using Nett.Extensions;
+    using Nett.Parser.Nodes;
 
     internal enum TokenType
     {
@@ -10,9 +11,11 @@
         Eof,
 
         BareKey,
+        SingleQuotedKey,
+        DoubleQuotedKey,
+        DottedKey,
         Comment,
         Dot,
-        Key,
         Assign,
         Comma,
 
@@ -40,51 +43,46 @@
     [DebuggerDisplay("{value}:{type}")]
     internal struct Token
     {
-#pragma warning disable SA1307 // Accessible fields must begin with upper-case letter
-        public int col;
-        public int line;
-        public TokenType type;
-        public string value;
-        public string errorHint;
-#pragma warning restore SA1307 // Accessible fields must begin with upper-case letter
+        public readonly SourceLocation Location;
+        public readonly TokenType Type;
+        public readonly string Value;
 
-        public Token(TokenType type, string value)
+        private string errorMessage;
+
+        public Token(TokenType type, string value, SourceLocation location)
         {
-            this.type = type;
-            this.value = value;
-            this.line = 0;
-            this.col = 0;
-            this.errorHint = null;
+            this.Type = type;
+            this.Value = value;
+            this.Location = location;
+            this.errorMessage = null;
         }
 
-        public bool IsEmpty => this.value == null || this.value.Trim().Length <= 0;
+        public bool IsEmpty => this.Value == null || this.Value.Trim().Length <= 0;
 
-        public bool IsEof => this.type == TokenType.Eof;
+        public bool IsEof => this.Type == TokenType.Eof;
 
-        public bool IsNewLine => this.type == TokenType.NewLine;
+        public bool IsNewLine => this.Type == TokenType.NewLine;
 
-        public static Token Unknown(string value, string hint, int line, int col)
+        public static Token Unknown(string value, string errorMessage, SourceLocation location)
         {
-            return new Token(TokenType.Unknown, value)
+            errorMessage.CheckNotNull(nameof(errorMessage));
+
+            return new Token(TokenType.Unknown, value, location)
             {
-                errorHint = hint,
-                line = line,
-                col = col,
+                errorMessage = errorMessage
             };
         }
 
-        public static Token CreateUnknownTokenFromFragment(CharBuffer cs, StringBuilder fragment)
-        {
-            while (!cs.TokenDone()) { fragment.Append(cs.Consume()); }
+        public static Token NewLine(SourceLocation location)
+            => new Token(TokenType.NewLine, "<NewLine>", location);
 
-            return new Token(TokenType.Unknown, fragment.ToString());
-        }
-
-        public static Token NewLine(int line, int col) => new Token(TokenType.NewLine, "<NewLine>") { line = line, col = col };
-
-        public static Token EndOfFile(int line, int col) => new Token(TokenType.Eof, "<EndOfFile>") { line = line, col = col };
+        public static Token EndOfFile(SourceLocation location)
+            => new Token(TokenType.Eof, "<EndOfFile>", location);
 
         public override string ToString()
-            => $"{this.value}:{this.type}";
+            => $"{this.Value}:{this.Type} at {this.Location}";
+
+        public SyntaxErrorNode TokenError()
+            => this.Type == TokenType.Unknown ? new SyntaxErrorNode(this.errorMessage, this.Location) : null;
     }
 }

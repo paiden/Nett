@@ -256,7 +256,49 @@ namespace Nett.Tests
             Assert.Equal(" Hopefully not.", ((TomlTable)read["group"]).Get<TomlArray>("more").Comments.First().Text);
             Assert.Single(((TomlTable)read["group"]).Get<TomlArray>("emptyArr1").Comments);
             Assert.Equal(3, ((TomlTable)read["group"]).Get<TomlArray>("emptyArr2").Comments.Count());
-            Assert.Equal(" End", ((TomlTable)read["group"]).Get<TomlTableArray>("questions").Comments.First().Text);
+            Assert.Equal(" End", ((TomlTable)read["group"]).Get<TomlTableArray>("questions").Comments.Single().Text);
+        }
+
+        [Fact]
+        public void ReadValidToml_WithCommentsOnKeyValuePair_AttachesCommentsToTheTomlObjects()
+        {
+            // Arrange
+            const string tml = @"
+#   KVP PreComment
+a = 1 #  KVP post comment";
+
+            // Act
+            var to = Toml.ReadString(tml);
+
+            // Assert
+            to["a"].Comments.Should().HaveCount(2);
+            to["a"].Comments.Should().Contain(c => c.Location == CommentLocation.Prepend && c.Text == "   KVP PreComment");
+            to["a"].Comments.Should().Contain(c => c.Location == CommentLocation.Append && c.Text == "  KVP post comment");
+        }
+
+        [Fact]
+        public void ReadValidToml_WithCommentsOnInlineTableInTableArray_AttachesCommentsToTheTomlObjects()
+        {
+            // Arrange
+            const string tml = @"
+#   KVP PreComment
+a = [
+# Oh no a nasty comment location
+{ x = 1 } # Oh no another nasty comment location
+]";
+
+            // Act
+            var to = Toml.ReadString(tml);
+
+            // Assert
+            var a = to.Get<TomlTableArray>("a");
+            a.Comments.Should().HaveCount(1);
+            a.Comments.Should().Contain(c => c.Location == CommentLocation.Prepend && c.Text == "   KVP PreComment");
+
+            var t = a[0];
+            t.Comments.Should().HaveCount(2);
+            t.Comments.Should().Contain(c => c.Location == CommentLocation.Prepend && c.Text == " Oh no a nasty comment location");
+            t.Comments.Should().Contain(c => c.Location == CommentLocation.Append && c.Text == " Oh no another nasty comment location");
         }
 
         [Fact]
@@ -318,20 +360,6 @@ namespace Nett.Tests
             // Assert
             Assert.Equal(3.14, read.Get<float>("pi"), 2);
             Assert.Equal(-3.14, read.Get<double>("negpi"), 2);
-        }
-
-        [Fact]
-        public void ReadValidTomlUntyped_ImplicitAndExplicitAfter()
-        {
-            // Arrange
-            var toml = TomlStrings.Valid.ImplicitAndExplicitAfter;
-
-            // Act
-            var read = Toml.ReadString(toml);
-
-            // Assert
-            Assert.Equal(42, read.Get<TomlTable>("a").Get<TomlTable>("b").Get<TomlTable>("c").Get<int>("answer"));
-            Assert.Equal(43, read.Get<TomlTable>("a").Get<long>("better"));
         }
 
         [Fact]
@@ -433,6 +461,40 @@ namespace Nett.Tests
             Assert.Equal(2, read.Rows.Count());
             Assert.Equal(double.Parse("3.141592653589793", CultureInfo.InvariantCulture), read.Get<double>("longpi"));
             Assert.Equal(double.Parse("-3.141592653589793", CultureInfo.InvariantCulture), read.Get<double>("neglongpi"));
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyed_WhenInputIsInlineArrayOfTablesWithEmptyTable_CreatesCorrectTomlDataStructure()
+        {
+            // Arrange
+            const string TML = @"
+a = [{}]";
+
+            // Act
+            var r = Toml.ReadString(TML);
+
+            // Assert
+            var a = r.Get<TomlTableArray>("a");
+            a.Items.Should().HaveCount(1);
+            var t = a[0];
+            t.Rows.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ReadValidTomlUntyed_WhenInputIsInlineArrayOfTablesWithOneRowTable_CreatesCorrectTomlDataStructure()
+        {
+            // Arrange
+            const string TML = @"
+a = [{x = 1}]";
+
+            // Act
+            var r = Toml.ReadString(TML);
+
+            // Assert
+            var a = r.Get<TomlTableArray>("a");
+            a.Items.Should().HaveCount(1);
+            var t = a[0];
+            t.Get<TomlInt>("x").Value.Should().Be(1);
         }
 
         [Fact]
@@ -582,7 +644,7 @@ namespace Nett.Tests
 
             // Assert
             Assert.Single(read.Rows);
-            Assert.Equal("Glory Days", ((read.Get<TomlTable>("albums")).Get<TomlTableArray>("songs")[0]).Get<string>("name"));
+            Assert.Equal("Glory Days", ((read.Get<TomlTableArray>("albums"))[0].Get<TomlTableArray>("songs")[0]).Get<string>("name"));
         }
 
         [Fact]

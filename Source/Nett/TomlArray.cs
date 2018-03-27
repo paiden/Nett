@@ -11,6 +11,20 @@
         internal TomlArray(ITomlRoot root, params TomlValue[] values)
             : base(root, values)
         {
+            if (values.Length > 1)
+            {
+                TomlObjectType primaryType = values[0].TomlType;
+
+                for (int i = 1; i < values.Length; i++)
+                {
+                    if (values[i].TomlType != primaryType)
+                    {
+                        throw new ArgumentException($"All TOML array elements should have the same type as the first item. " +
+                            $"First item has type '{values[0].ReadableTypeName}', but element at index '{i}' has type " +
+                            $"'{values[i].ReadableTypeName}'.");
+                    }
+                }
+            }
         }
 
         public TomlValue[] Items => this.Value;
@@ -31,10 +45,10 @@
 
             if (t.IsArray)
             {
-                var et = t.GetElementType();
-                var a = Array.CreateInstance(et, this.Value.Length);
+                Type et = t.GetElementType();
+                Array a = Array.CreateInstance(et, this.Value.Length);
                 int cnt = 0;
-                foreach (var i in this.Value)
+                foreach (TomlValue i in this.Value)
                 {
                     a.SetValue(i.Get(et), cnt++);
                 }
@@ -47,14 +61,14 @@
                 throw new InvalidOperationException(string.Format("Cannot convert TOML array to '{0}'.", t.FullName));
             }
 
-            var collection = (IList)Activator.CreateInstance(t);
+            IList collection = (IList)Activator.CreateInstance(t);
             Type itemType = Types.ObjectType;
             if (t.IsGenericType)
             {
                 itemType = t.GetGenericArguments()[0];
             }
 
-            foreach (var i in this.Value)
+            foreach (TomlValue i in this.Value)
             {
                 collection.Add(i.Get(itemType));
             }
@@ -75,7 +89,7 @@
 
         internal TomlArray CloneArrayFor(ITomlRoot root)
         {
-            var copy = new TomlValue[this.Value.Length];
+            TomlValue[] copy = new TomlValue[this.Value.Length];
             this.Value.CopyTo(copy, 0);
             return CopyComments(new TomlArray(root, copy), this);
         }
