@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Nett.Tests.Util;
@@ -43,7 +44,7 @@ namespace Nett.Tests
         public string Currency { get; set; }
         public decimal Ammount { get; set; }
 
-        public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(' ')[0]), Currency = s.Split(' ')[1] };
+        public static Money Parse(string s) => new Money() { Ammount = decimal.Parse(s.Split(' ')[0], CultureInfo.InvariantCulture), Currency = s.Split(' ')[1] };
         public override string ToString() => Invariant($"{this.Ammount} {this.Currency}");
     }
 
