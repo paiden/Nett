@@ -115,7 +115,7 @@ the table associated config will be used to perform all write operations.
 
 To create a new configuration do the following:
 ```C#
-var myConfig = TomlConfig.Create();
+var myConfig = TomlSettings.Create();
 ```
 
 This will create a copy of the default configuration. The copy can be modified
@@ -157,7 +157,7 @@ To make this work, we need to pass a custom configuration to the read method tha
 the type can be created. This is done the by:
 
 ```C#
-var myConfig = TomlConfig.Create(cfg => cfg
+var myConfig = TomlSettings.Create(cfg => cfg
     .ConfigureType<ConfigurationWithDepdendency>(ct => ct
         .CreateInstance(() => new ConfigurationWithDepdendency(new object()))));
 
@@ -181,8 +181,8 @@ By **default** the *'NumericalSize'* and *'Serialize'* sets are activated. All p
 can be activated by:
 
 ```C#
-var config = TomlConfig.Create(cfg => cfg
-    .AllowImplicitConversions(TomlConfig.ConversionSets.All));
+var config = TomlSettings.Create(cfg => cfg
+    .AllowImplicitConversions(TomlSettings.ConversionSets.All));
 var tbl = Toml.ReadString("f = 0.99", config);
 var i = tbl.Get<int>("f"); // i will be '0'
 ```
@@ -195,8 +195,8 @@ enabled, the higher the risk is that subtle bugs are introduced.
 The opposite route is to disable all 'Nett' implicit conversion via 
 
 ```C#
-var config = TomlConfig.Create(cfg => cfg
-    .AllowImplicitConversions(TomlConfig.ConversionSets.None));
+var config = TomlSettings.Create(cfg => cfg
+    .AllowImplicitConversions(TomlSettings.ConversionSets.None));
 var tbl = Toml.ReadString("i = 1", config);
 // var i = tbl.Get<int>("i"); // Would throw InvalidOperationException as event cast from TomlInt to int is not allowed
 var i = tbl.Get<long>("i"); // Only long will work, no other type
@@ -208,8 +208,8 @@ casting or custom converters.
 Any set combination can be activated by logical combination of the set flags e.g.:
 
 ```C#
-var config = TomlConfig.Create(cfg => cfg
-    .AllowImplicitConversions(TomlConfig.ConversionSets.NumericalType | TomlConfig.ConversionSets.Serialize));
+var config = TomlSettings.Create(cfg => cfg
+    .AllowImplicitConversions(TomlSettings.ConversionSets.NumericalType | TomlSettings.ConversionSets.Serialize));
 ```
 
 Var various scenarios a logical combination of the default conversion sets with some custom converters may
@@ -263,7 +263,7 @@ var obj = new TableContainingMoney()
     NotSupported = new Money() { Ammount = 9.99m, Currency = "EUR" }
 };
 
-var config = TomlConfig.Create(cfg => cfg
+var config = TomlSettings.Create(cfg => cfg
     .ConfigureType<decimal>(type => type
         .WithConversionFor<TomlFloat>(convert => convert
             .ToToml(dec => (double)dec)
@@ -295,7 +295,7 @@ var obj = new TableContainingMoney()
     NotSupported = new Money() { Ammount = 9.99m, Currency = "EUR" }
 };
 
-var config = TomlConfig.Create(cfg => cfg
+var config = TomlSettings.Create(cfg => cfg
     .ConfigureType<Money>(type => type
         .WithConversionFor<TomlString>(convert => convert
             .ToToml(custom => custom.ToString())
@@ -348,7 +348,7 @@ So the computed `Z` property needs to be ignored. This can be achieved in two wa
 1. Via fluent configuration  
   ```C#
 var c = new Computed();
-var config = TomlConfig.Create(cfg => cfg
+var config = TomlSettings.Create(cfg => cfg
     .ConfigureType<Computed>(type => type
         .IgnoreProperty(o => o.Z)));
 
