@@ -453,6 +453,11 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
+**vX.X.X** --- XXXX-XX-XX
+
+Nett:
++ Fix: Inline tables serialized in wrong container [#51](https://github.com/paiden/Nett/issues/51)
+
 **v0.9.0** --- 2018-03-25
 
 Nett:

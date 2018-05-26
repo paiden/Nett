@@ -377,7 +377,8 @@
         }
 
         private static bool ScopeCreatingType(TomlObject obj) =>
-            obj.TomlType == TomlObjectType.Table || obj.TomlType == TomlObjectType.ArrayOfTables;
+            (obj.TomlType == TomlObjectType.Table && ((TomlTable)obj).TableType != TableTypes.Inline)
+            || obj.TomlType == TomlObjectType.ArrayOfTables;
 
         [Conditional(Constants.Debug)]
         private void AssertIntegrity()
