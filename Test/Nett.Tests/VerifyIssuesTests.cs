@@ -282,6 +282,20 @@ B = {  }
 ");
         }
 
+        [Fact]
+        public void VerifyIssue53_EmptyInlineTableFailsToBeParsed_IsFixed()
+        {
+            // Arrange
+            const string Tml = @"
+[Root]
+A = {  }
+";
+            Action action = () => Toml.ReadString(Tml);
+
+            // Assert
+            action.ShouldNotThrow();
+        }
+
         public class TestTable
         {
             public string label { get; set; }

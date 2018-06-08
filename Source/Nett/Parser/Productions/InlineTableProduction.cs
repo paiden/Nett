@@ -8,7 +8,7 @@
 
             tokens.ExpectAndConsume(TokenType.LCurly);
 
-            if (!tokens.TryExpect(TokenType.RBrac))
+            if (!tokens.TryExpect(TokenType.RCurly))
             {
                 var kvp = KeyValuePairProduction.Apply(root, tokens);
                 inlineTable.AddRow(kvp.Item1, kvp.Item2);
