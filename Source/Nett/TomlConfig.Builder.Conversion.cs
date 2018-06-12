@@ -90,21 +90,21 @@
         {
             // TOML -> CLR
             // TomlFloat -> *
-            new TomlConverter<TomlFloat, long>((m, f) => (long)f.Value),
-            new TomlConverter<TomlFloat, ulong>((m, f) => (ulong)f.Value),
-            new TomlConverter<TomlFloat, int>((m, f) => (int)f.Value),
-            new TomlConverter<TomlFloat, uint>((m, f) => (uint)f.Value),
-            new TomlConverter<TomlFloat, short>((m, f) => (short)f.Value),
-            new TomlConverter<TomlFloat, ushort>((m, f) => (ushort)f.Value),
-            new TomlConverter<TomlFloat, char>((m, f) => (char)f.Value),
-            new TomlConverter<TomlFloat, byte>((m, f) => (byte)f.Value),
+            new TomlConverter<TomlFloat, long>((m, f) => Convert.ToInt64(f.Value)),
+            new TomlConverter<TomlFloat, ulong>((m, f) => Convert.ToUInt64(f.Value)),
+            new TomlConverter<TomlFloat, int>((m, f) => Convert.ToInt32(f.Value)),
+            new TomlConverter<TomlFloat, uint>((m, f) => Convert.ToUInt32(f.Value)),
+            new TomlConverter<TomlFloat, short>((m, f) => Convert.ToInt16(f.Value)),
+            new TomlConverter<TomlFloat, ushort>((m, f) => Convert.ToUInt16(f.Value)),
+            new TomlConverter<TomlFloat, char>((m, f) => (char)Convert.ToUInt16(f.Value)),
+            new TomlConverter<TomlFloat, byte>((m, f) => Convert.ToByte(f.Value)),
 
             // TOML -> CLR
             // TomlInt -> *
             new TomlConverter<TomlInt, float>((m, i) => i.Value),
             new TomlConverter<TomlInt, double>((m, i) => i.Value),
         }
-        .AddBidirectionalConverter<TomlInt, TomlFloat>((m, f) => new TomlInt(m, (long)f.Value), (m, i) => new TomlFloat(m, i.Value));
+        .AddBidirectionalConverter<TomlInt, TomlFloat>((m, f) => new TomlInt(m, Convert.ToInt64(f.Value)), (m, i) => new TomlFloat(m, i.Value));
 
         private static readonly List<ITomlConverter> NumericalSize = new List<ITomlConverter>()
         {
@@ -113,17 +113,17 @@
             new TomlConverter<TomlFloat, float>((m, f) => (float)f.Value),
 
             // TomlInt -> *
-            new TomlConverter<TomlInt, ulong>((m, i) => (ulong)i.Value),
-            new TomlConverter<TomlInt, int>((m, i) => (int)i.Value),
-            new TomlConverter<TomlInt, uint>((m, i) => (uint)i.Value),
-            new TomlConverter<TomlInt, short>((m, i) => (short)i.Value),
-            new TomlConverter<TomlInt, ushort>((m, i) => (ushort)i.Value),
-            new TomlConverter<TomlInt, char>((m, i) => (char)i.Value),
-            new TomlConverter<TomlInt, byte>((m, i) => (byte)i.Value),
+            new TomlConverter<TomlInt, ulong>((m, i) => Convert.ToUInt64(i.Value)),
+            new TomlConverter<TomlInt, int>((m, i) => Convert.ToInt32(i.Value)),
+            new TomlConverter<TomlInt, uint>((m, i) => Convert.ToUInt32(i.Value)),
+            new TomlConverter<TomlInt, short>((m, i) => Convert.ToInt16(i.Value)),
+            new TomlConverter<TomlInt, ushort>((m, i) => Convert.ToUInt16(i.Value)),
+            new TomlConverter<TomlInt, char>((m, i) => Convert.ToChar(i.Value)),
+            new TomlConverter<TomlInt, byte>((m, i) => Convert.ToByte(i.Value)),
 
             // CLR -> TOML
             // * -> TomlInt
-            new TomlConverter<ulong, TomlInt>((m, v) => new TomlInt(m, (long)v)),
+            new TomlConverter<ulong, TomlInt>((m, v) => new TomlInt(m, Convert.ToInt64(v))),
             new TomlConverter<uint, TomlInt>((m, v) => new TomlInt(m, v)),
             new TomlConverter<int, TomlInt>((m, v) => new TomlInt(m, v)),
             new TomlConverter<short, TomlInt>((m, v) => new TomlInt(m, v)),

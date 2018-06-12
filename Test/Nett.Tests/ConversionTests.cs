@@ -334,6 +334,103 @@ Foo3 = [""A""]";
             }
         }
 
+        public static IEnumerable<object[]> DotNetExplicitImplicitConversionsOverflowTestData
+        {
+            get
+            {
+                // TomlFloat
+                // +
+                yield return new object[] { "a0", "v=9.22e+18", new Func<TomlTable, object>(t => t.Get<long>("v")), true };
+                yield return new object[] { "a1", "v=-9.22e+18", new Func<TomlTable, object>(t => t.Get<long>("v")), true };
+                yield return new object[] { "a2", "v=1.84e+19", new Func<TomlTable, object>(t => t.Get<ulong>("v")), true };
+                yield return new object[] { "a3", "v=2147483647.1", new Func<TomlTable, object>(t => t.Get<int>("v")), true };
+                yield return new object[] { "a4", "v=-2147483648.1", new Func<TomlTable, object>(t => t.Get<int>("v")), true };
+                yield return new object[] { "a5", "v=4294967295.1", new Func<TomlTable, object>(t => t.Get<uint>("v")), true };
+                yield return new object[] { "a6", "v=32767.1", new Func<TomlTable, object>(t => t.Get<short>("v")), true };
+                yield return new object[] { "a7", "v=-32768.1", new Func<TomlTable, object>(t => t.Get<short>("v")), true };
+                yield return new object[] { "a8", "v=65535.1", new Func<TomlTable, object>(t => t.Get<ushort>("v")), true };
+                yield return new object[] { "a9", "v=65535.1", new Func<TomlTable, object>(t => t.Get<char>("v")), true };
+                yield return new object[] { "a10", "v=255.1", new Func<TomlTable, object>(t => t.Get<byte>("v")), true };
+                yield return new object[] { "a11", "v=9.22e+18", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), true };
+                yield return new object[] { "a12", "v=-9.22e+18", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), true };
+
+                // -
+                yield return new object[] { "b0", "v=9.23e+18", new Func<TomlTable, object>(t => t.Get<long>("v")), false };
+                yield return new object[] { "b1", "v=-9.23e+18", new Func<TomlTable, object>(t => t.Get<long>("v")), false };
+                yield return new object[] { "b2", "v=1.85e+19", new Func<TomlTable, object>(t => t.Get<ulong>("v")), false };
+                yield return new object[] { "b3", "v=-1.1", new Func<TomlTable, object>(t => t.Get<ulong>("v")), false };
+                yield return new object[] { "b4", "v=2147483648.1", new Func<TomlTable, object>(t => t.Get<int>("v")), false };
+                yield return new object[] { "b5", "v=-2147483649.1", new Func<TomlTable, object>(t => t.Get<int>("v")), false };
+                yield return new object[] { "b6", "v=4294967296.1", new Func<TomlTable, object>(t => t.Get<uint>("v")), false };
+                yield return new object[] { "b7", "v=-1.1", new Func<TomlTable, object>(t => t.Get<uint>("v")), false };
+                yield return new object[] { "b8", "v=32768.1", new Func<TomlTable, object>(t => t.Get<short>("v")), false };
+                yield return new object[] { "b9", "v=-32769.1", new Func<TomlTable, object>(t => t.Get<short>("v")), false };
+                yield return new object[] { "b10", "v=65536.1", new Func<TomlTable, object>(t => t.Get<ushort>("v")), false };
+                yield return new object[] { "b11", "v=-1.1", new Func<TomlTable, object>(t => t.Get<ushort>("v")), false };
+                yield return new object[] { "b12", "v=65536.1", new Func<TomlTable, object>(t => t.Get<char>("v")), false };
+                yield return new object[] { "b13", "v=-1.1", new Func<TomlTable, object>(t => t.Get<char>("v")), false };
+                yield return new object[] { "b14", "v=256.1", new Func<TomlTable, object>(t => t.Get<byte>("v")), false };
+                yield return new object[] { "b15", "v=-1.1", new Func<TomlTable, object>(t => t.Get<byte>("v")), false };
+                yield return new object[] { "b16", "v=9.23e+18", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), false };
+                yield return new object[] { "b17", "v=-9.23e+18", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), false };
+
+                // TomlInt
+                yield return new object[] { "c0", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<float>("v")), true };
+                yield return new object[] { "c1", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<double>("v")), true };
+                yield return new object[] { "c2", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<TomlFloat>("v")), true };
+                yield return new object[] { "c3", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<ulong>("v")), true };
+                yield return new object[] { "c4", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<ulong>("v")), true };
+                yield return new object[] { "c5", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<long>("v")), true };
+                yield return new object[] { "c6", "v=9223372036854775807", new Func<TomlTable, object>(t => t.Get<TomlInt>("v")), true };
+                yield return new object[] { "c7", "v=2147483647", new Func<TomlTable, object>(t => t.Get<int>("v")), true };
+                yield return new object[] { "c8", "v=-2147483648", new Func<TomlTable, object>(t => t.Get<int>("v")), true };
+                yield return new object[] { "c9", "v=4294967295", new Func<TomlTable, object>(t => t.Get<uint>("v")), true };
+                yield return new object[] { "c10", "v=32767", new Func<TomlTable, object>(t => t.Get<short>("v")), true };
+                yield return new object[] { "c11", "v=-32768", new Func<TomlTable, object>(t => t.Get<short>("v")), true };
+                yield return new object[] { "c12", "v=65535", new Func<TomlTable, object>(t => t.Get<ushort>("v")), true };
+                yield return new object[] { "c13", "v=65535", new Func<TomlTable, object>(t => t.Get<char>("v")), true };
+                yield return new object[] { "c14", "v=255", new Func<TomlTable, object>(t => t.Get<byte>("v")), true };
+
+                // -
+                yield return new object[] { "d0", "v=-1", new Func<TomlTable, object>(t => t.Get<ulong>("v")), false };
+                yield return new object[] { "d1", "v=2147483648", new Func<TomlTable, object>(t => t.Get<int>("v")), false };
+                yield return new object[] { "d2", "v=-2147483649", new Func<TomlTable, object>(t => t.Get<int>("v")), false };
+                yield return new object[] { "d3", "v=4294967296", new Func<TomlTable, object>(t => t.Get<uint>("v")), false };
+                yield return new object[] { "d4", "v=-1", new Func<TomlTable, object>(t => t.Get<uint>("v")), false };
+                yield return new object[] { "d5", "v=32768", new Func<TomlTable, object>(t => t.Get<short>("v")), false };
+                yield return new object[] { "d6", "v=-32769", new Func<TomlTable, object>(t => t.Get<short>("v")), false };
+                yield return new object[] { "d7", "v=65536", new Func<TomlTable, object>(t => t.Get<ushort>("v")), false };
+                yield return new object[] { "d8", "v=-1", new Func<TomlTable, object>(t => t.Get<ushort>("v")), false };
+                yield return new object[] { "d9", "v=65536", new Func<TomlTable, object>(t => t.Get<char>("v")), false };
+                yield return new object[] { "d10", "v=-1", new Func<TomlTable, object>(t => t.Get<char>("v")), false };
+                yield return new object[] { "d11", "v=256", new Func<TomlTable, object>(t => t.Get<byte>("v")), false };
+                yield return new object[] { "d12", "v=-1", new Func<TomlTable, object>(t => t.Get<byte>("v")), false };
+            }
+        }
+
+        [Theory(DisplayName = "Getting value when explicit .Net implicit conversions are activated and no overflow has occurred others will fail")]
+        [MemberData(nameof(DotNetExplicitImplicitConversionsOverflowTestData))]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+        public void ReadToml_ExplicitDotNetImplicit_ConversionToTomlIntOverflow(string id, string s, Func<TomlTable, object> read, bool shouldWork)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+        {
+            // Arrange
+            var tbl = SetupConversionSetTest(TomlSettings.ConversionSets.All, s);
+
+            // Act
+            Action a = () => read(tbl);
+
+            // Assert
+            if (shouldWork)
+            {
+                a.ShouldNotThrow();
+            }
+            else
+            {
+                a.ShouldThrow<OverflowException>();
+            }
+        }
+
         public class Testy
         {
             public float One { get; set; }
@@ -354,6 +451,24 @@ Foo3 = [""A""]";
 
             // Assert
             val.Value.Should().Be(1.0f);
+        }
+
+        [Fact]
+        public void ReadToml_WithAllConversionEnabled_CannotConvertFromTomlFloatToTomlIntIfValueOverflows()
+        {
+            // Arrange
+            var config = TomlSettings.Create(cfg => cfg
+                .AllowImplicitConversions(TomlSettings.ConversionSets.All)
+            );
+
+            string abc = "SomeFloat = 9.23e+18" + Environment.NewLine;
+            TomlTable table = Toml.ReadString(abc, config);
+
+            // Act
+            Action a = () => table.Get<TomlInt>("SomeFloat");
+
+            // Assert
+            a.ShouldThrow<Exception>();
         }
 
         [Fact]
