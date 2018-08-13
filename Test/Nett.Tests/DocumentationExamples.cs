@@ -221,7 +221,7 @@ ServerAddress = ""http://127.0.0.1:8080""
             var tbl = Toml.ReadString("f = 0.99", config);
             var i = tbl.Get<int>("f");
 
-            i.Should().Be(0);
+            i.Should().Be(1);
         }
 
         [Fact]
