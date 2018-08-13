@@ -18,7 +18,7 @@ namespace Nett.Tests
 
             public override string ToString()
             {
-                return $"RootTable({SubTable})";
+                return $"RootTable({this.SubTable})";
             }
         }
 
@@ -30,7 +30,7 @@ namespace Nett.Tests
 
                 public override string ToString()
                 {
-                    return $"ListTable({SomeValue})";
+                    return $"ListTable({this.SomeValue})";
                 }
             }
 
@@ -38,7 +38,7 @@ namespace Nett.Tests
 
             public override string ToString()
             {
-                return $"SubTable({string.Join(",", Values.Select(p => p.ToString()))})";
+                return $"SubTable({string.Join(",", this.Values.Select(p => p.ToString()))})";
             }
         }
 
@@ -296,12 +296,36 @@ A = {  }
             action.ShouldNotThrow();
         }
 
+        [Fact]
+        public void VerifyIssue54_WriteTomlWithMultiArrays_ProducesCorrectTomlOutput()
+        {
+            // Arrange
+            var obj = new MultiDimArray();
+
+            // Act
+            string output = Toml.WriteString(obj);
+            var x = new int[,] { { 1 }, { 2 } };
+
+            // Assert
+            output.Trim().ShouldBeSemanticallyEquivalentTo(MultiDimArray.TomlRep);
+        }
+
+        [Fact]
+        public void VerifyIssue54_ReadTomlWithMultiArrays_ProducesCorrectObject()
+        {
+            // Act
+            var obj = Toml.ReadString<MultiDimArray>(MultiDimArray.TomlRep);
+
+            // Assert
+            obj.ShouldBeEquivalentTo(new MultiDimArray());
+        }
+
         public class TestTable
         {
             public string label { get; set; }
             public DateTimeOffset timestamp { get; set; }
 
-            public TestTable(string l, DateTimeOffset t) { label = l; timestamp = t; }
+            public TestTable(string l, DateTimeOffset t) { this.label = l; this.timestamp = t; }
             public TestTable() { }
         };
 
@@ -316,5 +340,67 @@ A = {  }
             public float MyFloat { get; set; }
         }
 
+        public class MultiDimArray
+        {
+            public const string TomlRep = @"
+A1D = [1, 2]
+A2D = [[1, 2], [3, 4]]
+A3DE = [[[]]]
+A3D = [[[1, 2, 3]], [[4, 5, 6]], [[7, 8, 9]]]
+L1D = [1, 2]
+L2D = [[1, 2], [3, 4]]
+L3DE = [[[]]]
+L3D = [[[1, 2, 3]], [[4, 5, 6]], [[7, 8, 9]]]";
+
+            public int[] A1D { get; set; } = new int[] { 1, 2 };
+
+            public int[][] A2D { get; set; } = { new int[] { 1, 2 }, new int[] { 3, 4 } };
+
+            public int[][][] A3DE { get; set; } = new int[][][] { new int[][] { new int[] { } } };
+
+            public int[][][] A3D { get; set; } = new int[][][]
+            {
+                new int[][]
+                {
+                    new int[] { 1, 2, 3 }
+                },
+
+                new int[][]
+                {
+                    new int[] { 4, 5, 6 }
+                },
+
+
+                new int[][]
+                {
+                    new int [] {7, 8, 9}
+                },
+            };
+
+            public List<int> L1D { get; set; } = new List<int> { 1, 2 };
+
+            public List<List<int>> L2D { get; set; } = new List<List<int>> { new List<int> { 1, 2 }, new List<int> { 3, 4 } };
+
+            public List<List<List<int>>> L3DE { get; set; } = new List<List<List<int>>>() { new List<List<int>> { new List<int>() { } } };
+
+            public List<List<List<int>>> L3D { get; set; } = new List<List<List<int>>>
+            {
+                new List<List<int>>
+                {
+                    new List<int> { 1, 2, 3 }
+                },
+
+                new List<List<int>>
+                {
+                    new List<int> { 4, 5, 6 }
+                },
+
+
+                new List<List<int>>
+                {
+                    new List<int> {7, 8, 9}
+                },
+            };
+        }
     }
 }

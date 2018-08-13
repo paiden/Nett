@@ -38,20 +38,39 @@
         protected void WriteArray(TomlKey key, TomlArray array)
         {
             this.writer.Write(key.ToString());
-            this.writer.Write(" = [");
+            this.writer.Write(" = ");
 
-            for (int i = 0; i < array.Items.Length - 1; i++)
+            WriteArrayPart(array);
+
+            void WriteArrayPart(TomlArray ap)
             {
-                this.WriteValue(array[i]);
-                this.writer.Write(", ");
+                this.writer.Write('[');
+
+                for (int i = 0; i < ap.Items.Length - 1; i++)
+                {
+                    WriteArrayElement(ap.Items[i]);
+                    this.writer.Write(", ");
+                }
+
+                if (ap.Items.Length > 0)
+                {
+                    WriteArrayElement(ap.Items[ap.Items.Length - 1]);
+                }
+
+                this.writer.Write(']');
             }
 
-            if (array.Items.Length > 0)
+            void WriteArrayElement(TomlValue value)
             {
-                this.WriteValue(array.Items[array.Items.Length - 1]);
+                if (value is TomlArray arr)
+                {
+                    WriteArrayPart(arr);
+                }
+                else
+                {
+                    this.WriteValue(value);
+                }
             }
-
-            this.writer.Write(']');
         }
 
         protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp)

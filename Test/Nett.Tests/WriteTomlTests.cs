@@ -195,7 +195,7 @@ x = ""2""".Trim());
 
             public TestOrder()
             {
-                TableArray = new List<TestClassA>()
+                this.TableArray = new List<TestClassA>()
                 {
                     new TestClassA(),
                 };
@@ -205,7 +205,10 @@ x = ""2""".Trim());
         private class WithArray
         {
             public int[] EmptyArray => new int[0];
+
             public int[] NonEmptyIntArray => new int[] { -100, 0, 100 };
+
+            public int[][] MultiDimArray = new int[][] { new int[] { 1, 2 }, new int[] { 2, 4 } };
 
             public List<string> StringList => new List<string>() { "A", "B", "C" };
         }

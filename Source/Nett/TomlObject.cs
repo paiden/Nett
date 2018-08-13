@@ -65,31 +65,10 @@
         public abstract void Visit(ITomlObjectVisitor visitor);
 
         internal static TomlObject CreateFrom(ITomlRoot root, object val)
-            => CreateFrom(root, val, null);
+            => CreateFrom(root, val, null, val.GetType());
 
         internal static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi)
-        {
-            var t = val.GetType();
-            var converter = root.Settings.TryGetToTomlConverter(t);
-
-            if (converter != null)
-            {
-                return (TomlObject)converter.Convert(root, val, Types.TomlObjectType);
-            }
-            else if (val as IDictionary != null)
-            {
-                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Settings.GetTableType(t));
-            }
-            else if (t != Types.StringType && (val as IEnumerable) != null)
-            {
-                return CreateArrayType(root, (IEnumerable)val);
-            }
-            else
-            {
-                var tableType = root.Settings.GetTableType(t);
-                return TomlTable.CreateFromComplexObject(root, val, tableType);
-            }
-        }
+            => CreateFrom(root, val, null, val.GetType());
 
         internal abstract TomlObject CloneFor(ITomlRoot root);
 
@@ -112,36 +91,55 @@
 
         private static TomlObject CreateArrayType(ITomlRoot root, IEnumerable e)
         {
-            var et = e.GetElementType();
-
-            if (et != null)
+            if (!e.ToGenEnumerable().Any())
             {
+                var et = e.GetElementType();
+                if (et == null) { return new TomlArray(root); }
+
                 var conv = root.Settings.TryGetToTomlConverter(et);
-                if (conv != null)
-                {
-                    if (conv.CanConvertTo(typeof(TomlValue)))
-                    {
-                        var values = e.Select((o) => (TomlValue)conv.Convert(root, o, Types.TomlValueType));
-                        return new TomlArray(root, values.ToArray());
-                    }
-                    else if (conv.CanConvertTo(typeof(TomlTable)))
-                    {
-                        return new TomlTableArray(root, e.Select((o) => (TomlTable)conv.Convert(root, o, Types.TomlTableType)));
-                    }
-                    else
-                    {
-                        throw new NotSupportedException(
-                            $"Cannot create array type from enumerable with element type {et.FullName}");
-                    }
-                }
-                else
-                {
-                    return new TomlTableArray(root, e.Select((o) =>
-                        TomlTable.CreateFromComplexObject(root, o, root.Settings.GetTableType(et))));
-                }
+                return conv != null && conv.CanConvertTo(typeof(TomlValue))
+                    ? (TomlObject)new TomlArray(root)
+                    : new TomlTableArray(root);
             }
 
-            return new TomlArray(root);
+            var items = e.Select(o => CreateFrom(root, o, pi: null, valueType: e.GetElementType())).ToList();
+            var types = items.Select(i => i.GetType()).Distinct();
+            if (types.Count() > 1)
+            {
+                throw new ArgumentException($"Enumerable mapped to multiple TOML types '{string.Join(", ", types)}'. " +
+                    $"All array elements must map to the same TOML type.");
+            }
+
+            if (items.Any() && items.First().TomlType == TomlObjectType.Table)
+            {
+                return new TomlTableArray(root, items.Cast<TomlTable>());
+            }
+
+            return new TomlArray(root, items.Cast<TomlValue>().ToArray());
+        }
+
+        private static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi, Type valueType)
+        {
+            var t = valueType;
+            var converter = root.Settings.TryGetToTomlConverter(t);
+
+            if (converter != null)
+            {
+                return (TomlObject)converter.Convert(root, val, Types.TomlObjectType);
+            }
+            else if (val as IDictionary != null)
+            {
+                return TomlTable.CreateFromDictionary(root, (IDictionary)val, root.Settings.GetTableType(t));
+            }
+            else if (t != Types.StringType && (val as IEnumerable) != null)
+            {
+                return CreateArrayType(root, (IEnumerable)val);
+            }
+            else
+            {
+                var tableType = root.Settings.GetTableType(t);
+                return TomlTable.CreateFromComplexObject(root, val, tableType);
+            }
         }
     }
 

@@ -31,5 +31,8 @@
                 yield return selector(e);
             }
         }
+
+        public static IEnumerable<object> ToGenEnumerable(this IEnumerable e)
+            => e.Select(o => o);
     }
 }
