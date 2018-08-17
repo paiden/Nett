@@ -301,6 +301,11 @@ namespace Nett.Parser
                 this.SkipChar();
                 this.EnterState(fc => this.LexMultilineString(fc, t, escape), label: this.SkipChar);
             }
+            else if (c == escape)
+            {
+                this.EnterState(fc => this.LexSingleLineString(fc, t, escape));
+                this.Consume();
+            }
             else if (c == t) { this.Accept(GetStringType(t), this.SkipChar); }
             else if (c == '\r' || c == '\n') { this.Fail(ErrNewlineInString); }
             else if (c == LexInput.EofChar) { this.Fail(ErrStringNotClosed); }

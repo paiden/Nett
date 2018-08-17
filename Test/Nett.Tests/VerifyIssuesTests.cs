@@ -320,6 +320,19 @@ A = {  }
             obj.ShouldBeEquivalentTo(new MultiDimArray());
         }
 
+        [Fact]
+        public void VerifyIssue57_EscapedQuoteAtStartOfStringFailsToBeParsed_IsFixed()
+        {
+            // Arrange
+            const string Tml = "a=\"\\\"\""; // a = "\""
+
+            // Act
+            var table = Toml.ReadString(Tml);
+
+            // Assert
+            ((TomlValue<string>)table["a"]).Value.Should().Be("\"");
+        }
+
         public class TestTable
         {
             public string label { get; set; }
