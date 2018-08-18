@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FluentAssertions;
+using Nett.Tests.Util;
 using Xunit;
 
 namespace Nett.Tests.Functional
@@ -15,7 +15,7 @@ namespace Nett.Tests.Functional
 
             var s = Toml.WriteString(ItemDict.TwoItems, config);
 
-            s.Should().Be(ItemDict.TwoItemsInlineSerialzed);
+            s.ShouldBeNormalizedEqualTo(ItemDict.TwoItemsInlineSerialzed);
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Nett.Tests.Functional
 
             var s = Toml.WriteString(ItemDict.TwoItems, config);
 
-            s.Should().Be(ItemDict.TwoItemsDictInlineSerialized);
+            s.ShouldBeNormalizedEqualTo(ItemDict.TwoItemsDictInlineSerialized);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Nett.Tests.Functional
 
             var s = Toml.WriteString(InlineArray.Empty, config);
 
-            s.Should().Be(InlineArray.ExpectedEmpty);
+            s.ShouldBeNormalizedEqualTo(InlineArray.ExpectedEmpty);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Nett.Tests.Functional
 
             var s = Toml.WriteString(InlineArray.TwoItems, config);
 
-            s.Should().Be(InlineArray.ExpectedTwoItems);
+            s.ShouldBeNormalizedEqualTo(InlineArray.ExpectedTwoItems);
         }
 
 
@@ -61,7 +61,7 @@ namespace Nett.Tests.Functional
         {
             var s = Toml.WriteString(InlineArrayAttributeOnItem.TwoItems);
 
-            s.Should().Be(InlineArrayAttributeOnItem.TowItemsSerialized);
+            s.ShouldBeNormalizedEqualTo(InlineArrayAttributeOnItem.TowItemsSerialized);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Nett.Tests.Functional
         {
             var s = Toml.WriteString(new ConfigWithStringBoolDict());
 
-            s.Should().Be(ConfigWithStringBoolDict.Serialized);
+            s.ShouldBeNormalizedEqualTo(ConfigWithStringBoolDict.Serialized);
         }
     }
 }

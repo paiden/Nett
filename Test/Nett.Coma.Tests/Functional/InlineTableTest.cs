@@ -41,7 +41,7 @@ namespace Nett.Coma.Tests.Functional
 
                 // Assert
                 var f = File.ReadAllText(file);
-                f.Should().Be(expected);
+                f.ShouldBeNormalizedEqualTo(expected);
             }
         }
 

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
+using Nett.Tests.Util;
 using Nett.Tests.Util.TestData;
 using Xunit;
 
@@ -483,7 +484,7 @@ namespace Nett.Tests
             Assert.Equal(3, read.Rows.Count());
             Assert.Equal("This string has a ' quote character.", read.Get<string>("oneline"));
             Assert.Equal("This string has a ' quote character.", read.Get<string>("firstnl"));
-            Assert.Equal("This string\r\n has a ' quote character\r\n and more than\r\n one newline\r\n in it.", read.Get<string>("multiline"));
+            Assert.Equal("This string\r\n has a ' quote character\r\n and more than\r\n one newline\r\n in it.".NormalizeLineEndings(), read.Get<string>("multiline").NormalizeLineEndings());
         }
 
         [Fact]

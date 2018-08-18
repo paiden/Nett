@@ -20,6 +20,9 @@ namespace Nett.Tests.Util
         public static string StripWhitespace(this string s) =>
             s.Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
 
+        public static string NormalizeLineEndings(this string s) =>
+           s.Replace("\r\n", "\n").Replace("\r", "\n");
+
         public static string TestRunUniqueName(this string s) => $"../../../../data/{s}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
 
         public static string TestRunUniqueName(this string s, string fileExtension) => s.TestRunUniqueName() + fileExtension;

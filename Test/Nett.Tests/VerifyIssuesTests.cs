@@ -225,7 +225,7 @@ SomeValue = 5";
             tbl.Add("root5", 5);    // Added at root level but spuriously written into [Level2.Level3]
 
             var result = Toml.WriteString(tbl);
-            result.Trim().Should().Be(@"
+            result.Trim().ShouldBeNormalizedEqualTo(@"
 root1 = 1
 root2 = 2
 root3 = 3
@@ -330,7 +330,7 @@ A = {  }
             var table = Toml.ReadString(Tml);
 
             // Assert
-            ((TomlValue<string>)table["a"]).Value.Should().Be("\"");
+            table.Get<string>("a").Should().Be("\"");
         }
 
         public class TestTable
