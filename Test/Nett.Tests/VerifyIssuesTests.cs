@@ -225,7 +225,7 @@ SomeValue = 5";
             tbl.Add("root5", 5);    // Added at root level but spuriously written into [Level2.Level3]
 
             var result = Toml.WriteString(tbl);
-            result.Trim().Should().Be(@"
+            result.Trim().ShouldBeNormalizedEqualTo(@"
 root1 = 1
 root2 = 2
 root3 = 3
@@ -318,6 +318,19 @@ A = {  }
 
             // Assert
             obj.ShouldBeEquivalentTo(new MultiDimArray());
+        }
+
+        [Fact]
+        public void VerifyIssue57_EscapedQuoteAtStartOfStringFailsToBeParsed_IsFixed()
+        {
+            // Arrange
+            const string Tml = "a=\"\\\"\""; // a = "\""
+
+            // Act
+            var table = Toml.ReadString(Tml);
+
+            // Assert
+            table.Get<string>("a").Should().Be("\"");
         }
 
         public class TestTable

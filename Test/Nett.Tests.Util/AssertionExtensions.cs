@@ -20,6 +20,19 @@ namespace Nett.Tests.Util
             sx.StripWhitespace().Should().Be(sy.StripWhitespace());
         }
 
+        /// <summary>
+        /// Checks that the readable contents of two string is the same but changes "\r\n" and "\r" line endings to "\n" before.
+        /// </summary>
+        /// <remarks>
+        /// The toml specification is rather free with line endings and says
+        /// "TOML parsers should feel free to normalize newline to whatever makes sense for their platform."
+        /// So in most cases we should just check that a line break exists and not which kind it is.
+        /// </remarks>
+        public static void ShouldBeNormalizedEqualTo(this string sx, string sy)
+        {
+            sx.NormalizeLineEndings().Should().Be(sy.NormalizeLineEndings());
+        }
+
         public static void SouldBeEqualByJsonCompare(this object x, object y)
         {
             var xj = JsonConvert.SerializeObject(x);

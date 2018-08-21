@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Nett.Tests.Util;
 using Xunit;
 
 namespace Nett.Tests
@@ -116,7 +117,7 @@ V = 666
             var s = Toml.WriteString(tc, cfg);
 
             // Assert
-            Assert.Equal(exp.Trim(), s.Trim());
+            s.ShouldBeNormalizedEqualTo(exp);
         }
 
         [Fact]
@@ -124,10 +125,11 @@ V = 666
         {
             var s = Toml.WriteString(new WithBoolProperty());
 
-            s.Should().Be(
-                @"TheInt = 0
+            var exp = @"TheInt = 0
 TheBool = false
-");
+";
+
+            s.ShouldBeNormalizedEqualTo(exp);
         }
 
         [Fact]
@@ -156,7 +158,7 @@ TheBool = false
         public void Write_WhenClrObjectIsDictionary_WritesCorrectToml()
         {
             // Arrange
-            Dictionary<string, object> d = new Dictionary<string, object>()
+            var d = new Dictionary<string, object>()
             {
                 { "i", 1 },
                 { "s", "s" },
@@ -171,7 +173,7 @@ TheBool = false
             var s = Toml.WriteString(d);
 
             // Assert
-            s.Trim().Should().Be(@"
+            s.Trim().ShouldBeNormalizedEqualTo(@"
 i = 1
 s = ""s""
 
