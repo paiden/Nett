@@ -15,15 +15,18 @@
 
     public sealed partial class TomlSettings
     {
-        internal static readonly TomlSettings DefaultInstance = Create();
+        internal const BindingFlags PropBindingFlags = BindingFlags.Public | BindingFlags.Instance;
 
-        private const BindingFlags PropBindingFlags = BindingFlags.Public | BindingFlags.Instance;
+        internal static readonly TomlSettings DefaultInstance = Create();
 
         private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
         private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
         private readonly Dictionary<Type, HashSet<string>> ignoredProperties = new Dictionary<Type, HashSet<string>>();
+
+        private IKeyGenerator keyGenerator = KeyGenerators.Instance.PropertyName;
+        private ITargetPropertySelector mappingPropertySelector = TargetPropertySelectors.Instance.Exact;
 
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
@@ -94,9 +97,12 @@
                 .Where(pi => !this.IsPropertyIgnored(t, pi));
         }
 
+        internal TomlKey GetPropertyKey(PropertyInfo pi)
+            => new TomlKey(this.keyGenerator.GetKey(pi));
+
         internal PropertyInfo TryGetMappingProperty(Type t, string key)
         {
-            var pi = t.GetProperty(key, PropBindingFlags);
+            var pi = this.mappingPropertySelector.TryGetTargetProperty(key, t);
             return pi != null && !this.IsPropertyIgnored(t, pi) ? pi : null;
         }
 

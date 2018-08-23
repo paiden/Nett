@@ -314,6 +314,37 @@ Also the deserialization will work because the conversion specified both directi
 required to always specify both conversion directions. E.g. if you only write TOML files, the 'FromToml' part
 could be omitted.
 
+## Ignore case when mapping TOML keys to CLR properties
+
+```csharp
+public class TestObject
+{
+    public string TestProp { get; set; }
+}
+
+var settings = TomlSettings.Create(s => s
+    .ConfigurePropertyMapping(m => m
+        .UseTargetPropertySelector(standardSelectors => standardSelectors.IgnoreCase)));
+var read = Toml.ReadString<TestObject>("TestProp='x'", settings);
+
+// read.TestProj == "x"
+```
+
+## Write TOML keys with casing differnt from CLR property name
+```csharp
+public class TestObject
+{
+    public string TestProp { get; set; }
+}
+
+var settings = TomlSettings.Create(s => s
+    .ConfigurePropertyMapping(m => m
+        .UseKeyGenerator(standardGenerators => standardGenerators.PascalCase)));
+var written = Toml.WriteString(new TestObject() { TestProp = "x" }, settings);
+
+// Resulting TOML: testProj = "x"
+```
+
 ## Ignore CLR object properties
 
 By default TOML reads/writes all public properties of an CLR object. In some cases

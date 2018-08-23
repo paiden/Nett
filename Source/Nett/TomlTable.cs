@@ -259,7 +259,7 @@
                 {
                     TomlObject to = TomlObject.CreateFrom(root, val, p);
                     AddComments(to, p);
-                    tt.AddRow(new TomlKey(p.Name), to);
+                    tt.AddRow(root.Settings.GetPropertyKey(p), to);
                 }
             }
 

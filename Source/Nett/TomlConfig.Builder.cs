@@ -26,6 +26,42 @@
             ITomlSettingsBuilder To<T>();
         }
 
+        public interface IPropertyMappingBuilder
+        {
+            /// <summary>
+            /// Use a custom target property selector implementation for these settings.
+            /// </summary>
+            /// <param name="custom">Custom target selector implementation.</param>
+            /// <exception cref="ArgumentNullException">If <paramref name="custom"/> is <b>null</b>.</exception>
+            /// <returns>Fluent configuration builder continuation object.</returns>
+            IPropertyMappingBuilder UseTargetPropertySelector(ITargetPropertySelector custom);
+
+            /// <summary>
+            /// Choose which standard selector implementation to use for these settings.
+            /// </summary>
+            /// <param name="standardSelectors">Lamba which's parameter allows to choose one of the standard selectors.</param>
+            /// <exception cref="ArgumentNullException">If <paramref name="standardSelectors"/> is <b>null</b>.</exception>
+            /// <returns>Fluent configuration builder continuation object.</returns>
+            IPropertyMappingBuilder UseTargetPropertySelector(
+                Func<TargetPropertySelectors, ITargetPropertySelector> standardSelectors);
+
+            /// <summary>
+            /// Use a custom key generator implementation for these settings.
+            /// </summary>
+            /// <param name="generator">Custom key generator implementation.</param>
+            /// <exception cref="ArgumentNullException">If <paramref name="generator"/> is <b>null</b>.</exception>
+            /// <returns>Fluent configuration builder continuation object.</returns>
+            IPropertyMappingBuilder UseKeyGenerator(IKeyGenerator generator);
+
+            /// <summary>
+            /// Choose which standard key generator implementation to use for these settings.
+            /// </summary>
+            /// <param name="standardGenerators">Lamba which's parameter allows to choose one of the standard selectors.</param>
+            /// <exception cref="ArgumentNullException">If <paramref name="standardGenerators"/> is <b>null</b>.</exception>
+            /// <returns>Fluent configuration builder continuation object.</returns>
+            IPropertyMappingBuilder UseKeyGenerator(Func<KeyGenerators, IKeyGenerator> standardGenerators);
+        }
+
         public interface ITomlSettingsBuilder
         {
             ITomlSettingsBuilder AllowImplicitConversions(ConversionSets sets);
@@ -35,6 +71,14 @@
             ITomlSettingsBuilder ConfigureType<T>(Action<ITypeSettingsBuilder<T>> ct);
 
             ITableKeyMappingBuilder MapTableKey(string key);
+
+            /// <summary>
+            /// Configures the property mapping settings that define how TOML rows are mapped to corresponding CLR object
+            /// properties and vice versa.
+            /// </summary>
+            /// <param name="configureMapping">The configuration lambda.</param>
+            /// <returns>Fluent configuration builder continuation object.</returns>
+            ITomlSettingsBuilder ConfigurePropertyMapping(Action<IPropertyMappingBuilder> configureMapping);
         }
 
         internal sealed class ConversionSettingsBuilder<TCustom, TToml> : IConversionSettingsBuilder<TCustom, TToml>
@@ -95,6 +139,34 @@
             }
         }
 
+        internal sealed class PropertyMappingBuilder : IPropertyMappingBuilder
+        {
+            private readonly TomlSettings settings;
+
+            public PropertyMappingBuilder(TomlSettings settings)
+            {
+                this.settings = settings;
+            }
+
+            public IPropertyMappingBuilder UseKeyGenerator(IKeyGenerator generator)
+            {
+                this.settings.keyGenerator = generator.CheckNotNull(nameof(generator));
+                return this;
+            }
+
+            public IPropertyMappingBuilder UseKeyGenerator(Func<KeyGenerators, IKeyGenerator> selectStandardGenerator)
+                 => this.UseKeyGenerator(selectStandardGenerator(KeyGenerators.Instance));
+
+            public IPropertyMappingBuilder UseTargetPropertySelector(ITargetPropertySelector custom)
+            {
+                this.settings.mappingPropertySelector = custom.CheckNotNull(nameof(custom));
+                return this;
+            }
+
+            public IPropertyMappingBuilder UseTargetPropertySelector(Func<TargetPropertySelectors, ITargetPropertySelector> selectStandardRule)
+                => this.UseTargetPropertySelector(selectStandardRule(TargetPropertySelectors.Instance));
+        }
+
         internal sealed class TomlSettingsBuilder : ITomlSettingsBuilder
         {
             private readonly TomlSettings settings = new TomlSettings();
@@ -119,6 +191,12 @@
             public ITomlSettingsBuilder Apply(Action<ITomlSettingsBuilder> batch)
             {
                 batch(this);
+                return this;
+            }
+
+            public ITomlSettingsBuilder ConfigurePropertyMapping(Action<IPropertyMappingBuilder> configureMapping)
+            {
+                configureMapping(new PropertyMappingBuilder(this.settings));
                 return this;
             }
 
