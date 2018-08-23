@@ -65,6 +65,12 @@
 
         public abstract void Visit(ITomlObjectVisitor visitor);
 
+        internal static TomlObject CreateFrom(ITomlRoot root, object val)
+            => CreateFrom(root, val, null, val.GetType());
+
+        internal static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi)
+            => CreateFrom(root, val, null, val.GetType());
+
         internal TomlObject AddComments(IHasComments n)
         {
             this.AddPreComments(n);
@@ -91,12 +97,6 @@
 
             return this;
         }
-
-        internal static TomlObject CreateFrom(ITomlRoot root, object val)
-            => CreateFrom(root, val, null, val.GetType());
-
-        internal static TomlObject CreateFrom(ITomlRoot root, object val, PropertyInfo pi)
-            => CreateFrom(root, val, null, val.GetType());
 
         internal abstract TomlObject CloneFor(ITomlRoot root);
 

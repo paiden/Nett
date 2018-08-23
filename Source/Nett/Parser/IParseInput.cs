@@ -16,26 +16,11 @@ namespace Nett.Parser
 
         Token Current { get; }
 
-       //SyntaxErrorNode CreateErrorNode();
-
         Token Advance();
 
         bool Peek(Func<Token, bool> predicate);
 
         ICommentsContext CreateConsumeCommentContext();
-    }
-
-    internal sealed class NoCommentsHere : ICommentsContext
-    {
-        public static readonly ICommentsContext Instance = new NoCommentsHere();
-
-        public IEnumerable<Comment> Consume()
-            => Enumerable.Empty<Comment>();
-
-        public void Dispose()
-        {
-            // Dummy implementation; nothing to do here
-        }
     }
 
     internal static class ParseInputExtensions
@@ -62,6 +47,19 @@ namespace Nett.Parser
             }
 
             return accpted > 0;
+        }
+    }
+
+    internal sealed class NoCommentsHere : ICommentsContext
+    {
+        public static readonly ICommentsContext Instance = new NoCommentsHere();
+
+        public IEnumerable<Comment> Consume()
+            => Enumerable.Empty<Comment>();
+
+        public void Dispose()
+        {
+            // Dummy implementation; nothing to do here
         }
     }
 }

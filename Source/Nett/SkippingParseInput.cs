@@ -27,9 +27,6 @@ namespace Nett
         public ICommentsContext CreateConsumeCommentContext()
             => this.baseInput.CreateConsumeCommentContext();
 
-        //public SyntaxErrorNode CreateErrorNode()
-        //    => this.Skip().CreateErrorNode();
-
         public bool Peek(Func<Token, bool> predicate)
             => this.Skip().Peek(predicate);
 

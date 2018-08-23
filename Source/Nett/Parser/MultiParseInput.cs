@@ -29,9 +29,6 @@ namespace Nett.Parser
         public ICommentsContext CreateConsumeCommentContext()
             => this.active.CreateConsumeCommentContext();
 
-        //public SyntaxErrorNode CreateErrorNode()
-        //    => this.active.CreateErrorNode();
-
         public bool Peek(Func<Token, bool> predicate)
             => this.active.Peek(predicate);
 

@@ -8,23 +8,13 @@ namespace Nett.Parser.Nodes
 {
     internal abstract class Node : IGetChildren<Node>
     {
-        protected Token CheckTokenType(TokenType expected, Token t)
-        {
-            if (t.Type != expected)
-            {
-                throw new ArgumentException($"Expected token of type '{expected}' but actual token has type '{t.Type}'.");
-            }
-
-            return t;
-        }
-
         public abstract IEnumerable<Node> Children { get; }
-
-        IEnumerable<Node> IGetChildren<Node>.GetChildren()
-            => this.Children;
 
         public virtual SourceLocation Location
             => SourceLocation.None;
+
+        IEnumerable<Node> IGetChildren<Node>.GetChildren()
+            => this.Children;
 
         public string PrintTree()
         {
@@ -59,6 +49,14 @@ namespace Nett.Parser.Nodes
             }
         }
 
-        
+        protected Token CheckTokenType(TokenType expected, Token t)
+        {
+            if (t.Type != expected)
+            {
+                throw new ArgumentException($"Expected token of type '{expected}' but actual token has type '{t.Type}'.");
+            }
+
+            return t;
+        }
     }
 }

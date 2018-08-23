@@ -3,7 +3,6 @@ using Nett.Parser.Nodes;
 
 namespace Nett.Parser
 {
-
     [Serializable]
     public class ParseException : Exception
     {

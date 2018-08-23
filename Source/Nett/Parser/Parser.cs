@@ -243,7 +243,8 @@ namespace Nett.Parser
                     key,
                     a,
                     this.Value(NoCommentsHere.Instance),
-                    Comment.NoComments, Comment.NoComment).Req());
+                    Comment.NoComments,
+                    Comment.NoComment).Req());
 
             return new InlineTableItemNode(kve, this.NextInlineTableItem()).Opt();
 

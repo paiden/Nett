@@ -12,7 +12,6 @@ namespace Nett.Parser
         private const string ErrNewlineInString = "Single line string contains newlines.";
         private const string ErrFractionMissing = "Fraction of float is missing.";
 
-
         private static readonly List<Func<char, char, bool>> DurationUnitsOrdered
             = new List<Func<char, char, bool>>()
             {

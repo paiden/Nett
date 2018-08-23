@@ -46,13 +46,17 @@ namespace Nett.Parser
             this.scopeTracker = new ValueScopeTracker(lvalueAction, rValueAction);
         }
 
-        public int Position => this.index;
+        public int Position
+            => this.index;
 
         public Action<char> LexValueState
             => this.scopeTracker.ScopeAction;
 
         public bool Eof
             => this.index >= this.originalLength;
+
+        private SourceLocation SrcLocation
+            => new SourceLocation(this.tokenLine, this.tokenCol);
 
         public char Back(int n)
             => this.input[this.index - n];
@@ -106,9 +110,6 @@ namespace Nett.Parser
 
             return this.EmitInternal(Token.Unknown(this.PeekEmit(), errorHint, this.SrcLocation));
         }
-
-        private SourceLocation SrcLocation
-            => new SourceLocation(this.tokenLine, this.tokenCol);
 
         private char Advance()
         {
