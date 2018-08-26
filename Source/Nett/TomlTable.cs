@@ -26,6 +26,7 @@
         {
             Default,
             Inline,
+            Dotted,
         }
 
         public int Count => this.rows.Count;
@@ -56,14 +57,13 @@
         internal bool IsDefined { get; set; }
 
         internal IEnumerable<KeyValuePair<TomlKey, TomlObject>> InternalRows
-        {
-            get
-            {
-                var nonscoping = this.rows.Where(kvp => !ScopeCreatingType(kvp.Value));
-                var scoping = this.rows.Where(kvp => ScopeCreatingType(kvp.Value));
-                return nonscoping.Concat(scoping);
-            }
-        }
+            => this.NonScopingRows.Concat(this.ScopingRows);
+
+        internal IEnumerable<KeyValuePair<TomlKey, TomlObject>> NonScopingRows
+            => this.rows.Where(kvp => !ScopeCreatingType(kvp.Value));
+
+        internal IEnumerable<KeyValuePair<TomlKey, TomlObject>> ScopingRows
+            => this.rows.Where(kvp => ScopeCreatingType(kvp.Value));
 
         public TomlObject this[string key]
         {

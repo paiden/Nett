@@ -99,15 +99,7 @@
             }
         }
 
-        private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");
-
-        private bool ShouldAppendWithNewline(TomlObject obj) => !this.ShouldPrependWithNewline(obj);
-
-        private bool ShouldPrependWithNewline(TomlObject obj) =>
-            (obj.TomlType == TomlObjectType.Table && ((TomlTable)obj).TableType != TomlTable.TableTypes.Inline)
-            || obj.TomlType == TomlObjectType.ArrayOfTables;
-
-        private void WriteValue(TomlObject obj)
+        protected void WriteValue(TomlObject obj)
         {
             switch (obj.TomlType)
             {
@@ -129,5 +121,15 @@
                     break;
             }
         }
+
+        private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");
+
+        private bool ShouldAppendWithNewline(TomlObject obj) => !this.ShouldPrependWithNewline(obj);
+
+        private bool ShouldPrependWithNewline(TomlObject obj) =>
+            (obj.TomlType == TomlObjectType.Table && ((TomlTable)obj).TableType != TomlTable.TableTypes.Inline)
+            || obj.TomlType == TomlObjectType.ArrayOfTables;
+
+
     }
 }

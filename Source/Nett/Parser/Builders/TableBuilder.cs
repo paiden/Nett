@@ -24,7 +24,18 @@ namespace Nett.Parser.Builders
                     case KeyValueExpressionNode kvn:
                         var val = ToTomlValue(rootTable, kvn.Value.SyntaxNode());
                         val.AddComments(kvn);
-                        current.AddRow(kvn.Key.SyntaxNode().ExpressionKey(), val);
+
+                        if (kvn.Key.SyntaxNode().IsDottedKey())
+                        {
+                            var chain = KeyChain.FromSegments(kvn.Key.SyntaxNode().GetSegments());
+                            var owner = FindOrCreateOwnerTableForTable(current, chain, out var last, TomlTable.TableTypes.Dotted);
+                            owner.AddRow(last, val);
+                        }
+                        else
+                        {
+                            current.AddRow(kvn.Key.SyntaxNode().ExpressionKey(), val);
+                        }
+
                         break;
                     case TableNode tn:
                         current = CreateTableOrArrayOfTables(rootTable, tn);
@@ -54,29 +65,9 @@ namespace Nett.Parser.Builders
             }
         }
 
-        private static TomlTable CreateTable(TomlTable.RootTable root, IReq<KeyNode> key, Func<TomlTable, TomlTable> createNew)
-        {
-            System.Collections.Generic.IEnumerable<TerminalNode> keySegments = key.SyntaxNode().GetSegments();
-            KeyChain chain = KeyChain.FromSegments(keySegments);
-
-            if (chain.IsEmpty) { throw new InvalidOperationException("Empty TOML key is not allowed."); }
-
-            TomlTable owner = FindOrCreateOwnerTableForTable(root, chain, out TomlKey last);
-            TomlObject existing = owner.TryGetValue(last);
-            if (existing != null)
-            {
-                throw new InvalidOperationException($"Cannot define table with key '{chain}' as the owner already " +
-                    $"contains a row for key '{last}' of type '{existing.ReadableTypeName}'.");
-            }
-            else
-            {
-                return createNew(owner);
-            }
-        }
-
         private static TomlTable CreateStandardTable(TomlTable.RootTable root, StandardTableNode table, IHasComments comments)
         {
-            System.Collections.Generic.IEnumerable<TerminalNode> keySegments = table.Key.SyntaxNode().GetSegments();
+            var keySegments = table.Key.SyntaxNode().GetSegments();
             KeyChain chain = KeyChain.FromSegments(keySegments);
 
             if (chain.IsEmpty) { throw new InvalidOperationException("Empty TOML key is not allowed."); }
@@ -129,7 +120,8 @@ namespace Nett.Parser.Builders
             }
         }
 
-        private static TomlTable FindOrCreateOwnerTableForTable(TomlTable current, KeyChain keys, out TomlKey last)
+        private static TomlTable FindOrCreateOwnerTableForTable(
+            TomlTable current, KeyChain keys, out TomlKey last, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)
         {
             if (keys.IsLastSegment)
             {
@@ -143,11 +135,11 @@ namespace Nett.Parser.Builders
             {
                 if (row is TomlTable tbl)
                 {
-                    return FindOrCreateOwnerTableForTable(tbl, keys.Next, out last);
+                    return FindOrCreateOwnerTableForTable(tbl, keys.Next, out last, tableType);
                 }
                 else if (row is TomlTableArray ta)
                 {
-                    return FindOrCreateOwnerTableForTable(ta.Last(), keys.Next, out last);
+                    return FindOrCreateOwnerTableForTable(ta.Last(), keys.Next, out last, tableType);
                 }
                 else
                 {
@@ -157,9 +149,9 @@ namespace Nett.Parser.Builders
             }
             else
             {
-                TomlTable t = new TomlTable(current.Root);
+                TomlTable t = new TomlTable(current.Root, tableType);
                 current.AddRow(keys.Key, t);
-                return FindOrCreateOwnerTableForTable(t, keys.Next, out last);
+                return FindOrCreateOwnerTableForTable(t, keys.Next, out last, tableType);
             }
         }
 
