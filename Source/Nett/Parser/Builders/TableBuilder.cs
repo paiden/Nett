@@ -205,10 +205,10 @@ namespace Nett.Parser.Builders
             {
                 switch (terminal.Type)
                 {
-                    case TokenType.Integer: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 0)));
-                    case TokenType.HexInteger: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 2), 16));
-                    case TokenType.BinaryInteger: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 2), 2));
-                    case TokenType.OctalInteger: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 2), 8));
+                    case TokenType.Integer: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 0)), TomlInt.IntTypes.Decimal);
+                    case TokenType.HexInteger: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 2), 16), TomlInt.IntTypes.Hex);
+                    case TokenType.BinaryInteger: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 2), 2), TomlInt.IntTypes.Binary);
+                    case TokenType.OctalInteger: return new TomlInt(root, Convert.ToInt64(Cleanup(terminal.Value, 2), 8), TomlInt.IntTypes.Octal);
                     case TokenType.Bool: return new TomlBool(root, Convert.ToBoolean(terminal.Value));
                     case TokenType.String: return new TomlString(root, terminal.Value.Unescape(terminal));
                     case TokenType.LiteralString: return new TomlString(root, terminal.Value, TomlString.TypeOfString.Literal);

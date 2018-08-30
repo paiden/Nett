@@ -1,5 +1,6 @@
 ﻿namespace Nett.Writer
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nett.Util;
@@ -105,7 +106,7 @@
             {
                 case TomlObjectType.Bool: this.writer.Write(((TomlBool)obj).Value.ToString().ToLower()); break;
                 case TomlObjectType.Float: this.writer.Write("{0:0.0###############}", ((TomlFloat)obj).Value); break;
-                case TomlObjectType.Int: this.writer.Write(((TomlInt)obj).Value); break;
+                case TomlObjectType.Int: this.WriteInt((TomlInt)obj); break;
                 case TomlObjectType.DateTime: this.writer.Write(((TomlDateTime)obj).ToString()); break;
                 case TomlObjectType.TimeSpan: this.writer.Write(((TomlDuration)obj).ToString()); break;
                 case TomlObjectType.String:
@@ -122,6 +123,23 @@
             }
         }
 
+        private void WriteInt(TomlInt i)
+        {
+            switch (i.IntType)
+            {
+                case TomlInt.IntTypes.Binary: WriteIntWithBase("0b", i.Value, 2); break;
+                case TomlInt.IntTypes.Octal: WriteIntWithBase("0o", i.Value, 8); break;
+                case TomlInt.IntTypes.Hex: WriteIntWithBase("0x", i.Value, 16); break;
+                default: this.writer.Write(i.Value); break;
+            }
+
+            void WriteIntWithBase(string prefix, long value, int b)
+            {
+                this.writer.Write(prefix);
+                this.writer.Write(Convert.ToString(value, b).ToUpperInvariant());
+            }
+        }
+
         private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");
 
         private bool ShouldAppendWithNewline(TomlObject obj) => !this.ShouldPrependWithNewline(obj);
@@ -129,7 +147,5 @@
         private bool ShouldPrependWithNewline(TomlObject obj) =>
             (obj.TomlType == TomlObjectType.Table && ((TomlTable)obj).TableType != TomlTable.TableTypes.Inline)
             || obj.TomlType == TomlObjectType.ArrayOfTables;
-
-
     }
 }
