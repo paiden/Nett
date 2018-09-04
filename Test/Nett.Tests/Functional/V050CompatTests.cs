@@ -1,6 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Nett.Tests.Util;
 using Xunit;
+
+#pragma warning disable S4144 // Methods should not have identical implementations
 
 namespace Nett.Tests.Functional
 {
@@ -55,6 +58,78 @@ site.""google.com"" = true
 
             // Assert
             written.ShouldBeSemanticallyEquivalentTo(tml);
+        }
+
+        [Theory]
+        [InlineData("x=+inf", double.PositiveInfinity)]
+        [InlineData("x=-inf", double.NegativeInfinity)]
+        [InlineData("x=inf", double.PositiveInfinity)]
+        [InlineData("x=nan", double.NaN)]
+        [InlineData("x=-nan", double.NaN)]
+        [InlineData("x=+nan", double.NaN)]
+        public void Read_CanHandleSpecialFloats(string input, double expected)
+        {
+            // Act
+            var read = Toml.ReadString(input);
+
+            // Assert
+            read.Get<double>("x").Should().Be(expected);
+        }
+
+        public static TheoryData<string, Type> ReadCorrectDateTimeTypeData
+        {
+            get
+            {
+                var data = new TheoryData<string, Type>();
+
+                data.Add("x=1979-05-27T07:32:00Z", typeof(TomlOffsetDateTime));
+                data.Add("x=1979-05-27T00:32:00-07:00", typeof(TomlOffsetDateTime));
+                data.Add("x=1979-05-27T00:32:00.999999-07:00", typeof(TomlOffsetDateTime));
+                data.Add("x=1979-05-27T00:32:00.999999", typeof(TomlLocalDateTime));
+                data.Add("x=1979-05-27T07:32:00", typeof(TomlLocalDateTime));
+                data.Add("x=07:32:00", typeof(TomlLocalTime));
+                data.Add("x=00:32:00.999999", typeof(TomlLocalTime));
+                data.Add("x=1979-05-27", typeof(TomlLocalDate));
+
+                return data;
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(ReadCorrectDateTimeTypeData))]
+        public void ReadDateTime_ReadsCorrecTypeOfDateTime(string tml, Type expected)
+        {
+            // Act
+            var r = Toml.ReadString(tml);
+
+            // Assert
+            r.Get("x").Should().BeOfType(expected);
+        }
+
+        [Theory]
+        [InlineData("x=1979-05-27T07:32:00Z", "x=1979-05-27T07:32:00Z")]
+        [InlineData("x=1979-05-27T00:32:00-07:00", "x=1979-05-27T00:32:00-07:00")]
+        [InlineData("x=1979-05-27T00:32:00.999999-07:00", "x=1979-05-27T00:32:00.999999-07:00")]
+        [InlineData("x=1979-05-27T07:32:00+00:00", "x=1979-05-27T07:32:00+00:00")]
+        [InlineData("x=07:32:00", "x=07:32:00")]
+        [InlineData("x=00:32:00.999999", "x=00:32:00.999999")]
+        [InlineData("x=1979-05-27", "x=1979-05-27")]
+        public void ReadWriteCycle_WhenReadWithSpecificFormat_WritesAgainWithSameFormat(string tml, string expected)
+        {
+            // Arrange
+            var read = Toml.ReadString(tml);
+
+            // Act
+            var written = Toml.WriteString(read);
+
+            // Assert
+            written.ShouldBeSemanticallyEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void Api_StandardFileExtensionIsToml()
+        {
+            Toml.FileExtension.Should().Be(".toml");
         }
     }
 }

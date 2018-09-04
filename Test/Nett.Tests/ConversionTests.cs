@@ -97,6 +97,47 @@ namespace Nett.Tests
             Assert.Equal("S = 222\r\n", ser);
         }
 
+        public static TheoryData<string, object> DateTimeConversionData
+        {
+            get
+            {
+                var data = new TheoryData<string, object>();
+                // offset date-time
+                data.Add("1979-05-27T07:32:00Z", DateTime.Parse("1979-05-27T07:32:00Z").ToUniversalTime());
+                data.Add("1979-05-27T07:32:00Z", DateTimeOffset.Parse("1979-05-27T07:32:00Z"));
+                data.Add("1979-05-27T00:32:00-07:00", DateTimeOffset.Parse("1979-05-27T00:32:00-07:00"));
+                data.Add("1979-05-27T00:32:00-07:00", DateTime.Parse("1979-05-27T07:32:00"));
+
+                // local date-time
+                data.Add("1979-05-27T00:32:00.999999", DateTimeOffset.Parse("1979-05-27T00:32:00.999999"));
+                data.Add("1979-05-27T00:32:00.999999", DateTime.Parse("1979-05-27T00:32:00.999999"));
+
+                // local date
+                data.Add("1979-05-27", DateTimeOffset.Parse("1979-05-27T00:00:00"));
+                data.Add("1979-05-27", DateTime.Parse("1979-05-27T00:00:00"));
+
+                // local time
+                data.Add("00:32:00.999999", TimeSpan.Parse("00:32:00.999999"));
+
+                return data;
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(DateTimeConversionData))]
+        public void AllTomlDateTimes_HaveConvertersForAllSupportedDotNetTypes(string val, object expected)
+        {
+            // Arrange
+            string tml = $"x={val}";
+            var parsed = Toml.ReadString(tml);
+
+            // Act
+            var obj = parsed.Get("x").Get(expected.GetType());
+
+            // Assert
+            obj.Should().Be(expected);
+        }
+
         [Fact]
         public void RadToml_WithGenricConverters_CanFindCorrectConverter()
         {
@@ -592,7 +633,7 @@ Foo3 = [""A""]";
                         .ToToml(a => true))
                     .WithConversionFor<TomlFloat>(conv => conv
                         .ToToml(a => 1.0))
-                    .WithConversionFor<TomlDateTime>(conv => conv
+                    .WithConversionFor<TomlOffsetDateTime>(conv => conv
                         .ToToml(a => DateTimeOffset.MaxValue))
                     .WithConversionFor<TomlDuration>(conv => conv
                         .ToToml(a => TimeSpan.MaxValue))));

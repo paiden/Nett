@@ -16,7 +16,13 @@
 
         void Visit(TomlDuration ts);
 
-        void Visit(TomlDateTime dt);
+        void Visit(TomlOffsetDateTime dt);
+
+        void Visit(TomlLocalDate ld);
+
+        void Visit(TomlLocalDateTime ldt);
+
+        void Visit(TomlLocalTime lt);
 
         void Visit(TomlArray a);
     }

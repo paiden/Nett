@@ -102,26 +102,24 @@
 
         protected void WriteValue(TomlObject obj)
         {
-            switch (obj.TomlType)
+            switch (obj)
             {
-                case TomlObjectType.Bool: this.writer.Write(((TomlBool)obj).Value.ToString().ToLower()); break;
-                case TomlObjectType.Float: this.writer.Write("{0:0.0###############}", ((TomlFloat)obj).Value); break;
-                case TomlObjectType.Int: this.WriteInt((TomlInt)obj); break;
-                case TomlObjectType.DateTime: this.writer.Write(((TomlDateTime)obj).ToString()); break;
-                case TomlObjectType.TimeSpan: this.writer.Write(((TomlDuration)obj).ToString()); break;
-                case TomlObjectType.String:
-                    {
-                        this.writer.Write('\"');
-                        this.writer.Write(((TomlString)obj).Value.Escape() ?? string.Empty);
-                        this.writer.Write('\"');
-                        break;
-                    }
-
+                case TomlBool b: this.writer.Write(b.Value.ToString().ToLower()); break;
+                case TomlFloat f: this.writer.Write("{0:0.0###############}", f.Value); break;
+                case TomlInt i: this.WriteInt(i); break;
+                case TomlOffsetDateTime dt: this.writer.Write(dt.ToString()); break;
+                case TomlDuration d: this.writer.Write(d.ToString()); break;
+                case TomlLocalDateTime ldt: this.writer.Write(ldt.ToString()); break;
+                case TomlLocalDate ld: this.writer.Write(ld.ToString()); break;
+                case TomlLocalTime lt: this.writer.Write(lt.ToString()); break;
+                case TomlString s: this.WriteString(s); break;
                 default:
                     Assert(false, "This method should only get called for simple TOML Types. Check invocation code.");
                     break;
             }
         }
+
+        private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");
 
         private void WriteInt(TomlInt i)
         {
@@ -140,7 +138,12 @@
             }
         }
 
-        private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");
+        private void WriteString(TomlString s)
+        {
+            this.writer.Write('\"');
+            this.writer.Write(s.Value.Escape() ?? string.Empty);
+            this.writer.Write('\"');
+        }
 
         private bool ShouldAppendWithNewline(TomlObject obj) => !this.ShouldPrependWithNewline(obj);
 

@@ -34,9 +34,10 @@
         LiteralString,
         MultilineString,
         MultilineLiteralString,
-        Date,
+        LocalDate,
         LocalTime,
-        DateTime,
+        LocalDateTime,
+        OffsetDateTime,
         Duration,
     }
 

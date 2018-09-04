@@ -183,7 +183,7 @@ namespace Nett.Tests.Internal.Parser
 
             // Assert
             r.Skip(2)
-                .AssertNextTokenIs(TokenType.DateTime, token)
+                .AssertNextTokenIs(TokenType.OffsetDateTime, token)
                 .AssertNextTokenIs(TokenType.Eof)
                 .AssertNoMoreTokens();
         }

@@ -15,6 +15,21 @@ namespace Nett.TestDecoder
             return this.sb.ToString();
         }
 
+        public void Visit(TomlLocalDate ld)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(TomlLocalDateTime ldt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(TomlLocalTime lt)
+        {
+            throw new NotImplementedException();
+        }
+
         void ITomlObjectVisitor.Visit(TomlInt i) =>
             sb.Append("{").Append("\"type\":\"integer\", \"value\":\"").Append(i.Value).Append("\"}");
 
@@ -39,7 +54,7 @@ namespace Nett.TestDecoder
             this.sb.Append("]}");
         }
 
-        void ITomlObjectVisitor.Visit(TomlDateTime dt) =>
+        void ITomlObjectVisitor.Visit(TomlOffsetDateTime dt) =>
             sb.Append("{").Append("\"type\":\"datetime\", \"value\":\"").Append(XmlConvert.ToString(dt.Value.UtcDateTime, XmlDateTimeSerializationMode.Utc)).Append("\"}");
 
         void ITomlObjectVisitor.Visit(TomlString s) =>

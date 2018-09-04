@@ -215,9 +215,11 @@ namespace Nett.Parser.Builders
                     case TokenType.MultilineLiteralString: return new TomlString(root, terminal.Value, TomlString.TypeOfString.MultilineLiteral);
                     case TokenType.MultilineString: return new TomlString(root, terminal.Value, TomlString.TypeOfString.Multiline);
                     case TokenType.Float: return TomlFloat.FromTerminal(root, terminal);
-                    case TokenType.DateTime: return TomlDateTime.Parse(root, terminal.Value);
-                    case TokenType.LocalTime: return TomlDateTime.FromLocal(root, terminal);
+                    case TokenType.OffsetDateTime: return TomlOffsetDateTime.Parse(root, terminal.Value);
+                    case TokenType.LocalTime: return TomlLocalTime.Parse(root, terminal.Value);
                     case TokenType.Duration: return TomlDuration.Parse(root, terminal.Value);
+                    case TokenType.LocalDate: return TomlLocalDate.Parse(root, terminal.Value);
+                    case TokenType.LocalDateTime: return TomlLocalDateTime.Parse(root, terminal.Value);
                     default: throw new NotSupportedException();
                 }
 

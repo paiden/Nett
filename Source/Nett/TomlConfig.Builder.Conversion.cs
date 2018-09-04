@@ -53,11 +53,11 @@
             return cb;
         }
 
-        public static IConversionSettingsBuilder<TCustom, TomlDateTime> ToToml<TCustom>(
-            this IConversionSettingsBuilder<TCustom, TomlDateTime> cb, Func<TCustom, DateTimeOffset> conv)
+        public static IConversionSettingsBuilder<TCustom, TomlOffsetDateTime> ToToml<TCustom>(
+            this IConversionSettingsBuilder<TCustom, TomlOffsetDateTime> cb, Func<TCustom, DateTimeOffset> conv)
         {
-            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlDateTime>)cb).AddConverter(
-                new TomlConverter<TCustom, TomlDateTime>((root, customValue) => new TomlDateTime(root, conv(customValue))));
+            ((TomlSettings.ConversionSettingsBuilder<TCustom, TomlOffsetDateTime>)cb).AddConverter(
+                new TomlConverter<TCustom, TomlOffsetDateTime>((root, customValue) => new TomlOffsetDateTime(root, conv(customValue))));
             return cb;
         }
 
@@ -134,7 +134,7 @@
             // * -> TomlFloat
             new TomlConverter<float, TomlFloat>((m, v) => new TomlFloat(m, v)),
         }
-        .AddBidirectionalConverter<TomlDateTime, DateTime>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value.UtcDateTime);
+        .AddBidirectionalConverter<TomlOffsetDateTime, DateTime>((m, c) => new TomlOffsetDateTime(m, c), (m, t) => t.Value.UtcDateTime);
 
         // Without these converters the library will not work correctly
         private static readonly List<ITomlConverter> EquivalentTypeConverters = new List<ITomlConverter>()
@@ -145,8 +145,13 @@
         .AddBidirectionalConverter<TomlInt, long>((m, c) => new TomlInt(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlString, string>((m, c) => new TomlString(m, c), (m, t) => t.Value)
-        .AddBidirectionalConverter<TomlDateTime, DateTimeOffset>((m, c) => new TomlDateTime(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlOffsetDateTime, DateTimeOffset>((m, c) => new TomlOffsetDateTime(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlLocalDateTime, DateTime>((m, c) => new TomlLocalDateTime(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlLocalDateTime, DateTimeOffset>((m, c) => new TomlLocalDateTime(m, c.LocalDateTime), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlLocalDate, DateTime>((m, c) => new TomlLocalDate(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlLocalDate, DateTimeOffset>((m, c) => new TomlLocalDate(m, c.LocalDateTime), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlDuration, TimeSpan>((m, c) => new TomlDuration(m, c), (m, t) => t.Value)
+        .AddBidirectionalConverter<TomlLocalTime, TimeSpan>((m, c) => new TomlLocalTime(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlBool, bool>((m, c) => new TomlBool(m, c), (m, t) => t.Value);
 
         private static readonly List<ITomlConverter> SerializeConverters = new List<ITomlConverter>()

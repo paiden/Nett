@@ -124,7 +124,7 @@ namespace Nett.Tests
             var machineOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
             var newOffset = (int)machineOffset.TotalHours + 1;
 
-            return $"1979-05-27T08:01:01.999999{newOffset:+00;-00;+00}:00";
+            return $"1979-05-27 08:01:01.999999{newOffset:+00;-00;+00}:00";
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Nett
         public static TomlFloat Update(this TomlTable table, string key, double value)
             => Update(table, key, table.CreateAttached(value));
 
-        public static TomlDateTime Update(this TomlTable table, string key, DateTimeOffset value)
+        public static TomlOffsetDateTime Update(this TomlTable table, string key, DateTimeOffset value)
             => Update(table, key, table.CreateAttached(value));
 
         public static TomlDuration Update(this TomlTable table, string key, TimeSpan value)
