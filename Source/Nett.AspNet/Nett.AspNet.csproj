@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Shared.targets" />
   <PropertyGroup>
     <AssemblyVersion>$(AspNetVersion)</AssemblyVersion>
     <InformationalVersion>$(AspNetVersion)</InformationalVersion>
-    <FileVersion>$(AspNetVersion)</FileVersion>
+    <FileVersion>$(Version)</FileVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Nett.AspNet.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>

@@ -37,23 +37,19 @@ Param(
     # mutually exclusive quick targets
 
     [Alias("ngp")]
-    [parameter(ParameterSetName="NuGetPackage")]
-    [switch] $NuGetPackage,
+    [parameter(ParameterSetName="pack")]
+    [string] $pack,
 
-    [Alias("npv")]
-    [parameter(ParameterSetName="NuGetPackage", Mandatory=$true)]
-    [Version]$nugetPackageVersion,
-
-    [parameter(ParameterSetName="NuGetPackage")]
-    [switch]$strongName,
+    [Alias("up")]
+    [parameter(ParameterSetName="pack")]
+    [switch]$push,
 
     # Multi set parameters
 
     # Set independent parameters
     [ValidateSet("Debug", "Release")]
     [string]$configuration = "Release",
-    [switch]$disableStdBuild,
-
+    [switch]$nobuild,
 
     [parameter(Position=0, ValueFromRemainingArguments=$true, DontShow)] $rest
 )
@@ -86,14 +82,14 @@ else {
     $msbuild = "`"$msbuild`"";
 }
 
-if(-not $disableStdBuild) {
+if(-not $nobuild) {
     $msBuildOptions = "/p:Configuration=$configuration", "/m", "/nologo"
     $msBuildOptions += $rest
     Invoke-ExpandedChecked { & $msbuild $buildItem $msBuildOptions }
 }
 
-if($NuGetPackage) {
-    $v = $nugetPackageVersion.ToString()
+if($pack) {
+    $v = $pack.ToString()
     $nuspecNett = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec)`""
     $nuspecComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Coma.nuspec)`""
     $aspNettComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.AspNet.nuspec)`""
@@ -105,5 +101,20 @@ if($NuGetPackage) {
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $v -Properties $props -OutputDirectory ngp}
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $v -Properties $props -OutputDirectory ngp}
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $aspNettComa -Version $v -Properties $props -OutputDirectory ngp}
+
+    $signer = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Infrastructure\Nett.Signer\bin\$configuration\Nett.Signer.exe)`""
+
+    Invoke-ExpandedChecked { & $signer -i ngp\Nett.$v.nupkg -o ngp\Nett.StrongNamed.$v.nupkg -p Nett.StrongNamed -k keys.snk }
+    Invoke-ExpandedChecked { & $signer -i ngp\Nett.Coma.$v.nupkg -o ngp\Nett.Coma.StrongNamed.$v.nupkg -p Nett.Coma.StrongNamed -k keys.snk }
+    Invoke-ExpandedChecked { & $signer -i ngp\Nett.AspNet.$v.nupkg -o ngp\Nett.AspNet.StrongNamed.$v.nupkg -p Nett.AspNet.StrongNamed -k keys.snk }
 }
 
+if($push) {
+    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.Coma.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.AspNet.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+
+    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.StrongNamed.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.Coma.StrongNamed.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.AspNet.StrongNamed.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+}
