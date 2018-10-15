@@ -53,6 +53,15 @@
             return this.table;
         }
 
+        public void Visit(TomlLocalDate ld)
+            => this.table[this.currentKey] = ld.Value;
+
+        public void Visit(TomlLocalDateTime ldt)
+            => this.table[this.currentKey] = ldt.Value;
+
+        public void Visit(TomlLocalTime lt)
+            => this.table[this.currentKey] = lt.Value;
+
         void ITomlObjectVisitor.Visit(TomlInt i) => this.table[this.currentKey] = i.Value;
 
         void ITomlObjectVisitor.Visit(TomlBool b) => this.table[this.currentKey] = b.Value;
@@ -72,7 +81,7 @@
             this.table[this.currentKey] = clrArray;
         }
 
-        void ITomlObjectVisitor.Visit(TomlDateTime dt) => this.table[this.currentKey] = dt.Value;
+        void ITomlObjectVisitor.Visit(TomlOffsetDateTime dt) => this.table[this.currentKey] = dt.Value;
 
         void ITomlObjectVisitor.Visit(TomlString s) => this.table[this.currentKey] = s.Value;
 
@@ -129,7 +138,7 @@
                 this.Item = clrArray;
             }
 
-            public void Visit(TomlDateTime dt) => this.Item = dt.Value;
+            public void Visit(TomlOffsetDateTime dt) => this.Item = dt.Value;
 
             public void Visit(TomlString s) => this.Item = s.Value;
 
@@ -138,6 +147,15 @@
             public void Visit(TomlTableArray tableArray) => Debug.Assert(false);
 
             public void Visit(TomlTable table) => Debug.Assert(false);
+
+            public void Visit(TomlLocalDate ld)
+                => this.Item = ld.Value;
+
+            public void Visit(TomlLocalDateTime ldt)
+                => this.Item = ldt.Value;
+
+            public void Visit(TomlLocalTime lt)
+                => this.Item = lt.Value;
         }
     }
 }

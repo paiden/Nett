@@ -1,5 +1,6 @@
 ﻿namespace Nett.Writer
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nett.Util;
@@ -99,35 +100,55 @@
             }
         }
 
+        protected void WriteValue(TomlObject obj)
+        {
+            switch (obj)
+            {
+                case TomlBool b: this.writer.Write(b.Value.ToString().ToLower()); break;
+                case TomlFloat f: this.writer.Write("{0:0.0###############}", f.Value); break;
+                case TomlInt i: this.WriteInt(i); break;
+                case TomlOffsetDateTime dt: this.writer.Write(dt.ToString()); break;
+                case TomlDuration d: this.writer.Write(d.ToString()); break;
+                case TomlLocalDateTime ldt: this.writer.Write(ldt.ToString()); break;
+                case TomlLocalDate ld: this.writer.Write(ld.ToString()); break;
+                case TomlLocalTime lt: this.writer.Write(lt.ToString()); break;
+                case TomlString s: this.WriteString(s); break;
+                default:
+                    Assert(false, "This method should only get called for simple TOML Types. Check invocation code.");
+                    break;
+            }
+        }
+
         private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");
+
+        private void WriteInt(TomlInt i)
+        {
+            switch (i.IntType)
+            {
+                case TomlInt.IntTypes.Binary: WriteIntWithBase("0b", i.Value, 2); break;
+                case TomlInt.IntTypes.Octal: WriteIntWithBase("0o", i.Value, 8); break;
+                case TomlInt.IntTypes.Hex: WriteIntWithBase("0x", i.Value, 16); break;
+                default: this.writer.Write(i.Value); break;
+            }
+
+            void WriteIntWithBase(string prefix, long value, int b)
+            {
+                this.writer.Write(prefix);
+                this.writer.Write(Convert.ToString(value, b).ToUpperInvariant());
+            }
+        }
+
+        private void WriteString(TomlString s)
+        {
+            this.writer.Write('\"');
+            this.writer.Write(s.Value.Escape() ?? string.Empty);
+            this.writer.Write('\"');
+        }
 
         private bool ShouldAppendWithNewline(TomlObject obj) => !this.ShouldPrependWithNewline(obj);
 
         private bool ShouldPrependWithNewline(TomlObject obj) =>
             (obj.TomlType == TomlObjectType.Table && ((TomlTable)obj).TableType != TomlTable.TableTypes.Inline)
             || obj.TomlType == TomlObjectType.ArrayOfTables;
-
-        private void WriteValue(TomlObject obj)
-        {
-            switch (obj.TomlType)
-            {
-                case TomlObjectType.Bool: this.writer.Write(((TomlBool)obj).Value.ToString().ToLower()); break;
-                case TomlObjectType.Float: this.writer.Write("{0:0.0###############}", ((TomlFloat)obj).Value); break;
-                case TomlObjectType.Int: this.writer.Write(((TomlInt)obj).Value); break;
-                case TomlObjectType.DateTime: this.writer.Write(((TomlDateTime)obj).ToString()); break;
-                case TomlObjectType.TimeSpan: this.writer.Write(((TomlDuration)obj).ToString()); break;
-                case TomlObjectType.String:
-                    {
-                        this.writer.Write('\"');
-                        this.writer.Write(((TomlString)obj).Value.Escape() ?? string.Empty);
-                        this.writer.Write('\"');
-                        break;
-                    }
-
-                default:
-                    Assert(false, "This method should only get called for simple TOML Types. Check invocation code.");
-                    break;
-            }
-        }
     }
 }

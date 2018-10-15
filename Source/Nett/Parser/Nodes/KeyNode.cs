@@ -28,6 +28,9 @@ namespace Nett.Parser.Nodes
             return TomlKey.FromToken(this.Key.SyntaxNode().Terminal);
         }
 
+        public bool IsDottedKey()
+            => this.Next.HasNode;
+
         public IEnumerable<TerminalNode> GetSegments()
             => EnumerableFromBranch(this, n => n.Key.SyntaxNode(), n => n.Next.SyntaxNodeOrDefault()?.Next.SyntaxNode());
 

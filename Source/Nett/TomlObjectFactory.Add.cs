@@ -25,7 +25,7 @@ namespace Nett
         public static TomlFloat Add(this TomlTable table, string key, float value)
             => AddTomlObjectInternal(table, key, table.CreateAttached((double)value));
 
-        public static TomlDateTime Add(this TomlTable table, string key, DateTimeOffset value)
+        public static TomlOffsetDateTime Add(this TomlTable table, string key, DateTimeOffset value)
             => AddTomlObjectInternal(table, key, table.CreateAttached(value));
 
         public static TomlDuration Add(this TomlTable table, string key, TimeSpan value)

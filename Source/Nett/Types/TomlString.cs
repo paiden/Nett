@@ -1,7 +1,6 @@
 ﻿namespace Nett
 {
     using System.Diagnostics;
-    using System.Linq;
     using Extensions;
     using Nett.Parser;
 
@@ -67,50 +66,31 @@
 
         private static string ReplaceDelimeterBackslash(string source)
         {
-            for (int d = DelimeterBackslashPos(source, 0); d >= 0; d = DelimeterBackslashPos(source, d))
+            int candiate = -1;
+
+            for (int i = 0; i < source.Length; i++)
             {
-                var nnw = NextNonWhitespaceCharacer(source, d + 1);
-                source = source.Remove(d, nnw - d);
+                if (!IsCandiate() && source[i] == '\\')
+                {
+                    candiate = i;
+                }
+                else if (IsCandiate() && source[i].Is('\r', '\n'))
+                {
+                    source = source.Remove(candiate, 1);
+                    source = source.TrimStartFrom(candiate);
+                    i = candiate - 1; // -1 to counter for loop increment before next char check
+                    candiate = -1;
+                }
+                else if (IsCandiate() && !source[i].IsWhitespaceChar())
+                {
+                    candiate = -1;
+                }
             }
 
             return source;
-        }
 
-        private static int DelimeterBackslashPos(string source, int startIndex)
-        {
-            int i1 = source.IndexOf("\\\r", startIndex);
-            int i2 = source.IndexOf("\\\n", startIndex);
-
-            var minIndex = MinGreaterThan(0, -1, i1, i2);
-            return minIndex;
-        }
-
-        private static int MinGreaterThan(int absoluteMin, int defaultValue, params int[] values)
-        {
-            int currenMin = int.MaxValue;
-
-            for (int i = 0; i < values.Length; i++)
-            {
-                if (values[i] >= absoluteMin && values[i] < currenMin)
-                {
-                    currenMin = values[i];
-                }
-            }
-
-            return currenMin == int.MaxValue ? defaultValue : currenMin;
-        }
-
-        private static int NextNonWhitespaceCharacer(string source, int startIndex)
-        {
-            for (int i = startIndex; i < source.Length; i++)
-            {
-                if (!CharExtensions.WhitspaceCharSet.Contains(source[i]))
-                {
-                    return i;
-                }
-            }
-
-            return source.Length;
+            bool IsCandiate()
+                => candiate >= 0;
         }
     }
 }

@@ -8,14 +8,16 @@
     using LinqExtensions;
     using Nett.Parser.Nodes;
 
-    [Flags]
     public enum TomlObjectType
     {
-        Bool,
+        Bool = 1,
         Int,
         Float,
         String,
         DateTime,
+        LocalDateTime,
+        LocalTime,
+        LocalDate,
         TimeSpan,
         Array,
         Table,
@@ -182,6 +184,9 @@
                 case TomlObjectType.Int: return Types.TomlIntType;
                 case TomlObjectType.Float: return Types.TomlFloatType;
                 case TomlObjectType.DateTime: return Types.TomlDateTimeType;
+                case TomlObjectType.LocalDate: return Types.TomlLocalDate;
+                case TomlObjectType.LocalDateTime: return Types.TomlLocalDateTime;
+                case TomlObjectType.LocalTime: return Types.TomlLocalTime;
                 case TomlObjectType.TimeSpan: return Types.TomlTimeSpanType;
                 case TomlObjectType.Array: return Types.TomlArrayType;
                 case TomlObjectType.Table: return Types.TomlTableType;

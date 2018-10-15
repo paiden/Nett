@@ -6,7 +6,7 @@
 
     internal sealed partial class TomlTableWriter
     {
-        private sealed class TomlInlineTableWriter : TomlWriter
+        private class TomlInlineTableWriter : TomlWriter
         {
             public TomlInlineTableWriter(FormattingStreamWriter writer, TomlSettings settings)
                 : base(writer, settings)
@@ -50,7 +50,7 @@
                 this.writer.WriteLine(" ]");
             }
 
-            private void WriteInlineTableBody(TomlTable table)
+            protected void WriteInlineTableBody(TomlTable table)
             {
                 this.writer.Write("{ ");
                 var rows = table.InternalRows.ToArray();

@@ -218,11 +218,11 @@ namespace Nett.Parser
             if (isDateTimeSep && this.Peek(1).IsDigit() && this.Peek(2).IsDigit())
             {
                 this.Consume(3);
-                this.LexLocalTime(TokenType.DateTime);
+                this.LexLocalTime(TokenType.LocalDateTime);
             }
             else
             {
-                this.Accept(TokenType.DateTime);
+                this.Accept(TokenType.LocalDate);
             }
         }
 
@@ -247,6 +247,7 @@ namespace Nett.Parser
             if (this.Peek() == 'Z')
             {
                 this.Consume();
+                this.Accept(TokenType.OffsetDateTime);
             }
             else if (this.Peek().Is('-', '+'))
             {
@@ -256,9 +257,12 @@ namespace Nett.Parser
                 this.Expect(c => c == ':');
                 this.Expect(c => c.IsDigit());
                 this.Expect(c => c.IsDigit());
+                this.Accept(TokenType.OffsetDateTime);
             }
-
-            this.Accept(first != TokenType.Unknown ? first : TokenType.LocalTime);
+            else
+            {
+                this.Accept(first != TokenType.Unknown ? first : TokenType.LocalTime);
+            }
         }
 
         private void LexHex(char c)

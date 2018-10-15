@@ -4,10 +4,21 @@ namespace Nett
 {
     public sealed class TomlInt : TomlValue<long>
     {
-        internal TomlInt(ITomlRoot root, long value)
+        internal TomlInt(ITomlRoot root, long value, IntTypes intType = IntTypes.Decimal)
             : base(root, value)
         {
+            this.IntType = intType;
         }
+
+        public enum IntTypes
+        {
+            Decimal,
+            Binary,
+            Octal,
+            Hex,
+        }
+
+        public IntTypes IntType { get; }
 
         public override string ReadableTypeName => "int";
 

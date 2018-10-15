@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using Xunit;
 
 namespace Nett.Tests
@@ -30,6 +31,22 @@ namespace Nett.Tests
 
             // Assert
             Assert.Equal(expected, escaped);
+        }
+
+        [Theory]
+        [InlineData("", 0, "")]
+        [InlineData("\n", 0, "")]
+        [InlineData(" ", 0, "")]
+        [InlineData(" ", 1, " ")]
+        [InlineData("a b", 0, "a b")]
+        [InlineData("a b", 1, "ab")]
+        public void TrimStartFrom_ProducesCorrectResultString(string input, int from, string expected)
+        {
+            // Act
+            var r = input.TrimStartFrom(from);
+
+            // Assert
+            r.Should().Be(expected);
         }
     }
 }

@@ -145,9 +145,10 @@ namespace Nett.Parser
                         || t.Type == TokenType.BinaryInteger
                         || t.Type == TokenType.OctalInteger
                         || t.Type == TokenType.Bool
-                        || t.Type == TokenType.Date
-                        || t.Type == TokenType.DateTime
+                        || t.Type == TokenType.LocalDate
+                        || t.Type == TokenType.OffsetDateTime
                         || t.Type == TokenType.LocalTime
+                        || t.Type == TokenType.LocalDateTime
                         || t.Type == TokenType.Duration
                         || t.Type == TokenType.String
                         || t.Type == TokenType.LiteralString

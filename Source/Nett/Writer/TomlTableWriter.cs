@@ -86,12 +86,19 @@
             inlineWriter.WriteInlineTable(key, table);
         }
 
+        private void WriteTomlDottedTable(TomlKey key, TomlTable table)
+        {
+            var dottedWriter = new DottedTableWriter(this.writer, this.settings);
+            dottedWriter.WriteDottedTable(table, key);
+        }
+
         private void WriteTomlTable(string parentKey, TomlKey key, TomlTable table)
         {
             switch (table.TableType)
             {
-                case TomlTable.TableTypes.Default: this.WriteNormalTomlTable(parentKey, key, table); break;
                 case TomlTable.TableTypes.Inline: this.WriteTomlInlineTable(parentKey, key, table); break;
+                case TomlTable.TableTypes.Dotted: this.WriteTomlDottedTable(key, table); break;
+                default: this.WriteNormalTomlTable(parentKey, key, table); break;
             }
         }
 

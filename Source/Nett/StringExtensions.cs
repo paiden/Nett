@@ -91,5 +91,24 @@ namespace Nett
                     }
                 });
         }
+
+        public static string TrimStartFrom(this string s, int start)
+        {
+            int wsCharCount = 0;
+
+            for (int i = start; i < s.Length; i++)
+            {
+                if (s[i].IsWhitespaceChar())
+                {
+                    wsCharCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return s.Remove(start, wsCharCount);
+        }
     }
 }

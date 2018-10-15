@@ -281,7 +281,6 @@ trimmed in raw strings.
         [InlineData("1979-05-27T00:32:00.999999-07:00", "1979-05-27T00:32:00.999999-07:00")]
         [InlineData("1979-05-27T00:32:00.999999+07:00", "1979-05-27T00:32:00.999999+07:00")]
         [InlineData("2000-01-01T00:00:00+01:00", "2000-01-01T00:00:00+01:00")]
-        [InlineData("07:32:00", "0001-01-01T07:32:00+00:00")]
         public void Deserialize_DateTime_DeseriaizesCorrectly(string src, string expectedDate)
         {
             // Arrange
@@ -306,13 +305,13 @@ trimmed in raw strings.
         public void Deserialize_LocalTime_DeserializesCorrectly(string src)
         {
             // Arrange
-            var date = DateTimeOffset.Parse($"0001-01-01T{src}", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+            var local = TimeSpan.Parse(src);
 
             // Act
             var parsed = Toml.ReadString($"x={src}");
 
             // Assert
-            parsed["x"].Get<DateTimeOffset>().Should().Be(date);
+            parsed["x"].Get<TimeSpan>().Should().Be(local);
         }
 
         [Fact]
@@ -535,7 +534,5 @@ color = ""gray""
             var t3 = a[2];
             Assert.Equal("Nail", t3.Get<string>("name"));
         }
-
-
     }
 }

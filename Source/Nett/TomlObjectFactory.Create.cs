@@ -25,8 +25,8 @@ namespace Nett
         public static TomlDuration CreateAttached(this TomlObject rootSource, TimeSpan value)
             => new TomlDuration(rootSource.Root, value);
 
-        public static TomlDateTime CreateAttached(this TomlObject rootSource, DateTimeOffset value)
-            => new TomlDateTime(rootSource.Root, value);
+        public static TomlOffsetDateTime CreateAttached(this TomlObject rootSource, DateTimeOffset value)
+            => new TomlOffsetDateTime(rootSource.Root, value);
 
         // Arrays
         public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<bool> values)
@@ -51,10 +51,10 @@ namespace Nett
             => new TomlArray(rootSource.Root, values.Select(v => new TomlDuration(rootSource.Root, v)).ToArray());
 
         public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<DateTime> values)
-            => new TomlArray(rootSource.Root, values.Select(v => new TomlDateTime(rootSource.Root, v)).ToArray());
+            => new TomlArray(rootSource.Root, values.Select(v => new TomlOffsetDateTime(rootSource.Root, v)).ToArray());
 
         public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable<DateTimeOffset> values)
-            => new TomlArray(rootSource.Root, values.Select(v => new TomlDateTime(rootSource.Root, v)).ToArray());
+            => new TomlArray(rootSource.Root, values.Select(v => new TomlOffsetDateTime(rootSource.Root, v)).ToArray());
 
         // Table
         public static TomlTable CreateAttached(
