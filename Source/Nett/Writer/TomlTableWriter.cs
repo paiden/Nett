@@ -88,7 +88,7 @@
 
         private void WriteTomlDottedTable(TomlKey key, TomlTable table)
         {
-            var dottedWriter = new DottedTableWriter(this.writer, settings);
+            var dottedWriter = new DottedTableWriter(this.writer, this.settings);
             dottedWriter.WriteDottedTable(table, key);
         }
 

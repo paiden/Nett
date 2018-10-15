@@ -18,7 +18,8 @@ namespace Nett.Writer
             {
                 foreach (var r in table.NonScopingRows)
                 {
-                    if (r.Value is TomlTable it) // Inline Tables
+                    // Inline Tables
+                    if (r.Value is TomlTable it)
                     {
                         this.WriteDotteKey(ConcatWithRowKey(r.Key));
                         this.WriteInlineTableBody(it);

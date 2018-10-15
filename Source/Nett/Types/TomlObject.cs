@@ -184,7 +184,7 @@
                 case TomlObjectType.Int: return Types.TomlIntType;
                 case TomlObjectType.Float: return Types.TomlFloatType;
                 case TomlObjectType.DateTime: return Types.TomlDateTimeType;
-                case TomlObjectType.LocalDate: return Types.TomlLocalDate; ;
+                case TomlObjectType.LocalDate: return Types.TomlLocalDate;
                 case TomlObjectType.LocalDateTime: return Types.TomlLocalDateTime;
                 case TomlObjectType.LocalTime: return Types.TomlLocalTime;
                 case TomlObjectType.TimeSpan: return Types.TomlTimeSpanType;

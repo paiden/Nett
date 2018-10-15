@@ -34,6 +34,8 @@ site.""google.com"" = true
         [InlineData("x=0xAF", 0xAF)]
         [InlineData("x=0o77", 0x3F)]
         [InlineData("x=0b10", 0b10)]
+        [InlineData("x=+0", 0)]
+        [InlineData("x=-0", 0)]
         public void Read_CanReadAllIntTypes(string input, int expected)
         {
             // Act
@@ -67,6 +69,8 @@ site.""google.com"" = true
         [InlineData("x=nan", double.NaN)]
         [InlineData("x=-nan", double.NaN)]
         [InlineData("x=+nan", double.NaN)]
+        [InlineData("x=-0.0", 0.0)]
+        [InlineData("x=+0.0", 0.0)]
         public void Read_CanHandleSpecialFloats(string input, double expected)
         {
             // Act
