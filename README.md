@@ -453,9 +453,10 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-**vX.X.X** --- XXXX-XX-XX
+**v0.10.0** --- XXXX-XX-XX
 
 Nett:
++ Nett: Is now TOML v0.5.0 compliant
 + Refactor: New lexer and parser 
 + Fix: Inline tables serialized in wrong container [#51](https://github.com/paiden/Nett/issues/51)
 
