@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
     <NuspecFile>../../Coma.nuspec</NuspecFile>
     <AssemblyVersion>$(ComaVersion)</AssemblyVersion>
-    <FileVersion>$(ComaVersion)</FileVersion>
+    <FileVersion>$(Version)</FileVersion>
     <InformationalVersion>$(ComaVersion)</InformationalVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Nett.Coma.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
