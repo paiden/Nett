@@ -127,6 +127,27 @@ site.""google.com"" = true
         }
 
         [Fact]
+        public void CanRadTomlWithAccidentalWhiteSpaceInMultiLineBasicStrings()
+        {
+            // Arrange (string contains whitespaces at end of line! Test is useless without them!)
+            //            const string tml = @"x=""""""
+            //l1 \   
+            //l2\   
+            //l3""""""";
+
+            const string tml = @"x=""""""\
+  \
+  \ 
+""""""";
+
+            // Act
+            var read = Toml.ReadString(tml);
+
+            // Assert
+            read.Get<string>("x").Should().Be("");
+        }
+
+        [Fact]
         public void Api_StandardFileExtensionIsToml()
         {
             Toml.FileExtension.Should().Be(".toml");
