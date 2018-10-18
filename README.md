@@ -484,11 +484,12 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-**v0.10.0** --- XXXX-XX-XX
+**v0.10.0** --- 2018-10-18
 
 Nett:
 + Nett: Is now TOML v0.5.0 compliant
-+ Refactor: New lexer and parser 
++ NuGet packages are strong named by default, '.StrongName' versions of packages are obsolete.
++ Refactor: New lexer and parser (improved performance)
 + Fix: Inline tables serialized in wrong container [#51](https://github.com/paiden/Nett/issues/51)
 
 **v0.9.0** --- 2018-03-25
