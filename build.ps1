@@ -72,7 +72,7 @@ function Invoke-ExpandedChecked {
 
 $basePath = & .\Infrastructure\vswhere.exe -latest -property installationPath
 $msbuild = Join-Path $basePath  ".\MSBuild\15.0\bin\msbuild.exe"
-$buildItem = Join-Path -Path $PSScriptRoot -ChildPath Solutions\Nett\Nett.sln
+$buildItem = Join-Path -Path $PSScriptRoot -ChildPath Nett.sln
 
 if (!(Test-Path $msbuild)) {
     write-error "ERROR: Could not find MSBuild."
