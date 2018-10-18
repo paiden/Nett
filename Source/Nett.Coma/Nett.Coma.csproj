@@ -8,6 +8,8 @@
     <InformationalVersion>$(ComaVersion)</InformationalVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Nett.Coma.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\keys.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />

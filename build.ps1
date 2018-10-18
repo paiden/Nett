@@ -101,20 +101,10 @@ if($pack) {
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $v -Properties $props -OutputDirectory ngp}
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $v -Properties $props -OutputDirectory ngp}
     Invoke-ExpandedChecked { & nuget.exe pack -symbols $aspNettComa -Version $v -Properties $props -OutputDirectory ngp}
-
-    $signer = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Infrastructure\Nett.Signer\bin\$configuration\Nett.Signer.exe)`""
-
-    Invoke-ExpandedChecked { & $signer -i ngp\Nett.$v.nupkg -o ngp\Nett.StrongNamed.$v.nupkg -p Nett.StrongNamed -k keys.snk }
-    Invoke-ExpandedChecked { & $signer -i ngp\Nett.Coma.$v.nupkg -o ngp\Nett.Coma.StrongNamed.$v.nupkg -p Nett.Coma.StrongNamed -k keys.snk }
-    Invoke-ExpandedChecked { & $signer -i ngp\Nett.AspNet.$v.nupkg -o ngp\Nett.AspNet.StrongNamed.$v.nupkg -p Nett.AspNet.StrongNamed -k keys.snk }
 }
 
 if($push) {
     Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
     Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.Coma.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
     Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.AspNet.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
-
-    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.StrongNamed.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
-    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.Coma.StrongNamed.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
-    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.AspNet.StrongNamed.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
 }
