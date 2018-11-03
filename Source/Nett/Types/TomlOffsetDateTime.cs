@@ -1,4 +1,5 @@
-﻿namespace Nett
+﻿
+namespace Nett
 {
     using System;
     using System.Diagnostics;
@@ -8,6 +9,9 @@
 
     public sealed class TomlOffsetDateTime : TomlValue<DateTimeOffset>
     {
+        private const string SpaceSep = " ";
+        private const string TSep = "T";
+
         private static readonly string[] ParseFormats = new string[]
         {
             "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ssZ", "yyyy-MM-ddTHH:mm:ss.FFFFFFK", "yyyy-MM-ddTHH:mm:ss.FFFFFFZ", "yyyy-MM-ddTHH:mm:ssK", "yyyy-MM-ddTHH:mm:ss.FFFFFF", "yyyy-MM-dd",
@@ -54,7 +58,7 @@
             Debug.Assert(s != null);
 
             const int offsetCharPos = 19;
-            string sep = s.Contains("T") ? "T" : string.Empty;
+            string sep = s.Contains(TSep) ? TSep : SpaceSep;
             bool hasOffset = s.LastIndexOf("+") == offsetCharPos || s.LastIndexOf("-") == offsetCharPos;
             var off = hasOffset ? "K" : "Z";
             var value = DateTimeOffset.ParseExact(s, ParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
