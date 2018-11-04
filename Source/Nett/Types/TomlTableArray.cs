@@ -54,6 +54,12 @@
         {
             if (t == TableArrayType) { return this; }
 
+            var conv = this.Root.Settings.TryGetConverter(this.GetType(), t);
+            if (conv != null)
+            {
+                return conv.Convert(this.Root, this, t);
+            }
+
             if (t.IsArray)
             {
                 var et = t.GetElementType();

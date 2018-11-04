@@ -143,21 +143,56 @@
             return false;
         }
 
-        private void AddConverter(ITomlConverter converter) =>
-                                                                            this.converters.Add(converter);
-
-        private class ConverterCollection
+        private sealed class ConverterCollection
         {
-            private readonly List<ITomlConverter> converters = new List<ITomlConverter>();
+            private static readonly ToMatchingClrTypeConverter DirectConv = new ToMatchingClrTypeConverter();
+            private readonly List<ITomlConverter> converters = new List<ITomlConverter>(64);
 
-            public void Add(ITomlConverter converter) => this.converters.Insert(0, converter);
+            public ConverterCollection()
+            {
+                this.converters.Add(DirectConv);
+            }
 
-            public void AddRange(IEnumerable<ITomlConverter> converters) => this.converters.InsertRange(0, converters);
+            public void Add(ITomlConverter converter)
+                => this.converters.Insert(1, converter);
+
+            public void AddRange(IEnumerable<ITomlConverter> converters) => this.converters.InsertRange(1, converters);
 
             public ITomlConverter TryGetConverter(Type from, Type to) => this.converters.FirstOrDefault(c => c.CanConvertFrom(from) && c.CanConvertTo(to));
 
             public ITomlConverter TryGetLatestToTomlConverter(Type from) =>
                 this.converters.FirstOrDefault(c => c.CanConvertFrom(from) && c.CanConvertToToml());
+
+            private class ToMatchingClrTypeConverter : ITomlConverter<TomlObject, object>
+            {
+                public Type FromType
+                    => typeof(TomlObject);
+
+                public TomlObjectType? TomlTargetType => null;
+
+                public bool CanConvertFrom(Type t)
+                    => Types.TomlObjectType.IsAssignableFrom(t);
+
+                public bool CanConvertTo(Type t)
+                    => t == typeof(object);
+
+                public bool CanConvertToToml()
+                    => false;
+
+                public object Convert(ITomlRoot root, TomlObject src, Type targetType)
+                    => this.Convert(root, (object)src, targetType);
+
+                public object Convert(ITomlRoot root, object value, Type targetType)
+                {
+                    switch (value)
+                    {
+                        case TomlValue val: return val.UntypedValue;
+                        case TomlTable tbl: return tbl.ToDictionary();
+                        case TomlTableArray tarr: return tarr.Items.Select(i => this.Convert(root, i, typeof(object)));
+                        default: return value;
+                    }
+                }
+            }
         }
     }
 }

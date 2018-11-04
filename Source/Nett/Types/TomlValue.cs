@@ -25,10 +25,13 @@
                 UInt16Type, UInt32Type,
             };
 
-        public TomlValue(ITomlRoot root)
+        protected TomlValue(ITomlRoot root, object untyped)
             : base(root)
         {
+            this.UntypedValue = untyped;
         }
+
+        public object UntypedValue { get; }
 
         internal abstract TomlValue ValueWithRoot(ITomlRoot root);
 
@@ -57,8 +60,8 @@
         private static readonly Type ValueType = typeof(T);
         private readonly T value;
 
-        public TomlValue(ITomlRoot root, T value)
-            : base(root)
+        protected TomlValue(ITomlRoot root, T value)
+            : base(root, value)
         {
             this.value = value;
         }

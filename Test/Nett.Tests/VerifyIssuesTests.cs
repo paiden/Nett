@@ -333,6 +333,48 @@ A = {  }
             table.Get<string>("a").Should().Be("\"");
         }
 
+        public static TheoryData<string, object> EquivalentMappingTestData
+        {
+            get
+            {
+                const string tbl = @"
+[x]
+r = 1";
+                const string tbla = @"
+[[x]]
+r = 1";
+
+                var extbl = new Dictionary<string, object>()
+                {
+                    { "r", 1 }
+                };
+
+                var extbla = new List<Dictionary<string, object>>() { extbl };
+
+                var d = new TheoryData<string, object>();
+                d.Add("x=1", 1L);
+                d.Add("x=1.0", 1.0);
+                d.Add("x=\"b\"", "b");
+                d.Add(tbl, extbl);
+                d.Add(tbla, extbla);
+                return d;
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(EquivalentMappingTestData))]
+        public void VerifyIssue63_GetWithObjectType_MapsItToEquivalentClrTypeAutomatically(string input, object expected)
+        {
+            // Arrange
+            var tml = Toml.ReadString(input);
+
+            // Act
+            var converted = tml.Get<object>("x");
+
+            // Assert
+            converted.ShouldBeEquivalentTo(expected);
+        }
+
         public class TestTable
         {
             public string label { get; set; }

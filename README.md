@@ -484,10 +484,15 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
+**v0.11.0** --- XXXX-XX-XX
+Nett: 
++ Add: TomlObjects implement `ToString()` [#63](https://github.com/paiden/Nett/issues/51)
++ Fix: `Get<object>` automatically maps to equivalent CLR type [#63](https://github.com/paiden/Nett/issues/51)
+
 **v0.10.0** --- 2018-10-18
 
 Nett:
-+ Nett: Is now TOML v0.5.0 compliant
++ Nett is now TOML v0.5.0 compliant
 + NuGet packages are strong named by default, '.StrongName' versions of packages are obsolete.
 + Refactor: New lexer and parser (improved performance)
 + Fix: Inline tables serialized in wrong container [#51](https://github.com/paiden/Nett/issues/51)
