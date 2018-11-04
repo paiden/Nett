@@ -19,6 +19,9 @@ namespace Nett
             visitor.Visit(this);
         }
 
+        public override string ToString()
+            => this.Value ? "true" : "false";
+
         internal TomlBool CloneBoolFor(ITomlRoot root) => CopyComments(new TomlBool(root, this.Value), this);
 
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneBoolFor(root);

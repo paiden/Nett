@@ -36,6 +36,9 @@
             visitor.Visit(this);
         }
 
+        public override string ToString()
+            => this.Value;
+
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneStringFor(root);
 
         internal TomlString CloneStringFor(ITomlRoot root) => CopyComments(new TomlString(root, this.Value), this);

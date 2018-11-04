@@ -1,12 +1,17 @@
 ﻿namespace Nett.Writer
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
     using Nett.Util;
     using static System.Diagnostics.Debug;
 
     internal sealed partial class TomlTableWriter : TomlWriter
     {
+        private static readonly TomlKey KeyNotAvailable = new TomlKey("_");
+
         public TomlTableWriter(FormattingStreamWriter writer, TomlSettings settings)
             : base(writer, settings)
         {
@@ -14,11 +19,65 @@
             Assert(settings != null);
         }
 
+        internal static string WriteTomlFragment(TomlTable table)
+        {
+            return table.TableType == TomlTable.TableTypes.Inline
+                ? WriteIntoStream(WriteInlineTable)
+                : WriteIntoStream(WriteTable);
+
+            void WriteInlineTable(FormattingStreamWriter stream)
+            {
+                var writer = new TomlInlineTableWriter(stream, table.Root.Settings);
+                writer.WriteInlineTableBody(table);
+            }
+
+            void WriteTable(FormattingStreamWriter stream)
+            {
+                var writer = new TomlTableWriter(stream, table.Root.Settings);
+                writer.WriteToml(table);
+            }
+        }
+
+        internal static string WriteTomlFragment(TomlArray array)
+        {
+            return WriteIntoStream(WriteArray);
+
+            void WriteArray(FormattingStreamWriter stream)
+            {
+                var writer = new TomlTableWriter(stream, array.Root.Settings);
+                writer.WriteArrayPart(array);
+            }
+        }
+
+        internal static string WriteTomlFragment(TomlTableArray array)
+        {
+            return WriteIntoStream(WriteTomlTableArray);
+
+            void WriteTomlTableArray(FormattingStreamWriter stream)
+            {
+                var writer = new TomlTableWriter(stream, array.Root.Settings);
+                writer.WriteTomlTableArray(string.Empty, KeyNotAvailable, array);
+            }
+        }
+
         internal void WriteToml(TomlTable table)
         {
             const string rootParentKey = "";
             this.WriteTableRows(rootParentKey, table);
             this.writer.Flush();
+        }
+
+        private static string WriteIntoStream(Action<FormattingStreamWriter> write)
+        {
+            using (var ms = new MemoryStream(1024))
+            {
+                var sw = new FormattingStreamWriter(ms, CultureInfo.InvariantCulture);
+                write(sw);
+                sw.Flush();
+                ms.Position = 0;
+                StreamReader sr = new StreamReader(ms);
+                return sr.ReadToEnd();
+            }
         }
 
         private static string CombineKey(string parent, TomlKey key) => parent + key.ToString() + ".";

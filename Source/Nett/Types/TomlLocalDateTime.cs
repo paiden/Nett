@@ -20,6 +20,9 @@ namespace Nett
         public override void Visit(ITomlObjectVisitor visitor)
             => visitor.Visit(this);
 
+        public override string ToString()
+            => this.Value.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFF");
+
         internal static TomlLocalDateTime Parse(ITomlRoot root, string value)
         {
             return new TomlLocalDateTime(root, DateTime.Parse(value, CultureInfo.InvariantCulture));

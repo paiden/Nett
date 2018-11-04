@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Extensions;
+    using Nett.Writer;
 
     public sealed class TomlTableArray : TomlObject
     {
@@ -45,6 +46,9 @@
         {
             this.items.Add(table);
         }
+
+        public override string ToString()
+            => TomlTableWriter.WriteTomlFragment(this);
 
         public override object Get(Type t)
         {

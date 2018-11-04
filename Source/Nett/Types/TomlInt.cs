@@ -1,4 +1,5 @@
-﻿using Nett.Extensions;
+﻿using System;
+using Nett.Extensions;
 
 namespace Nett
 {
@@ -27,6 +28,17 @@ namespace Nett
         public override void Visit(ITomlObjectVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            switch (this.IntType)
+            {
+                case IntTypes.Binary: return $"0b{Convert.ToString(this.Value, 2)}";
+                case IntTypes.Hex: return $"0x{Convert.ToString(this.Value, 16)}";
+                case IntTypes.Octal: return $"0o{Convert.ToString(this.Value, 8)}";
+                default: return this.Value.ToString();
+            }
         }
 
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneIntFor(root);

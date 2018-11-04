@@ -50,7 +50,7 @@
                 this.writer.WriteLine(" ]");
             }
 
-            protected void WriteInlineTableBody(TomlTable table)
+            internal void WriteInlineTableBody(TomlTable table)
             {
                 this.writer.Write("{ ");
                 var rows = table.InternalRows.ToArray();

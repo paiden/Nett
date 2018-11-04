@@ -7,7 +7,7 @@
     using System.Linq;
     using System.Reflection;
     using Extensions;
-
+    using Nett.Writer;
     using static System.Diagnostics.Debug;
 
     public partial class TomlTable : TomlObject, IDictionary<string, TomlObject>
@@ -241,6 +241,9 @@
         {
             visitor.Visit(this);
         }
+
+        public override string ToString()
+            => TomlTableWriter.WriteTomlFragment(this);
 
         internal static TomlTable CreateFromComplexObject<T>(ITomlRoot root, T obj, TableTypes tableType)
         {

@@ -7,7 +7,7 @@
 
     using static System.Diagnostics.Debug;
 
-    internal abstract class TomlWriter
+    internal class TomlWriter
     {
         protected readonly TomlSettings settings;
         protected readonly FormattingStreamWriter writer;
@@ -16,6 +16,36 @@
         {
             this.writer = writer;
             this.settings = settings;
+        }
+
+        internal void WriteArrayPart(TomlArray array)
+        {
+            this.writer.Write('[');
+
+            for (int i = 0; i < array.Items.Length - 1; i++)
+            {
+                WriteArrayElement(array.Items[i]);
+                this.writer.Write(", ");
+            }
+
+            if (array.Items.Length > 0)
+            {
+                WriteArrayElement(array.Items[array.Items.Length - 1]);
+            }
+
+            this.writer.Write(']');
+
+            void WriteArrayElement(TomlValue value)
+            {
+                if (value is TomlArray arr)
+                {
+                    this.WriteArrayPart(arr);
+                }
+                else
+                {
+                    this.WriteValue(value);
+                }
+            }
         }
 
         protected void WriteAppendComments(TomlObject obj)
@@ -41,37 +71,9 @@
             this.writer.Write(key.ToString());
             this.writer.Write(" = ");
 
-            WriteArrayPart(array);
+            this.WriteArrayPart(array);
 
-            void WriteArrayPart(TomlArray ap)
-            {
-                this.writer.Write('[');
 
-                for (int i = 0; i < ap.Items.Length - 1; i++)
-                {
-                    WriteArrayElement(ap.Items[i]);
-                    this.writer.Write(", ");
-                }
-
-                if (ap.Items.Length > 0)
-                {
-                    WriteArrayElement(ap.Items[ap.Items.Length - 1]);
-                }
-
-                this.writer.Write(']');
-            }
-
-            void WriteArrayElement(TomlValue value)
-            {
-                if (value is TomlArray arr)
-                {
-                    WriteArrayPart(arr);
-                }
-                else
-                {
-                    this.WriteValue(value);
-                }
-            }
         }
 
         protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp)

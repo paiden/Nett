@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Extensions;
+    using Nett.Writer;
 
     public sealed class TomlArray : TomlValue<TomlValue[]>
     {
@@ -86,6 +87,9 @@
         {
             visitor.Visit(this);
         }
+
+        public override string ToString()
+            => TomlTableWriter.WriteTomlFragment(this);
 
         internal TomlArray CloneArrayFor(ITomlRoot root)
         {

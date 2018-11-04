@@ -22,6 +22,14 @@ namespace Nett
             visitor.Visit(this);
         }
 
+        public override string ToString()
+        {
+            if (double.IsNaN(this.Value)) { return "nan"; }
+            else if (this.Value == double.NegativeInfinity) { return "-inf"; }
+            else if (this.Value == double.PositiveInfinity) { return "+inf"; }
+            else { return this.Value.ToString("0.0###############", CultureInfo.InvariantCulture); }
+        }
+
         internal static TomlFloat FromTerminal(ITomlRoot root, Token token)
         {
             Debug.Assert(token.Type == TokenType.Float);
