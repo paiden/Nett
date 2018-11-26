@@ -14,7 +14,8 @@
           ]
         }
       ],
-      "dest": "api"
+      "dest": "api",
+      "properties": { "TargetFramework": "net40" }
     }
   ],
   "build": {
