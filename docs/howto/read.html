@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>TOML to class </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="TOML to class ">
+    <meta name="generator" content="docfx 2.40.11.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="toml-to-class">TOML to class</h1>
+
+<p>TOML input file:</p>
+<pre><code class="lang-toml">EnableDebug = true
+
+[Server]
+Timeout = 1m
+
+[Client]
+ServerAddress = &quot;http://127.0.0.1:8080&quot;
+</code></pre><p>Code:</p>
+<pre><code class="lang-csharp">public class Configuration
+{
+    public bool EnableDebug { get; set; }
+    public Server Server { get; set; }
+    public Client Client { get; set; }
+}
+
+public class Server
+{
+    public TimeSpan Timeout { get; set; }
+}
+
+public class Client
+{
+    public string ServerAddress { get; set; }
+}
+
+// ...
+
+var cust = Toml.ReadFile&lt;Configuration&gt;(filename);
+
+Console.WriteLine(&quot;EnableDebug: &quot; + cust.EnableDebug);
+Console.WriteLine(&quot;Timeout: &quot; + cust.Server.Timeout);
+Console.WriteLine(&quot;ServerAddress: &quot; + cust.Client.ServerAddress);
+</code></pre><p>Output:</p>
+<pre><code>EnableDebug: True
+Timeout: 00:01:00
+ServerAddress: http://127.0.0.1:8080
+</code></pre><p>The properties of the object have to</p>
+<ul>
+<li>be public</li>
+<li>match the TOML key casing</li>
+<li>expose a public setter</li>
+</ul>
+<p>Advanced &lt;behavior configuration&gt; allows you to tweak these requirements.</p>
+<h1 id="toml-to-tomltable">TOML to TomlTable</h1>
+<p>TOML input file:v</p>
+<pre><code class="lang-toml">EnableDebug = true
+
+[Server]
+Timeout = 1m
+
+[Client]
+ServerAddress = &quot;http://127.0.0.1:8080&quot;
+</code></pre><p>Code:</p>
+<pre><code class="lang-csharp">var toml = Toml.ReadFile(filename);
+Console.WriteLine(&quot;EnableDebug: &quot; + toml.Get&lt;bool&gt;(&quot;EnableDebug&quot;));
+Console.WriteLine(&quot;Timeout: &quot; + toml.Get&lt;TomlTable&gt;(&quot;Server&quot;).Get&lt;TimeSpan&gt;(&quot;Timeout&quot;));
+Console.WriteLine(&quot;ServerAddress: &quot; + toml.Get&lt;TomlTable&gt;(&quot;Client&quot;).Get&lt;string&gt;(&quot;ServerAddress&quot;));
+</code></pre><p>Output:</p>
+<pre><code>EnableDebug: True
+Timeout: 00:01:00
+ServerAddress: http://127.0.0.1:8080
+</code></pre><p><code>TomlTable</code> is <code>Nett&#39;s</code> generic representation of a TomlDocument. It is 
+a hash set based data structure where each key is 
+represented as a <code>string</code> and each value as a <code>TomlObject</code>.</p>
+<p>Using the <code>TomlTable</code> representation has the benefit of having TOML
+metadata - e.g. the Comments - available in the data model.</p>
+<h1 id="toml-to-dictionary">TOML to Dictionary</h1>
+<p>TOML input file:</p>
+<pre><code class="lang-toml">EnableDebug = true
+
+[Server]
+Timeout = 1m
+
+[Client]
+ServerAddress = &quot;&quot;http://127.0.0.1:8080&quot;&quot;
+</code></pre><p>Code: </p>
+<pre><code class="lang-csharp">var data = Toml.ReadFile(filename).ToDictionary();
+var server = (Dictionary&lt;string, object&gt;)data[&quot;Server&quot;];
+var client = (Dictionary&lt;string, object&gt;)data[&quot;Client&quot;];
+
+Console.WriteLine(&quot;EnableDebug: &quot; + data[&quot;EnableDebug&quot;]);
+Console.WriteLine(&quot;Timeout: &quot; + server[&quot;Timeout&quot;]);
+Console.WriteLine(&quot;ServerAddress: &quot; + client[&quot;ServerAddress&quot;]);
+</code></pre><p>Output:</p>
+<pre><code>EnableDebug: True
+Timeout: 00:01:00
+ServerAddress: http://127.0.0.1:8080
+</code></pre><p>With <code>ToDictionary()</code> the data can be transformed to a standard 
+<code>Dictionary&lt;string, object&gt;</code> representation. </p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/dfx/howto/read.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

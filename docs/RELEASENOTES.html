@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>v0.11.0 </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="v0.11.0 ">
+    <meta name="generator" content="docfx 2.40.11.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="v0110">v0.11.0</h2>
+
+<p>Nett: </p>
+<ul>
+<li>Add: API to map object properties to specific TOML keys <a href="https://github.com/paiden/Nett/issues/69">#69</a></li>
+<li>Refactor: <strong>[Breaking Change]</strong> Make TOML object factory API fluent <a href="https://github.com/paiden/Nett/issues/68">#68</a></li>
+</ul>
+<p>Asp.Net:</p>
+<ul>
+<li>Fix: &#39;Unexpected&#39; exception when loading unsupported TOML types <a href="https://github.com/paiden/Nett/issues/38">#38</a></li>
+<li>Fix: Deeper nested config objects loaded correctly <a href="https://github.com/paiden/Nett/issues/71">#71</a></li>
+</ul>
+<h2 id="v0101">v0.10.1</h2>
+<p>Nett: </p>
+<ul>
+<li>Add: TomlObjects implement <code>ToString()</code> <a href="https://github.com/paiden/Nett/issues/51">#63</a></li>
+<li>Fix: <code>Get&lt;object&gt;</code> automatically maps to equivalent CLR type <a href="https://github.com/paiden/Nett/issues/51">#63</a></li>
+<li>Fix: DateTime Read/Write format corruption <a href="https://github.com/paiden/Nett/issues/66">#66</a></li>
+</ul>
+<h2 id="v0100">v0.10.0</h2>
+<p>Nett:</p>
+<ul>
+<li>Nett is now TOML v0.5.0 compliant</li>
+<li>NuGet packages are strong named by default, &#39;.StrongName&#39; versions of packages are obsolete.</li>
+<li>Refactor: New lexer and parser (improved performance)</li>
+<li>Fix: Inline tables serialized in wrong container <a href="https://github.com/paiden/Nett/issues/51">#51</a></li>
+</ul>
+<h2 id="v090">v0.9.0</h2>
+<p>Nett:</p>
+<ul>
+<li><strong>Breaking</strong> Change: Rename TomlTimeSpan to TomlDuration</li>
+<li><strong>Breaking</strong> Change: TomlDuration uses Go-Like duration format as described in <a href="https://github.com/toml-lang/toml/issues/514">Toml/#514</a></li>
+<li>Fix: Updating of TomlTables with TableArrayTypes <a href="https://github.com/paiden/Nett/issues/44">#44</a></li>
+<li>Fix: Table rows written into wrong section <a href="https://github.com/paiden/Nett/issues/42">#42</a></li>
+<li>Fix: NotImplementedException when using table arrays <a href="https://github.com/paiden/Nett/issues/41">#41</a></li>
+</ul>
+<h2 id="v080">v0.8.0</h2>
+<p>General: </p>
+<ul>
+<li>Add: .Net Standard 2.0 support</li>
+<li>Add: Nett.AspNet package that integrates TOML into the Asp.Net Core configuration system</li>
+<li><strong>Breaking</strong> Change: API changes creating / adding TOML objects in generic TOML</li>
+<li>Removed: Strong named packages</li>
+</ul>
+<p>Nett:</p>
+<ul>
+<li>Add: API for updating a TomlTable row</li>
+<li>Add: Dictionary can be serialized directly</li>
+</ul>
+<p>Coma:</p>
+<ul>
+<li>Add: API to use custom store implementations for configurations.</li>
+<li>Add: API for combining TOML tables</li>
+<li>Change: The coma configuration API </li>
+</ul>
+<h2 id="v070">v0.7.0</h2>
+<p>Nett: </p>
+<ul>
+<li>Add: Factory methods to allow generic construction of TOML object graphs <a href="https://github.com/paiden/Nett/issues/21">#21</a></li>
+<li>Change: Rename Nett internal settings object from &#39;TomlConfig&#39; to &#39;TomlSettings&#39;</li>
+<li>Fix: Write key back to file with same type <a href="https://github.com/paiden/Nett/issues/23">#23</a></li>
+<li>Fix: Parse errors caused by absent optional whitespace <a href="https://github.com/paiden/Nett/issues/26">#26</a></li>
+<li>Fix: Various TOML array parser issues</li>
+</ul>
+<p>Coma:</p>
+<ul>
+<li>Add: Settings can be moved between config scopes.</li>
+</ul>
+<h2 id="v063">v0.6.3</h2>
+<p>Nett:</p>
+<ul>
+<li>Fix: Serialize <code>uint</code> correctly <a href="https://github.com/paiden/Nett/issues/16">#16</a></li>
+</ul>
+<p>Coma:</p>
+<ul>
+<li>Fix: Type conversions  <a href="https://github.com/paiden/Nett/issues/17">#17</a></li>
+</ul>
+<h2 id="v062">v0.6.2</h2>
+<p>Nett:</p>
+<ul>
+<li>Fix: Ignore static properties <a href="https://github.com/paiden/Nett/issues/15">#15</a></li>
+</ul>
+<h2 id="v061">v0.6.1</h2>
+<p>Nett:</p>
+<ul>
+<li>Fix: Array of tables serialization <a href="https://github.com/paiden/Nett/issues/14">#14</a></li>
+</ul>
+<h2 id="v060">v0.6.0</h2>
+<p>Nett:</p>
+<ul>
+<li>Add: Properties of TOML mapped classes can be ignored via attribute or config</li>
+<li>Add: TomlTable supports Freezable pattern</li>
+<li>Fix: All parser errors include line and column</li>
+<li>Fix: Various invalid TOML cases now cause a parser error as expected</li>
+<li>Removed: Comments merge mode (will be redesigned and added in future version)</li>
+</ul>
+<p>Coma: </p>
+<ul>
+<li>Initial release</li>
+</ul>
+<h2 id="v050">v0.5.0</h2>
+<ul>
+<li>Changed: Configuration API to have clearer syntax and behavior</li>
+<li>Add: implicit cast sets; Guids and Enums are converted automatically</li>
+<li>Fix: Weird formatting and new lines for nested tables</li>
+<li>Fix: Invalid TOML strings produce better parser error message</li>
+</ul>
+<h2 id="v042">v0.4.2</h2>
+<ul>
+<li>Fix: Float was written as TomlInt when it had no decimal places <a href="https://github.com/paiden/Nett/issues/8">#8</a></li>
+<li>Fix: Inline tables read as arrays <a href="https://github.com/paiden/Nett/issues/7">#7</a></li>
+<li>Fix: Integer bare keys not working <a href="https://github.com/paiden/Nett/issues/6">#6</a></li>
+</ul>
+<h2 id="v041">v0.4.1</h2>
+<ul>
+<li>Add: Support for short date time formats</li>
+<li>Fix: Writing files is culture invariant</li>
+<li>Fix: Table encoding/decoding when they are used inside table arrays</li>
+</ul>
+<h2 id="v040">v0.4.0</h2>
+<ul>
+<li>First public preview release</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/RELEASENOTES.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

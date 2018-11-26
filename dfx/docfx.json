@@ -23,15 +23,9 @@
       {
         "files": [
           "api/**.yml",
-          "api/index.md"
-        ]
-      },
-      {
-        "files": [
-          "articles/**.md",
-          "gettingstarted/**.md",
-          "gettingstarted/**/toc.yml",
-          "articles/**/toc.yml",
+          "api/index.md",
+          "howto/**/*.*",
+          "articles/**/*.*",
           "toc.yml",
           "*.md"
         ],
@@ -39,6 +33,10 @@
           "obj/**",
           "_site/**"
         ]
+      },
+      {
+        "files": "RELEASENOTES.md",
+        "src": ".."
       }
     ],
     "resource": [
@@ -56,7 +54,8 @@
       {
         "files": [
           "apidoc/**.md",
-          "specs/*.md"
+          "specs/*.md",
+          "../RELEASENOTES.md"
         ],
         "exclude": [
           "obj/**",

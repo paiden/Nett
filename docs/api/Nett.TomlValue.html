@@ -1,0 +1,728 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class TomlValue
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class TomlValue
+   ">
+    <meta name="generator" content="docfx 2.40.11.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Nett.TomlValue">
+  
+  
+  <h1 id="Nett_TomlValue" data-uid="Nett.TomlValue" class="text-break">Class TomlValue
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Nett.TomlObject.html">TomlObject</a></div>
+    <div class="level2"><span class="xref">TomlValue</span></div>
+      <div class="level3"><a class="xref" href="Nett.TomlValue-1.html">TomlValue&lt;T&gt;</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_Comments">TomlObject.Comments</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_ReadableTypeName">TomlObject.ReadableTypeName</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_TomlType">TomlObject.TomlType</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_AddComment_Nett_TomlComment_">TomlObject.AddComment(TomlComment)</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_AddComment_System_String_Nett_CommentLocation_">TomlObject.AddComment(String, CommentLocation)</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_AddComments_System_Collections_Generic_IEnumerable_Nett_TomlComment__">TomlObject.AddComments(IEnumerable&lt;TomlComment&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_ClearComments">TomlObject.ClearComments()</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_Get__1">TomlObject.Get&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_Get_System_Type_">TomlObject.Get(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_Visit_Nett_ITomlObjectVisitor_">TomlObject.Visit(ITomlObjectVisitor)</a>
+    </div>
+    <div>
+      <a class="xref" href="Nett.TomlObject.html#Nett_TomlObject_CopyComments__1___0_Nett_TomlObject_">TomlObject.CopyComments&lt;T&gt;(T, TomlObject)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Nett.html">Nett</a></h6>
+  <h6><strong>Assembly</strong>: Nett.dll</h6>
+  <h5 id="Nett_TomlValue_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class TomlValue : TomlObject</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue__ctor_Nett_ITomlRoot_System_Object_.md&amp;value=---%0Auid%3A%20Nett.TomlValue.%23ctor(Nett.ITomlRoot%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L28">View Source</a>
+  </span>
+  <a id="Nett_TomlValue__ctor_" data-uid="Nett.TomlValue.#ctor*"></a>
+  <h4 id="Nett_TomlValue__ctor_Nett_ITomlRoot_System_Object_" data-uid="Nett.TomlValue.#ctor(Nett.ITomlRoot,System.Object)">TomlValue(ITomlRoot, Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected TomlValue(ITomlRoot root, object untyped)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.ITomlRoot.html">ITomlRoot</a></td>
+        <td><span class="parametername">root</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">untyped</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_BoolType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.BoolType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L8">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_BoolType" data-uid="Nett.TomlValue.BoolType">BoolType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type BoolType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_CharType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.CharType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L9">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_CharType" data-uid="Nett.TomlValue.CharType">CharType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type CharType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_DateTimeType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.DateTimeType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L10">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_DateTimeType" data-uid="Nett.TomlValue.DateTimeType">DateTimeType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type DateTimeType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_DoubleType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.DoubleType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L11">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_DoubleType" data-uid="Nett.TomlValue.DoubleType">DoubleType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type DoubleType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_FloatType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.FloatType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L12">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_FloatType" data-uid="Nett.TomlValue.FloatType">FloatType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type FloatType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_Int16Type.md&amp;value=---%0Auid%3A%20Nett.TomlValue.Int16Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L13">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_Int16Type" data-uid="Nett.TomlValue.Int16Type">Int16Type</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type Int16Type</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_Int32Type.md&amp;value=---%0Auid%3A%20Nett.TomlValue.Int32Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L14">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_Int32Type" data-uid="Nett.TomlValue.Int32Type">Int32Type</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type Int32Type</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_Int64Type.md&amp;value=---%0Auid%3A%20Nett.TomlValue.Int64Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L15">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_Int64Type" data-uid="Nett.TomlValue.Int64Type">Int64Type</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type Int64Type</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_StringType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.StringType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L16">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_StringType" data-uid="Nett.TomlValue.StringType">StringType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type StringType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_TimespanType.md&amp;value=---%0Auid%3A%20Nett.TomlValue.TimespanType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L17">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_TimespanType" data-uid="Nett.TomlValue.TimespanType">TimespanType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type TimespanType</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_UInt16Type.md&amp;value=---%0Auid%3A%20Nett.TomlValue.UInt16Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L18">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_UInt16Type" data-uid="Nett.TomlValue.UInt16Type">UInt16Type</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type UInt16Type</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_UInt32Type.md&amp;value=---%0Auid%3A%20Nett.TomlValue.UInt32Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L19">View Source</a>
+  </span>
+  <h4 id="Nett_TomlValue_UInt32Type" data-uid="Nett.TomlValue.UInt32Type">UInt32Type</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Type UInt32Type</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_UntypedValue.md&amp;value=---%0Auid%3A%20Nett.TomlValue.UntypedValue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L34">View Source</a>
+  </span>
+  <a id="Nett_TomlValue_UntypedValue_" data-uid="Nett.TomlValue.UntypedValue*"></a>
+  <h4 id="Nett_TomlValue_UntypedValue" data-uid="Nett.TomlValue.UntypedValue">UntypedValue</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object UntypedValue { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue_CleanupNumberInputString_System_String_System_Int32_.md&amp;value=---%0Auid%3A%20Nett.TomlValue.CleanupNumberInputString(System.String%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L38">View Source</a>
+  </span>
+  <a id="Nett_TomlValue_CleanupNumberInputString_" data-uid="Nett.TomlValue.CleanupNumberInputString*"></a>
+  <h4 id="Nett_TomlValue_CleanupNumberInputString_System_String_System_Int32_" data-uid="Nett.TomlValue.CleanupNumberInputString(System.String,System.Int32)">CleanupNumberInputString(String, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static string CleanupNumberInputString(string input, int sub = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">input</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">sub</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Boolean_">TomlObjectFactory.CreateAttached(TomlObject, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_String_">TomlObjectFactory.CreateAttached(TomlObject, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Int64_">TomlObjectFactory.CreateAttached(TomlObject, Int64)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Double_">TomlObjectFactory.CreateAttached(TomlObject, Double)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_TimeSpan_">TomlObjectFactory.CreateAttached(TomlObject, TimeSpan)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_DateTimeOffset_">TomlObjectFactory.CreateAttached(TomlObject, DateTimeOffset)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Boolean__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;Boolean&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_String__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;String&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Int64__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;Int64&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Int32__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;Int32&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Double__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;Double&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Single__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_TimeSpan__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;TimeSpan&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_DateTime__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;DateTime&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_DateTimeOffset__">TomlObjectFactory.CreateAttached(TomlObject, IEnumerable&lt;DateTimeOffset&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Object_Nett_TomlTable_TableTypes_">TomlObjectFactory.CreateAttached(TomlObject, Object, TomlTable.TableTypes)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached__1_Nett_TomlObject_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_">TomlObjectFactory.CreateAttached&lt;TValue&gt;(TomlObject, IDictionary&lt;String, TValue&gt;, TomlTable.TableTypes)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateAttached__1_Nett_TomlObject_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_">TomlObjectFactory.CreateAttached&lt;T&gt;(TomlObject, IEnumerable&lt;T&gt;, TomlTable.TableTypes)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateEmptyAttachedArray_Nett_TomlObject_">TomlObjectFactory.CreateEmptyAttachedArray(TomlObject)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateEmptyAttachedTableArray_Nett_TomlObject_">TomlObjectFactory.CreateEmptyAttachedTableArray(TomlObject)</a>
+  </div>
+  <div>
+      <a class="xref" href="Nett.TomlObjectFactory.html#Nett_TomlObjectFactory_CreateEmptyAttachedTable_Nett_TomlObject_Nett_TomlTable_TableTypes_">TomlObjectFactory.CreateEmptyAttachedTable(TomlObject, TomlTable.TableTypes)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlValue.md&amp;value=---%0Auid%3A%20Nett.TomlValue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/Types/TomlValue.cs/#L6" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

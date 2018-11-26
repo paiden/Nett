@@ -1,0 +1,1173 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/dev/nett/dfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "../RELEASENOTES.md",
+      "output": {
+        ".html": {
+          "relative_path": "RELEASENOTES.html",
+          "hash": "UYm9hGl6Vogp54tBSau/fQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.AspNet.ConfigurationBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.AspNet.ConfigurationBuilderExtensions.html",
+          "hash": "9jlTdNIrm5dNDiHimdpnfg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.AspNet.TomlConfigurationProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.AspNet.TomlConfigurationProvider.html",
+          "hash": "m4nf14mGjATCD9+PhLeE9g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.AspNet.TomlConfigurationSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.AspNet.TomlConfigurationSource.html",
+          "hash": "UBhAL/c+KMEvZ9juIqr3bg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.AspNet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.AspNet.html",
+          "hash": "js8iaQrttphEgg5QKBwK3w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Collections.WithDepth-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Collections.WithDepth-1.html",
+          "hash": "Ws8M2DoJLRotWu0fK1kJTA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Collections.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Collections.html",
+          "hash": "OWoPX/L0HNhdXLC0PyUh8g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.Config-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.Config-1.html",
+          "hash": "rqDNte0K58XT35bQoLXOng=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.Config.IConfigBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.Config.IConfigBuilder-1.html",
+          "hash": "Y85HKN5Jlv9MtIkU3G5TYQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.Config.IConfigBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.Config.IConfigBuilder.html",
+          "hash": "LMIF64rCV2W9Re9KhEhk6g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.Config.IMergeStoreBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.Config.IMergeStoreBuilder.html",
+          "hash": "bR3wfLM079lsZVDBL2jghQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.Config.IStoreBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.Config.IStoreBuilder.html",
+          "hash": "ZC5ZiEBKOok6UfTlq5KEqQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.Config.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.Config.html",
+          "hash": "9l29NBchfiMZAT05N1Lv0Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.IConfigSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.IConfigSource.html",
+          "hash": "8IaZUiDv8J7tpuaSUg7GUg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.IConfigStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.IConfigStore.html",
+          "hash": "j/Ef09Eq6cSdPf18BmdTRA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Coma.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Coma.html",
+          "hash": "6uoGSfM+DPtF4+r7NXBIlg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.CommentLocation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.CommentLocation.html",
+          "hash": "UCEZxYWQFCmwdY3hOvoPeg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ConversionBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ConversionBuilderExtensions.html",
+          "hash": "G7/u2+RdJJjOFvh2KxODEQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ICommentOperationOrRowSelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ICommentOperationOrRowSelector.html",
+          "hash": "GcIyuhN5UHUT8tjJ+/yh1w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.IConversionSettingsBuilder-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.IConversionSettingsBuilder-2.html",
+          "hash": "mjQPHd2f10fjuwPJQLnRFw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.IKeyGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.IKeyGenerator.html",
+          "hash": "OKDcjAohovv9RcR/7kVziw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.IRowSelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.IRowSelector.html",
+          "hash": "kQ6MtyR1tWcglX5NGTVmYA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ISourceSelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ISourceSelector.html",
+          "hash": "WL9ateFoOJEf6BYA74F4ww=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ITableCombiner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ITableCombiner.html",
+          "hash": "zpPPrhR3CCsbFPwZRZ3ZJQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ITargetPropertySelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ITargetPropertySelector.html",
+          "hash": "46BrU4NpempqraqG0J/eDg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ITargetSelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ITargetSelector.html",
+          "hash": "Z32IqrjMb+bsECAYDA+G1w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ITomlKeyGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ITomlKeyGenerator.html",
+          "hash": "sSb4tvL9R1NxwJOHvvfHhQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ITomlObjectVisitor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ITomlObjectVisitor.html",
+          "hash": "h1CdUKhqwvBbLG8XFKwL1g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.ITomlRoot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.ITomlRoot.html",
+          "hash": "DIx3pdKS8hU0bEudIIa2Xg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.InputComments.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.InputComments.html",
+          "hash": "/H4QJrFqz64tyy3UA/ckJA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.KeyGenerators.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.KeyGenerators.html",
+          "hash": "QCGY397yeQF5E+wtaFVWLQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Parser.ParseException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Parser.ParseException.html",
+          "hash": "To5yRAI2N96aYOCFOiS+Hw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Parser.SourceLocation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Parser.SourceLocation.html",
+          "hash": "rN3TpM383yNQYlAD/aciQw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Parser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Parser.html",
+          "hash": "U7C81xPinhTResaZOtNJCw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.StreamTomlSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.StreamTomlSerializer.html",
+          "hash": "DGJ0KCJpO5xt5DmYi/9tVg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TargetPropertySelectors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TargetPropertySelectors.html",
+          "hash": "srzR79z3CnalKPuJlfvzgA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "UidNotFound"
+      ],
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.Toml.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.Toml.html",
+          "hash": "o+ElnHDy9NL9AIobB0B2Pw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlArray.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlArray.html",
+          "hash": "cSjbIq9lcdPCj8VXXMf8RQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlBool.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlBool.html",
+          "hash": "SdNPXwwhd4sJACkZgxDm+g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlComment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlComment.html",
+          "hash": "kWDdRH4wsbbOXIuymC06Ng=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlCommentAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlCommentAttribute.html",
+          "hash": "jmXU+YLFUYNHao0gQybpBQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlDuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlDuration.html",
+          "hash": "c9vlEhSI+ljmjdXnPjgx9w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlFloat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlFloat.html",
+          "hash": "af9cxlSPEsJ9yr8T9yOirg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlIgnoreAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlIgnoreAttribute.html",
+          "hash": "24wnr8YbINWvvjhXO+q5tA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlInt.IntTypes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlInt.IntTypes.html",
+          "hash": "/mnsP+OG3gEo4KAgdFFKHw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlInt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlInt.html",
+          "hash": "aqZOZqpUiUIeWIERn5nM4w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlLocalDate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlLocalDate.html",
+          "hash": "PLVVC5Or1Jwku7d0VgsyBQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlLocalDateTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlLocalDateTime.html",
+          "hash": "6X3Hf/OqohlhfFH5K4GNvQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlLocalTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlLocalTime.html",
+          "hash": "a42sWJ5r7G5cG3gGqIsNVg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlMember.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlMember.html",
+          "hash": "+I9w2zUFx5f6jrpc3zV0Zg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlObject.html",
+          "hash": "Pnxvc4czK0n8U2uRK8E3QA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlObjectFactory.RequireTomlObject-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlObjectFactory.RequireTomlObject-1.html",
+          "hash": "XptwpDScVuaFk6FXB7OyIg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlObjectFactory.Result-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlObjectFactory.Result-1.html",
+          "hash": "rTLhlEn0P9wsx3HJmDUaGw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlObjectFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlObjectFactory.html",
+          "hash": "2l2bLFeqHe16RvHahWPPfA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlObjectType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlObjectType.html",
+          "hash": "OtgjeTTBNxe70GMk9D+Dlg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlOffsetDateTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlOffsetDateTime.html",
+          "hash": "W7FIqGHXvCj3y4Ds4S1XGA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.ConversionSets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.ConversionSets.html",
+          "hash": "7Tqf3bX67GT/CyIVVKORKQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.IMappingBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.IMappingBuilder-1.html",
+          "hash": "MhRIG1ScKn8xl/4elKMpLw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.IPropertyMappingBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.IPropertyMappingBuilder.html",
+          "hash": "GM22bTN3p3ORPV6CvNyvzw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.ITableKeyMappingBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.ITableKeyMappingBuilder.html",
+          "hash": "GclyA0PRs9CeSWP9OcHkjA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.ITomlSettingsBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.ITomlSettingsBuilder.html",
+          "hash": "Z5K1ZiLUEz7S4UiYA8aryQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.ITypeSettingsBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.ITypeSettingsBuilder-1.html",
+          "hash": "QFy0HnVwcSzl3IUEWMdjMg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlSettings.html",
+          "hash": "8ONojef3n5DOngfCFTGADQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlString.TypeOfString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlString.TypeOfString.html",
+          "hash": "5wCUPQScKCws3Ac8fr+L/g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlString.html",
+          "hash": "jcojI9zqVey9AHZ701XXsQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlTable.TableTypes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlTable.TableTypes.html",
+          "hash": "anRaU6yFu8Fv1nKRki2kTg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlTable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlTable.html",
+          "hash": "6TOtxrNKmgmiPMuX/ybk1A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlTableArray.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlTableArray.html",
+          "hash": "t+EzdDVPFY0ANE57+YCd0w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlTableToTypedDictionaryConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlTableToTypedDictionaryConverter.html",
+          "hash": "Tdm40i0B+yJQOQ7Ncq6vxA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlValue-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlValue-1.html",
+          "hash": "LvnNcCGcPxvZEzK+kfm/ww=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TomlValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TomlValue.html",
+          "hash": "FsTjLK3FDPDPS8iIvOPyPg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.TreatAsInlineTableAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.TreatAsInlineTableAttribute.html",
+          "hash": "4iec7HCYRK0gOcGb8tu/mw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Nett.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Nett.html",
+          "hash": "5vzgnlYNTmoA5Qrj7Z7cDw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "wxlYNeJfRSQHvQqMn5jL2A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "FdMe2ZDmZIz4NubMcAwrrA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/config.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/config.html",
+          "hash": "F/wbu0W73gAqqt41nymm3Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "IWkvIkj3IYBB2B5x2OULuQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/pitfalls.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/pitfalls.html",
+          "hash": "IbLoRGh6rSuxlutBYLO3sA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/spec.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/spec.html",
+          "hash": "1bevtRRYxQ6iStoXpfKZGg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "ZjBemIWw/uY48h6iE3l6qQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/typeconv.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/typeconv.html",
+          "hash": "MqVIASuQctcRJDteFQcR8w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/coma.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/coma.html",
+          "hash": "xUgseU0Pu69CppDxzjPqcg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/custser.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/custser.html",
+          "hash": "JwnO27e2AeywSXkl6iWzDQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/depdeser.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/depdeser.html",
+          "hash": "9w13C8Fidkf0ajVt0AtH8Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/ignoreprop.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/ignoreprop.html",
+          "hash": "Q4WHL3pZenWaUrha7Z8UIw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/intro.html",
+          "hash": "ChRyQ0kRm8gCg6e1WzCmBA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/keyformat.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/keyformat.html",
+          "hash": "nS1wnf+Wr3R9h4mm7RsuBg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/read.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/read.html",
+          "hash": "FrevgWHEVSMXSFB2ZbqUkw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/stdconv.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/stdconv.html",
+          "hash": "SqEJn4U7d143Zky2dlZWDQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "howto/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "howto/toc.html",
+          "hash": "hQ9rGR4zKUDLobfVlVzfag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "howto/write.md",
+      "output": {
+        ".html": {
+          "relative_path": "howto/write.html",
+          "hash": "55OLus2paYtFc/n1g2M7DA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "PQ2/dEBKOpLFe9nWvOIWVw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "SyJ0ce5ATZHNSuhze4QeMw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 75,
+          "skipped_file_count": 75
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 17,
+          "skipped_file_count": 17
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

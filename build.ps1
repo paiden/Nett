@@ -36,9 +36,14 @@ Build with release configuration
 Param(
     # mutually exclusive quick targets
 
+    
+    [alias("dp")]
+    [parameter(ParameterSetName="doc")]
+    [switch]$docpub,
+
     [Alias("ngp")]
     [parameter(ParameterSetName="pack")]
-    [switch] $pack,
+    [switch]$pack,
 
     [Alias("up")]
     [parameter(ParameterSetName="pack")]
@@ -90,6 +95,12 @@ if (-not $nobuild) {
     $msBuildOptions = "/p:Configuration=$configuration", "/m", "/nologo"
     $msBuildOptions += $rest
     Invoke-ExpandedChecked { & $msbuild $buildItem $msBuildOptions }
+}
+
+if($docpub) {
+    & docfx dfx\docfx.json 
+    Remove-Item -Path docs\* -Recurse -Force
+    Copy-Item -Path .\dfx\_site\* -Destination docs -Recurse -Container -Force
 }
 
 if ($pack) {

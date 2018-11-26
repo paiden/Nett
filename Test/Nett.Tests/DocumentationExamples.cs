@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Nett.Tests.Util;
 using Xunit;
+using Xunit.Abstractions;
 using static System.FormattableString;
 
 namespace Nett.Tests
@@ -13,9 +15,22 @@ namespace Nett.Tests
     public class Configuration
     {
         public bool EnableDebug { get; set; }
-        public Server Server { get; set; }
-        public Client Client { get; set; }
+        public Server Server { get; set; } = new Server();
+        public Client Client { get; set; } = new Client();
     }
+
+    [ExcludeFromCodeCoverage]
+    public class Server
+    {
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(2);
+    }
+
+    [ExcludeFromCodeCoverage]
+    public class Client
+    {
+        public string ServerAddress { get; set; } = "http://localhost:8082";
+    }
+
 
     [ExcludeFromCodeCoverage]
     public class ConfigurationWithDepdendency : Configuration
@@ -24,18 +39,6 @@ namespace Nett.Tests
         {
 
         }
-    }
-
-    [ExcludeFromCodeCoverage]
-    public class Server
-    {
-        public TimeSpan Timeout { get; set; }
-    }
-
-    [ExcludeFromCodeCoverage]
-    public class Client
-    {
-        public string ServerAddress { get; set; }
     }
 
     [ExcludeFromCodeCoverage]
@@ -73,16 +76,24 @@ namespace Nett.Tests
     [ExcludeFromCodeCoverage]
     public class DocumentationExamples
     {
-        private string exp = @"EnableDebug = true
+
+
+        private string exp = @"
+EnableDebug = true
 
 [Server]
 Timeout = 1m
 
-
 [Client]
 ServerAddress = ""http://127.0.0.1:8080""
-
 ";
+
+        private readonly ITestOutputHelper Console;
+
+        public DocumentationExamples(ITestOutputHelper console)
+        {
+            this.Console = console;
+        }
 
         private string NewFileName() => Guid.NewGuid() + ".toml";
 
@@ -233,6 +244,153 @@ ServerAddress = ""http://127.0.0.1:8080""
             var i = tbl.Get<long>("i"); // Only this will work
 
             i.Should().Be(1);
+        }
+
+        [Fact]
+        public void Read_AsTomlTable_ReadsTableCorrectly()
+        {
+            // Arrange
+            using (var filename = TestFileName.Create("test", ".toml"))
+            {
+                File.WriteAllText(filename, exp);
+
+                // Act
+                var toml = Toml.ReadFile(filename);
+                Console.WriteLine("EnableDebug: " + toml.Get<bool>("EnableDebug"));
+                Console.WriteLine("Timeout: " + toml.Get<TomlTable>("Server").Get<TimeSpan>("Timeout"));
+                Console.WriteLine("ServerAddress: " + toml.Get<TomlTable>("Client").Get<string>("ServerAddress"));
+
+                // Assert
+                toml.Get<bool>("EnableDebug").Should().Be(true);
+                toml.Get<TomlTable>("Server").Get<TimeSpan>("Timeout").Should().Be(TimeSpan.FromMinutes(1));
+                toml.Get<TomlTable>("Client").Get<string>("ServerAddress").Should().Be("http://127.0.0.1:8080");
+            }
+        }
+
+        [Fact]
+        public void Read_AsDictionary_ReadsTableCorrectly()
+        {
+            // Arrange
+            using (var filename = TestFileName.Create("test", ".toml"))
+            {
+                File.WriteAllText(filename, exp);
+
+                // Act
+                var data = Toml.ReadFile(filename).ToDictionary();
+                var server = (Dictionary<string, object>)data["Server"];
+                var client = (Dictionary<string, object>)data["Client"];
+
+                Console.WriteLine("EnableDebug: " + data["EnableDebug"]);
+                Console.WriteLine("Timeout: " + server["Timeout"]);
+                Console.WriteLine("ServerAddress: " + client["ServerAddress"]);
+
+                // Assert
+                data["EnableDebug"].Should().Be(true);
+                server["Timeout"].Should().Be(TimeSpan.FromMinutes(1));
+                client["ServerAddress"].Should().Be("http://127.0.0.1:8080");
+            }
+        }
+
+        [Fact]
+        public void Read_AsCustomObject_ReadsTableCorrectly()
+        {
+            // Arrange
+            using (var filename = TestFileName.Create("test", ".toml"))
+            {
+                File.WriteAllText(filename, exp);
+
+                // Act
+                var cust = Toml.ReadFile<Configuration>(filename);
+
+                Console.WriteLine("EnableDebug: " + cust.EnableDebug);
+                Console.WriteLine("Timeout: " + cust.Server.Timeout);
+                Console.WriteLine("ServerAddress: " + cust.Client.ServerAddress);
+
+                // Assert
+                cust.EnableDebug.Should().Be(true);
+                cust.Server.Timeout.Should().Be(TimeSpan.FromMinutes(1));
+                cust.Client.ServerAddress.Should().Be("http://127.0.0.1:8080");
+            }
+        }
+
+        [Fact]
+        public void Write_WithCustomObject_WritesCorrectFileContent()
+        {
+            // Arrange
+            using (var filename = TestFileName.Create("test", ".toml"))
+            {
+                // Act
+                var obj = new Configuration();
+                Toml.WriteFile(obj, filename);
+
+                // Assert
+                File.ReadAllText(filename).ShouldBeSemanticallyEquivalentTo(
+                    @"
+EnableDebug = false
+[Server]
+Timeout = 2m
+[Client]
+ServerAddress = ""http://localhost:8082""");
+            }
+        }
+
+        [Fact]
+        public void Write_WithTomlTable_WritesCorrectFileContent()
+        {
+            // Arrange
+            using (var filename = TestFileName.Create("test", ".toml"))
+            {
+                // Act
+                var server = Toml.Create();
+                server.Add("Timeout", TimeSpan.FromMinutes(2));
+
+                var client = Toml.Create();
+                client.Add("ServerAddress", "http://localhost:8082");
+
+                var tbl = Toml.Create();
+                tbl.Add("EnableDebug", false);
+                tbl.Add("Server", server);
+                tbl.Add("Client", client);
+
+                Toml.WriteFile(tbl, filename);
+
+                // Assert
+                File.ReadAllText(filename).ShouldBeSemanticallyEquivalentTo(
+                    @"
+EnableDebug = false
+[Server]
+Timeout = 2m
+[Client]
+ServerAddress = ""http://localhost:8082""");
+            }
+        }
+
+        [Fact]
+        public void Write_WithDictionary_WritesCorrectFileContent()
+        {
+            // Arrange
+            using (var filename = TestFileName.Create("test", ".toml"))
+            {
+                // Act
+                var data = new Dictionary<string, object>()
+                {
+                    { "EnableDebug", false },
+                    { "Server", new Dictionary<string, object>() { { "Timeout", TimeSpan.FromMinutes(2) } } },
+                    { "Client", new Dictionary<string, object>() { { "ServerAddress", "http://localhost:8082" } } },
+                };
+
+                Toml.WriteFile(data, filename);
+
+                // Assert
+                File.ReadAllText(filename).ShouldBeSemanticallyEquivalentTo(
+                    @"
+EnableDebug = false
+[Server]
+Timeout = 2m
+[Client]
+ServerAddress = ""http://localhost:8082""");
+            }
+
         }
     }
 }

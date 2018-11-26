@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Nett.Coma </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Nett.Coma ">
+    <meta name="generator" content="docfx 2.40.11.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="nettcoma">Nett.Coma</h1>
+
+<p>&#39;Nett.Coma&#39; is an extension library for Nett. The purpose of &#39;Coma&#39; is to provide a modern and powerful config system
+in the .Net ecosytem. </p>
+<p>Since .Net 2.0 there exists a .Net framework integrated configuration system inside the <code>System.Configuration</code> namespace.
+So why a new config system? Because of the following disadvantages, that the .Net integrated config system has:</p>
+<ul>
+<li>XML as configuration format</li>
+<li>Very much boilerplate code needed to get strongly typed config objects</li>
+<li>No way to support for advanced use case scenarios (e.g. multi file configurations)</li>
+<li>Not actively maintained</li>
+</ul>
+<p>&#39;Coma&#39; attempts to solve many of these pitfalls by providing the following features:</p>
+<ul>
+<li>TOML used as the configuration format</li>
+<li>Coma wraps plain CLR config type to provide additional functionality</li>
+<li>Out of the box support for multi file / merge configurations (e.g. like Git config system)</li>
+</ul>
+<h2 id="getting-started">Getting started</h2>
+<p>Assume the following settings object is used inside an app</p>
+<pre><code class="lang-C#">public class AppSettings
+{
+    public TimeSpan IdleTimeout { get; set; } = TimeSpan.FromMinutes(15);
+
+    public UserSettings User { get; set; } = new UserSettings();
+
+    public class UserSettings
+    {
+        public string UserName { get; set; }
+    }
+}
+</code></pre><p>The following example should give an idea how to integrate the &#39;Coma&#39; system to get a
+application settings implementation.</p>
+<pre><code class="lang-C#">var appSettings = &quot;%APPDATA%/AppSettings.toml&quot;;
+var userSettings = &quot;%USERDATA%/UserSettings.toml&quot;;
+
+// Merge only works when files exist on disk, user has to do the initial creation manually
+File.WriteAllText(appSettings, &quot;IdleTimeout = 00:15:00&quot;);
+File.WriteAllText(userSettings,
+@&quot;
+[User] 
+UserName = &quot;&quot;Test&quot;&quot;
+&quot;);
+IConfigSource appSource = null;
+IConfigSource userSource = null;
+
+// merge both TOML files into one settings object
+var config = Config.CreateAs()
+    .MappedToType(() =&gt; new AppSettings())
+    .StoredAs(store =&gt; store
+        .File(appSettings).AccessedBySource(&quot;app&quot;, out appSource).MergeWith(
+            store.File(userSettings).AccessedBySource(&quot;user&quot;, out userSource)))
+    .Initialize();
+
+// Read the settings
+var oldTimeout = config.Get(s =&gt; s.IdleTimeout);
+var oldUserName = config.Get(s =&gt; s.User.UserName);
+
+// Save settings. When no override source is given, the system will save back to the file
+// where the setting was loaded from during the merge operation
+config.Set(s =&gt; s.User.UserName, oldUserName + &quot;_New&quot;);
+
+// Save setting into user file. User setting will override app setting until the setting
+// gets cleared from the user file
+config.Set(s =&gt; s.IdleTimeout, oldTimeout + TimeSpan.FromMinutes(15), appSource);
+
+// Now clear the user setting again, after that the app setting will be returned when accessing the setting again
+config.Clear(s =&gt; s.IdleTimeout, userSource);
+
+// Now clear the setting without a scope, this will clear it from the currently active source.
+// In this case the setting will be cleared from both files =&gt; The setting will not be in any config anymore
+config.Clear(s =&gt; s.IdleTimeout);
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/dfx/howto/coma.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

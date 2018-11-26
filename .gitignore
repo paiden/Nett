@@ -1,7 +1,6 @@
 #File Types
 *.cache
 *.coverage
-*.html
 *.log
 *.nupkg
 *.old
@@ -19,10 +18,6 @@ obj
 packages
 PerfTestResults
 data
-
-#Docfx stuff
-*.manifest
-toc.yml
 
 # Tagtemplate(d) files
 Shared.targets

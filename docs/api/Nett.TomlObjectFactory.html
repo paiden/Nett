@@ -1,0 +1,3618 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class TomlObjectFactory
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class TomlObjectFactory
+   ">
+    <meta name="generator" content="docfx 2.40.11.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Nett.TomlObjectFactory">
+  
+  
+  <h1 id="Nett_TomlObjectFactory" data-uid="Nett.TomlObjectFactory" class="text-break">Class TomlObjectFactory
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">TomlObjectFactory</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Nett.html">Nett</a></h6>
+  <h6><strong>Assembly</strong>: Nett.dll</h6>
+  <h5 id="Nett_TomlObjectFactory_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class TomlObjectFactory</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L10">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Boolean_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Boolean)">Add(TomlTable, String, Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlBool&gt; Add(this TomlTable table, string key, bool value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlBool.html">TomlBool</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Boolean__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L35">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Boolean__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Boolean})">Add(TomlTable, String, IEnumerable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;bool&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTime__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.DateTime%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L56">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTime__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.DateTime})">Add(TomlTable, String, IEnumerable&lt;DateTime&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;DateTime&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.DateTime</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTimeOffset__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.DateTimeOffset%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L53">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTimeOffset__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.DateTimeOffset})">Add(TomlTable, String, IEnumerable&lt;DateTimeOffset&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;DateTimeOffset&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.DateTimeOffset</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Double__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Double%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L47">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Double__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Double})">Add(TomlTable, String, IEnumerable&lt;Double&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;double&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int32__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L44">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int32__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Int32})">Add(TomlTable, String, IEnumerable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;int&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int64__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Int64%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L41">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int64__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Int64})">Add(TomlTable, String, IEnumerable&lt;Int64&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;long&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Single__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L50">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Single__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Single})">Add(TomlTable, String, IEnumerable&lt;Single&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;float&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Single</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L38">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_String__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.String})">Add(TomlTable, String, IEnumerable&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;string&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_TimeSpan__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.TimeSpan%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L59">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_TimeSpan__" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.TimeSpan})">Add(TomlTable, String, IEnumerable&lt;TimeSpan&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Add(this TomlTable table, string key, IEnumerable&lt;TimeSpan&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L28">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_DateTimeOffset_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.DateTimeOffset)">Add(TomlTable, String, DateTimeOffset)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlOffsetDateTime&gt; Add(this TomlTable table, string key, DateTimeOffset value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTimeOffset</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlOffsetDateTime.html">TomlOffsetDateTime</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Double_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L22">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Double_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Double)">Add(TomlTable, String, Double)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlFloat&gt; Add(this TomlTable table, string key, double value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlFloat.html">TomlFloat</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Int32_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L19">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Int32_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Int32)">Add(TomlTable, String, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlInt&gt; Add(this TomlTable table, string key, int value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlInt.html">TomlInt</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Int64_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L16">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Int64_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Int64)">Add(TomlTable, String, Int64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlInt&gt; Add(this TomlTable table, string key, long value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlInt.html">TomlInt</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Object_Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Object%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L70">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Object_Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Object,Nett.TomlTable.TableTypes)">Add(TomlTable, String, Object, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlTable&gt; Add(this TomlTable table, string key, object obj, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">tableType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlTable.html">TomlTable</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Single_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L25">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_Single_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.Single)">Add(TomlTable, String, Single)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlFloat&gt; Add(this TomlTable table, string key, float value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Single</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlFloat.html">TomlFloat</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_String_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L13">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_String_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.String)">Add(TomlTable, String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlString&gt; Add(this TomlTable table, string key, string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlString.html">TomlString</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_TimeSpan_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add(Nett.TomlTable%2CSystem.String%2CSystem.TimeSpan)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L31">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add_Nett_TomlTable_System_String_System_TimeSpan_" data-uid="Nett.TomlObjectFactory.Add(Nett.TomlTable,System.String,System.TimeSpan)">Add(TomlTable, String, TimeSpan)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlDuration&gt; Add(this TomlTable table, string key, TimeSpan value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlDuration.html">TomlDuration</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add__1_Nett_TomlTable_System_String___0_Nett_TomlObjectFactory_RequireTomlObject___0__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add%60%601(Nett.TomlTable%2CSystem.String%2C%60%600%2CNett.TomlObjectFactory.RequireTomlObject%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L92">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add__1_Nett_TomlTable_System_String___0_Nett_TomlObjectFactory_RequireTomlObject___0__" data-uid="Nett.TomlObjectFactory.Add``1(Nett.TomlTable,System.String,``0,Nett.TomlObjectFactory.RequireTomlObject{``0})">Add&lt;T&gt;(TomlTable, String, T, TomlObjectFactory.RequireTomlObject&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;T&gt; Add&lt;T&gt;(this TomlTable table, string key, T obj, TomlObjectFactory.RequireTomlObject&lt;T&gt; _ = null)
+
+    where T : TomlObject</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.RequireTomlObject-1.html">TomlObjectFactory.RequireTomlObject</a>&lt;T&gt;</td>
+        <td><span class="parametername">_</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add__1_Nett_TomlTable_System_String_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add%60%601(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IDictionary%7BSystem.String%2C%60%600%7D%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L63">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add__1_Nett_TomlTable_System_String_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.Add``1(Nett.TomlTable,System.String,System.Collections.Generic.IDictionary{System.String,``0},Nett.TomlTable.TableTypes)">Add&lt;T&gt;(TomlTable, String, IDictionary&lt;String, T&gt;, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlTable&gt; Add&lt;T&gt;(this TomlTable table, string key, IDictionary&lt;string, T&gt; tableData, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</td>
+        <td><span class="parametername">tableData</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">tableType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlTable.html">TomlTable</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Add__1_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Add%60%601(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7B%60%600%7D%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Add.cs/#L82">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Add_" data-uid="Nett.TomlObjectFactory.Add*"></a>
+  <h4 id="Nett_TomlObjectFactory_Add__1_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.Add``1(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{``0},Nett.TomlTable.TableTypes)">Add&lt;T&gt;(TomlTable, String, IEnumerable&lt;T&gt;, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlTableArray&gt; Add&lt;T&gt;(this TomlTable table, string key, IEnumerable&lt;T&gt; tableArray, TomlTable.TableTypes tableType = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="parametername">tableArray</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">tableType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlTableArray.html">TomlTableArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Boolean_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L13">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Boolean_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Boolean)">CreateAttached(TomlObject, Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlBool CreateAttached(this TomlObject rootSource, bool value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlBool.html">TomlBool</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Boolean__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L32">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Boolean__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.Boolean})">CreateAttached(TomlObject, IEnumerable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;bool&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_DateTime__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.DateTime%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L53">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_DateTime__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.DateTime})">CreateAttached(TomlObject, IEnumerable&lt;DateTime&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;DateTime&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.DateTime</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_DateTimeOffset__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.DateTimeOffset%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L56">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_DateTimeOffset__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.DateTimeOffset})">CreateAttached(TomlObject, IEnumerable&lt;DateTimeOffset&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;DateTimeOffset&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.DateTimeOffset</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Double__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.Double%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L44">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Double__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.Double})">CreateAttached(TomlObject, IEnumerable&lt;Double&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;double&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Int32__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L41">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Int32__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.Int32})">CreateAttached(TomlObject, IEnumerable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;int&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Int64__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.Int64%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L38">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Int64__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.Int64})">CreateAttached(TomlObject, IEnumerable&lt;Int64&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;long&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Single__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L47">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_Single__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.Single})">CreateAttached(TomlObject, IEnumerable&lt;Single&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;float&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Single</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L35">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_String__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.String})">CreateAttached(TomlObject, IEnumerable&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;string&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_TimeSpan__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7BSystem.TimeSpan%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L50">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Collections_Generic_IEnumerable_System_TimeSpan__" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Collections.Generic.IEnumerable{System.TimeSpan})">CreateAttached(TomlObject, IEnumerable&lt;TimeSpan&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateAttached(this TomlObject rootSource, IEnumerable&lt;TimeSpan&gt; values)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
+        <td><span class="parametername">values</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L28">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_DateTimeOffset_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.DateTimeOffset)">CreateAttached(TomlObject, DateTimeOffset)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlOffsetDateTime CreateAttached(this TomlObject rootSource, DateTimeOffset value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTimeOffset</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlOffsetDateTime.html">TomlOffsetDateTime</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Double_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L22">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Double_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Double)">CreateAttached(TomlObject, Double)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlFloat CreateAttached(this TomlObject rootSource, double value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlFloat.html">TomlFloat</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Int64_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L19">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Int64_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Int64)">CreateAttached(TomlObject, Int64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlInt CreateAttached(this TomlObject rootSource, long value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlInt.html">TomlInt</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Object_Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.Object%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L60">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_Object_Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.Object,Nett.TomlTable.TableTypes)">CreateAttached(TomlObject, Object, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlTable CreateAttached(this TomlObject rootSource, object obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_String_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L16">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_String_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.String)">CreateAttached(TomlObject, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlString CreateAttached(this TomlObject rootSource, string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlString.html">TomlString</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_TimeSpan_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject%2CSystem.TimeSpan)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L25">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached_Nett_TomlObject_System_TimeSpan_" data-uid="Nett.TomlObjectFactory.CreateAttached(Nett.TomlObject,System.TimeSpan)">CreateAttached(TomlObject, TimeSpan)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlDuration CreateAttached(this TomlObject rootSource, TimeSpan value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlDuration.html">TomlDuration</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached__1_Nett_TomlObject_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached%60%601(Nett.TomlObject%2CSystem.Collections.Generic.IDictionary%7BSystem.String%2C%60%600%7D%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L77">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached__1_Nett_TomlObject_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.CreateAttached``1(Nett.TomlObject,System.Collections.Generic.IDictionary{System.String,``0},Nett.TomlTable.TableTypes)">CreateAttached&lt;TValue&gt;(TomlObject, IDictionary&lt;String, TValue&gt;, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlTable CreateAttached&lt;TValue&gt;(this TomlObject rootSource, IDictionary&lt;string, TValue&gt; tableData, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, TValue&gt;</td>
+        <td><span class="parametername">tableData</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TValue</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateAttached__1_Nett_TomlObject_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateAttached%60%601(Nett.TomlObject%2CSystem.Collections.Generic.IEnumerable%7B%60%600%7D%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L92">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateAttached_" data-uid="Nett.TomlObjectFactory.CreateAttached*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateAttached__1_Nett_TomlObject_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.CreateAttached``1(Nett.TomlObject,System.Collections.Generic.IEnumerable{``0},Nett.TomlTable.TableTypes)">CreateAttached&lt;T&gt;(TomlObject, IEnumerable&lt;T&gt;, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlTableArray CreateAttached&lt;T&gt;(this TomlObject rootSource, IEnumerable&lt;T&gt; obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTableArray.html">TomlTableArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateEmptyAttachedArray_Nett_TomlObject_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateEmptyAttachedArray(Nett.TomlObject)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L116">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateEmptyAttachedArray_" data-uid="Nett.TomlObjectFactory.CreateEmptyAttachedArray*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateEmptyAttachedArray_Nett_TomlObject_" data-uid="Nett.TomlObjectFactory.CreateEmptyAttachedArray(Nett.TomlObject)">CreateEmptyAttachedArray(TomlObject)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlArray CreateEmptyAttachedArray(this TomlObject rootSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlArray.html">TomlArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateEmptyAttachedTable_Nett_TomlObject_Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateEmptyAttachedTable(Nett.TomlObject%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L122">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateEmptyAttachedTable_" data-uid="Nett.TomlObjectFactory.CreateEmptyAttachedTable*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateEmptyAttachedTable_Nett_TomlObject_Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.CreateEmptyAttachedTable(Nett.TomlObject,Nett.TomlTable.TableTypes)">CreateEmptyAttachedTable(TomlObject, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlTable CreateEmptyAttachedTable(this TomlObject rootSource, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_CreateEmptyAttachedTableArray_Nett_TomlObject_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.CreateEmptyAttachedTableArray(Nett.TomlObject)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Create.cs/#L119">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_CreateEmptyAttachedTableArray_" data-uid="Nett.TomlObjectFactory.CreateEmptyAttachedTableArray*"></a>
+  <h4 id="Nett_TomlObjectFactory_CreateEmptyAttachedTableArray_Nett_TomlObject_" data-uid="Nett.TomlObjectFactory.CreateEmptyAttachedTableArray(Nett.TomlObject)">CreateEmptyAttachedTableArray(TomlObject)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlTableArray CreateEmptyAttachedTableArray(this TomlObject rootSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObject.html">TomlObject</a></td>
+        <td><span class="parametername">rootSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTableArray.html">TomlTableArray</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L9">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Boolean_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Boolean)">Update(TomlTable, String, Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlBool&gt; Update(this TomlTable table, string key, bool value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlBool.html">TomlBool</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Boolean__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Boolean%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L49">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Boolean__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Boolean})">Update(TomlTable, String, IEnumerable&lt;Boolean&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;bool&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTime__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.DateTime%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L70">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTime__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.DateTime})">Update(TomlTable, String, IEnumerable&lt;DateTime&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;DateTime&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.DateTime</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTimeOffset__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.DateTimeOffset%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L67">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_DateTimeOffset__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.DateTimeOffset})">Update(TomlTable, String, IEnumerable&lt;DateTimeOffset&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;DateTimeOffset&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.DateTimeOffset</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Double__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Double%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L61">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Double__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Double})">Update(TomlTable, String, IEnumerable&lt;Double&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;double&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int32__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L58">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int32__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Int32})">Update(TomlTable, String, IEnumerable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;int&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int64__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Int64%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L55">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Int64__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Int64})">Update(TomlTable, String, IEnumerable&lt;Int64&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;long&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Single__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L64">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_Single__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.Single})">Update(TomlTable, String, IEnumerable&lt;Single&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;float&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Single</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L52">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_String__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.String})">Update(TomlTable, String, IEnumerable&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;string&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_TimeSpan__.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.TimeSpan%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L73">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable_System_TimeSpan__" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{System.TimeSpan})">Update(TomlTable, String, IEnumerable&lt;TimeSpan&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlArray&gt; Update(this TomlTable table, string key, IEnumerable&lt;TimeSpan&gt; array)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlArray.html">TomlArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L21">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_DateTimeOffset_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.DateTimeOffset)">Update(TomlTable, String, DateTimeOffset)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlOffsetDateTime&gt; Update(this TomlTable table, string key, DateTimeOffset value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.DateTimeOffset</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlOffsetDateTime.html">TomlOffsetDateTime</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Double_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L18">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Double_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Double)">Update(TomlTable, String, Double)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlFloat&gt; Update(this TomlTable table, string key, double value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlFloat.html">TomlFloat</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Int64_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L15">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Int64_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Int64)">Update(TomlTable, String, Int64)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlInt&gt; Update(this TomlTable table, string key, long value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlInt.html">TomlInt</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Object_Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.Object%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L35">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_Object_Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.Object,Nett.TomlTable.TableTypes)">Update(TomlTable, String, Object, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlTable&gt; Update(this TomlTable table, string key, object obj, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlTable.html">TomlTable</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_String_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L12">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_String_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.String)">Update(TomlTable, String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlString&gt; Update(this TomlTable table, string key, string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlString.html">TomlString</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_TimeSpan_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update(Nett.TomlTable%2CSystem.String%2CSystem.TimeSpan)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L24">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update_Nett_TomlTable_System_String_System_TimeSpan_" data-uid="Nett.TomlObjectFactory.Update(Nett.TomlTable,System.String,System.TimeSpan)">Update(TomlTable, String, TimeSpan)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlDuration&gt; Update(this TomlTable table, string key, TimeSpan value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlDuration.html">TomlDuration</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update__1_Nett_TomlTable_System_String_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update%60%601(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IDictionary%7BSystem.String%2C%60%600%7D%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L28">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update__1_Nett_TomlTable_System_String_System_Collections_Generic_IDictionary_System_String___0__Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.Update``1(Nett.TomlTable,System.String,System.Collections.Generic.IDictionary{System.String,``0},Nett.TomlTable.TableTypes)">Update&lt;T&gt;(TomlTable, String, IDictionary&lt;String, T&gt;, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlTable&gt; Update&lt;T&gt;(this TomlTable table, string key, IDictionary&lt;string, T&gt; tableData, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</td>
+        <td><span class="parametername">tableData</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlTable.html">TomlTable</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory_Update__1_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory.Update%60%601(Nett.TomlTable%2CSystem.String%2CSystem.Collections.Generic.IEnumerable%7B%60%600%7D%2CNett.TomlTable.TableTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L40">View Source</a>
+  </span>
+  <a id="Nett_TomlObjectFactory_Update_" data-uid="Nett.TomlObjectFactory.Update*"></a>
+  <h4 id="Nett_TomlObjectFactory_Update__1_Nett_TomlTable_System_String_System_Collections_Generic_IEnumerable___0__Nett_TomlTable_TableTypes_" data-uid="Nett.TomlObjectFactory.Update``1(Nett.TomlTable,System.String,System.Collections.Generic.IEnumerable{``0},Nett.TomlTable.TableTypes)">Update&lt;T&gt;(TomlTable, String, IEnumerable&lt;T&gt;, TomlTable.TableTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TomlObjectFactory.Result&lt;TomlTableArray&gt; Update&lt;T&gt;(this TomlTable table, string key, IEnumerable&lt;T&gt; items, TomlTable.TableTypes type = TomlTable.TableTypes.Default)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.html">TomlTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="parametername">items</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Nett.TomlTable.TableTypes.html">TomlTable.TableTypes</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Nett.TomlObjectFactory.Result-1.html">TomlObjectFactory.Result</a>&lt;<a class="xref" href="Nett.TomlTableArray.html">TomlTableArray</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/paiden/Nett/new/topic/newdoc/apiSpec/new?filename=Nett_TomlObjectFactory.md&amp;value=---%0Auid%3A%20Nett.TomlObjectFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/Source/Nett/TomlObjectFactory.Update.cs/#L6" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

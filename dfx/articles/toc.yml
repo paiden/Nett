@@ -1,2 +1,10 @@
-- name: Introduction
+- name: Intro 
   href: intro.md
+- name: Common Pitfalls
+  href: pitfalls.md
+- name: Conversion
+  href: typeconv.md
+- name: Configuration
+  href: config.md
+- name: TOML spec
+  href: spec.md

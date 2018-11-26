@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>How to change key format for serialization </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="How to change key format for serialization ">
+    <meta name="generator" content="docfx 2.40.11.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="how-to-change-key-format-for-serialization">How to change key format for serialization</h1>
+
+<p>This section shows how to change the serialized TOML key format</p>
+<pre><code class="lang-csharp">public class Root
+{
+    public int firstprop { get; set; } = 1;
+    public int secondProp { get; set; } = 2;
+    public int ThirdProp { get; set; } = 3;
+    public int FOURTHPROP { get; set; } = 4;
+}
+
+var pascalSettings = TomlSettings.Create(s =&gt; s
+    .ConfigurePropertyMapping(m =&gt; m
+        .UseKeyGenerator(standardGenerators =&gt; standardGenerators.PascalCase)));
+
+var upperSettings = TomlSettings.Create(s =&gt; s
+    .ConfigurePropertyMapping(m =&gt; m
+        .UseKeyGenerator(standardGenerators =&gt; standardGenerators.UperCase)));
+
+var lowerSettings = TomlSettings.Create(s =&gt; s
+    .ConfigurePropertyMapping(m =&gt; m
+        .UseKeyGenerator(standardGenerators =&gt; standardGenerators.LowerCase)));
+
+var camelSettings = TomlSettings.Create(s =&gt; s
+    .ConfigurePropertyMapping(m =&gt; m
+        .UseKeyGenerator(standardGenerators =&gt; standardGenerators.LowerCase)));
+
+var defaultToml = Toml.WriteString(new Root());
+
+var pascal = Toml.WriteString(new Root(), pascalSettings);
+
+var upper = Toml.WriteString(new Root(), upperSettings);
+
+var lower = Toml.WriteString(new Root(), lowerSettings);
+
+var camel = Toml.WriteString(new Root(), camelSettings);
+</code></pre><p>Default TOML:</p>
+<pre><code class="lang-toml">firstprop = 1
+secondProp = 2
+ThirdProp = 3
+FOURTHPROP = 4
+</code></pre><p>Pascal:</p>
+<pre><code class="lang-toml">Firstprop = 1
+SecondProp = 2
+ThirdProp = 3
+FOURTHPROP = 4
+</code></pre><p>Upper:</p>
+<pre><code class="lang-toml">FIRSTPROP = 1
+SECONDPROP = 2
+THIRDPROP = 3
+FOURHTPROP = 4
+</code></pre><p>Lower:</p>
+<pre><code class="lang-toml">firstprop = 1
+secondprop = 2
+thirdprop = 3
+fourthprop = 4
+</code></pre><p>Camel:</p>
+<pre><code class="lang-toml">firstprop = 1
+secondProp = 2
+ThirdProp = 3
+FOURTHPROP = 4
+</code></pre><h1 id="how-to-ignore-key-format-for-property-mapping">How to ignore key format for property mapping</h1>
+<p>TOML is case sensitive. By default <code>Nett</code> will not map TOML values to
+the corresponding object property if they are not exactly the same.</p>
+<p>You can make Nett ignore the case of the target property by using 
+the <code>IgnoreCase</code> target property selector:</p>
+<pre><code class="lang-csharp">public class TestObject
+{
+    public string TestProp { get; set; }
+}
+
+// Create custom settings with &#39;IgnoreCase&#39; property selector enabled
+var settings = TomlSettings.Create(s =&gt; s
+    .ConfigurePropertyMapping(m =&gt; m
+        .UseTargetPropertySelector(standardSelectors =&gt; standardSelectors.IgnoreCase)));
+
+const string TomlInput = &quot;TestProp = &#39;x&#39;&quot;;
+
+// Deserialize TOML file content with default settings
+var exact = Toml.ReadString&lt;TestObject&gt;(TomlInput);
+
+// Deserialize TOML file content with custom settings enabled
+var ignoreCase = Toml.ReadString&lt;TestObject&gt;(TomlInput, settings);
+
+Debug.Assert(exact.TestProp == null);
+Debug.Assert(ignoreCase.TestProp == &quot;x&quot;);
+</code></pre><p>Warning: If the <code>IgnoreCase</code> target property selector is used
+and the input TOML has multiple keys that only differ in casing</p>
+<pre><code class="lang-toml">testprop = 1
+TestProp = 2
+</code></pre><p>The mapping behavior is undefined.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/paiden/Nett/blob/topic/newdoc/dfx/howto/keyformat.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
