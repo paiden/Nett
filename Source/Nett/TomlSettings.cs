@@ -94,6 +94,7 @@
         internal IEnumerable<PropertyInfo> GetSerializationProperties(Type t)
         {
             return t.GetProperties(PropBindingFlags)
+                .Where(pi => pi.GetIndexParameters().Length <= 0)
                 .Where(pi => !this.IsPropertyIgnored(t, pi));
         }
 

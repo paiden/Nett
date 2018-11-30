@@ -5,6 +5,8 @@ using System.Linq;
 using FluentAssertions;
 using Nett.Tests.Util;
 using Nett.Tests.Util.TestData;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Nett.Tests
@@ -373,6 +375,47 @@ r = 1";
 
             // Assert
             converted.ShouldBeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void VerifyIssue65_WriteToml_WhenObjectIsJsonStructure_CreatesCorrectContent()
+        {
+            // Arrange
+            const string jsonString = @"{""MongoURL"":""localhost"",""ElasticsearchUrls"":""http://localhost:9200""}";
+            object configurationObject = JsonConvert.DeserializeObject(jsonString);
+
+            // Act
+            string contents = Toml.WriteString(configurationObject);
+
+            // Assert
+            contents.ShouldBeSemanticallyEquivalentTo(
+                @"
+Type = ""Object""
+HasValues = true
+First = [[]]
+Last = [[]]
+Count = 2
+Root = [[[]], [[]]]
+Path = """"");
+        }
+
+
+        [Fact]
+        public void VerifyIssue65_WriteToml_WhenObjectIsJsonStructureDict_CreatesCorrectContent()
+        {
+            // Arrange
+            const string jsonString = @"{""MongoURL"":""localhost"",""ElasticsearchUrls"":""http://localhost:9200""}";
+            JObject configurationObject = (JObject)JsonConvert.DeserializeObject(jsonString);
+            var serMe = configurationObject.ToObject<Dictionary<string, object>>();
+
+            // Act
+            string contents = Toml.WriteString(serMe);
+
+            // Assert
+            contents.ShouldBeSemanticallyEquivalentTo(
+                @"
+MongoURL = ""localhost""
+ElasticsearchUrls = ""http://localhost:9200""");
         }
 
         public class TestTable
