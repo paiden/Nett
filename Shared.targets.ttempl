@@ -1,0 +1,15 @@
+<!-- This file is auto generated on build. Changes to it will be lost. Modify Shared.targets.ttempl instead -->
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NettAssemblyVersion>$NETT_VERSION_2DXX$</NettAssemblyVersion>
+    <NettInformationalVersion>$NETT_VERSION$</NettInformationalVersion>
+    <NettFileVersion>$NETT_VERSION_4D$</NettFileVersion>
+    <ComaAssemblyVersion>$COMA_VERSION_2DXX$</ComaAssemblyVersion>
+    <ComaInformationalVersion>$COMA_VERSION$</ComaInformationalVersion>
+    <ComaFileVersion>$COMA_VERSION_4D$</ComaFileVersion>
+    <AspNettAssemblyVersion>$ASPNETT_VERSION_2DXX$</AspNettAssemblyVersion>
+    <AspNettInformationalVersion>$ASPNETT_VERSION$</AspNettInformationalVersion>
+    <AspNettFileVersion>$ASPNETT_VERSION_4D$</AspNettFileVersion>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)Infrastructure/Nett.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+</Project>

@@ -23,3 +23,6 @@ data
 #Docfx stuff
 *.manifest
 toc.yml
+
+# Tagtemplate(d) files
+Shared.targets

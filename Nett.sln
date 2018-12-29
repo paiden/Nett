@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett", "Source\Nett\Nett.csproj", "{11E1BD88-FAB6-407D-B3EF-42A291D4AA14}"
 EndProject
@@ -16,6 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Infrastructure\Nett.ruleset = Infrastructure\Nett.ruleset
 		README.md = README.md
 		Shared.targets = Shared.targets
+		Shared.targets.ttempl = Shared.targets.ttempl
+		tagger.ps1 = tagger.ps1
+		tags.ps1 = tags.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{9A668C41-A34B-4E30-9D2A-B903C9D4985D}"

@@ -2,9 +2,9 @@
   <Import Project="../../Shared.targets" />
   <PropertyGroup>
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <AssemblyVersion>$(NettVersion)</AssemblyVersion>
-    <InformationalVersion>$(NettVersion)</InformationalVersion>
-    <FileVersion>$(Version)</FileVersion>
+    <AssemblyVersion>$(NettAssemblyVersion)</AssemblyVersion>
+    <InformationalVersion>$(NettInformationalVersion)</InformationalVersion>
+    <FileVersion>$(NettFileVersion)</FileVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Nett.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <SignAssembly>true</SignAssembly>

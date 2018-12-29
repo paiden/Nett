@@ -38,11 +38,11 @@ Param(
 
     [Alias("ngp")]
     [parameter(ParameterSetName="pack")]
-    [string] $pack,
+    [switch] $pack,
 
     [Alias("up")]
     [parameter(ParameterSetName="pack")]
-    [switch]$push,
+    [switch]$pub,
 
     # Multi set parameters
 
@@ -70,6 +70,8 @@ function Invoke-ExpandedChecked {
     }
 }
 
+. ./tags.ps1
+
 $basePath = & .\Infrastructure\vswhere.exe -latest -property installationPath
 $msbuild = Join-Path $basePath  ".\MSBuild\15.0\bin\msbuild.exe"
 $buildItem = Join-Path -Path $PSScriptRoot -ChildPath Nett.sln
@@ -82,29 +84,63 @@ else {
     $msbuild = "`"$msbuild`"";
 }
 
-if(-not $nobuild) {
+Invoke-Expression ".\tagger.ps1"
+
+if (-not $nobuild) {
     $msBuildOptions = "/p:Configuration=$configuration", "/m", "/nologo"
     $msBuildOptions += $rest
     Invoke-ExpandedChecked { & $msbuild $buildItem $msBuildOptions }
 }
 
-if($pack) {
-    $v = $pack.ToString()
+if ($pack) {
     $nuspecNett = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec)`""
     $nuspecComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Coma.nuspec)`""
     $aspNettComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.AspNet.nuspec)`""
     $props = "`"configuration=$configuration`""
 
-    if($configuration -eq "Debug") { $v += '-debug' }
-
     New-Item -ItemType Directory -Path ngp -Force
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $v -Properties $props -OutputDirectory ngp}
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $v -Properties $props -OutputDirectory ngp}
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $aspNettComa -Version $v -Properties $props -OutputDirectory ngp}
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $NETT_VERSION -Properties $props -OutputDirectory ngp}
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $COMA_VERSION -Properties $props -OutputDirectory ngp}
+    Invoke-ExpandedChecked { & nuget.exe pack -symbols $aspNettComa -Version $ASPNETT_VERSION -Properties $props -OutputDirectory ngp}
 }
 
-if($push) {
-    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
-    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.Coma.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
-    Invoke-ExpandedChecked { & nuget.exe push ngp\Nett.AspNet.$v.nupkg -Source 'https://www.nuget.org/api/v2/package' }
+if($pub) {
+    # Try to validate release notes are up to date before pushing new packages
+    $rnf = "Readme.md"
+    $rn = Get-Content $rnf
+    $rn | Select-String -Pattern "XXXX-XX-XX" | ForEach-Object { "$rnf Line $($_.LineNumber): Unspecified release date" } | Write-Host -ForegroundColor Red
+    $nrvc = ($rn | Select-String -pattern $NETT_VERSION | Measure-Object).Count
+    $crvc = ($rn | Select-String -Pattern $COMA_VERSION | Measure-Object).Count
+    $arvc = ($rn | Select-String -Pattern $ASPNETT_VERSION | Measure-Object).Count
+
+    if ($nrvc -le 0) { Write-Host "Failed to find 'Nett' v$NETT_VERSION release notes." -ForegroundColor Red }
+    if ($crvc -le 0) { Write-Host "Failed to find 'Nett.Coma' v$COMA_VERSION release notes." -ForegroundColor Red }
+    if ($arvc -le 0) { Write-Host "Failed to find 'Nett.AspNet' v$ASPNETT_VERSION release notes." -ForegroundColor Red }
+
+    # Some version number checking
+    $np = "ngp\Nett.$NETT_VERSION.nupkg"
+    $cp = "ngp\Nett.Coma.$COMA_VERSION.nupkg"
+    $ap = "ngp\Nett.AspNet.$ASPNETT_VERSION.nupkg"
+
+    if (-not (Test-Path $np)) { throw "Nuget package $np does not exist on disk. Aborting push." }
+    if (-not (Test-Path $cp)) { throw "Nuget package $cp does not exist on disk. Aborting push." }
+    if (-not (Test-Path $ap)) { throw "Nuget pakcage $ap does not eixst on disk. Aborting push." }
+
+    Get-ChildItem Source\Nett\bin\$configuration\netstandard2.0\Nett.dll | ForEach-Object { "Nett.dll: $($_.VersionInfo.FileVersion)" } |  Write-Host
+    Get-ChildItem Source\Nett.Coma\bin\$configuration\netstandard2.0\Nett.Coma.dll | ForEach-Object { "Nett.Coma.dll: $($_.VersionInfo.FileVersion)" } | Write-Host
+    Get-ChildItem Source\Nett.AspNet\bin\$configuration\netstandard2.0\Nett.AspNet.dll | ForEach-Object { "Nett.AspNet.dll: $($_.VersionInfo.FileVersion)" } | Write-Host
+
+    Write-Host $np
+    Write-Host $cp
+    Write-Host $ap
+
+    $confirm = Read-Host "Please check for errors and correct version numbers. Continue to publish these '$configuration' packages? [y/n]"
+    if ($confirm -match "[yY]") {
+        Invoke-ExpandedChecked { & nuget.exe push $np -Source 'https://www.nuget.org/api/v2/package' }
+        Invoke-ExpandedChecked { & nuget.exe push $cp -Source 'https://www.nuget.org/api/v2/package' }
+        Invoke-ExpandedChecked { & nuget.exe push $ap -Source 'https://www.nuget.org/api/v2/package' }
+    }
+    else {
+        Write-Output "Push was aborted by user."
+    }
 }

@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
     <NuspecFile>../../Coma.nuspec</NuspecFile>
-    <AssemblyVersion>$(ComaVersion)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <InformationalVersion>$(ComaVersion)</InformationalVersion>
+    <AssemblyVersion>$(ComaAssemblyVersion)</AssemblyVersion>
+    <FileVersion>$(ComaFileVersion)</FileVersion>
+    <InformationalVersion>$(ComaInformationalVersion)</InformationalVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Nett.Coma.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <SignAssembly>true</SignAssembly>
