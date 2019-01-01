@@ -484,10 +484,11 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-**v0.11.0** --- XXXX-XX-XX
+**v0.10.1** --- 2019-01-01
 Nett: 
 + Add: TomlObjects implement `ToString()` [#63](https://github.com/paiden/Nett/issues/51)
 + Fix: `Get<object>` automatically maps to equivalent CLR type [#63](https://github.com/paiden/Nett/issues/51)
++ Fix: DateTime Read/Write format corruption [#66](https://github.com/paiden/Nett/issues/66)
 
 **v0.10.0** --- 2018-10-18
 
