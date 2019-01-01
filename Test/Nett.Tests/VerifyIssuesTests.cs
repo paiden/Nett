@@ -418,6 +418,20 @@ MongoURL = ""localhost""
 ElasticsearchUrls = ""http://localhost:9200""");
         }
 
+        [Fact]
+        public void VerifyIssue66_ReadWriteToml_DoesWriteDateTimeWithSpace()
+        {
+            // Arrane
+            const string input = @"x = 2018-12-26 22:31:33.109707-07:00";
+
+            // Act
+            var read = Nett.Toml.ReadString(input);
+            var written = Toml.WriteString(read);
+
+            // Assert
+            written.Trim().Should().Be(input);
+        }
+
         public class TestTable
         {
             public string label { get; set; }
