@@ -81,6 +81,7 @@
     <Compile Include="Functional\InlineTableTests.Read.cs" />
     <Compile Include="Functional\ParserErrorMessageTests.cs" />
     <Compile Include="Functional\CustomPropertyMappingTests.cs" />
+    <Compile Include="Functional\Polymorphism.cs" />
     <Compile Include="Functional\ReadInWriteOutTests.cs" />
     <Compile Include="Functional\InlineTableTests.Write.cs" />
     <Compile Include="Functional\V050CompatTests.cs" />

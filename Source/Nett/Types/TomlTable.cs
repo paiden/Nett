@@ -171,14 +171,13 @@
         {
             if (t == Types.TomlTableType) { return this; }
 
-            var result = this.Root.Settings.GetActivatedInstance(t);
-
             var conv = this.Root.Settings.TryGetConverter(Types.TomlTableType, t);
             if (conv != null)
             {
                 return conv.Convert(this.Root, this, t);
             }
 
+            var result = this.Root.Settings.GetActivatedInstance(t);
             foreach (var r in this.rows)
             {
                 var targetProperty = this.Root.Settings.TryGetMappingProperty(result.GetType(), r.Key.Value);

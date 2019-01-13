@@ -432,6 +432,44 @@ ElasticsearchUrls = ""http://localhost:9200""");
             written.Trim().Should().Be(input);
         }
 
+        [Fact]
+        public void VerifyIssue67_CreatePolyFromTable_UsesConverterToCreateObj()
+        {
+            var write = new Root()
+            {
+                Items = new List<B>()
+                {
+                    new C(),
+                    new D(),
+                }
+            };
+
+            var t = Toml.WriteString(write);
+
+            var config = TomlSettings.Create(cfg => cfg
+                .ConfigureType<B>(tc => tc
+                    .WithConversionFor<TomlTable>(c => c
+                        .FromToml(tbl => PolyCreate(tbl)))));
+
+            var read = Toml.ReadString<Root>(t, config);
+
+            B PolyCreate(TomlTable table)
+            {
+                if (table.Get<string>(nameof(B.Type)) == nameof(C))
+                {
+                    return new C();
+                }
+                else if (table.Get<string>(nameof(B.Type)) == nameof(D))
+                {
+                    return new D();
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
         public class TestTable
         {
             public string label { get; set; }
@@ -450,6 +488,37 @@ ElasticsearchUrls = ""http://localhost:9200""");
         public class MyObject
         {
             public float MyFloat { get; set; }
+        }
+
+        public abstract class B
+        {
+            public string Type { get; set; }
+
+            public B(string t)
+            {
+                this.Type = t;
+            }
+        }
+
+        public class C : B
+        {
+            public C()
+                : base(nameof(C))
+            {
+            }
+        }
+
+        public class D : B
+        {
+            public D()
+                : base(nameof(D))
+            {
+            }
+        }
+
+        public class Root
+        {
+            public List<B> Items { get; set; } = new List<B>();
         }
 
         public class MultiDimArray
