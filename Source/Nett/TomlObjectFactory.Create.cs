@@ -65,6 +65,11 @@ namespace Nett
                 throw new ArgumentException(string.Format(TomlObjectCreateNotAllowed2A, nameof(obj), to.ReadableTypeName));
             }
 
+            if (obj is IResult fr)
+            {
+                throw new ArgumentException($"Cannot add factory result object of type '{fr.GetType()}'.");
+            }
+
             var t = TomlTable.CreateFromComplexObject(rootSource.Root, obj, type);
             return t;
         }

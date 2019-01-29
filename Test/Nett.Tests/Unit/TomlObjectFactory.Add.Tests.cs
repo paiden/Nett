@@ -86,7 +86,7 @@ namespace Nett.Tests.Unit
             var tbl = Toml.Create();
 
             // Act
-            var newTbl = tbl.Add("x", FooClass.Foo1);
+            var newTbl = tbl.Add("x", FooClass.Foo1).Added;
 
             // Assert
             FooClass.Foo1.AssertIs(tbl["x"]);
@@ -100,7 +100,7 @@ namespace Nett.Tests.Unit
             var tbl = Toml.Create();
 
             // Act
-            var newTbl = tbl.Add("x", FooDict.Dict1);
+            var newTbl = tbl.Add("x", FooDict.Dict1).Added;
 
             // Assert
             FooDict.Dict1.AssertIs(tbl["x"]);
@@ -115,7 +115,7 @@ namespace Nett.Tests.Unit
             var tbl = Toml.Create();
 
             // Act
-            var newTbl = tbl.Add("x", FooStruct.Foo1);
+            var newTbl = tbl.Add("x", FooStruct.Foo1).Added;
 
             // Assert
             FooStruct.Foo1.AssertIs(tbl["x"]);
@@ -129,7 +129,7 @@ namespace Nett.Tests.Unit
             var tbl = Toml.Create();
 
             // Act
-            var newTbl = tbl.Add("x", FooClassList.List1);
+            var newTbl = tbl.Add("x", FooClassList.List1).Added;
 
             // Assert
             FooClassList.List1.AssertIs(newTbl);
@@ -143,7 +143,7 @@ namespace Nett.Tests.Unit
             var tbl = Toml.Create();
 
             // Act
-            var newTbl = tbl.Add("x", FooClassList.List1);
+            var newTbl = tbl.Add("x", FooClassList.List1).Added;
 
             // Assert
             FooClassList.List1.AssertIs(newTbl);
@@ -201,6 +201,20 @@ namespace Nett.Tests.Unit
 
             // Act
             Action a = () => tbl.CreateAttached(Toml.Create());
+
+            // Assert
+            a.ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public void Add_WhenOjbectIsFactoryResult_ThrowsArg()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            var r = tbl.Add("x", false);
+
+            // Act
+            Action a = () => tbl.Add("y", r);
 
             // Assert
             a.ShouldThrow<ArgumentException>();

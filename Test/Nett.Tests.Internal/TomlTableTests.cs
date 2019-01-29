@@ -85,8 +85,7 @@ namespace Nett.Tests
         private TomlTable CreateSingleProp(string comment)
         {
             var tt = Toml.Create();
-            var i = tt.Add("r1", (long)1);
-            i.AddComment(new TomlComment(comment, CommentLocation.Prepend));
+            tt.Add("r1", (long)1).ConfigureAdded(ti => ti.AddComment(new TomlComment(comment, CommentLocation.Prepend)));
             return tt;
         }
 
@@ -97,7 +96,7 @@ namespace Nett.Tests
             t.Add("I", (long)1);
             t.Add("F", 1.0);
 
-            tt.Add("A", (System.Collections.Generic.IEnumerable<int>)(new int[] { 1, 2, 3 }));
+            tt.Added.Add("A", (System.Collections.Generic.IEnumerable<int>)(new int[] { 1, 2, 3 }));
 
             return t;
         }

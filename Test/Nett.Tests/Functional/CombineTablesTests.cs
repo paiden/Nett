@@ -29,22 +29,22 @@ namespace Nett.Tests.Functional
             X = Toml.Create();
             X.Add(XKey, XVal);
             X.Add(SameKey, XVal);
-            var xs = X.Add(SubTableKey, Toml.Create());
+            var xs = X.Add(SubTableKey, Toml.Create()).Added;
             xs.Add(SubTableValueKey, XSubTableVal);
 
             Y = Toml.Create();
             Y.Add(YKey, YVal);
             Y.Add(SameKey, YVal);
-            var ys = Y.Add(SubTableKey, X.CreateEmptyAttachedTable());
+            var ys = Y.Add(SubTableKey, X.CreateEmptyAttachedTable()).Added;
             ys.Add(SubTableValueKey, YSubTableVal);
 
             Dx = Toml.Create();
             Dx.Add("a", (long)1);
-            Dx.Add("c", (long)3).AddComment("xcc");
+            Dx.Add("c", (long)3).ConfigureAdded(c => c.AddComment("xcc"));
 
             Dy = Toml.Create();
-            Dy.Add("b", (long)2).AddComment("ybc");
-            Dy.Add("c", (long)4).AddComment("ycc");
+            Dy.Add("b", (long)2).ConfigureAdded(c => c.AddComment("ybc"));
+            Dy.Add("c", (long)4).ConfigureAdded(c => c.AddComment("ycc"));
         }
 
         [Fact]

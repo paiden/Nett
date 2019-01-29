@@ -113,7 +113,7 @@ a.b.c = 2
                 { "x", 3 },
             };
 
-            a.Add("n", ndat, TomlTable.TableTypes.Dotted);
+            a.ConfigureAdded(n => n.Add("n", ndat, TomlTable.TableTypes.Dotted));
 
             // Act
             var written = Toml.WriteString(root);
@@ -132,7 +132,7 @@ a.b.c = 2
                 {"b", 1 },
                 {"c", 2 },
             };
-            var a = root.Add("a", adat, TomlTable.TableTypes.Dotted);
+            var a = root.Add("a", adat, TomlTable.TableTypes.Dotted).Added;
 
             var ndat = new Dictionary<string, object>()
             {
@@ -158,7 +158,7 @@ a.b.c = 2
                 {"b", 1 },
                 {"c", 2 },
             };
-            var a = root.Add("a", adat, TomlTable.TableTypes.Dotted);
+            var a = root.Add("a", adat, TomlTable.TableTypes.Dotted).Added;
 
             var ndat = new Dictionary<string, object>()
             {

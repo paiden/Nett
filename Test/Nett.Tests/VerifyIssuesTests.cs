@@ -213,13 +213,13 @@ SomeValue = 5";
             tbl.Add("root2", 2);
             tbl.Add("root3", 3);
 
-            var t2 = tbl.Add("Level2", Toml.Create());
+            var t2 = tbl.Add("Level2", Toml.Create()).Added;
             t2.Add("second1", "x");
             t2.Add("second2", "y");
 
             tbl.Add("root4", 4);    // Added at root level but spuriously written into [Level2.Level3]
 
-            var t3 = t2.Add("Level3", Toml.Create());
+            var t3 = t2.Add("Level3", Toml.Create()).Added;
             t3.Add("third1", "a");
             t3.Add("third2", "b");
 
@@ -259,8 +259,8 @@ third2 = ""b""".Trim());
 
             // Assert
             tb["test"].Should().BeOfType<TomlTableArray>();
-            ta[0].Get<TestTable>().timestamp.Should().Be(DateTimeOffset.MaxValue);
-            ta[1].Get<TestTable>().timestamp.Should().Be(DateTimeOffset.MinValue);
+            ta.Added[0].Get<TestTable>().timestamp.Should().Be(DateTimeOffset.MaxValue);
+            ta.Added[1].Get<TestTable>().timestamp.Should().Be(DateTimeOffset.MinValue);
         }
 
         [Fact]
@@ -268,7 +268,7 @@ third2 = ""b""".Trim());
         {
             // Arrange
             var table = Toml.Create();
-            var root = table.Add("Root", new object(), TomlTable.TableTypes.Default);
+            var root = table.Add("Root", new object(), TomlTable.TableTypes.Default).Added;
             root.Add("A", new object(), TomlTable.TableTypes.Default);
             root.Add("B", new object(), TomlTable.TableTypes.Inline);
 

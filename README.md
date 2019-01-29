@@ -484,6 +484,11 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
+**v0.11.0** --- XXXX-XX-XX
+Nett: 
+
++ Refactor: **[Breaking Change]** Make TOML object factory API fluent
+
 **v0.10.1** --- 2019-01-01
 Nett: 
 + Add: TomlObjects implement `ToString()` [#63](https://github.com/paiden/Nett/issues/51)

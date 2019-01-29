@@ -234,7 +234,7 @@ namespace Nett.Tests.Unit
 
             // Assert
             FooDict.Dict1.AssertIs(this.updateThis["x"]);
-            FooDict.Dict1.AssertIs(u);
+            FooDict.Dict1.AssertIs(u.Added);
         }
 
         [Fact]
@@ -255,6 +255,19 @@ namespace Nett.Tests.Unit
 
             // Assert
             FooStructList.List1.AssertIs(this.updateThis["x"]);
+        }
+
+        [Fact]
+        public void Update_WithResultObject_ThrowsInvalidArg()
+        {
+            // Arrange
+            var r = this.updateThis.Update("x", false);
+
+            // Act
+            Action a = () => this.updateThis.Update("x", r);
+
+            // Assert
+            a.ShouldThrow<ArgumentException>();
         }
     }
 }
