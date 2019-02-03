@@ -28,13 +28,17 @@ namespace Nett
             Literal,
         }
 
-        public static bool operator ==(TomlKey x, TomlKey y) => x.Value == y.Value;
+        public static bool operator ==(TomlKey x, TomlKey y)
+            => x.Equals(y);
 
-        public static bool operator !=(TomlKey x, TomlKey y) => !(x == y);
+        public static bool operator !=(TomlKey x, TomlKey y)
+            => !x.Equals(y);
 
-        public bool Equals(TomlKey other) => this == other;
+        public bool Equals(TomlKey other)
+            => this.Value == other.Value;
 
-        public override bool Equals(object obj) => obj is TomlKey && this == (TomlKey)obj;
+        public override bool Equals(object obj)
+            => obj is TomlKey k && this.Equals(k);
 
         public override int GetHashCode() => this.Value.GetHashCode();
 

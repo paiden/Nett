@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
+    using Nett.Collections;
+    using Nett.Mapping;
     using static System.Diagnostics.Debug;
 
     internal enum TomlCommentLocation
@@ -12,6 +13,10 @@
         Prepend,
         Append,
     }
+
+
+
+
 
     public sealed partial class TomlSettings
     {
@@ -23,7 +28,8 @@
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
         private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
-        private readonly Dictionary<Type, HashSet<string>> ignoredProperties = new Dictionary<Type, HashSet<string>>();
+        private readonly Dictionary<Type, HashSet<SerializationMember>> ignoredMembers = new Dictionary<Type, HashSet<SerializationMember>>();
+        private readonly Map<SerializationInfo, string> explicitMembers = new Map<SerializationInfo, string>();
 
         private IKeyGenerator keyGenerator = KeyGenerators.Instance.PropertyName;
         private ITargetPropertySelector mappingPropertySelector = TargetPropertySelectors.Instance.Exact;
@@ -91,31 +97,53 @@
             return TomlTable.TableTypes.Default;
         }
 
-        internal IEnumerable<PropertyInfo> GetSerializationProperties(Type t)
+        internal IEnumerable<SerializationInfo> GetSerializationMembers(Type t)
         {
-            return t.GetProperties(PropBindingFlags)
-                .Where(pi => pi.GetIndexParameters().Length <= 0)
-                .Where(pi => !this.IsPropertyIgnored(t, pi));
+            return StaticTypeMetaData.GetSerializationMembers(t, this.keyGenerator)
+                .Where(si => IncludeMember(si.Member.MemberInfo))
+                .Concat(this.explicitMembers.Forward.Keys);
+
+            bool IncludeMember(MemberInfo mi)
+            {
+                return !this.IsMemberIgnored(t, mi)
+                    && !this.explicitMembers.Forward.Keys.Any(si => si.Is(mi));
+            }
         }
 
-        internal TomlKey GetPropertyKey(PropertyInfo pi)
-            => new TomlKey(this.keyGenerator.GetKey(pi));
+        internal IEnumerable<TomlComment> GetComments(Type type, SerializationMember m)
+            => StaticTypeMetaData.GetComments(type, m);
 
-        internal PropertyInfo TryGetMappingProperty(Type t, string key)
+        internal SerializationMember? TryGetMappedMember(Type t, string key)
         {
+            var configured = StaticTypeMetaData.GetSerializationMembers(t, this.keyGenerator)
+                .Concat(this.explicitMembers.Forward.Keys);
+
+            var cmem = configured.Where(IsFlup)
+                .Cast<SerializationInfo?>()
+                .FirstOrDefault();
+
+            bool IsFlup(SerializationInfo si)
+            {
+                bool r = si.Key.Value == key;
+                return r;
+            }
+
+            if (cmem.HasValue && !this.IsMemberIgnored(t, cmem.Value.Member.MemberInfo))
+            {
+                return cmem.Value.Member;
+            }
+
             var pi = this.mappingPropertySelector.TryGetTargetProperty(key, t);
-            return pi != null && !this.IsPropertyIgnored(t, pi) ? pi : null;
+            return pi != null && !this.IsMemberIgnored(t, pi) ? new SerializationMember(pi) : (SerializationMember?)null;
         }
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);
 
-        internal Type TryGetMappedType(string key, PropertyInfo target)
+        internal Type TryGetMappedType(string key, SerializationMember? target)
         {
-            Type mapped;
-            bool noTypeInfoAvailable = target == null;
-            bool targetCanHoldMappedTable = noTypeInfoAvailable || target.PropertyType == Types.ObjectType;
-            if (targetCanHoldMappedTable && this.tableKeyToTypeMappings.TryGetValue(key, out mapped))
+            bool targetCanHoldMappedTable = !target.HasValue || target.Value.MemberType == Types.ObjectType;
+            if (targetCanHoldMappedTable && this.tableKeyToTypeMappings.TryGetValue(key, out var mapped))
             {
                 return mapped;
             }
@@ -126,19 +154,19 @@
         internal ITomlConverter TryGetToTomlConverter(Type fromType) =>
             this.converters.TryGetLatestToTomlConverter(fromType);
 
-        private bool IsPropertyIgnored(Type ownerType, PropertyInfo pi)
+        private bool IsMemberIgnored(Type ownerType, MemberInfo mi)
         {
             Assert(ownerType != null);
-            Assert(pi != null);
+            Assert(mi != null);
 
-            HashSet<string> ignored;
-
-            bool contained = UserTypeMetaData.IsPropertyIgnored(ownerType, pi);
-            if (contained) { return true; }
-
-            if (this.ignoredProperties.TryGetValue(ownerType, out ignored))
+            if (StaticTypeMetaData.IsMemberIgnored(ownerType, mi))
             {
-                return ignored.Contains(pi.Name);
+                return true;
+            }
+
+            if (this.ignoredMembers.TryGetValue(ownerType, out var ignored))
+            {
+                return ignored.Any(m => m.Is(mi));
             }
 
             return false;

@@ -74,6 +74,7 @@
     <Compile Include="ConversionTests.cs" />
     <Compile Include="DocumentationExamples.cs" />
     <Compile Include="EnumConversionTests.cs" />
+    <Compile Include="Functional\AlternativeKeyTests.cs" />
     <Compile Include="Functional\CombineTablesTests.cs" />
     <Compile Include="Functional\DottedKeyTests.cs" />
     <Compile Include="Functional\IgnorePropertyTests.cs" />

@@ -4,6 +4,6 @@ namespace Nett
 {
     public interface IKeyGenerator
     {
-        string GetKey(PropertyInfo property);
+        string GetKey(MemberInfo property);
     }
 }

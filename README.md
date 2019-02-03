@@ -487,7 +487,8 @@ config.Clear(s => s.IdleTimeout);
 **v0.11.0** --- XXXX-XX-XX
 Nett: 
 
-+ Refactor: **[Breaking Change]** Make TOML object factory API fluent
++ Add: API to map object properties to specific TOML keys [#69](https://github.com/paiden/Nett/issues/69)
++ Refactor: **[Breaking Change]** Make TOML object factory API fluent [68](https://github.com/paiden/Nett/issues/68)
 
 Asp.Net:
 

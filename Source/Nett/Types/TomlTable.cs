@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Reflection;
     using Extensions;
     using Nett.Writer;
     using static System.Diagnostics.Debug;
@@ -180,11 +179,12 @@
             var result = this.Root.Settings.GetActivatedInstance(t);
             foreach (var r in this.rows)
             {
-                var targetProperty = this.Root.Settings.TryGetMappingProperty(result.GetType(), r.Key.Value);
-                if (targetProperty != null)
+                var targetMember = this.Root.Settings.TryGetMappedMember(result.GetType(), r.Key.Value);
+                if (targetMember.HasValue)
                 {
-                    Type keyMapingTargetType = this.Root.Settings.TryGetMappedType(r.Key.Value, targetProperty);
-                    targetProperty.SetValue(result, r.Value.Get(keyMapingTargetType ?? targetProperty.PropertyType), null);
+                    Type keyMapingTargetType = this.Root.Settings.TryGetMappedType(r.Key.Value, targetMember);
+                    var value = r.Value.Get(keyMapingTargetType ?? targetMember.Value.MemberType);
+                    targetMember.Value.SetValue(result, value);
                 }
             }
 
@@ -251,17 +251,17 @@
 
             TomlTable tt = new TomlTable(root, tableType);
 
-            var props = root.Settings.GetSerializationProperties(obj.GetType());
+            var members = root.Settings.GetSerializationMembers(obj.GetType());
             var allObjects = new List<Tuple<string, TomlObject>>();
 
-            foreach (var p in props)
+            foreach (var m in members)
             {
-                object val = p.GetValue(obj, null);
+                object val = m.GetValue(obj);
                 if (val != null)
                 {
-                    TomlObject to = TomlObject.CreateFrom(root, val, p);
-                    AddComments(to, p);
-                    tt.AddRow(root.Settings.GetPropertyKey(p), to);
+                    TomlObject to = TomlObject.CreateFrom(root, val);
+                    to.AddComments(root.Settings.GetComments(obj.GetType(), m.Member));
+                    tt.AddRow(m.Key, to);
                 }
             }
 
@@ -367,15 +367,6 @@
 
         protected virtual void OnRowValueSet(string rowKey)
         {
-        }
-
-        private static void AddComments(TomlObject obj, PropertyInfo pi)
-        {
-            var comments = pi.GetCustomAttributes(typeof(TomlCommentAttribute), false).Cast<TomlCommentAttribute>();
-            foreach (var c in comments)
-            {
-                obj.AddComment(new TomlComment(c.Comment, c.Location));
-            }
         }
 
         private static bool ScopeCreatingType(TomlObject obj) =>

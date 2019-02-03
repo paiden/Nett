@@ -176,25 +176,6 @@ subprop=4", settings);
             read.Sub.SubProp.Should().Be(4);
         }
 
-        [Fact]
-        public void WriteRead_WhenUsingWeirdGenSelectorCombo_WrittenContentsCannotBeReadBackCorrectly()
-        {
-            // Arrange
-            var settings = TomlSettings.Create(s => s
-                .ConfigurePropertyMapping(m => m
-                    .UseTargetPropertySelector(standardSelectors => standardSelectors.Exact)
-                    .UseKeyGenerator(standardGenerators => standardGenerators.LowerCase)));
-            var obj = new RootTestObject() { Prop = 3, Sub = new RootTestObject.SubTestObject() { SubProp = 4 } };
-            var toRead = Toml.WriteString(obj, settings);
-
-            // Act
-            var read = Toml.ReadString<RootTestObject>(toRead, settings);
-
-            // Assert
-            read.Prop.Should().NotBe(obj.Prop);
-            read.Sub.SubProp.Should().NotBe(obj.Sub.SubProp);
-        }
-
         private static TestObject Create(string value)
             => new TestObject() { TestProp = value };
 

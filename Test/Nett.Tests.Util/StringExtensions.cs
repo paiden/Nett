@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Nett.Tests.Util
 {
@@ -20,8 +21,8 @@ namespace Nett.Tests.Util
         public static string StripWhitespace(this string s) =>
             s.Replace(" ", "").Replace("\t", "").Replace("\n", "").Replace("\r", "");
 
-        public static string NormalizeLineEndings(this string s) =>
-           s.Replace("\r\n", "\n").Replace("\r", "\n");
+        public static string NormalizeLineEndings(this string s)
+           => Regex.Replace(s, @"\r\n|\n\r|\n|\r", "\r\n");
 
         public static string TestRunUniqueName(this string s) => $"../../../../data/{s}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
 

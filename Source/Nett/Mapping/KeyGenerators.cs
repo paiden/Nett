@@ -34,25 +34,25 @@ namespace Nett
 
         private sealed class PropertyNameKeyGenerator : IKeyGenerator
         {
-            public string GetKey(PropertyInfo property)
+            public string GetKey(MemberInfo property)
                 => property.Name;
         }
 
         private sealed class UpperCaseKeyGenerator : IKeyGenerator
         {
-            public string GetKey(PropertyInfo property)
+            public string GetKey(MemberInfo property)
                 => property.Name.ToUpperInvariant();
         }
 
         private sealed class LowerCaseKeyGenerator : IKeyGenerator
         {
-            public string GetKey(PropertyInfo property)
+            public string GetKey(MemberInfo property)
                 => property.Name.ToLowerInvariant();
         }
 
         private sealed class CamelCaseKeyGenerator : IKeyGenerator
         {
-            public string GetKey(PropertyInfo property)
+            public string GetKey(MemberInfo property)
             {
                 string name = property.Name;
                 if (char.IsUpper(name[0])) { return name; }
@@ -65,7 +65,7 @@ namespace Nett
 
         private sealed class PascalCaseKeyGenerator : IKeyGenerator
         {
-            public string GetKey(PropertyInfo property)
+            public string GetKey(MemberInfo property)
             {
                 string name = property.Name;
                 if (char.IsLower(name[0])) { return name; }

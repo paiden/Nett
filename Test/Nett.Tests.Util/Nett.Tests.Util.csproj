@@ -75,6 +75,8 @@
     <Compile Include="AssertionExtensions.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="FFact.cs" />
+    <Compile Include="Fuent\NormalizedStringAssertions.cs" />
+    <Compile Include="Fuent\StringExtensions.cs" />
     <Compile Include="MTheory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenarios\ComaDocExampleScenario.cs" />

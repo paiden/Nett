@@ -36,16 +36,16 @@
             void CreateFromCustomClrObject()
             {
                 var t = obj.GetType();
-                var props = settings.GetSerializationProperties(t);
+                var members = settings.GetSerializationMembers(t);
 
-                foreach (var p in props)
+                foreach (var m in members)
                 {
-                    object val = p.GetValue(obj, null);
+                    object val = m.GetValue(obj);
                     if (val != null)
                     {
-                        TomlObject to = TomlObject.CreateFrom(tt, val, p);
-                        AddComments(to, p);
-                        tt.AddRow(settings.GetPropertyKey(p), to);
+                        TomlObject to = TomlObject.CreateFrom(tt, val);
+                        to.AddComments(settings.GetComments(t, m.Member));
+                        tt.AddRow(m.Key, to);
                     }
                 }
             }

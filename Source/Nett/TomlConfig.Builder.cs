@@ -3,12 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Reflection;
     using Extensions;
+    using Nett.Mapping;
     using Util;
     using static System.Diagnostics.Debug;
 
     public sealed partial class TomlSettings
     {
+        public interface IMappingBuilder<TCustom>
+        {
+            ITypeSettingsBuilder<TCustom> ToKey(string key);
+        }
+
         public interface ITypeSettingsBuilder<TCustom>
         {
             ITypeSettingsBuilder<TCustom> CreateInstance(Func<TCustom> func);
@@ -19,6 +26,14 @@
 
             ITypeSettingsBuilder<TCustom> WithConversionFor<TToml>(Action<IConversionSettingsBuilder<TCustom, TToml>> conv)
                 where TToml : TomlObject;
+
+            ITypeSettingsBuilder<TCustom> Include<TMember>(Expression<Func<TCustom, TMember>> selector);
+
+            ITypeSettingsBuilder<TCustom> Include(string memberName, BindingFlags bindFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            IMappingBuilder<TCustom> Map<TMember>(Expression<Func<TCustom, TMember>> selector);
+
+            IMappingBuilder<TCustom> Map(string memberName, BindingFlags bindFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         public interface ITableKeyMappingBuilder
@@ -263,10 +278,38 @@
 
             public ITypeSettingsBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor)
             {
-                var properties = this.settings.ignoredProperties.AddIfNeeded(typeof(TCustom), def: new HashSet<string>());
+                var properties = this.settings.ignoredMembers.AddIfNeeded(typeof(TCustom), def: new HashSet<SerializationMember>());
                 var propertyInfo = ReflectionUtil.GetPropertyInfo(accessor);
-                properties.Add(propertyInfo.Name);
+                properties.Add(new SerializationMember(propertyInfo));
                 return this;
+            }
+
+            public ITypeSettingsBuilder<TCustom> Include<TMember>(Expression<Func<TCustom, TMember>> selector)
+            {
+                var member = ReflectionUtil.GetSerMemberInfo(selector);
+                var key = member.GetKey();
+                this.settings.explicitMembers.Add(new SerializationInfo(member, key), key.Value);
+                return this;
+            }
+
+            public ITypeSettingsBuilder<TCustom> Include(string memberName, BindingFlags bindFlags)
+            {
+                var sm = ReflectionUtil.GetSerMemberInfo(typeof(TCustom), memberName, bindFlags);
+                var key = sm.GetKey();
+                this.settings.explicitMembers.Add(new SerializationInfo(sm, key), key.Value);
+                return this;
+            }
+
+            public IMappingBuilder<TCustom> Map<TMember>(Expression<Func<TCustom, TMember>> selector)
+            {
+                var sm = ReflectionUtil.GetSerMemberInfo(selector);
+                return new MappingBuilder(this, sm);
+            }
+
+            public IMappingBuilder<TCustom> Map(string memberName, BindingFlags bindFlags)
+            {
+                var sm = ReflectionUtil.GetSerMemberInfo(typeof(TCustom), memberName, bindFlags);
+                return new MappingBuilder(this, sm);
             }
 
             public ITypeSettingsBuilder<TCustom> TreatAsInlineTable()
@@ -280,6 +323,24 @@
             {
                 conv(new ConversionSettingsBuilder<TCustom, TToml>(this.converters));
                 return this;
+            }
+
+            private sealed class MappingBuilder : IMappingBuilder<TCustom>
+            {
+                private readonly SerializationMember serMember;
+                private readonly TypeSettingsBuilder<TCustom> typeBuilder;
+
+                public MappingBuilder(TypeSettingsBuilder<TCustom> typeBuilder, SerializationMember serMember)
+                {
+                    this.typeBuilder = typeBuilder;
+                    this.serMember = serMember;
+                }
+
+                public ITypeSettingsBuilder<TCustom> ToKey(string key)
+                {
+                    this.typeBuilder.settings.explicitMembers.Add(new SerializationInfo(this.serMember, new TomlKey(key)), key);
+                    return this.typeBuilder;
+                }
             }
         }
     }
