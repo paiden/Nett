@@ -35,7 +35,7 @@ namespace Nett.AspNet
                 string sv = string.Empty;
                 switch (r.Value)
                 {
-                    case TomlTable t: this.CreateProviderDictionary(dict, t, r.Key + ":"); break;
+                    case TomlTable t: this.CreateProviderDictionary(dict, t, keyPrefix + ":" + r.Key + ":"); break;
                     case TomlBool b: sv = b.Value.ToString(CultureInfo.InvariantCulture); break;
                     case TomlString s: sv = s.Value; break;
                     case TomlInt i: sv = i.Value.ToString(CultureInfo.InvariantCulture); break;
