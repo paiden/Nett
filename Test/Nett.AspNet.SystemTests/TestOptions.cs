@@ -7,6 +7,8 @@
             this.Option1 = "value1_from_ctor";
         }
 
+        public int[] A { get; set; } = new int[0];
+
         public string Option1 { get; set; }
 
         public int Option2 { get; set; } = 5;

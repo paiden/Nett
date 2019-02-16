@@ -492,6 +492,7 @@ Nett:
 
 Asp.Net:
 
++ Fix: 'Unexpected' exception when loading unsupported TOML types [38](https://github.com/paiden/Nett/issues/38)
 + Fix: Deeper nested config objects loaded correctly (#71)(https://github.com/paiden/Nett/issues/71)
 
 **v0.10.1** --- 2019-01-01
