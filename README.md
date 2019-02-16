@@ -489,6 +489,10 @@ Nett:
 
 + Refactor: **[Breaking Change]** Make TOML object factory API fluent
 
+Asp.Net:
+
++ Fix: Deeper nested config objects loaded correctly (#71)(https://github.com/paiden/Nett/issues/71)
+
 **v0.10.1** --- 2019-01-01
 Nett: 
 + Add: TomlObjects implement `ToString()` [#63](https://github.com/paiden/Nett/issues/51)

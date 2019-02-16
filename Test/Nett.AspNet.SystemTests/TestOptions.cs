@@ -24,5 +24,20 @@
         public string SubOption1 { get; set; }
 
         public int SubOption2 { get; set; }
+
+        public SubSubOpt SubSubOpts { get; set; } = new SubSubOpt();
+    }
+
+    public class SubSubOpt
+    {
+        public SubSubOpt()
+        {
+            this.SSOPT1 = "value1_from_ctor";
+            this.SSOPT2 = -1;
+        }
+
+        public string SSOPT1 { get; set; }
+
+        public float SSOPT2 { get; set; }
     }
 }

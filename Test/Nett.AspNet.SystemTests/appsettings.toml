@@ -4,3 +4,7 @@ Option2 = 666
 [subsection]
 SubOption1 = "SubHello from TOML"
 SubOption2 = 333
+
+[subsection.SubSubOpts]
+SSOPT1 = "hello"
+SSOPT2 = 16.4

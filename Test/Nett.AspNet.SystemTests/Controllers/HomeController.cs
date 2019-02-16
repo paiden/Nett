@@ -19,7 +19,8 @@ namespace Nett.AspNet.SystemTests.Controllers
         public string Get()
         {
             return $"Option1={this.options.Option1};Option2={this.options.Option2};" +
-                $"SubOption1={this.subOptions.SubOption1};SubOption2={this.subOptions.SubOption2}";
+                $"SubOption1={this.subOptions.SubOption1};SubOption2={this.subOptions.SubOption2}" +
+                $"SSOPT1={this.subOptions.SubSubOpts.SSOPT1};SSOPT2={this.subOptions.SubSubOpts.SSOPT2}";
         }
     }
 }

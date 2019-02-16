@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett.AspNet.SystemTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett.AspNet", "Source\Nett.AspNet\Nett.AspNet.csproj", "{B725009F-78A1-4587-9BAB-7DD09FF31DE4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nett.AspNet.Tests", "Test\Nett.AspNet.Tests\Nett.AspNet.Tests.csproj", "{48293078-FD6C-46E2-9AA0-4D932A0C1A45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B725009F-78A1-4587-9BAB-7DD09FF31DE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48293078-FD6C-46E2-9AA0-4D932A0C1A45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48293078-FD6C-46E2-9AA0-4D932A0C1A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48293078-FD6C-46E2-9AA0-4D932A0C1A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48293078-FD6C-46E2-9AA0-4D932A0C1A45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{57E5A8B7-F789-4E16-AFFA-A78F5B460861} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{43F48E90-2FA1-4DD7-A4CF-9EB6DB078A76} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 		{D2A875E3-B324-4125-BC76-10EE039AF9C9} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
+		{48293078-FD6C-46E2-9AA0-4D932A0C1A45} = {9A668C41-A34B-4E30-9D2A-B903C9D4985D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {103717AC-2FA6-462C-A42E-BAEA4AC47635}
