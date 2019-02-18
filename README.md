@@ -484,7 +484,7 @@ config.Clear(s => s.IdleTimeout);
 
 # Changelog
 
-**v0.11.0** --- XXXX-XX-XX
+**v0.11.0** --- 2019-02-18
 Nett: 
 
 + Add: API to map object properties to specific TOML keys [#69](https://github.com/paiden/Nett/issues/69)
