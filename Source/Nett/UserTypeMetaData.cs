@@ -104,7 +104,6 @@ namespace Nett
 
         private sealed class MetaDataInfo
         {
-
             public MetaDataInfo(
                 HashSet<SerializationMember> implicitMembers,
                 HashSet<SerializationInfo> explicitMembers,

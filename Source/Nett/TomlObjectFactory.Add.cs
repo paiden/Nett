@@ -6,7 +6,7 @@ namespace Nett
 {
     public static partial class TomlObjectFactory
     {
-        /// values
+        // values
         public static Result<TomlBool> Add(this TomlTable table, string key, bool value)
             => AddTomlObjectInternal(table, key, table.CreateAttached(value));
 

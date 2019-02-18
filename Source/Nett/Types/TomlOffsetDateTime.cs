@@ -1,5 +1,4 @@
-﻿
-namespace Nett
+﻿namespace Nett
 {
     using System;
     using System.Diagnostics;

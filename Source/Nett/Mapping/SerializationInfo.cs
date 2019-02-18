@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Nett.Util;
 
 namespace Nett.Mapping
 {
@@ -51,5 +52,8 @@ namespace Nett.Mapping
 
         public bool Equals(SerializationInfo other)
             => this.Key == other.Key && this.Member == other.Member;
+
+        public override int GetHashCode()
+            => HashUtil.GetHashCode(this.Key, this.Member);
     }
 }

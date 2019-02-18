@@ -72,8 +72,6 @@
             this.writer.Write(" = ");
 
             this.WriteArrayPart(array);
-
-
         }
 
         protected void WriteKeyedValue(KeyValuePair<TomlKey, TomlObject> kvp)

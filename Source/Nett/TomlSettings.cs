@@ -14,10 +14,6 @@
         Append,
     }
 
-
-
-
-
     public sealed partial class TomlSettings
     {
         internal const BindingFlags PropBindingFlags = BindingFlags.Public | BindingFlags.Instance;
