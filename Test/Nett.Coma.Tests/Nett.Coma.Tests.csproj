@@ -80,6 +80,7 @@
     <Compile Include="Functional\InlineTableTest.cs" />
     <Compile Include="Functional\MergeTests.cs" />
     <Compile Include="Functional\TransactionTests.cs" />
+    <Compile Include="Issues\Issue25Tests.cs" />
     <Compile Include="Issues\Issue41Tests.cs" />
     <Compile Include="SingleLevelConfig.cs" />
     <Compile Include="Functional\ExternalChangeTests.cs" />

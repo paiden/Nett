@@ -1,3 +1,7 @@
+## v0.11.1
+Nett:
++ Fix: ArgumentOutOfRange exception when DateTime field/prop not initialized [#25](https://github.com/paiden/Nett/issues/25)
+
 ## v0.11.0
 Nett: 
 

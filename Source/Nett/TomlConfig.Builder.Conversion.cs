@@ -134,7 +134,7 @@
             // * -> TomlFloat
             new TomlConverter<float, TomlFloat>((m, v) => new TomlFloat(m, v)),
         }
-        .AddBidirectionalConverter<TomlOffsetDateTime, DateTime>((m, c) => new TomlOffsetDateTime(m, c), (m, t) => t.Value.UtcDateTime);
+        .AddBidirectionalConverter<TomlOffsetDateTime, DateTime>(ToOffsetDateTime, (m, t) => t.Value.UtcDateTime);
 
         // Without these converters the library will not work correctly
         private static readonly List<ITomlConverter> EquivalentTypeConverters = new List<ITomlConverter>()
@@ -172,6 +172,20 @@
 
             All = NumericalSize | NumericalType | Serialize,
             Default = NumericalSize | Serialize,
+        }
+
+        private static TomlOffsetDateTime ToOffsetDateTime(ITomlRoot root, DateTime dt)
+        {
+            try
+            {
+                return new TomlOffsetDateTime(root, dt);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // Exc happens for DateTime.MinValue -> DateTimeOffset depending on timezone
+                // (object not explicitly initialized)
+                return new TomlOffsetDateTime(root, DateTimeOffset.MinValue);
+            }
         }
     }
 
