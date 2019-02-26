@@ -3,23 +3,28 @@ Nett is a library to read and write [TOML](https://github.com/toml-lang/toml) fi
 
 | Nett | Nett.Coma | Nett.AspNet | Build | 
 |------|-----------|-------------|-------|
-| [![NuGet](https://img.shields.io/nuget/v/Nett.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.Coma/) | [![NuGet](https://img.shields.io/nuget/v/Nett.AspNet.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.AspNet/)
+| [![NuGet](https://img.shields.io/nuget/v/Nett.svg?cacheSeconds=3600)](https://www.nuget.org/packages/Nett/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.svg?cacheSeconds=3600)](https://www.nuget.org/packages/Nett.Coma/) | [![NuGet](https://img.shields.io/nuget/v/Nett.AspNet.svg?cacheSeconds=3600)](https://www.nuget.org/packages/Nett.AspNet/)|[![Build Status](https://paiden.visualstudio.com/Nett/_apis/build/status/Nett-CI?branchName=master)](https://paiden.visualstudio.com/Nett/_build/latest?definitionId=16&branchName=master)|
 
 
 | [Release Notes](http://paiden.github.io/Nett/RELEASENOTES.html) | [Documentation](http://paiden.github.io/Nett/) | [NuGet](https://www.nuget.org/packages/Nett/) |
 
 # How to build?
 ## Prerequisites
+1. [NuGet 4.9.3+](https://www.nuget.org/downloads) available on command line
 1. [Visual Studio 2017+](https://visualstudio.microsoft.com/downloads/) with .Net development workload
 1. [DocFX](https://dotnet.github.io/docfx/index.html) for generating the documentation 
 
 
 ## Steps
 
-### Build Assemblies
-1. After initial checkout the first build has to be done via running `.\build.ps1`
-in PowerShell (this will auto generate some code files)
-2. After that The solution can be build in Visual Studio
+### Build Projects
+1. On Command Line
+    1. Setup some auto generated files by running `tagger.ps1`
+    1. Restore NuGet packages by running `nuget.exe restore`
+    1. Build project by running `build.ps1`
+1. With Visual Studio
+    1. Setup some auto generated files by running `tagger.ps1`
+    1. Open `Nett.sln` and build in Visual Studio
 
 ### Build & check documentation
 1. Run `docfx.exe dfx\docfx.json --serve`
@@ -27,7 +32,7 @@ in PowerShell (this will auto generate some code files)
 
 ### Build NuGet package
 
-1. Run `.\build.ps1 -ngp` in PowerShell
+1. Compile in release mode, packages will be in output folder
 
 # Contributing 
 
