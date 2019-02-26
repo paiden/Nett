@@ -36,7 +36,7 @@ Build with release configuration
 Param(
     # mutually exclusive quick targets
 
-    
+
     [alias("dp")]
     [parameter(ParameterSetName="doc")]
     [switch]$docpub,
@@ -98,28 +98,15 @@ if (-not $nobuild) {
 }
 
 if($docpub) {
-    & docfx dfx\docfx.json 
+    & docfx dfx\docfx.json
     Remove-Item -Path docs\* -Recurse -Force
     Copy-Item -Path .\dfx\_site\* -Destination docs -Recurse -Container -Force
 }
 
-if ($pack) {
-    $nuspecNett = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.nuspec)`""
-    $nuspecComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Coma.nuspec)`""
-    $aspNettComa = "`"$(Join-Path -Path $PSScriptRoot -ChildPath Nett.AspNet.nuspec)`""
-    $props = "`"configuration=$configuration`""
-
-    New-Item -ItemType Directory -Path ngp -Force
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecNett -Version $NETT_VERSION -Properties $props -OutputDirectory ngp}
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $nuspecComa -Version $COMA_VERSION -Properties $props -OutputDirectory ngp}
-    Invoke-ExpandedChecked { & nuget.exe pack -symbols $aspNettComa -Version $ASPNETT_VERSION -Properties $props -OutputDirectory ngp}
-}
-
 if($pub) {
     # Try to validate release notes are up to date before pushing new packages
-    $rnf = "Readme.md"
+    $rnf = "RELEASENOTES.md"
     $rn = Get-Content $rnf
-    $rn | Select-String -Pattern "XXXX-XX-XX" | ForEach-Object { "$rnf Line $($_.LineNumber): Unspecified release date" } | Write-Host -ForegroundColor Red
     $nrvc = ($rn | Select-String -pattern $NETT_VERSION | Measure-Object).Count
     $crvc = ($rn | Select-String -Pattern $COMA_VERSION | Measure-Object).Count
     $arvc = ($rn | Select-String -Pattern $ASPNETT_VERSION | Measure-Object).Count
@@ -129,9 +116,9 @@ if($pub) {
     if ($arvc -le 0) { Write-Host "Failed to find 'Nett.AspNet' v$ASPNETT_VERSION release notes." -ForegroundColor Red }
 
     # Some version number checking
-    $np = "ngp\Nett.$NETT_VERSION.nupkg"
-    $cp = "ngp\Nett.Coma.$COMA_VERSION.nupkg"
-    $ap = "ngp\Nett.AspNet.$ASPNETT_VERSION.nupkg"
+    $np = "Source\Nett\bin\Release\Nett.$NETT_VERSION.nupkg"
+    $cp = "Source\Nett.Coma\bin\Release\Nett.Coma.$COMA_VERSION.nupkg"
+    $ap = "Source\Nett.AspNet\bin\Release\Nett.AspNet.$ASPNETT_VERSION.nupkg"
 
     if (-not (Test-Path $np)) { throw "Nuget package $np does not exist on disk. Aborting push." }
     if (-not (Test-Path $cp)) { throw "Nuget package $cp does not exist on disk. Aborting push." }
@@ -147,9 +134,9 @@ if($pub) {
 
     $confirm = Read-Host "Please check for errors and correct version numbers. Continue to publish these '$configuration' packages? [y/n]"
     if ($confirm -match "[yY]") {
-        Invoke-ExpandedChecked { & nuget.exe push $np -Source 'https://www.nuget.org/api/v2/package' }
-        Invoke-ExpandedChecked { & nuget.exe push $cp -Source 'https://www.nuget.org/api/v2/package' }
-        Invoke-ExpandedChecked { & nuget.exe push $ap -Source 'https://www.nuget.org/api/v2/package' }
+       Invoke-ExpandedChecked { & nuget.exe push $np -Source 'https://www.nuget.org/api/v2/package' }
+       Invoke-ExpandedChecked { & nuget.exe push $cp -Source 'https://www.nuget.org/api/v2/package' }
+       Invoke-ExpandedChecked { & nuget.exe push $ap -Source 'https://www.nuget.org/api/v2/package' }
     }
     else {
         Write-Output "Push was aborted by user."

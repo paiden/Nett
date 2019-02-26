@@ -9,9 +9,17 @@
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\keys.snk</AssemblyOriginatorKeyFile>
+    <PackageId>Nett.AspNet</PackageId>
+    <Authors>paiden@outlook.com</Authors>
+    <Description>TOML file integration for Asp.Net Core Configuration System.</Description>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
+    <PackageTags>TOML Serialization Configuration ASP Asp.Net</PackageTags>
+    <Version>$(AspNettInformationalVersion)</Version>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nett\Nett.csproj" />

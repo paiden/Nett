@@ -2,13 +2,16 @@
 Nett:
 + Fix: ArgumentOutOfRange exception when DateTime field/prop not initialized [#25](https://github.com/paiden/Nett/issues/25)
 
+AspNet:
++ Fix: Fix missing dependency for NuGet package [#72](https://github.com/paiden/Nett/issues/72)
+
 ## v0.11.0
 Nett: 
 
 + Add: API to map object properties to specific TOML keys [#69](https://github.com/paiden/Nett/issues/69)
 + Refactor: **[Breaking Change]** Make TOML object factory API fluent [#68](https://github.com/paiden/Nett/issues/68)
 
-Asp.Net:
+AspNet:
 
 + Fix: 'Unexpected' exception when loading unsupported TOML types [#38](https://github.com/paiden/Nett/issues/38)
 + Fix: Deeper nested config objects loaded correctly [#71](https://github.com/paiden/Nett/issues/71)

@@ -2,7 +2,6 @@
   <Import Project="../../Shared.targets" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
-    <NuspecFile>../../Coma.nuspec</NuspecFile>
     <AssemblyVersion>$(ComaAssemblyVersion)</AssemblyVersion>
     <FileVersion>$(ComaFileVersion)</FileVersion>
     <InformationalVersion>$(ComaInformationalVersion)</InformationalVersion>
@@ -10,9 +9,18 @@
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\keys.snk</AssemblyOriginatorKeyFile>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <Version>$(ComaInformationalVersion)</Version>
+    <Authors>paiden@outlook.com</Authors>
+    <Description>.Net Configuration System based on TOML configuration format</Description>
+    <PackageTags>TOML Serialization Configuration</PackageTags>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nett\Nett.csproj" />

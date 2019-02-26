@@ -9,6 +9,13 @@
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\keys.snk</AssemblyOriginatorKeyFile>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <Authors>paiden@outlook.com</Authors>
+    <Description>Library for reading and writing TOML files</Description>
+    <PackageTags>TOML Serialization Configuration</PackageTags>
+    <Version>$(NettInformationalVersion)</Version>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Parser\Ast\**" />
@@ -16,6 +23,8 @@
     <None Remove="Parser\Ast\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
