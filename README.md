@@ -1,6 +1,11 @@
 # What is Nett?
 Nett is a library to read and write [TOML](https://github.com/toml-lang/toml) files in .Net.
 
+| Nett | Nett.Coma | Nett.AspNet | Build | 
+|------|-----------|-------------|-------|
+| [![NuGet](https://img.shields.io/nuget/v/Nett.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett/) | [![NuGet](https://img.shields.io/nuget/v/Nett.Coma.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.Coma/) | [![NuGet](https://img.shields.io/nuget/v/Nett.AspNet.svg?maxAge=2592000)](https://www.nuget.org/packages/Nett.AspNet/)
+
+
 | [Release Notes](http://paiden.github.io/Nett/RELEASENOTES.html) | [Documentation](http://paiden.github.io/Nett/) | [NuGet](https://www.nuget.org/packages/Nett/) |
 
 # How to build?
