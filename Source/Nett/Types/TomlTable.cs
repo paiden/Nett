@@ -183,7 +183,21 @@
                 if (targetMember.HasValue)
                 {
                     Type keyMapingTargetType = this.Root.Settings.TryGetMappedType(r.Key.Value, targetMember);
-                    var value = r.Value.Get(keyMapingTargetType ?? targetMember.Value.MemberType);
+
+                    object value = null;
+                    try
+                    {
+                        value = r.Value.Get(keyMapingTargetType ?? targetMember.Value.MemberType);
+                    }
+                    catch (Exception exc)
+                    {
+                        throw new InvalidOperationException(
+                            $"Failed to convert TOML object with key '{r.Key}', " + $"type '{r.Value.ReadableTypeName}' " +
+                            $"and value '{r.Value.ToString()}' to object property " +
+                            $"with name '{targetMember.Value.MemberInfo.Name}' and type '{targetMember.Value.MemberType.FullName}'.",
+                            exc);
+                    }
+
                     targetMember.Value.SetValue(result, value);
                 }
             }

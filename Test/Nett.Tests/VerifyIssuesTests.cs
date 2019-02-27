@@ -470,6 +470,42 @@ ElasticsearchUrls = ""http://localhost:9200""");
             }
         }
 
+        [Fact]
+        public void VerifyIssue29_WhenConversionHasError_TheErrorMessgeIsSomewhatUseful()
+        {
+            // Arrange
+            var cfg = TomlSettings.Create(c => c
+                .ConfigureType<Item>(type => type
+                    .WithConversionFor<TomlString>(conv => conv
+                        .FromToml(s => Item.Parse(s.Value)))));
+            TomlTable tbl = Toml.Create(cfg);
+            tbl.Add("Item", "Item Parse Value");
+
+            // Act
+            Action a = () => tbl.Get<ItmRoot>();
+
+            // Assert
+            a.ShouldThrow<InvalidOperationException>().WithMessage(
+                "Failed to convert TOML object with key 'Item', type 'string' and value 'Item Parse Value' " +
+                "to object property with name 'Item' and type 'Nett.Tests.VerifyIssuesTests+Item'.")
+                .WithInnerMessage("Simulate conversion error");
+        }
+
+        public class Item
+        {
+            public int Value { get; set; }
+
+            public static Item Parse(string s)
+            {
+                throw new Exception("Simulate conversion error");
+            }
+        }
+
+        public class ItmRoot
+        {
+            public Item Item { get; set; }
+        }
+
         public class TestTable
         {
             public string label { get; set; }
