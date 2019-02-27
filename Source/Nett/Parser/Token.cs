@@ -39,9 +39,11 @@
         LocalDateTime,
         OffsetDateTime,
         Duration,
+
+        Unit,
     }
 
-    [DebuggerDisplay("{value}:{type}")]
+    [DebuggerDisplay("{Value}:{Type}")]
     internal struct Token
     {
         public readonly SourceLocation Location;
@@ -82,6 +84,9 @@
 
         public override string ToString()
             => $"{this.Value}:{this.Type} at {this.Location}";
+
+        public Token Trimmed()
+            => new Token(this.Type, this.Value.Trim(), this.Location);
 
         public SyntaxErrorNode TokenError()
             => this.Type == TokenType.Unknown ? new SyntaxErrorNode(this.errorMessage, this.Location) : null;

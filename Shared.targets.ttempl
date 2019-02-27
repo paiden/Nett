@@ -4,12 +4,19 @@
     <NettAssemblyVersion>$NETT_VERSION_2DXX$</NettAssemblyVersion>
     <NettInformationalVersion>$NETT_VERSION$</NettInformationalVersion>
     <NettFileVersion>$NETT_VERSION_4D$</NettFileVersion>
+
+    <NettExpAssemblyVersion>$NETTEXP_VERSION_2DXX$</NettExpAssemblyVersion>
+    <NettExpInformationalVersion>$NETTEXP_VERSION$</NettExpInformationalVersion>
+    <NettExpFileVersion>$NETTEXP_VERSION_4D$</NettExpFileVersion>
+
     <ComaAssemblyVersion>$COMA_VERSION_2DXX$</ComaAssemblyVersion>
     <ComaInformationalVersion>$COMA_VERSION$</ComaInformationalVersion>
     <ComaFileVersion>$COMA_VERSION_4D$</ComaFileVersion>
+
     <AspNettAssemblyVersion>$ASPNETT_VERSION_2DXX$</AspNettAssemblyVersion>
     <AspNettInformationalVersion>$ASPNETT_VERSION$</AspNettInformationalVersion>
     <AspNettFileVersion>$ASPNETT_VERSION_4D$</AspNettFileVersion>
+
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)Infrastructure/Nett.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 </Project>

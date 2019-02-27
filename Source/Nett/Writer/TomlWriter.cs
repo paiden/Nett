@@ -117,6 +117,13 @@
                     Assert(false, "This method should only get called for simple TOML Types. Check invocation code.");
                     break;
             }
+
+            if (this.settings.IsFeautureEnabled(ExperimentalFeature.ValueWithUnit)
+                && obj is TomlValue v
+                && !string.IsNullOrWhiteSpace(v.Unit))
+            {
+                this.writer.Write($" ({v.Unit})");
+            }
         }
 
         private static string FixMultilineComment(string src) => src.Replace("\n", "\n#");

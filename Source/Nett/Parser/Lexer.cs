@@ -93,7 +93,8 @@ namespace Nett.Parser
             else if (c == '\'') { this.EnterState(this.LexSingleQuotedKey, label: this.SkipChar); }
             else if (c == LexInput.EofChar) { this.Accept(TokenType.Eof); }
             else if (c.IsBareKeyChar()) { this.EnterState(this.LexBareKey); }
-            else { this.Fail($"Encountered unexpected char '{c}' while lexing LValue"); }
+            else if (c == '(') { this.EnterState(this.LexAnyCharFrag, label: this.SkipChar); }
+            else { this.Fail($"Encountered unexpected char '{c}' while lexing RValue"); }
         }
 
         private void LexBareKey(char c)
@@ -112,6 +113,12 @@ namespace Nett.Parser
         private void LexSingleQuotedKey(char c)
         {
             if (c == '\'') { this.Accept(TokenType.SingleQuotedKey, this.SkipChar); }
+            else { this.Continue(); }
+        }
+
+        private void LexAnyCharFrag(char c)
+        {
+            if (c == ')') { this.Accept(TokenType.Unit, this.SkipChar); }
             else { this.Continue(); }
         }
 
@@ -139,6 +146,7 @@ namespace Nett.Parser
             else if (c == '}') { this.Accept(TokenType.RCurly, this.Consume); }
             else if (c == ',') { this.Accept(TokenType.Comma, this.Consume); }
             else if (c == '#') { this.EnterState(this.LexComment, label: this.SkipChar); }
+            else if (c == '(') { this.EnterState(this.LexAnyCharFrag, label: this.SkipChar); }
             else if (c == LexInput.EofChar) { this.Accept(TokenType.Eof); }
             else { this.Fail($"Encountered unexpected char '{c}' while lexing RValue"); }
         }

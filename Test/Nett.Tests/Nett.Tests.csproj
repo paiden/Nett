@@ -84,6 +84,7 @@
     <Compile Include="Functional\CustomPropertyMappingTests.cs" />
     <Compile Include="Functional\ReadInWriteOutTests.cs" />
     <Compile Include="Functional\InlineTableTests.Write.cs" />
+    <Compile Include="Functional\ValueWithUnitTests.cs" />
     <Compile Include="Functional\V050CompatTests.cs" />
     <Compile Include="Plugins\DictRootConfig.cs" />
     <Compile Include="Plugins\ObjRootConfig.cs" />

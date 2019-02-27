@@ -14,6 +14,11 @@
         Append,
     }
 
+    internal enum ExperimentalFeature
+    {
+        ValueWithUnit,
+    }
+
     public sealed partial class TomlSettings
     {
         internal const BindingFlags PropBindingFlags = BindingFlags.Public | BindingFlags.Instance;
@@ -26,6 +31,7 @@
         private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
         private readonly Dictionary<Type, HashSet<SerializationMember>> ignoredMembers = new Dictionary<Type, HashSet<SerializationMember>>();
         private readonly Map<SerializationInfo, string> explicitMembers = new Map<SerializationInfo, string>();
+        private readonly Dictionary<ExperimentalFeature, bool> featureFlags = new Dictionary<ExperimentalFeature, bool>();
 
         private IKeyGenerator keyGenerator = KeyGenerators.Instance.PropertyName;
         private ITargetPropertySelector mappingPropertySelector = TargetPropertySelectors.Instance.Exact;
@@ -146,6 +152,9 @@
 
             return null;
         }
+
+        internal bool IsFeautureEnabled(ExperimentalFeature feature)
+            => this.featureFlags.TryGetValue(feature, out bool flag) ? flag : false;
 
         internal ITomlConverter TryGetToTomlConverter(Type fromType) =>
             this.converters.TryGetLatestToTomlConverter(fromType);

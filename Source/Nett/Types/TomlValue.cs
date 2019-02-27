@@ -33,6 +33,23 @@
 
         public object UntypedValue { get; }
 
+        internal virtual string Unit { get; set; } = null;
+
+        public override object Get(Type t)
+        {
+            if (this.GetType() == t) { return this; }
+
+            var converter = this.Root.Settings.TryGetConverter(this.GetType(), t);
+            if (converter != null)
+            {
+                return converter.Convert(this.Root, this, t);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Cannot convert from type '{this.ReadableTypeName}' to '{t.Name}'.");
+            }
+        }
+
         internal abstract TomlValue ValueWithRoot(ITomlRoot root);
 
         protected static string CleanupNumberInputString(string input, int sub = 0)
@@ -67,20 +84,5 @@
         }
 
         public T Value => this.value;
-
-        public override object Get(Type t)
-        {
-            if (this.GetType() == t) { return this; }
-
-            var converter = this.Root.Settings.TryGetConverter(this.GetType(), t);
-            if (converter != null)
-            {
-                return converter.Convert(this.Root, this, t);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Cannot convert from type '{this.ReadableTypeName}' to '{t.Name}'.");
-            }
-        }
     }
 }

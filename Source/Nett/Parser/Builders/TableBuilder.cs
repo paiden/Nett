@@ -195,10 +195,21 @@ namespace Nett.Parser.Builders
         {
             switch (node.Value.SyntaxNode())
             {
-                case TerminalNode tn: return CreateValueFromTerminal(tn.Terminal);
+                case TerminalNode tn: return CreateValue(tn);
                 case ArrayNode an: return CreateArrayOrTableArray(an);
                 case InlineTableNode it: return CreateInlineTable(it);
                 default: throw new Exception($"Cannot create TomlValue from node with type '{node.GetType()}'.");
+            }
+
+            TomlValue CreateValue(TerminalNode tn)
+            {
+                var val = CreateValueFromTerminal(tn.Terminal);
+                if (node.Unit.HasNode)
+                {
+                    val.Unit = node.Unit.SyntaxNodeOrDefault().Terminal.Value;
+                }
+
+                return val;
             }
 
             TomlValue CreateValueFromTerminal(Token terminal)

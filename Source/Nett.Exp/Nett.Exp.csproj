@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Shared.targets" />
+  <PropertyGroup>
+    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
+    <AssemblyVersion>$(NettAssemblyVersion)</AssemblyVersion>
+    <InformationalVersion>$(NettInformationalVersion)</InformationalVersion>
+    <FileVersion>$(NettFileVersion)</FileVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Nett.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\keys.snk</AssemblyOriginatorKeyFile>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <Authors>paiden@outlook.com</Authors>
+    <Description>Experimental extensions for Nett</Description>
+    <PackageTags>TOML Serialization Configuration Experimental</PackageTags>
+    <Version>$(NettInformationalVersion)</Version>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nett\Nett.csproj" />
+  </ItemGroup>
+</Project>

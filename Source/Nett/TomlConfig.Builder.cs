@@ -182,7 +182,7 @@
                 => this.UseTargetPropertySelector(selectStandardRule(TargetPropertySelectors.Instance));
         }
 
-        internal sealed class TomlSettingsBuilder : ITomlSettingsBuilder
+        internal sealed class TomlSettingsBuilder : ITomlSettingsBuilder, IExpSettingsBuilder
         {
             private readonly TomlSettings settings = new TomlSettings();
             private readonly List<ITomlConverter> userConverters = new List<ITomlConverter>();
@@ -248,6 +248,11 @@
                 {
                     this.settings.converters.AddRange(NumercialType);
                 }
+            }
+
+            void IExpSettingsBuilder.EnableExperimentalFeature(ExperimentalFeature feature, bool enable)
+            {
+                this.settings.featureFlags[feature] = enable;
             }
 
             private void SetupUserConverters()

@@ -1,10 +1,14 @@
-## v0.11.1
+## v0.12.0
 Nett:
 + Fix: ArgumentOutOfRange exception when DateTime field/prop not initialized [#25](https://github.com/paiden/Nett/issues/25)
 + Fix: Improve conversion error messages [#29](https://github.com/paiden/Nett/issues/29)
 
 AspNet:
 + Fix: Fix missing dependency for NuGet package [#72](https://github.com/paiden/Nett/issues/72)
+
+Exp:
++ Add: Experimental features project & package
++ Add: Values with unit experimental feautre
 
 ## v0.11.0
 Nett: 

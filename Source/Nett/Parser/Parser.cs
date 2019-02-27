@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nett.Extensions;
 using Nett.Parser.Nodes;
 
 namespace Nett.Parser
@@ -6,10 +7,12 @@ namespace Nett.Parser
     internal sealed class Parser
     {
         private readonly MultiParseInput input;
+        private readonly TomlSettings settings;
 
-        public Parser(IParseInput input)
+        public Parser(IParseInput input, TomlSettings settings)
         {
             this.input = new MultiParseInput(input, new SkippingParseInput(input, toSkip: TokenType.NewLine));
+            this.settings = settings.CheckNotNull(nameof(settings));
         }
 
         public IOpt<StartNode> Parse()
@@ -132,10 +135,22 @@ namespace Nett.Parser
 
         private IReq<ValueNode> Value(ICommentsContext cctx)
         {
-            return SimpleValue()
+            var value = SimpleValue()
                 .Or(Array)
                 .Or(InlineTable)
                 .OrNode(() => SyntaxErrorNode.Unexpected("Expected TOML value", this.input.Current));
+
+            if (this.settings.IsFeautureEnabled(ExperimentalFeature.ValueWithUnit) && value.HasNode)
+            {
+                var unit = this.input.Accept(t => t.Type == TokenType.BareKey || t.Type == TokenType.Unit)
+                    .CreateNode(t => new TerminalNode(t.Trimmed()).Opt());
+                if (unit.HasNode)
+                {
+                    return value.SyntaxNode().WithUnitAttached(unit);
+                }
+            }
+
+            return value;
 
             IOpt<ValueNode> SimpleValue()
                 => this.input

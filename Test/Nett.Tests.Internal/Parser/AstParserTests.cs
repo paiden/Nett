@@ -524,7 +524,7 @@ S
         {
             var lexer = new Lexer(input);
             var tokens = lexer.Lex();
-            var parser = new Nett.Parser.Parser(new ParseInput(tokens));
+            var parser = new Nett.Parser.Parser(new ParseInput(tokens), TomlSettings.DefaultInstance);
             return parser.Parse().NodeOrDefault();
         }
     }

@@ -662,6 +662,19 @@ namespace Nett.Tests.Internal.Parser
             r.Skip(3).First().Type.Should().Be(TokenType.Comment);
         }
 
+        [Fact]
+        public void Lex_WithAnyCharFrag_LexesCorrecTokens()
+        {
+            // Arrange
+            Lexer l = CreateLexer("x=1 ($)");
+
+            // Act
+            List<Token> r = l.Lex();
+
+            // Asset
+            r.Skip(3).First().Type.Should().Be(TokenType.Unit);
+        }
+
         private static Lexer CreateValueLexer(string valueToken)
             => new Lexer($"X={valueToken}");
 

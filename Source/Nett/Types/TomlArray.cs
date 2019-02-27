@@ -36,6 +36,12 @@
 
         public override TomlObjectType TomlType => TomlObjectType.Array;
 
+        internal override string Unit
+        {
+            get => null;
+            set => throw new InvalidOperationException($"{this.ReadableTypeName} cannot have a unit.");
+        }
+
         public TomlObject this[int index] => this.Value[index];
 
         public T Get<T>(int index) => this.Value[index].Get<T>();

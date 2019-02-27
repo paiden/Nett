@@ -1,5 +1,6 @@
 # Version numbers (variants of these will be added to tags list)
 $NETT_VERSION =
+$NETTEXP_VERSION =
 $COMA_VERSION =
 $ASPNETT_VERSION = "0.11.0"
 

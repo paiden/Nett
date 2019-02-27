@@ -12,7 +12,7 @@
             var content = reader.ReadToEnd();
             var lexer = new Lexer(content);
             var tokens = lexer.Lex();
-            var parser = new Parser.Parser(new ParseInput(tokens));
+            var parser = new Parser.Parser(new ParseInput(tokens), settings);
             var ast = parser.Parse();
 #if DEBUG
             var tree = ast.SyntaxNodeOrDefault()?.PrintTree();

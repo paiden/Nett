@@ -15,7 +15,7 @@ function Add-Versions([hashtable]$dst, [string]$key, [string]$setver) {
 	$dst.Add("$($key)_SEM", "$setver+$githash")
     $dst.Add("$($key)_3D", $ver.ToString(3))
     $dst.Add("$($key)_4D", $ver.ToString(4))
-    $dst.Add("$($key)_2DXX", "$($ver.ToString(2)).0.0") 
+    $dst.Add("$($key)_2DXX", "$($ver.ToString(2)).0.0")
 }
 
 function New-TargetFile([hashtable]$t) {
@@ -28,7 +28,7 @@ function New-TargetFile([hashtable]$t) {
         }
 
         $tgt = $template.Replace($templext, "")
-        if((Test-Path $tgt) -and ((Get-Content $tgt -Raw).Trim()) -eq ($content.Trim())) { 
+        if((Test-Path $tgt) -and ((Get-Content $tgt -Raw).Trim()) -eq ($content.Trim())) {
             return
         }
 
@@ -41,6 +41,7 @@ function New-TargetFile([hashtable]$t) {
 $githash = &git rev-parse --short HEAD
 
 Add-Versions $tags "NETT_VERSION" $NETT_VERSION
+Add-Versions $tags "NETTEXP_VERSION" $NETTEXP_VERSION
 Add-Versions $tags "COMA_VERSION" $COMA_VERSION
 Add-Versions $tags "ASPNETT_VERSION" $ASPNETT_VERSION
 
