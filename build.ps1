@@ -77,8 +77,9 @@ function Invoke-ExpandedChecked {
 
 . ./tags.ps1
 
-$basePath = & .\Infrastructure\vswhere.exe -latest -property installationPath
-$msbuild = Join-Path $basePath  ".\MSBuild\15.0\bin\msbuild.exe"
+$vswhere = Join-Path ${env:ProgramFiles(x86)} -ChildPath "Microsoft Visual Studio\Installer\vswhere.exe"
+$msbuild = & $vswhere -prerelease -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | select-object -first 1
+Write-Output "MSBuild: $msbuild"
 $buildItem = Join-Path -Path $PSScriptRoot -ChildPath Nett.sln
 
 if (!(Test-Path $msbuild)) {
@@ -110,33 +111,40 @@ if($pub) {
     $nrvc = ($rn | Select-String -pattern $NETT_VERSION | Measure-Object).Count
     $crvc = ($rn | Select-String -Pattern $COMA_VERSION | Measure-Object).Count
     $arvc = ($rn | Select-String -Pattern $ASPNETT_VERSION | Measure-Object).Count
+    $exvc = ($rn | Select-String -Pattern $NETTEXP_VERSION | Measure-Object).Count
 
     if ($nrvc -le 0) { Write-Host "Failed to find 'Nett' v$NETT_VERSION release notes." -ForegroundColor Red }
     if ($crvc -le 0) { Write-Host "Failed to find 'Nett.Coma' v$COMA_VERSION release notes." -ForegroundColor Red }
     if ($arvc -le 0) { Write-Host "Failed to find 'Nett.AspNet' v$ASPNETT_VERSION release notes." -ForegroundColor Red }
+    if ($exvc -le 0) { Write-Host "Failed to find 'Nett.Exp' v$NETTEXP_VERSION release notes." -ForegroundColor Red }
 
     # Some version number checking
     $np = "Source\Nett\bin\Release\Nett.$NETT_VERSION.nupkg"
     $cp = "Source\Nett.Coma\bin\Release\Nett.Coma.$COMA_VERSION.nupkg"
     $ap = "Source\Nett.AspNet\bin\Release\Nett.AspNet.$ASPNETT_VERSION.nupkg"
+    $ep = "Source\Nett.Exp\bin\Release\Nett.Exp.$NETTEXP_VERSION.nupkg"
 
     if (-not (Test-Path $np)) { throw "Nuget package $np does not exist on disk. Aborting push." }
     if (-not (Test-Path $cp)) { throw "Nuget package $cp does not exist on disk. Aborting push." }
-    if (-not (Test-Path $ap)) { throw "Nuget pakcage $ap does not eixst on disk. Aborting push." }
+    if (-not (Test-Path $ap)) { throw "Nuget pakcage $ap does not exist on disk. Aborting push." }
+    if (-not (Test-Path $ep)) { throw "Nuget pakcage $ap does not exist on disk. Aborting push." }
 
     Get-ChildItem Source\Nett\bin\$configuration\netstandard2.0\Nett.dll | ForEach-Object { "Nett.dll: $($_.VersionInfo.FileVersion)" } |  Write-Host
     Get-ChildItem Source\Nett.Coma\bin\$configuration\netstandard2.0\Nett.Coma.dll | ForEach-Object { "Nett.Coma.dll: $($_.VersionInfo.FileVersion)" } | Write-Host
     Get-ChildItem Source\Nett.AspNet\bin\$configuration\netstandard2.0\Nett.AspNet.dll | ForEach-Object { "Nett.AspNet.dll: $($_.VersionInfo.FileVersion)" } | Write-Host
+    Get-ChildItem Source\Nett.Exp\bin\$configuration\netstandard2.0\Nett.Exp.dll | ForEach-Object { "Nett.Exp.dll: $($_.VersionInfo.FileVersion)" } | Write-Host
 
     Write-Host $np
     Write-Host $cp
     Write-Host $ap
+    Write-Host $ep
 
     $confirm = Read-Host "Please check for errors and correct version numbers. Continue to publish these '$configuration' packages? [y/n]"
     if ($confirm -match "[yY]") {
        Invoke-ExpandedChecked { & nuget.exe push $np -Source 'https://www.nuget.org/api/v2/package' }
        Invoke-ExpandedChecked { & nuget.exe push $cp -Source 'https://www.nuget.org/api/v2/package' }
        Invoke-ExpandedChecked { & nuget.exe push $ap -Source 'https://www.nuget.org/api/v2/package' }
+       Invoke-ExpandedChecked { & nuget.exe push $ep -Source 'https://www.nuget.org/api/v2/package' }
     }
     else {
         Write-Output "Push was aborted by user."
