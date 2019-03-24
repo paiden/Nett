@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Shared.targets" />
   <PropertyGroup>
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
@@ -16,6 +16,8 @@
     <Version>$(NettInformationalVersion)</Version>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nett\Nett.csproj" />
