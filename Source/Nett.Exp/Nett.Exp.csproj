@@ -14,7 +14,7 @@
     <Description>Experimental extensions for Nett</Description>
     <PackageTags>TOML Serialization Configuration Experimental</PackageTags>
     <Version>$(NettInformationalVersion)</Version>
-    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

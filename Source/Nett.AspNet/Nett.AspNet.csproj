@@ -12,7 +12,7 @@
     <PackageId>Nett.AspNet</PackageId>
     <Authors>paiden@outlook.com</Authors>
     <Description>TOML file integration for Asp.Net Core Configuration System.</Description>
-    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
     <PackageTags>TOML Serialization Configuration ASP Asp.Net</PackageTags>
     <Version>$(AspNettInformationalVersion)</Version>

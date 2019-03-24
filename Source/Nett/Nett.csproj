@@ -14,7 +14,7 @@
     <Description>Library for reading and writing TOML files</Description>
     <PackageTags>TOML Serialization Configuration</PackageTags>
     <Version>$(NettInformationalVersion)</Version>
-    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

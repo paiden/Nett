@@ -14,7 +14,7 @@
     <Authors>paiden@outlook.com</Authors>
     <Description>.Net Configuration System based on TOML configuration format</Description>
     <PackageTags>TOML Serialization Configuration</PackageTags>
-    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/paiden/Nett</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
