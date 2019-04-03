@@ -82,6 +82,7 @@
     <Compile Include="Functional\TransactionTests.cs" />
     <Compile Include="Issues\Issue25Tests.cs" />
     <Compile Include="Issues\Issue41Tests.cs" />
+    <Compile Include="Issues\Issue74Tests.cs" />
     <Compile Include="SingleLevelConfig.cs" />
     <Compile Include="Functional\ExternalChangeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

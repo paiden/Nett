@@ -3,13 +3,16 @@ Nett:
 + Fix: ArgumentOutOfRange exception when DateTime field/prop not initialized [#25](https://github.com/paiden/Nett/issues/25)
 + Fix: Improve conversion error messages [#29](https://github.com/paiden/Nett/issues/29)
 
+Coma: 
++ Add: New overload for `Get(...)` that allows to specify a defualt value [#74](https://github.com/paiden/Nett/issues/74)
+
 AspNet:
 + Add: Support for array of tables and jagged arrays conversion [#75](https://github.com/paiden/Nett/issues/75)
 + Fix: Fix missing dependency for NuGet package [#72](https://github.com/paiden/Nett/issues/72)
 
 Exp:
 + Add: Experimental features project & package
-+ Add: Values with unit experimental feautre
++ Add: Values with unit experimental feature
 
 ## v0.11.0
 Nett: 

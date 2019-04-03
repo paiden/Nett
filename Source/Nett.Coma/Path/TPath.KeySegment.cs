@@ -1,6 +1,7 @@
 ﻿#pragma warning disable SA1313
 
 using System;
+using System.Collections.Generic;
 
 namespace Nett.Coma.Path
 {
@@ -23,7 +24,7 @@ namespace Nett.Coma.Path
                 if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentException(nameof(key)); }
                 this.key = key;
 
-                this.ThrowWhenKeyNotFound = _ => throw new InvalidOperationException(this.KeyNotFoundMessage);
+                this.ThrowWhenKeyNotFound = _ => throw new KeyNotFoundException(this.KeyNotFoundMessage);
             }
 
             protected string KeyNotFoundMessage => $"TOML table does not contain a row with key '{this.key}'.";

@@ -1,6 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
     using Extensions;
     using Nett.Extensions;
@@ -16,11 +17,18 @@
         }
 
         public TRet Get<TRet>(Expression<Func<T, TRet>> selector)
-        {
-            selector.CheckNotNull(nameof(selector));
+            => this.GetInternal(selector);
 
-            var obj = this.config.GetFromPath(selector.BuildTPath());
-            return obj.Get<TRet>();
+        public TRet Get<TRet>(Expression<Func<T, TRet>> selector, TRet defaultValue)
+        {
+            try
+            {
+                return this.GetInternal(selector);
+            }
+            catch (KeyNotFoundException) when (typeof(Array).IsAssignableFrom(typeof(TRet)))
+            {
+                return defaultValue;
+            }
         }
 
         public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector)
@@ -60,5 +68,12 @@
         public IDisposable StartTransaction() => this.config.StartTransaction();
 
         public T Unmanaged() => this.config.Unmanaged().Get<T>();
+
+        public TRet GetInternal<TRet>(Expression<Func<T, TRet>> selector)
+        {
+            selector.CheckNotNull(nameof(selector));
+            var obj = this.config.GetFromPath(selector.BuildTPath());
+            return obj.Get<TRet>();
+        }
     }
 }
