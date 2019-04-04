@@ -19,6 +19,7 @@ namespace Nett.AspNet
             {
                 switch (r.Value)
                 {
+                    case TomlTableArray ta: ProcessTableArray(dict, ta, FullKey(r)); break;
                     case TomlTable t: ProcessTable(dict, t, keyPrefix + r.Key + ":"); break;
                     case TomlArray a: ProcessArray(dict, a, FullKey(r)); break;
                     case TomlBool b: AddEntry(r, b.Value.ToString(CultureInfo.InvariantCulture)); break;
@@ -41,6 +42,15 @@ namespace Nett.AspNet
 
             string FullKey(KeyValuePair<string, TomlObject> row)
                 => keyPrefix + row.Key;
+        }
+
+        private static void ProcessTableArray(Dictionary<string, string> dict, TomlTableArray tableArray, string keyPrefix)
+        {
+            for (int i = 0; i < tableArray.Items.Count; i++)
+            {
+                TomlTable table = tableArray.Items[i];
+                ProcessTable(dict, table, $"{keyPrefix}:{i}:");
+            }
         }
 
         private static void ProcessArray(Dictionary<string, string> dict, TomlArray array, string fullKey)
