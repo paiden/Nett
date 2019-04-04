@@ -83,17 +83,24 @@ NTA2 = 22");
         }
 
         [Fact]
-        public void ToProviderDictionary_WhenTomlContainsJaggedArray_ProducesUsefulErrorMessage()
+        public void ToProviderDictionary_Converts_JaggedArray()
         {
             // Arrange
             var tml = Toml.ReadString(@"
-x = [[1]]");
+jaggedArray = [ [ ""index00"", ""index01"" ], [ ""index10"" ], [], [ ""index30"" ] ]
+");
 
             // Act
-            Action a = () => ProviderDictionaryConverter.ToProviderDictionary(tml);
+            var providerDict = ProviderDictionaryConverter.ToProviderDictionary(tml);
 
             // Assert
-            a.ShouldThrow<InvalidOperationException>().WithMessage("AspNet provider cannot handle jagged arrays, only simple arrays are supported.The arrays key is 'x'.");
+            providerDict.Should().Equal(new Dictionary<string, string>()
+            {
+                { "jaggedArray:0:0", "index00" },
+                { "jaggedArray:0:1", "index01" },
+                { "jaggedArray:1:0", "index10" },
+                { "jaggedArray:3:0", "index30" }
+            });
         }
     }
 }

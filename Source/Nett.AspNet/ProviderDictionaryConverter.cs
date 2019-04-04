@@ -59,12 +59,12 @@ namespace Nett.AspNet
             {
                 if (array.Items[i] is TomlArray a)
                 {
-                    throw new InvalidOperationException(
-                        $"AspNet provider cannot handle jagged arrays, only simple arrays are supported." +
-                        $"The arrays key is '{fullKey}'.");
+                    ProcessArray(dict, a, $"{fullKey}:{i}");
                 }
-
-                dict[$"{fullKey}:{i}"] = array.Items[i].ToString();
+                else
+                {
+                    dict[$"{fullKey}:{i}"] = array.Items[i].ToString();
+                }
             }
         }
     }
