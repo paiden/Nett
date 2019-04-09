@@ -4,6 +4,7 @@ Nett:
 + Fix: Improve conversion error messages [#29](https://github.com/paiden/Nett/issues/29)
 
 AspNet:
++ Add: Support for array of tables and jagged arrays conversion [#75](https://github.com/paiden/Nett/issues/75)
 + Fix: Fix missing dependency for NuGet package [#72](https://github.com/paiden/Nett/issues/72)
 
 Exp:

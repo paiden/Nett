@@ -39,32 +39,68 @@ SSOPT2 = 16.4");
         }
 
         [Fact]
-        public void ToProviderDictionary_WhenTomlContainsTblArray_ProducesUsefulErrorMessage()
+        public void ToProviderDictionary_Converts_TomlTableArray()
         {
             // Arrange
             var tml = Toml.ReadString(@"
-[[x]]
-[[x]]");
+[[tableArray]]
+
+[[tableArray]]
+STA1 = ""array1""
+STA2 = 1
+
+[[tableArray]]
+
+[[tableArray]]
+STA1 = ""array3""
+STA2 = 3
+
+[[tableArray.nestedTableArray]]
+NTA1 = ""nestedArray0""
+NTA2 = 10
+
+[[tableArray.nestedTableArray]]
+
+[[tableArray.nestedTableArray]]
+NTA1 = ""nestedArray2""
+NTA2 = 22");
 
             // Act
-            Action a = () => ProviderDictionaryConverter.ToProviderDictionary(tml);
+            var providerDict = ProviderDictionaryConverter.ToProviderDictionary(tml);
 
             // Assert
-            a.ShouldThrow<InvalidOperationException>().WithMessage("AspNet provider cannot handle TOML object of type 'array of tables'. The objects key is 'x'.");
+            providerDict.Should().Equal(new Dictionary<string, string>()
+            {
+                { "tableArray:1:STA1", "array1" },
+                { "tableArray:1:STA2", "1" },
+                { "tableArray:3:STA1", "array3" },
+                { "tableArray:3:STA2", "3" },
+                { "tableArray:3:nestedTableArray:0:NTA1", "nestedArray0" },
+                { "tableArray:3:nestedTableArray:0:NTA2", "10" },
+                { "tableArray:3:nestedTableArray:2:NTA1", "nestedArray2" },
+                { "tableArray:3:nestedTableArray:2:NTA2", "22" },
+            });
         }
 
         [Fact]
-        public void ToProviderDictionary_WhenTomlContainsJaggedArray_ProducesUsefulErrorMessage()
+        public void ToProviderDictionary_Converts_JaggedArray()
         {
             // Arrange
             var tml = Toml.ReadString(@"
-x = [[1]]");
+jaggedArray = [ [ ""index00"", ""index01"" ], [ ""index10"" ], [], [ ""index30"" ] ]
+");
 
             // Act
-            Action a = () => ProviderDictionaryConverter.ToProviderDictionary(tml);
+            var providerDict = ProviderDictionaryConverter.ToProviderDictionary(tml);
 
             // Assert
-            a.ShouldThrow<InvalidOperationException>().WithMessage("AspNet provider cannot handle jagged arrays, only simple arrays are supported.The arrays key is 'x'.");
+            providerDict.Should().Equal(new Dictionary<string, string>()
+            {
+                { "jaggedArray:0:0", "index00" },
+                { "jaggedArray:0:1", "index01" },
+                { "jaggedArray:1:0", "index10" },
+                { "jaggedArray:3:0", "index30" }
+            });
         }
     }
 }
