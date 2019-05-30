@@ -12,7 +12,7 @@ function Get-Version([string]$ver) {
 function Add-Versions([hashtable]$dst, [string]$key, [string]$setver) {
     [Version]$ver = Get-Version $setver
     $dst.Add($key, "$setver");
-	$dst.Add("$($key)_SEM", "$setver+$githash")
+    $dst.Add("$($key)_SEM", "$setver+$githash")
     $dst.Add("$($key)_3D", $ver.ToString(3))
     $dst.Add("$($key)_4D", $ver.ToString(4))
     $dst.Add("$($key)_2DXX", "$($ver.ToString(2)).0.0")

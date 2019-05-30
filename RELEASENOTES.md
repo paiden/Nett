@@ -4,7 +4,7 @@ Nett:
 + Fix: Improve conversion error messages [#29](https://github.com/paiden/Nett/issues/29)
 
 Coma: 
-+ Add: New overload for `Get(...)` that allows to specify a defualt value [#74](https://github.com/paiden/Nett/issues/74)
++ Add: New overload for `Get(...)` that allows to specify a default value [#74](https://github.com/paiden/Nett/issues/74)
 
 AspNet:
 + Add: Support for array of tables and jagged arrays conversion [#75](https://github.com/paiden/Nett/issues/75)
