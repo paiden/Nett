@@ -71,10 +71,23 @@
             /// <summary>
             /// Choose which standard key generator implementation to use for these settings.
             /// </summary>
-            /// <param name="standardGenerators">Lamba which's parameter allows to choose one of the standard selectors.</param>
+            /// <param name="standardGenerators">Lambda which's parameter allows to choose one of the standard selectors.</param>
             /// <exception cref="ArgumentNullException">If <paramref name="standardGenerators"/> is <b>null</b>.</exception>
             /// <returns>Fluent configuration builder continuation object.</returns>
             IPropertyMappingBuilder UseKeyGenerator(Func<KeyGenerators, IKeyGenerator> standardGenerators);
+
+            /// <summary>
+            /// Set a custom callback that gets invoked when a target property is not found when a TOML table gets mapped to a
+            /// .Net object.
+            /// </summary>
+            /// <param name="whenNotFound">The callback to invoke.
+            /// Argument 1: The TOML key chain that could not be mapped from highest to deepest. Always contains at least one element.
+            ///   The root itself is not part of the key chain.
+            /// Argument 2: The target object on that no property matching they key was found.
+            /// Argument 3: The value associated with that key in the TOML table.
+            /// </param>
+            /// <returns>Fluent configuration builder continuation object.</returns>
+            IPropertyMappingBuilder OnTargetPropertyNotFound(Action<string[], object, TomlObject> whenNotFound);
         }
 
         public interface ITomlSettingsBuilder
@@ -180,6 +193,12 @@
 
             public IPropertyMappingBuilder UseTargetPropertySelector(Func<TargetPropertySelectors, ITargetPropertySelector> selectStandardRule)
                 => this.UseTargetPropertySelector(selectStandardRule(TargetPropertySelectors.Instance));
+
+            public IPropertyMappingBuilder OnTargetPropertyNotFound(Action<string[], object, TomlObject> whenNotFound)
+            {
+                this.settings.whenTargetPropertyNotFoundCallback = whenNotFound.CheckNotNull(nameof(whenNotFound));
+                return this;
+            }
         }
 
         internal sealed class TomlSettingsBuilder : ITomlSettingsBuilder, IExpSettingsBuilder

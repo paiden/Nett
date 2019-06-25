@@ -1,6 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using System.Collections.Generic;
     using Nett.Extensions;
 
     internal sealed class TomlSource : TomlObject
@@ -19,12 +20,13 @@
         // How can we provide a better value for this enum inside the COMA lib?
         public override TomlObjectType TomlType => TomlObjectType.Int;
 
-        public override object Get(Type t) => this.Value;
-
         public override void Visit(ITomlObjectVisitor visitor)
         {
             throw new NotImplementedException();
         }
+
+        internal override object GetInternal(Type t, Func<IEnumerable<string>> _)
+            => this.Value;
 
         internal override TomlObject CloneFor(ITomlRoot root) => CopyComments(new TomlSource(root, this.Value), this);
 

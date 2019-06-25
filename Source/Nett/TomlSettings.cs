@@ -35,6 +35,7 @@
 
         private IKeyGenerator keyGenerator = KeyGenerators.Instance.PropertyName;
         private ITargetPropertySelector mappingPropertySelector = TargetPropertySelectors.Instance.Exact;
+        private Action<string[], object, TomlObject> whenTargetPropertyNotFoundCallback = (_, __, ___) => { };
 
         private TomlCommentLocation defaultCommentLocation = TomlCommentLocation.Prepend;
 
@@ -138,6 +139,9 @@
             var pi = this.mappingPropertySelector.TryGetTargetProperty(key, t);
             return pi != null && !this.IsMemberIgnored(t, pi) ? new SerializationMember(pi) : (SerializationMember?)null;
         }
+
+        internal void OnTargetPropertyNotFound(string[] keyChain, object target, TomlObject value)
+            => this.whenTargetPropertyNotFoundCallback(keyChain, target, value);
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);

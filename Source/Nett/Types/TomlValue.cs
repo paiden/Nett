@@ -1,6 +1,7 @@
 ﻿namespace Nett
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     public abstract class TomlValue : TomlObject
@@ -35,7 +36,9 @@
 
         internal virtual string Unit { get; set; } = null;
 
-        public override object Get(Type t)
+        internal abstract TomlValue ValueWithRoot(ITomlRoot root);
+
+        internal override object GetInternal(Type t, Func<IEnumerable<string>> _)
         {
             if (this.GetType() == t) { return this; }
 
@@ -49,8 +52,6 @@
                 throw new InvalidOperationException($"Cannot convert from type '{this.ReadableTypeName}' to '{t.Name}'.");
             }
         }
-
-        internal abstract TomlValue ValueWithRoot(ITomlRoot root);
 
         protected static string CleanupNumberInputString(string input, int sub = 0)
             => input.Substring(sub).Replace("_", string.Empty).ToLowerInvariant();

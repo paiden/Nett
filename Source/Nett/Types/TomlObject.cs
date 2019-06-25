@@ -63,7 +63,8 @@
 
         public T Get<T>() => (T)this.Get(typeof(T));
 
-        public abstract object Get(Type t);
+        public object Get(Type t)
+            => this.GetInternal(t, getMyKeyChain: Enumerable.Empty<string>);
 
         public abstract void Visit(ITomlObjectVisitor visitor);
 
@@ -98,6 +99,8 @@
         }
 
         internal abstract TomlObject CloneFor(ITomlRoot root);
+
+        internal abstract object GetInternal(Type t, Func<IEnumerable<string>> getMyKeyChain);
 
         internal virtual void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)
         {

@@ -166,45 +166,6 @@
 
         public TomlObject Get(string key) => this[key];
 
-        public override object Get(Type t)
-        {
-            if (t == Types.TomlTableType) { return this; }
-
-            var conv = this.Root.Settings.TryGetConverter(Types.TomlTableType, t);
-            if (conv != null)
-            {
-                return conv.Convert(this.Root, this, t);
-            }
-
-            var result = this.Root.Settings.GetActivatedInstance(t);
-            foreach (var r in this.rows)
-            {
-                var targetMember = this.Root.Settings.TryGetMappedMember(result.GetType(), r.Key.Value);
-                if (targetMember.HasValue)
-                {
-                    Type keyMapingTargetType = this.Root.Settings.TryGetMappedType(r.Key.Value, targetMember);
-
-                    object value = null;
-                    try
-                    {
-                        value = r.Value.Get(keyMapingTargetType ?? targetMember.Value.MemberType);
-                    }
-                    catch (Exception exc)
-                    {
-                        throw new InvalidOperationException(
-                            $"Failed to convert TOML object with key '{r.Key}', " + $"type '{r.Value.ReadableTypeName}' " +
-                            $"and value '{r.Value.ToString()}' to object property " +
-                            $"with name '{targetMember.Value.MemberInfo.Name}' and type '{targetMember.Value.MemberType.FullName}'.",
-                            exc);
-                    }
-
-                    targetMember.Value.SetValue(result, value);
-                }
-            }
-
-            return result;
-        }
-
         public IEnumerator<KeyValuePair<string, TomlObject>> GetEnumerator()
         {
             var iterator = this.rows.GetEnumerator();
@@ -334,6 +295,52 @@
             }
 
             return tbl;
+        }
+
+        internal override object GetInternal(Type t, Func<IEnumerable<string>> getMyKeyChain)
+        {
+            if (t == Types.TomlTableType) { return this; }
+
+            var conv = this.Root.Settings.TryGetConverter(Types.TomlTableType, t);
+            if (conv != null)
+            {
+                return conv.Convert(this.Root, this, t);
+            }
+
+            var result = this.Root.Settings.GetActivatedInstance(t);
+            foreach (var r in this.rows)
+            {
+                var targetMember = this.Root.Settings.TryGetMappedMember(result.GetType(), r.Key.Value);
+                if (targetMember.HasValue)
+                {
+                    Type keyMapingTargetType = this.Root.Settings.TryGetMappedType(r.Key.Value, targetMember);
+
+                    object value = null;
+                    try
+                    {
+                        value = r.Value.GetInternal(
+                            keyMapingTargetType ?? targetMember.Value.MemberType,
+                            () => getMyKeyChain().Concat(r.Key.Value.ToEnumerable()));
+                    }
+                    catch (Exception exc)
+                    {
+                        throw new InvalidOperationException(
+                            $"Failed to convert TOML object with key '{r.Key}', " + $"type '{r.Value.ReadableTypeName}' " +
+                            $"and value '{r.Value.ToString()}' to object property " +
+                            $"with name '{targetMember.Value.MemberInfo.Name}' and type '{targetMember.Value.MemberType.FullName}'.",
+                            exc);
+                    }
+
+                    targetMember.Value.SetValue(result, value);
+                }
+                else
+                {
+                    this.Root.Settings.OnTargetPropertyNotFound(
+                        getMyKeyChain().Concat(r.Key.Value.ToEnumerable()).ToArray(), result, r.Value);
+                }
+            }
+
+            return result;
         }
 
         internal override void OverwriteCommentsWithCommentsFrom(TomlObject src, bool overwriteWithEmpty)

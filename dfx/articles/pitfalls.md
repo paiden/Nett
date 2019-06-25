@@ -40,3 +40,35 @@ class object, so by default it does the `UtcDateTime` conversion.
 
 If the data object expects `LocalDateTime` this will lead to 
 time differences between serialization and deserialization.
+
+# Property mapping issues
+
+When mapping a TOML table to a .Net object there can be various
+reasons, why this mapping does not work as expected. This section
+of the documentation tries to explain the mechanisms 'Nett' has 
+in place to help to diagnose such issues.
+
+## On target property missing callback
+This is a callback that will get invoked when Nett tries to map
+a TOML table row to a corresponding property in a .Net object 
+but cannot find a suitable property on the object. 
+
+Users can install custom callbacks and implement whatever error
+action is desired (including throwing exceptions).
+
+```csharp
+var settings = TomlSettings.Create(s => s
+    .ConfigurePropertyMapping(m => m
+        .OnTargetPropertyNotFound((k, t, v) => { key = k; tgt = t; val = v; })));
+```
+
+The callback tries to give as much information as possible to allow
+the user to provide as good error messages as possible.
+
+The first argument is an array of string that represent all TOML
+keys until the row that should get mapped. So if you have try to map
+the TOML row a.b.c the first argument will be `["a", "b", "c"]`.
+
+The second argument gives you the instance of the target object. 
+
+The third argument is the TOML value object that could not be mapped.

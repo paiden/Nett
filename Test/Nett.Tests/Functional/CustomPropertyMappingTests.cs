@@ -154,7 +154,7 @@ namespace Nett.Coma.Tests.Functional
             var written = Toml.WriteString(new RootTestObject(), settings);
 
             // Assert
-            written.ShouldBeSemanticallyEquivalentTo("prop=1[sub]subprop=2");
+            written.ShouldBeSemanticallyEquivalentTo("prop=1subarr=[][sub]subprop=2");
         }
 
         [Fact]
@@ -176,6 +176,65 @@ subprop=4", settings);
             read.Sub.SubProp.Should().Be(4);
         }
 
+        [Fact]
+        public void GivenPropertyForKeyDoesNotExistAndCallbackWasSet_WhenTomlWithSuchKeyIsRead_InvokesTheCallback()
+        {
+            // Arrange
+            object tgt = null; string[] key = null; TomlObject val = null;
+            var settings = TomlSettings.Create(s => s
+                .ConfigurePropertyMapping(m => m
+                    .OnTargetPropertyNotFound((k, t, v) => { key = k; tgt = t; val = v; })));
+
+            // Act
+            var obj = Toml.ReadString<RootTestObject>(@"
+thisdoesnotexist = 3", settings);
+
+            // Assert
+            tgt.Should().BeOfType<RootTestObject>();
+            key.Should().Equal("thisdoesnotexist");
+            val.Should().BeOfType<TomlInt>().Which.Value.Should().Be(3);
+        }
+
+        [Fact]
+        public void GivenPropertyForKeyDoesNotExistAndCallbackWasSet_WhenTomlWithSuchSubTableKeyIsRead_InvokesTheCallback()
+        {
+            // Arrange
+            object tgt = null; string[] key = null; TomlObject val = null;
+            var settings = TomlSettings.Create(s => s
+                .ConfigurePropertyMapping(m => m
+                    .OnTargetPropertyNotFound((k, t, v) => { key = k; tgt = t; val = v; })));
+
+            // Act
+            var obj = Toml.ReadString<RootTestObject>(@"
+[Sub]
+thisdoesnotexistinsub = 3", settings);
+
+            // Assert
+            tgt.Should().BeOfType<RootTestObject.SubTestObject>();
+            key.Should().Equal("Sub", "thisdoesnotexistinsub");
+            val.Should().BeOfType<TomlInt>().Which.Value.Should().Be(3);
+        }
+
+        [Fact]
+        public void GivenPropertyForSubKeyDoesNotExistAndCallbackWasSet_WhenTomlWithSuchKeyIsRead_InvokesTheCallback()
+        {
+            // Arrange
+            object tgt = null; string[] key = null; TomlObject val = null;
+            var settings = TomlSettings.Create(s => s
+                .ConfigurePropertyMapping(m => m
+                    .OnTargetPropertyNotFound((k, t, v) => { key = k; tgt = t; val = v; })));
+
+            // Act
+            var obj = Toml.ReadString<RootTestObject>(@"
+[[SubArr]]
+thisdoesnotexistinsubarr = 3", settings);
+
+            // Assert
+            tgt.Should().BeOfType<RootTestObject.SubTestObject>();
+            key.Should().Equal("SubArr", "thisdoesnotexistinsubarr");
+            val.Should().BeOfType<TomlInt>().Which.Value.Should().Be(3);
+        }
+
         private static TestObject Create(string value)
             => new TestObject() { TestProp = value };
 
@@ -195,6 +254,8 @@ subprop=4", settings);
 
 
             public SubTestObject Sub { get; set; } = new SubTestObject();
+
+            public SubTestObject[] SubArr { get; set; } = new SubTestObject[0];
 
             public class SubTestObject
             {

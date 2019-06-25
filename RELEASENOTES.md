@@ -1,3 +1,7 @@
+## v0.13.0
+Nett:
++ Add: Callback for processing non map-able table rows [#78](https://github.com/paiden/Nett/issues/78)
+
 ## v0.12.0
 Nett:
 + Fix: ArgumentOutOfRange exception when DateTime field/prop not initialized [#25](https://github.com/paiden/Nett/issues/25)

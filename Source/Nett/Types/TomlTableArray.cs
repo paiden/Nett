@@ -50,7 +50,19 @@
         public override string ToString()
             => TomlTableWriter.WriteTomlFragment(this);
 
-        public override object Get(Type t)
+        public TomlTable Last() => this.items[this.items.Count - 1];
+
+        public override void Visit(ITomlObjectVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneArrayFor(root);
+
+        internal TomlTableArray CloneArrayFor(ITomlRoot root)
+            => CopyComments(new TomlTableArray(root, this.items.Select(i => i.CloneTableFor(root))), this);
+
+        internal override object GetInternal(Type t, Func<IEnumerable<string>> getMyKeyChain)
         {
             if (t == TableArrayType) { return this; }
 
@@ -67,7 +79,7 @@
                 int cnt = 0;
                 foreach (var i in this.items)
                 {
-                    a.SetValue(i.Get(et), cnt++);
+                    a.SetValue(i.GetInternal(et, getMyKeyChain), cnt++);
                 }
 
                 return a;
@@ -87,23 +99,11 @@
 
             foreach (var i in this.items)
             {
-                collection.Add(i.Get(itemType));
+                collection.Add(i.GetInternal(itemType, getMyKeyChain));
             }
 
             return collection;
         }
-
-        public TomlTable Last() => this.items[this.items.Count - 1];
-
-        public override void Visit(ITomlObjectVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
-        internal override TomlObject CloneFor(ITomlRoot root) => this.CloneArrayFor(root);
-
-        internal TomlTableArray CloneArrayFor(ITomlRoot root)
-            => CopyComments(new TomlTableArray(root, this.items.Select(i => i.CloneTableFor(root))), this);
 
         internal override TomlObject WithRoot(ITomlRoot root) => this.TableArrayWithRoot(root);
 
