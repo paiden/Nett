@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 
@@ -15,29 +15,25 @@ namespace Nett.AspNet
         public static IConfigurationBuilder AddTomlFile(this IConfigurationBuilder builder, string path, bool optional, bool reloadOnChange)
             => AddTomlFile(builder, provider: null, path: path, optional: optional, reloadOnChange: reloadOnChange);
 
-        public static IConfigurationBuilder AddTomlFile(
-            this IConfigurationBuilder builder,
-            IFileProvider provider,
-            string path,
-            bool optional,
-            bool reloadOnChange)
-        {
-            if (provider == null && Path.IsPathRooted(path))
-            {
-                provider = new PhysicalFileProvider(Path.GetDirectoryName(path));
-                path = Path.GetFileName(path);
-            }
+        public static IConfigurationBuilder AddTomlFile(this IConfigurationBuilder builder, IFileProvider provider, string path, bool optional, bool reloadOnChange)
+            => AddTomlFile(builder, provider, path, s => { s.Optional = optional; s.ReloadOnChange = reloadOnChange; });
 
+        public static IConfigurationBuilder AddTomlFile(this IConfigurationBuilder builder, string path, Action<TomlConfigurationSource> configureSource)
+            => AddTomlFile(builder, provider: null, path: path, configureSource: configureSource);
+
+        public static IConfigurationBuilder AddTomlFile(this IConfigurationBuilder builder, IFileProvider provider, string path, Action<TomlConfigurationSource> configureSource)
+        {
             var source = new TomlConfigurationSource()
             {
                 FileProvider = provider,
-                Path = path,
-                Optional = optional,
-                ReloadOnChange = reloadOnChange,
+                Path = path
             };
 
-            builder.Add(source);
-            return builder;
+            configureSource?.Invoke(source);
+
+            source.ResolveFileProvider();
+
+            return builder.Add(source);
         }
     }
 }

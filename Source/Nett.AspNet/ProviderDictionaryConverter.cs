@@ -7,8 +7,11 @@ namespace Nett.AspNet
     internal static class ProviderDictionaryConverter
     {
         public static Dictionary<string, string> ToProviderDictionary(TomlTable table)
+            => ToProviderDictionary(table, null);
+
+        public static Dictionary<string, string> ToProviderDictionary(TomlTable table, StringComparer keyComparer)
         {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Dictionary<string, string> dict = new Dictionary<string, string>(comparer: keyComparer);
             ProcessTable(dict, table, keyPrefix: string.Empty);
             return dict;
         }
