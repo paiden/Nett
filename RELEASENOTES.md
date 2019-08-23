@@ -1,9 +1,10 @@
+## v0.14.0
+AspNet:
++ Add: Option to treat provider dictionary config keys as case insensitive [#81](https://github.com/paiden/Nett/issues/81)
+
 ## v0.13.0
 Nett:
 + Add: Callback for processing non map-able table rows [#78](https://github.com/paiden/Nett/issues/78)
-
-AspNet:
-+ Add: Option to treat provider dictionary config keys as case insensitive [#81](https://github.com/paiden/Nett/issues/81)
 
 ## v0.12.0
 Nett:
