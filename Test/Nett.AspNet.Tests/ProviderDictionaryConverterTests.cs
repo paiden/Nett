@@ -102,5 +102,62 @@ jaggedArray = [ [ ""index00"", ""index01"" ], [ ""index10"" ], [], [ ""index30""
                 { "jaggedArray:3:0", "index30" }
             });
         }
+
+        [Fact]
+        public void ToProviderDictionary_Converts_With_Case_Sensitive_Keys_By_Default()
+        {
+            // Arrange
+            var tml = Toml.ReadString(@"
+Option1 = 1
+Option2 = ""opt1""
+
+[SubOption]
+SubOption1 = ""suboption1""
+");
+
+            // Act
+            var providerDict = ProviderDictionaryConverter.ToProviderDictionary(tml);
+
+            // Assert
+            providerDict.Should().ContainKeys("Option1", "Option2", "SubOption:SubOption1");
+            providerDict.Should().NotContainKeys("option1", "option2", "subOption:subOption1");
+        }
+
+        [Fact]
+        public void ToProviderDictionary_Converts_To_Dictionary_With_Key_Comparer_When_Specified()
+        {
+            // Arrange
+            var tml = Toml.ReadString(@"
+Option1 = 1
+Option2 = ""opt1""
+
+[SubOption]
+SubOption1 = ""suboption1""
+suboption1 = ""otheropt""
+");
+
+            // Act
+            var providerDict = ProviderDictionaryConverter.ToProviderDictionary(tml, StringComparer.OrdinalIgnoreCase);
+
+            // Assert
+            providerDict.Should().ContainKeys("Option1", "Option2", "SubOption:SubOption1");
+            providerDict.Should().ContainKeys("option1", "option2", "suboption:suboption1");
+        }
+
+        [Fact]
+        public void ToProviderDictionary_With_Case_Insensitive_Key_Comparer_Overrides_Earlier_Keys()
+        {
+            // Arrange
+            var tml = Toml.ReadString(@"
+Option = 1
+option = ""opt1""
+");
+
+            // Act
+            var providerDict = ProviderDictionaryConverter.ToProviderDictionary(tml, StringComparer.OrdinalIgnoreCase);
+
+            // Assert
+            providerDict["option"].Should().Be("opt1", "the provider dictionary overrides earlier values with the last one found for a key.");
+        }
     }
 }
