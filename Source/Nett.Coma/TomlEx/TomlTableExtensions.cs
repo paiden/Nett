@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nett.Coma.TomlEx;
     using Nett.Extensions;
 
     internal static class TomlTableExtensions
@@ -84,26 +83,29 @@
             return (T)current[keyChain.Last()];
         }
 
-        public static TomlTable TransformToSourceTable(this TomlTable table, IConfigSource source)
+        public static TomlTable TransformToSourceTable(this TomlTable table, IConfigSource source, TomlObject rootSource = null)
         {
             table.CheckNotNull(nameof(table));
 
-            var sourcesTable = Toml.Create(table.TableType);
+            var sourcesTable = rootSource == null
+                ? Toml.Create(table.TableType)
+                : TomlObjectFactory.CreateEmptyAttachedTable(rootSource, table.TableType);
+
             foreach (var r in table.Rows)
             {
                 if (r.Value.TomlType == TomlObjectType.Table)
                 {
-                    sourcesTable[r.Key] = ((TomlTable)r.Value).TransformToSourceTable(source);
+                    sourcesTable[r.Key] = ((TomlTable)r.Value).TransformToSourceTable(source, sourcesTable);
                 }
                 else if (r.Value.TomlType == TomlObjectType.ArrayOfTables)
                 {
                     var arr = (TomlTableArray)r.Value;
-                    var sourcesArray = new TomlTableArray(table.Root, arr.Items.Select(t => t.TransformToSourceTable(source)));
+                    var sourcesArray = new TomlTableArray(table.Root, arr.Items.Select(t => t.TransformToSourceTable(source, sourcesTable)));
                     sourcesTable[r.Key] = sourcesArray;
                 }
                 else
                 {
-                    sourcesTable[r.Key] = new TomlSource(table.Root, source);
+                    sourcesTable[r.Key] = new TomlSource(sourcesTable.Root, source);
                 }
             }
 
@@ -111,23 +113,6 @@
         }
 
         public static TomlTable Clone(this TomlTable input)
-        {
-            input.CheckNotNull(nameof(input));
-
-            TomlTable cloned = Toml.Create(input.Root.Settings);
-            cloned.TableType = input.TableType;
-
-            foreach (var r in input.InternalRows)
-            {
-                switch (r.Value.TomlType)
-                {
-                    case TomlObjectType.Table: cloned.AddRow(r.Key, ((TomlTable)r.Value).Clone()); break;
-                    case TomlObjectType.ArrayOfTables: cloned.AddRow(r.Key, ((TomlTableArray)r.Value).Clone()); break;
-                    default: cloned[r.Key.Value] = r.Value; break;
-                }
-            }
-
-            return cloned;
-        }
+            => input.CloneTableFor(input.Root);
     }
 }

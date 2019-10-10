@@ -29,7 +29,7 @@ namespace Nett.Tests.Functional
             X = Toml.Create();
             X.Add(XKey, XVal);
             X.Add(SameKey, XVal);
-            var xs = X.Add(SubTableKey, Toml.Create()).Added;
+            var xs = X.Add(SubTableKey, TomlObjectFactory.CreateEmptyAttachedTable(X)).Added;
             xs.Add(SubTableValueKey, XSubTableVal);
 
             Y = Toml.Create();

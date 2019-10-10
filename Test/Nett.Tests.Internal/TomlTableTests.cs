@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
@@ -68,6 +69,19 @@ namespace Nett.Tests
             to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(0).Location.Should().Be(CommentLocation.Prepend);
             to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(1).Text.Should().Be("fa2");
             to.Get<TomlTable>("SubTable").Get("A").Comments.ElementAt(1).Location.Should().Be(CommentLocation.Append);
+        }
+
+        [Fact]
+        public void CloneAlsoCreatesARootTable()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+
+            // Act
+            var clone = tbl.CloneFor(tbl.Root);
+
+            // Assert
+            clone.Should().BeAssignableTo<ITomlRoot>();
         }
 
         private TomlTable CreateEmpty()

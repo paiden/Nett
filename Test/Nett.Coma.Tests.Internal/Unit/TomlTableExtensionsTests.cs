@@ -84,5 +84,24 @@ namespace Nett.Coma.Tests.Unit
             // Assert
             cloned.TableType.Should().Be(tbl.TableType);
         }
+
+        [Fact]
+        public void CloneAlsoClonesSubtableComments()
+        {
+            const string Tml = @"#Some comment
+b = true
+
+#Comment on nested table
+[a]
+#Comment on C
+c = """"
+";
+
+            var tbl = Toml.ReadString(Tml);
+
+            var cloned = tbl.Clone();
+
+            Toml.WriteString(cloned).ShouldBeNormalizedEqualTo(Tml);
+        }
     }
 }

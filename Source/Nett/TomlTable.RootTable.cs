@@ -64,6 +64,13 @@
             }
 
             TomlSettings ITomlRoot.Settings => this.settings;
+
+            internal override TomlObject CloneFor(ITomlRoot root)
+            {
+                var clone = root == this ? new RootTable(this.settings) : new TomlTable(root);
+                this.CloneForInternal(clone);
+                return clone;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Nett.Tests.Util;
+using Nett.Coma;
 using Xunit;
 
 namespace Nett.Coma.Tests.Issues
@@ -8,6 +9,15 @@ namespace Nett.Coma.Tests.Issues
 
     public class Issue84Tests
     {
+        private static readonly string InitialToml = @"#Some comment
+b = true
+
+#Comment on nested table
+[a]
+#Comment on C
+c = """"
+";
+
         public class Configuration
         {
 
@@ -24,21 +34,14 @@ namespace Nett.Coma.Tests.Issues
             }
         }
 
-        [Fact(Skip = "Disabled as followup commits are needed to make it work.")]
+        [Fact]
         public void CommentsNotLostWhenPorpertyValueIsSet()
         {
-            var expectedUnchanged = @"#Some comment
-b = true
-
-#Comment on nested table
-[a]
-#Comment on C
-c = """"
-";
+            // Arrange
             var expectedChanged = @"#Some comment
 b = false
 
-#Comment on nested
+#Comment on nested table
 [a]
 #Comment on C
 c = """"
@@ -51,10 +54,12 @@ c = """"
                 .Initialize();
 
             var readValue = File.ReadAllText(filename);
-            readValue.ShouldBeNormalizedEqualTo(expectedUnchanged);
+            readValue.ShouldBeNormalizedEqualTo(InitialToml);
 
+            // Act
             config.Set(c => c.b, false);
 
+            // Assert
             readValue = File.ReadAllText(filename);
             readValue.ShouldBeNormalizedEqualTo(expectedChanged);
         }

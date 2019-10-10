@@ -212,6 +212,9 @@
         public static string WriteString<T>(T obj, TomlSettings settings) =>
             WriteStringInternal(TomlTable.RootTable.From(settings, obj));
 
+        public static string WriteString(TomlTable table)
+            => WriteStringInternal(table);
+
         private static void WriteFileInternal(TomlTable table, string filePath, TomlSettings settings)
         {
             if (table == null) { throw new ArgumentNullException(nameof(table)); }

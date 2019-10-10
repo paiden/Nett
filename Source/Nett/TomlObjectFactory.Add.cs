@@ -92,7 +92,10 @@ namespace Nett
         public static Result<T> Add<T>(
             this TomlTable table, string key, T obj, RequireTomlObject<T> _ = null)
             where T : TomlObject
-            => AddTomlObjectInternal(table, key, obj.Root == table.Root ? obj : (T)obj.CloneFor(table.Root));
+        {
+            var toAdd = obj.Root == table.Root ? obj : (T)obj.CloneFor(table.Root);
+            return AddTomlObjectInternal(table, key, toAdd);
+        }
 #pragma warning restore SA1313 // Parameter names must begin with lower-case letter
 
         // Internal
