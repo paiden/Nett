@@ -34,12 +34,6 @@ namespace Nett
         internal TomlLocalDateTime CloneLocalDateTimeFor(ITomlRoot root)
             => CopyComments(this.NewLocalDateTimeWithRoot(root), this);
 
-        internal override TomlValue ValueWithRoot(ITomlRoot root)
-            => this.NewLocalDateTimeWithRoot(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root)
-            => this.NewLocalDateTimeWithRoot(root);
-
         private TomlLocalDateTime NewLocalDateTimeWithRoot(ITomlRoot root)
         {
             root.CheckNotNull(nameof(root));

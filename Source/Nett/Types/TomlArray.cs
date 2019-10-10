@@ -105,16 +105,5 @@
         }
 
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneArrayFor(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.ArrayWithRoot(root);
-
-        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.ArrayWithRoot(root);
-
-        internal TomlArray ArrayWithRoot(ITomlRoot root)
-        {
-            root.CheckNotNull(nameof(root));
-
-            return new TomlArray(root, this.Items.Select(i => i.ValueWithRoot(root)).ToArray());
-        }
     }
 }

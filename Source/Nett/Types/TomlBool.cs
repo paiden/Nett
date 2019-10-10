@@ -26,10 +26,6 @@ namespace Nett
 
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneBoolFor(root);
 
-        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.BoolWithRoot(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.BoolWithRoot(root);
-
         internal TomlBool BoolWithRoot(ITomlRoot root)
         {
             root.CheckNotNull(nameof(root));

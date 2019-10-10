@@ -45,10 +45,6 @@ namespace Nett
 
         internal TomlInt CloneIntFor(ITomlRoot root) => CopyComments(new TomlInt(root, this.Value), this);
 
-        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.IntWithRoot(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.IntWithRoot(root);
-
         internal TomlInt IntWithRoot(ITomlRoot root)
         {
             root.CheckNotNull(nameof(root));

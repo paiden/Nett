@@ -29,12 +29,5 @@
             => this.Value;
 
         internal override TomlObject CloneFor(ITomlRoot root) => CopyComments(new TomlSource(root, this.Value), this);
-
-        internal override TomlObject WithRoot(ITomlRoot root)
-        {
-            root.CheckNotNull(nameof(root));
-
-            return new TomlSource(root, this.Value);
-        }
     }
 }

@@ -31,15 +31,5 @@ namespace Nett
         {
             throw new NotImplementedException();
         }
-
-        internal override TomlValue ValueWithRoot(ITomlRoot root)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override TomlObject WithRoot(ITomlRoot root)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -384,8 +384,6 @@
             return table;
         }
 
-        internal override TomlObject WithRoot(ITomlRoot root) => this.TableWithRoot(root);
-
         protected virtual void OnRowValueSet(string rowKey)
         {
         }

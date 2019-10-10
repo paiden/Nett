@@ -110,7 +110,8 @@
             }
         }
 
-        internal abstract TomlObject WithRoot(ITomlRoot root);
+        internal TomlObject WithRoot(ITomlRoot root)
+            => this.CloneFor(root);
 
         protected static T CopyComments<T>(T dst, TomlObject src)
             where T : TomlObject

@@ -77,16 +77,5 @@
         internal TomlOffsetDateTime CloneDateTimeFor(ITomlRoot root) => CopyComments(new TomlOffsetDateTime(root, this.Value), this);
 
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneDateTimeFor(root);
-
-        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.DateTimeWithRoot(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.DateTimeWithRoot(root);
-
-        internal TomlOffsetDateTime DateTimeWithRoot(ITomlRoot root)
-        {
-            root.CheckNotNull(nameof(root));
-
-            return new TomlOffsetDateTime(root, this.Value, this.sepFmt, this.offsetFmt);
-        }
     }
 }

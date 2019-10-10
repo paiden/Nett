@@ -137,7 +137,7 @@
         internal IConfigSource TryGetSource(TPath path)
         {
             path.CheckNotNull(nameof(path));
-
+             
             var cfgTable = this.persistable.LoadSourcesTable();
             var source = path.TryGet(cfgTable) as TomlSource;
             return source?.Value;

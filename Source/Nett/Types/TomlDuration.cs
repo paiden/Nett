@@ -75,17 +75,6 @@ namespace Nett
 
         internal TomlDuration CloneTimespanFor(ITomlRoot root) => CopyComments(new TomlDuration(root, this.Value), this);
 
-        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.TimeSpanWithRoot(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.TimeSpanWithRoot(root);
-
-        internal TomlDuration TimeSpanWithRoot(ITomlRoot root)
-        {
-            root.CheckNotNull(nameof(root));
-
-            return new TomlDuration(root, this.Value);
-        }
-
         private static TimeSpan TimeSpanFromTokens(string value, string unit)
         {
             switch (unit)

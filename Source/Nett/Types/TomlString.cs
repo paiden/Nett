@@ -43,17 +43,6 @@
 
         internal TomlString CloneStringFor(ITomlRoot root) => CopyComments(new TomlString(root, this.Value), this);
 
-        internal override TomlValue ValueWithRoot(ITomlRoot root) => this.StringWithRoot(root);
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.StringWithRoot(root);
-
-        internal TomlString StringWithRoot(ITomlRoot root)
-        {
-            root.CheckNotNull(nameof(root));
-
-            return new TomlString(root, this.Value, this.type);
-        }
-
         private static string MultilineTrim(TypeOfString type, string input)
         {
             switch (type)

@@ -36,8 +36,6 @@
 
         internal virtual string Unit { get; set; } = null;
 
-        internal abstract TomlValue ValueWithRoot(ITomlRoot root);
-
         internal override object GetInternal(Type t, Func<IEnumerable<string>> _)
         {
             if (this.GetType() == t) { return this; }

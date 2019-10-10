@@ -104,15 +104,5 @@
 
             return collection;
         }
-
-        internal override TomlObject WithRoot(ITomlRoot root) => this.TableArrayWithRoot(root);
-
-        internal TomlTableArray TableArrayWithRoot(ITomlRoot root)
-        {
-            root.CheckNotNull(nameof(root));
-
-            var a = new TomlTableArray(root, this.Items.Select(t => t.TableWithRoot(root)));
-            return a;
-        }
     }
 }
