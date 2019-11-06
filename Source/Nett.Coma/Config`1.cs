@@ -17,18 +17,24 @@
         }
 
         public TRet Get<TRet>(Expression<Func<T, TRet>> selector)
-            => this.GetInternal(selector);
+            => this.GetTomlObjAs(selector);
 
         public TRet Get<TRet>(Expression<Func<T, TRet>> selector, TRet defaultValue)
         {
             try
             {
-                return this.GetInternal(selector);
+                return this.GetTomlObjAs(selector);
             }
             catch (KeyNotFoundException) when (typeof(Array).IsAssignableFrom(typeof(TRet)))
             {
                 return defaultValue;
             }
+        }
+
+        public TRet GetAs<TRet>(Expression<Func<T, object>> selector)
+        {
+            var obj = this.GetTomlObj(selector);
+            return obj.Get<TRet>();
         }
 
         public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector)
@@ -69,11 +75,17 @@
 
         public T Unmanaged() => this.config.Unmanaged().Get<T>();
 
-        public TRet GetInternal<TRet>(Expression<Func<T, TRet>> selector)
+        private TRet GetTomlObjAs<TRet>(Expression<Func<T, TRet>> selector)
+        {
+            var obj = this.GetTomlObj(selector);
+            return obj.Get<TRet>();
+        }
+
+        private TomlObject GetTomlObj<TRet>(Expression<Func<T, TRet>> selector)
         {
             selector.CheckNotNull(nameof(selector));
             var obj = this.config.GetFromPath(selector.BuildTPath());
-            return obj.Get<TRet>();
+            return obj;
         }
     }
 }

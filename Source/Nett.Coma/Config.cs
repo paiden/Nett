@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Nett.Coma.Path;
     using Nett.Extensions;
 
@@ -72,7 +71,7 @@
 
         internal bool Clear(TPath path)
         {
-            var ste = path.TryApply(this.persistable.LoadSourcesTable()) as TomlSource;
+            var ste = path.TryGet(this.persistable.LoadSourcesTable()) as TomlSource;
 
             if (ste == null)
             {
@@ -85,7 +84,7 @@
         internal bool Clear(TPath path, IConfigSource source)
         {
             var sourceTable = this.persistable.Load(source);
-            var wasRemoved = path.ClearFrom(sourceTable);
+            var wasRemoved = path.Clear(sourceTable);
             this.persistable.Save(sourceTable, source);
             return wasRemoved;
         }
@@ -95,7 +94,7 @@
             path.CheckNotNull(nameof(path));
 
             var cfg = this.persistable.Load();
-            return path.Apply(cfg);
+            return path.Get(cfg);
         }
 
         internal void Set(TPath path, object value)
@@ -112,7 +111,7 @@
             }
             else
             {
-                this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value)));
+                this.Set(tbl => path.Set(tbl, TomlObject.CreateFrom(tbl.Root, value)));
             }
         }
 
@@ -121,7 +120,7 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.SetValue(tbl, TomlObject.CreateFrom(tbl.Root, value)), source);
+            this.Set(tbl => path.Set(tbl, TomlObject.CreateFrom(tbl.Root, value)), source);
         }
 
         internal IConfigSource TryGetSource(TPath path)
@@ -129,7 +128,7 @@
             path.CheckNotNull(nameof(path));
 
             var cfgTable = this.persistable.LoadSourcesTable();
-            var source = path.TryApply(cfgTable) as TomlSource;
+            var source = path.TryGet(cfgTable) as TomlSource;
             return source?.Value;
         }
 

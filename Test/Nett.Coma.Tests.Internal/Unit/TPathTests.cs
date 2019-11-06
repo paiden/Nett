@@ -28,7 +28,7 @@ namespace Nett.Coma.Tests.Internal.Unit
             var path = e.BuildTPath();
 
             // Act
-            var o = path.Apply(this.tbl);
+            var o = path.Get(this.tbl);
 
             // Assert
             o.Get<int>().Should().Be(1);
@@ -42,7 +42,7 @@ namespace Nett.Coma.Tests.Internal.Unit
             var path = e.BuildTPath();
 
             // Act
-            var o = path.Apply(this.tbl);
+            var o = path.Get(this.tbl);
 
             // Assert
             o.Get<int[]>().Should().Equal(new int[] { 1, 2 });
@@ -56,7 +56,7 @@ namespace Nett.Coma.Tests.Internal.Unit
             var path = e.BuildTPath();
 
             // Act
-            var o = path.Apply(this.tbl);
+            var o = path.Get(this.tbl);
 
             // Assert
             o.Get<int>().Should().Be(this.r.Item.I);
@@ -70,7 +70,7 @@ namespace Nett.Coma.Tests.Internal.Unit
             var path = e.BuildTPath();
 
             // Act
-            var o = path.Apply(this.tbl);
+            var o = path.Get(this.tbl);
 
             // Assert
             o.Get<int>().Should().Be(this.r.A[1]);

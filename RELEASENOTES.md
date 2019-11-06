@@ -1,3 +1,6 @@
+## v0.15.0
+Coma: Add GetAs conversion method [#85](https://github.com/paiden/Nett/issues/85)
+
 ## v0.14.0
 AspNet:
 + Add: Option to treat provider dictionary config keys as case insensitive [#81](https://github.com/paiden/Nett/issues/81)

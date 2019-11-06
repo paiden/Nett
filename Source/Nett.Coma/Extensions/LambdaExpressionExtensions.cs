@@ -9,7 +9,7 @@ namespace Nett.Coma.Extensions
         public static TPath BuildTPath(this LambdaExpression expr)
         {
             expr.CheckNotNull(nameof(expr));
-            return TPath.Builder.Build(expr);
+            return TPath.Build(expr);
         }
     }
 }
