@@ -184,5 +184,44 @@ a.b=1
 a.c=2
 a.n={x=3}");
         }
+
+        [Fact]
+        public void GivenDottedKeyValueWithPreComment_WhenWrittenToFile_WritesCommentBeforeLine()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            var obj = tbl.CreateEmptyAttachedTable(TomlTable.TableTypes.Dotted);
+            tbl.Add(nameof(obj), obj);
+
+            obj.Add("x", 1).Added.AddComment("The Comment", CommentLocation.Prepend);
+
+            // Act
+            var tml = Toml.WriteString(tbl);
+
+            // Assert
+            tml.Should().BeAfterTransforms(StringTransformForComparison, @"
+[obj]
+#TheComment
+x=1");
+        }
+
+        [Fact]
+        public void GivenDottedKeyValueWithAppendComment_WhenWrittenToFile_WritesCommentBeforeLine()
+        {
+            // Arrange
+            var tbl = Toml.Create();
+            var obj = tbl.CreateEmptyAttachedTable(TomlTable.TableTypes.Dotted);
+            tbl.Add(nameof(obj), obj);
+
+            obj.Add("x", 1).Added.AddComment("The Comment", CommentLocation.Append);
+
+            // Act
+            var tml = Toml.WriteString(tbl);
+
+            // Assert
+            tml.Should().BeAfterTransforms(StringTransformForComparison, @"
+[obj]
+x=1#TheComment");
+        }
     }
 }
