@@ -86,6 +86,7 @@
     <Compile Include="Functional\InlineTableTests.Write.cs" />
     <Compile Include="Functional\ValueWithUnitTests.cs" />
     <Compile Include="Functional\V050CompatTests.cs" />
+    <Compile Include="Issues\Issue86Tests.cs" />
     <Compile Include="Plugins\DictRootConfig.cs" />
     <Compile Include="Plugins\ObjRootConfig.cs" />
     <Compile Include="Plugins\PluginConfigWithIntDict.cs" />

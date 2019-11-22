@@ -6,6 +6,8 @@ namespace Nett.Tests.Functional
 {
     public sealed class AlternativeKeyTests
     {
+        private readonly ST StringTransformForComparison = ST.Do(ST.Norm, ST.NoSpc, ST.Trim);
+
         [Fact]
         public void UseCustomKey_WithLamdaForPropSelector_SerializationUsesThatKey()
         {
@@ -152,7 +154,7 @@ ThatsMine = ""You found me""");
             var tml = Toml.WriteString(instance);
 
             // Assert
-            tml.ShouldNormalized().Be(@"
+            tml.Should().BeAfterTransforms(StringTransformForComparison, @"
 'The Key' = 1
 PubField = ""Serialize all the things""
 ThatsMine = ""You found me""");
@@ -184,7 +186,7 @@ ThatsMine=""thatsmine read correctly""");
             var tml = Toml.WriteString(instance);
 
             // Assert
-            tml.ShouldNormalized().Be(@"
+            tml.Should().BeAfterTransforms(StringTransformForComparison, @"
 Y = 22
 
 [AObj]

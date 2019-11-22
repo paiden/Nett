@@ -48,6 +48,7 @@ namespace Nett.Writer
             {
                 this.WriteDotteKey(keySegments);
                 this.WriteValue(value);
+                this.WriteAppendNewlines(value);
             }
 
             private void WriteDotteKey(params TomlKey[] keySegments)

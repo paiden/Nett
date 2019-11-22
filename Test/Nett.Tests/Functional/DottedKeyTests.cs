@@ -8,6 +8,8 @@ namespace Nett.Tests.Functional
 {
     public sealed class DottedKeyTests
     {
+        private readonly ST StringTransformForComparison = ST.Do(ST.Norm, ST.NoSpc, ST.Trim);
+
         [Fact]
         public void Read_WithSingleDottedKey_ReadsTableCorrectly()
         {
@@ -31,7 +33,6 @@ fruit.id = 1";
 a.b = 1
 a.b.c = 2
 ";
-
             // Act
             Action a = () => Toml.ReadString(Input);
 
@@ -119,7 +120,10 @@ a.b.c = 2
             var written = Toml.WriteString(root);
 
             // Assert
-            written.ShouldBeSemanticallyEquivalentTo("a.b=1 a.c=2 a.n.x=3");
+            written.Should().BeAfterTransforms(StringTransformForComparison, @"
+a.b=1
+a.c=2
+a.n.x=3");
         }
 
         [Fact]
@@ -145,7 +149,10 @@ a.b.c = 2
             var written = Toml.WriteString(root);
 
             // Assert
-            written.ShouldBeSemanticallyEquivalentTo("a.b=1 a.c=2 a.n.x=3");
+            written.Should().BeAfterTransforms(StringTransformForComparison, @"
+a.b=1
+a.c=2
+a.n.x=3");
         }
 
         [Fact]
@@ -171,7 +178,11 @@ a.b.c = 2
             var written = Toml.WriteString(root);
 
             // Assert
-            written.ShouldBeSemanticallyEquivalentTo("a.b=1 a.c=2 a.n={x=3}");
+
+            written.Should().BeAfterTransforms(StringTransformForComparison, @"
+a.b=1
+a.c=2
+a.n={x=3}");
         }
     }
 }
