@@ -60,6 +60,34 @@
 
         public TomlTable LoadSourcesTable() => this.MergeTables(c => c.LoadSourcesTable());
 
+        public void RemoveEmptyTables()
+        {
+            foreach (var store in this.stores)
+            {
+                var tbl = store.Load();
+                RemoveEmptyTables(tbl);
+                store.Save(tbl);
+            }
+
+            static void RemoveEmptyTables(TomlTable current)
+            {
+                foreach (var r in current.InternalRows.ToList())
+                {
+                    if (r.Value is TomlTable tbl)
+                    {
+                        if (tbl.InternalRows.Any())
+                        {
+                            RemoveEmptyTables(tbl);
+                        }
+                        else
+                        {
+                            current.Remove(r.Key.Value);
+                        }
+                    }
+                }
+            }
+        }
+
         public void Save(TomlTable content)
         {
             Assert(this.stores.Count > 0, AssertAtLeastOneConfigMsg);

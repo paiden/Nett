@@ -37,10 +37,23 @@
             return obj.Get<TRet>();
         }
 
-        public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector)
+        /// <summary>
+        /// Clears a setting value from the object by removing the row from the underlying TOML table.
+        /// </summary>
+        /// <typeparam name="TProperty">Type of the config object property</typeparam>
+        /// <param name="selector">Lambda expression used to resolve the property that should get cleared.</param>
+        /// <param name="fromAllSources">If set to true, the underlying row will be deleted for all files in that
+        /// the setting exited instead of only the one that provides the current value for the setting object after the
+        /// load/merge operation.</param>
+        /// <returns><b>True</b> if the setting was deleted from at least one config source, <b>false</b> otherwise.</returns>
+        /// <remarks>
+        /// If the property cleared is a complex object with its own TOML table all rows of that table are cleared. If no table row
+        /// remains after the clear operation, the table is completely removed from it's owner table.
+        /// </remarks>
+        public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector, bool fromAllSources = false)
         {
             var path = selector.CheckNotNull(nameof(selector)).BuildTPath();
-            return this.config.Clear(path);
+            return this.config.Clear(path, fromAllSources);
         }
 
         public bool Clear<TProperty>(Expression<Func<T, TProperty>> selector, IConfigSource source)

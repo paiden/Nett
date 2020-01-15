@@ -61,6 +61,14 @@ namespace Nett.Coma.Path
         public override string ToString()
             => $"{this.parent?.ToString() ?? string.Empty}{this.segment.ToString()}";
 
+        internal IEnumerable<TPath> BuildForTableItems(TomlTable tbl)
+        {
+            foreach (var r in tbl.InternalRows)
+            {
+                yield return new TPath(this, new RowSegment(typeof(object), r.Key.Value));
+            }
+        }
+
         private static TomlObject GetTableRowOrThrowOnNotFound(string key, TomlTable tbl)
             => tbl.TryGetValue(key, out var val) ? val : throw new KeyNotFoundException($"Key '{key}' not found in TOML table.");
 

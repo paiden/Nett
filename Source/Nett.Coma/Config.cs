@@ -1,7 +1,6 @@
 ﻿namespace Nett.Coma
 {
     using System;
-    using System.Collections.Generic;
     using Nett.Coma.Path;
     using Nett.Extensions;
 
@@ -58,7 +57,7 @@
         public TomlTable Unmanaged() => this.persistable.Load();
 
         internal static Config<T> CreateInternal<T>(Func<T> createDefault, IMergeConfigStore store)
-                    where T : class
+            where T : class
         {
             createDefault.CheckNotNull(nameof(createDefault));
             store.CheckNotNull(nameof(store));
@@ -69,16 +68,29 @@
             return new Config<T>(store);
         }
 
-        internal bool Clear(TPath path)
+        internal bool Clear(TPath path, bool fromAllSources)
         {
-            var ste = path.TryGet(this.persistable.LoadSourcesTable()) as TomlSource;
-
-            if (ste == null)
+            if (path.TryGet(this.persistable.LoadSourcesTable()) is TomlSource ste)
             {
-                return false;
+                if (fromAllSources)
+                {
+                    bool cleared = false;
+                    foreach (var s in this.persistable.Sources)
+                    {
+                        cleared |= this.Clear(path, s);
+                    }
+                }
+                else
+                {
+                    return this.Clear(path, ste.Value);
+                }
+            }
+            else if (path.TryGet(this.persistable.Load()) is TomlTable tbl)
+            {
+                return this.ClearTable(path, tbl, fromAllSources);
             }
 
-            return this.Clear(path, ste.Value);
+            return false;
         }
 
         internal bool Clear(TPath path, IConfigSource source)
@@ -132,7 +144,17 @@
             return source?.Value;
         }
 
-        private static MergeConfigStore CreateMergeStore(IConfigStoreWithSource store)
-                    => new MergeConfigStore(new List<IConfigStoreWithSource>() { store });
+        private bool ClearTable(TPath tablePath, TomlTable table, bool fromAllSources)
+        {
+            bool cleared = false;
+            foreach (var rowPath in tablePath.BuildForTableItems(table))
+            {
+                cleared |= this.Clear(rowPath, fromAllSources);
+            }
+
+            this.persistable.RemoveEmptyTables();
+
+            return cleared;
+        }
     }
 }

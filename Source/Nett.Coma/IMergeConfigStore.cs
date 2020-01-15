@@ -11,5 +11,7 @@ namespace Nett.Coma
         TomlTable Load(IConfigSource source);
 
         void Save(TomlTable table, IConfigSource target);
+
+        void RemoveEmptyTables();
     }
 }

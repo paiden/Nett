@@ -1,5 +1,8 @@
 ## v0.15.0
-Coma: Add GetAs conversion method [#85](https://github.com/paiden/Nett/issues/85)
+Coma: 
++ Add GetAs conversion method [#85](https://github.com/paiden/Nett/issues/85)
++ `Config.Clear` now also supports clearing TOML tables
++ Add new `Config.Clear` overload that allows to clear a setting completely
 
 ## v0.14.0
 AspNet:

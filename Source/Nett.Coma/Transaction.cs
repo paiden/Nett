@@ -66,6 +66,9 @@
 
         public TomlTable LoadSourcesTable() => this.transactionSourcesTable;
 
+        public void RemoveEmptyTables()
+            => this.persistable.RemoveEmptyTables();
+
         public void Save(TomlTable content) => this.transactionTable = content;
 
         public void Save(TomlTable table, IConfigSource source)
