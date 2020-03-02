@@ -32,12 +32,16 @@ namespace Nett.Coma.Path
                 return item is TomlTable ? item : this.TryWrapInConvertProxy(item, resolveTargetsParent);
             }
 
-            public override void Set(TomlObject target, TomlObject obj)
+            public override void Set(TomlObject target, Func<TomlObject, TomlObject> createNewValueObject)
             {
-                switch (target)
+                if (target is TomlTable tbl)
                 {
-                    case TomlTable tbl: tbl[this.key] = obj; break;
-                    default: throw new InvalidOperationException($"Cannot set '{this.key}' on object target '{target}'.");
+                    tbl.TryGetValue(this.key, out var cur);
+                    tbl[this.key] = createNewValueObject(cur);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Cannot set '{this.key}' on object target '{target}'.");
                 }
             }
 

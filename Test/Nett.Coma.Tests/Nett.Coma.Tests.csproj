@@ -84,6 +84,7 @@
     <Compile Include="Issues\Issue25Tests.cs" />
     <Compile Include="Issues\Issue41Tests.cs" />
     <Compile Include="Issues\Issue74Tests.cs" />
+    <Compile Include="Issues\Issue84Tests.cs" />
     <Compile Include="Issues\Issue85Tests.cs" />
     <Compile Include="Issues\Issue87Tests.cs" />
     <Compile Include="SingleLevelConfig.cs" />

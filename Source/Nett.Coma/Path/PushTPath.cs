@@ -34,10 +34,10 @@ namespace Nett.Coma.Path
             return false;
         }
 
-        public void Set(TomlObject target, TomlObject obj)
+        public void Set(TomlObject target, Func<TomlObject, TomlObject> createNewValueObject)
         {
             var tgt = this.parent?.Resolve(target) ?? target;
-            this.segment.Set(tgt, obj);
+            this.segment.Set(tgt, createNewValueObject);
         }
 
         public TomlObject Get(TomlObject target)
@@ -139,7 +139,7 @@ namespace Nett.Coma.Path
                 this.mappedType = mappedType;
             }
 
-            public virtual void Set(TomlObject target, TomlObject obj)
+            public virtual void Set(TomlObject target, Func<TomlObject, TomlObject> createNewValueObject)
                 => throw new NotSupportedException();
 
             public virtual TomlObject Get(TomlObject target)
@@ -175,19 +175,20 @@ namespace Nett.Coma.Path
             public override TomlObject Resolve(TomlObject target, Func<TomlObject> resolveTargetsParent)
                 => this.Get(target);
 
-            public override void Set(TomlObject target, TomlObject obj)
+            public override void Set(TomlObject target, Func<TomlObject, TomlObject> createNewValueObject)
             {
-                if (target is TomlTableArray tta && obj is TomlTable t)
+                if (target is TomlTableArray tta)
                 {
-                    tta.Items[this.index] = t;
+                    tta.Items[this.index] = (TomlTable)createNewValueObject(tta.Items[this.index]);
                 }
-                else if (target is TomlArray ta && obj is TomlValue v)
+                else if (target is TomlArray ta)
                 {
-                    ta.Items[this.index] = v;
+                    ta.Items[this.index] = (TomlValue)createNewValueObject(ta.Items[this.index]);
                 }
                 else
                 {
-                    throw new InvalidOperationException("X2");
+                    throw new InvalidOperationException(
+                        $"Cannot apply index '[{this.index}]' onto TOML object of type '{target.ReadableTypeName}'.");
                 }
             }
 

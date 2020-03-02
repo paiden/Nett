@@ -1,6 +1,7 @@
 ﻿namespace Nett.Coma
 {
     using System;
+    using System.Linq;
     using Nett.Coma.Path;
     using Nett.Extensions;
 
@@ -114,8 +115,6 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            var src = this.TryGetSource(path);
-
             bool notStoredInConfigYet = this.TryGetSource(path) == null;
             if (notStoredInConfigYet)
             {
@@ -123,7 +122,7 @@
             }
             else
             {
-                this.Set(tbl => path.Set(tbl, TomlObject.CreateFrom(tbl.Root, value)));
+                this.Set(tbl => path.Set(tbl, cur => CreateNewValueObject(cur, tbl.Root, value)));
             }
         }
 
@@ -132,7 +131,7 @@
             path.CheckNotNull(nameof(path));
             value.CheckNotNull(nameof(value));
 
-            this.Set(tbl => path.Set(tbl, TomlObject.CreateFrom(tbl.Root, value)), source);
+            this.Set(tbl => path.Set(tbl, cur => CreateNewValueObject(cur, tbl.Root, value)), source);
         }
 
         internal IConfigSource TryGetSource(TPath path)
@@ -142,6 +141,13 @@
             var cfgTable = this.persistable.LoadSourcesTable();
             var source = path.TryGet(cfgTable) as TomlSource;
             return source?.Value;
+        }
+
+        private static TomlObject CreateNewValueObject(TomlObject current, ITomlRoot root, object value)
+        {
+            var newTobj = TomlObject.CreateFrom(root, value);
+            newTobj.AddComments(current?.Comments ?? Enumerable.Empty<TomlComment>());
+            return newTobj;
         }
 
         private bool ClearTable(TPath tablePath, TomlTable table, bool fromAllSources)
