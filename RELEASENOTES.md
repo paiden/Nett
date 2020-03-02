@@ -1,10 +1,10 @@
 ## v0.15.0
 Coma: 
 + Add GetAs conversion method [#85](https://github.com/paiden/Nett/issues/85)
-+ `Config.Clear` now also supports clearing TOML tables
++ `Config.Clear` now also supports clearing TOML tables [#87](https://github.com/paiden/Nett/issues/87)
 + Add new `Config.Clear` overload that allows to clear a setting completely
++ Fix Setting a TOML value clearing TOML comments [#84](https://github.com/paiden/Nett/issues/85)
 
-## v0.14.0
 AspNet:
 + Add: Option to treat provider dictionary config keys as case insensitive [#81](https://github.com/paiden/Nett/issues/81)
 
