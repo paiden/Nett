@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Nett.Converters;
 
     public interface IConversionSettingsBuilder<TCustom, TToml>
         where TToml : TomlObject
@@ -139,8 +140,8 @@
         // Without these converters the library will not work correctly
         private static readonly List<ITomlConverter> EquivalentTypeConverters = new List<ITomlConverter>()
         {
+            new TomlArrayToObjectConverter(),
             new TomlTableToDictionaryConverter(),
-            new TomlTableToTypedDictionaryConverter(),
         }
         .AddBidirectionalConverter<TomlInt, long>((m, c) => new TomlInt(m, c), (m, t) => t.Value)
         .AddBidirectionalConverter<TomlFloat, double>((m, c) => new TomlFloat(m, c), (m, t) => t.Value)

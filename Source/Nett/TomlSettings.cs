@@ -25,7 +25,7 @@
 
         internal static readonly TomlSettings DefaultInstance = Create();
 
-        private readonly Dictionary<Type, Func<object>> activators = new Dictionary<Type, Func<object>>();
+        private readonly Dictionary<Type, Func<CreateInstanceContext, object>> activators = new Dictionary<Type, Func<CreateInstanceContext, object>>();
         private readonly ConverterCollection converters = new ConverterCollection();
         private readonly HashSet<Type> inlineTableTypes = new HashSet<Type>();
         private readonly Dictionary<string, Type> tableKeyToTypeMappings = new Dictionary<string, Type>();
@@ -54,12 +54,24 @@
             return config;
         }
 
-        internal object GetActivatedInstance(Type t)
+        internal bool TryGetUserActivatedInstance(Type t, CreateInstanceContext context, out object activated)
         {
-            Func<object> a;
-            if (this.activators.TryGetValue(t, out a))
+            activated = null;
+
+            if (this.activators.TryGetValue(t, out var a))
             {
-                return a();
+                activated = a(context);
+                return true;
+            }
+
+            return false;
+        }
+
+        internal object GetActivatedInstance(Type t, CreateInstanceContext context)
+        {
+            if (this.activators.TryGetValue(t, out var a))
+            {
+                return a(context);
             }
             else
             {
@@ -142,6 +154,9 @@
 
         internal void OnTargetPropertyNotFound(string[] keyChain, object target, TomlObject value)
             => this.whenTargetPropertyNotFoundCallback(keyChain, target, value);
+
+        internal ITomlConverter TryGetConverter(TomlObject tomlObj, Type to)
+            => this.TryGetConverter(tomlObj.GetType(), to);
 
         internal ITomlConverter TryGetConverter(Type from, Type to) =>
             this.converters.TryGetConverter(from, to);

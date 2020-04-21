@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using Extensions;
@@ -11,6 +12,25 @@
 
     public sealed partial class TomlSettings
     {
+        public class CreateInstanceContext
+        {
+            public string Key { get; }
+
+            public IEnumerable<string> KeyChain { get; }
+
+            public CreateInstanceContext(string key)
+            {
+                this.Key = key;
+                this.KeyChain = Enumerable.Empty<string>();
+            }
+
+            public CreateInstanceContext(IEnumerable<string> keyChain)
+            {
+                this.KeyChain = keyChain.ToList();
+                this.Key = this.KeyChain.Any() ? this.KeyChain.Last() : null;
+            }
+        }
+
         public interface IMappingBuilder<TCustom>
         {
             ITypeSettingsBuilder<TCustom> ToKey(string key);
@@ -19,6 +39,8 @@
         public interface ITypeSettingsBuilder<TCustom>
         {
             ITypeSettingsBuilder<TCustom> CreateInstance(Func<TCustom> func);
+
+            ITypeSettingsBuilder<TCustom> CreateInstance(Func<CreateInstanceContext, TCustom> creator);
 
             ITypeSettingsBuilder<TCustom> IgnoreProperty<TProperty>(Expression<Func<TCustom, TProperty>> accessor);
 
@@ -34,11 +56,6 @@
             IMappingBuilder<TCustom> Map<TMember>(Expression<Func<TCustom, TMember>> selector);
 
             IMappingBuilder<TCustom> Map(string memberName, BindingFlags bindFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        }
-
-        public interface ITableKeyMappingBuilder
-        {
-            ITomlSettingsBuilder To<T>();
         }
 
         public interface IPropertyMappingBuilder
@@ -98,8 +115,6 @@
 
             ITomlSettingsBuilder ConfigureType<T>(Action<ITypeSettingsBuilder<T>> ct);
 
-            ITableKeyMappingBuilder MapTableKey(string key);
-
             /// <summary>
             /// Configures the property mapping settings that define how TOML rows are mapped to corresponding CLR object
             /// properties and vice versa.
@@ -144,26 +159,6 @@
             private void AddConverterInternal(ITomlConverter converter)
             {
                 this.converters.Insert(0, converter);
-            }
-        }
-
-        internal sealed class TableKeyMappingBuilder : ITableKeyMappingBuilder
-        {
-            private readonly TomlSettings settings;
-            private readonly ITomlSettingsBuilder configBuilder;
-            private readonly string key;
-
-            public TableKeyMappingBuilder(TomlSettings settings, ITomlSettingsBuilder configBuilder, string key)
-            {
-                this.settings = settings;
-                this.configBuilder = configBuilder;
-                this.key = key;
-            }
-
-            public ITomlSettingsBuilder To<T>()
-            {
-                this.settings.tableKeyToTypeMappings[this.key] = typeof(T);
-                return this.configBuilder;
             }
         }
 
@@ -240,9 +235,6 @@
                 return this;
             }
 
-            public ITableKeyMappingBuilder MapTableKey(string key) =>
-                new TableKeyMappingBuilder(this.settings, this, key);
-
             public void SetupConverters()
             {
                 this.SetupDefaultConverters();
@@ -295,8 +287,11 @@
             }
 
             public ITypeSettingsBuilder<TCustom> CreateInstance(Func<TCustom> activator)
+                => this.CreateInstance(_ => activator());
+
+            public ITypeSettingsBuilder<TCustom> CreateInstance(Func<CreateInstanceContext, TCustom> activator)
             {
-                this.settings.activators.Add(typeof(TCustom), () => activator());
+                this.settings.activators.Add(typeof(TCustom), (ctx) => activator(ctx));
                 return this;
             }
 

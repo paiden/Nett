@@ -90,7 +90,12 @@ Setting = 1
         {
             // Arrange
             var config = TomlSettings.Create(cfg => cfg
-                .MapTableKey(SimplePluginConfig.Key).To<SimplePluginConfig>());
+                .ConfigureType<object>(tc => tc
+                    .CreateInstance(ctx => ctx.Key switch
+                        {
+                            nameof(SimplePluginConfig) => new SimplePluginConfig(),
+                            _ => new object(),
+                        })));
 
             // Act
             var c = Toml.ReadString<DictRootConfig>(TomlWhenARegistered, config);
@@ -114,8 +119,12 @@ Setting = """"
 PortA = 1
 PortB = 2";
             var config = TomlSettings.Create(cfg => cfg
-                .MapTableKey(PluginConfigWithIntDict.Key)
-                .To<PluginConfigWithIntDict>());
+                .ConfigureType<object>(tc => tc
+                    .CreateInstance(ctx => ctx.Key switch
+                    {
+                        nameof(PluginConfigWithIntDict) => new PluginConfigWithIntDict(),
+                        _ => new object(),
+                    })));
 
             // Act
             var c = Toml.ReadString<DictRootConfig>(SrcToml, config);

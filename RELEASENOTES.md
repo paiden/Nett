@@ -1,3 +1,8 @@
+## vX.X.X
+Nett: 
++ Add CreateInsanceContext paramter to 'CreateInstance' type configuration method that can be used to inspect TOML key [#90](https://github.com/paiden/Nett/issues/90)
++ Remove MapToTableKey configuration API Method (same functionality is now accomplished via type configuration)
+
 ## v0.15.0
 Coma: 
 + Add GetAs conversion method [#85](https://github.com/paiden/Nett/issues/85)

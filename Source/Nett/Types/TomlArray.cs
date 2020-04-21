@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using Extensions;
     using Nett.Writer;
 
     public sealed class TomlArray : TomlValue<TomlValue[]>
@@ -84,24 +83,30 @@
                 return a;
             }
 
-            if (!Types.ListType.IsAssignableFrom(t))
+            if (Types.ListType.IsAssignableFrom(t))
             {
-                throw new InvalidOperationException(string.Format("Cannot convert TOML array to '{0}'.", t.FullName));
+                IList collection = (IList)Activator.CreateInstance(t);
+                Type itemType = Types.ObjectType;
+                if (t.IsGenericType)
+                {
+                    itemType = t.GetGenericArguments()[0];
+                }
+
+                foreach (TomlValue i in this.Value)
+                {
+                    collection.Add(i.Get(itemType));
+                }
+
+                return collection;
             }
 
-            IList collection = (IList)Activator.CreateInstance(t);
-            Type itemType = Types.ObjectType;
-            if (t.IsGenericType)
+            var conv = this.Root.Settings.TryGetConverter(Types.TomlArrayType, t);
+            if (conv != null)
             {
-                itemType = t.GetGenericArguments()[0];
+                return conv.Convert(this.Root, this, t);
             }
 
-            foreach (TomlValue i in this.Value)
-            {
-                collection.Add(i.Get(itemType));
-            }
-
-            return collection;
+            throw new InvalidOperationException(string.Format("Cannot convert TOML array to '{0}'.", t.FullName));
         }
 
         internal override TomlObject CloneFor(ITomlRoot root) => this.CloneArrayFor(root);

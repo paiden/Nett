@@ -12,7 +12,12 @@ namespace Nett.Tests.Plugins
         {
             // Arrange
             var config = TomlSettings.Create(cfg => cfg
-                .MapTableKey(ObjRootConfig.PluginConfigKey).To<SimplePluginConfig>());
+                .ConfigureType<object>(ct => ct
+                    .CreateInstance(ctx => ctx.Key switch
+                {
+                    nameof(ObjRootConfig.PluginConfig) => new SimplePluginConfig(),
+                    _ => new object()
+                })));
 
             // Act
             var c = Toml.ReadString<ObjRootConfig>(ObjRootConfig.DefaultSimpleToml, config);
@@ -33,8 +38,12 @@ RootSetting = 1
 PortA = 1
 PortB = 2";
             var config = TomlSettings.Create(cfg => cfg
-                .MapTableKey(ObjRootConfig.PluginConfigKey)
-                .To<PluginConfigWithIntDict>());
+                .ConfigureType<object>(ct => ct
+                    .CreateInstance(ctx => ctx.Key switch
+                    {
+                        nameof(ObjRootConfig.PluginConfig) => new PluginConfigWithIntDict(),
+                        _ => new object()
+                    })));
 
             // Act
             var c = Toml.ReadString<ObjRootConfig>(ObjRootConfig.DefaultSimpleToml, config);

@@ -197,8 +197,8 @@
 
         public Dictionary<string, object> ToDictionary()
         {
-            var converter = new ConvertTomlTableToDictionaryConversionVisitor();
-            return converter.Convert(this);
+            var converter = new TomlTableToDictionaryConverter();
+            return (Dictionary<string, object>)converter.Convert(this.Root, this, typeof(Dictionary<string, object>));
         }
 
         public TomlObject TryGetValue(string key)
@@ -292,13 +292,21 @@
         {
             if (t == Types.TomlTableType) { return this; }
 
-            var conv = this.Root.Settings.TryGetConverter(Types.TomlTableType, t);
+            var ctx = new TomlSettings.CreateInstanceContext(getMyKeyChain());
+
+            var activatedType = t;
+            if (this.Root.Settings.TryGetUserActivatedInstance(t, ctx, out var result))
+            {
+                activatedType = result.GetType();
+            }
+
+            var conv = this.Root.Settings.TryGetConverter(Types.TomlTableType, activatedType);
             if (conv != null)
             {
                 return conv.Convert(this.Root, this, t);
             }
 
-            var result = this.Root.Settings.GetActivatedInstance(t);
+            result = this.Root.Settings.GetActivatedInstance(t, ctx);
             foreach (var r in this.rows)
             {
                 var targetMember = this.Root.Settings.TryGetMappedMember(result.GetType(), r.Key.Value);
@@ -317,7 +325,7 @@
                     {
                         throw new InvalidOperationException(
                             $"Failed to convert TOML object with key '{r.Key}', " + $"type '{r.Value.ReadableTypeName}' " +
-                            $"and value '{r.Value.ToString()}' to object property " +
+                            $"and value '{r.Value}' to object property " +
                             $"with name '{targetMember.Value.MemberInfo.Name}' and type '{targetMember.Value.MemberType.FullName}'.",
                             exc);
                     }

@@ -83,8 +83,8 @@
     <Compile Include="ReadTomlWithCommentsTests.cs" />
     <Compile Include="StringExtensionTests.cs" />
     <Compile Include="TomlTableTests.cs" />
-    <Compile Include="TomlTableToTypedDictionaryConverterTests.cs" />
     <Compile Include="TomlValueTests.cs" />
+    <Compile Include="Util\DictReflectUtilTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -106,9 +106,7 @@
   <ItemGroup>
     <Analyzer Include="..\..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Util\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
