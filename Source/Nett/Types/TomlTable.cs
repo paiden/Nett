@@ -99,15 +99,15 @@
         /// var y = Toml.Create(); // Assume rows are added to Y
         ///
         /// // Create table that has all rows of X + rows of Y that had no equivalent in row in X
-        /// var r1 = Toml.CombineTables(op => op.Overwrite(X).With(Y).ForRowsOnlyInSource());
+        /// var r1 = TomlTable.Combine(op => op.Overwrite(X).With(Y).ForRowsOnlyInSource());
         ///
         /// // Create table that has all rows of X overwritten with the
         /// // equivalent rows from Y and added all rows that had no equivalent row in X yet
-        /// var r2 = Toml.CombineTables(op => op.Overwrite(X).With(Y).ForAllSourceRows());
+        /// var r2 = TomlTable.Combine(op => op.Overwrite(X).With(Y).ForAllSourceRows());
         ///
         /// // Create table that has all rows of X overwritten with the
         /// // equivalent row of Y, if such a row existed in Y
-        /// var r3 = Toml.CombineTables(op => op.Overwrite(X).With(Y).ForAllTargetRows());
+        /// var r3 = TomlTable.Combine(op => op.Overwrite(X).With(Y).ForAllTargetRows());
         ///
         /// // These operations create the following tables
         /// // Key | X   | Y   | r1 | r2 | r3
